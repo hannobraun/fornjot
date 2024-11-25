@@ -70,21 +70,23 @@ impl TextRenderer {
     ) -> anyhow::Result<()> {
         let mut buffers = Vec::new();
 
-        let mut buffer = glyphon::Buffer::new(
-            &mut self.font_system,
-            glyphon::Metrics {
-                font_size: 16.,
-                line_height: 16.,
-            },
-        );
-        buffer.set_text(
-            &mut self.font_system,
-            "Hello, world!",
-            glyphon::Attrs::new(),
-            glyphon::Shaping::Advanced,
-        );
+        for op in &_operations.operations {
+            let mut buffer = glyphon::Buffer::new(
+                &mut self.font_system,
+                glyphon::Metrics {
+                    font_size: 16.,
+                    line_height: 16.,
+                },
+            );
+            buffer.set_text(
+                &mut self.font_system,
+                &format!("{op}"),
+                glyphon::Attrs::new(),
+                glyphon::Shaping::Advanced,
+            );
 
-        buffers.push(buffer);
+            buffers.push(buffer);
+        }
 
         let text_areas = buffers.iter().map(|buffer| glyphon::TextArea {
             buffer,
