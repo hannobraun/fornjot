@@ -3,7 +3,6 @@ pub struct TextRenderer {
     viewport: glyphon::Viewport,
     text_renderer: glyphon::TextRenderer,
     font_system: glyphon::FontSystem,
-    buffer: glyphon::Buffer,
     swash_cache: glyphon::SwashCache,
     scale_factor: f32,
 }
@@ -47,28 +46,13 @@ impl TextRenderer {
             }),
         );
 
-        let mut font_system = glyphon::FontSystem::new();
-
-        let mut buffer = glyphon::Buffer::new(
-            &mut font_system,
-            glyphon::Metrics {
-                font_size: 16.,
-                line_height: 16.,
-            },
-        );
-        buffer.set_text(
-            &mut font_system,
-            "Hello, world!",
-            glyphon::Attrs::new(),
-            glyphon::Shaping::Advanced,
-        );
+        let font_system = glyphon::FontSystem::new();
 
         Self {
             text_atlas,
             viewport,
             text_renderer,
             font_system,
-            buffer,
             swash_cache,
             scale_factor,
         }
@@ -81,6 +65,20 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
+        let mut buffer = glyphon::Buffer::new(
+            &mut self.font_system,
+            glyphon::Metrics {
+                font_size: 16.,
+                line_height: 16.,
+            },
+        );
+        buffer.set_text(
+            &mut self.font_system,
+            "Hello, world!",
+            glyphon::Attrs::new(),
+            glyphon::Shaping::Advanced,
+        );
+
         self.text_renderer
             .prepare(
                 device,
@@ -89,7 +87,7 @@ impl TextRenderer {
                 &mut self.text_atlas,
                 &self.viewport,
                 [glyphon::TextArea {
-                    buffer: &self.buffer,
+                    buffer: &buffer,
                     left: 0.,
                     top: 0.,
                     scale: self.scale_factor,
