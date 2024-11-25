@@ -89,9 +89,13 @@ impl Renderer {
 
     pub fn render(
         &mut self,
-        selected_operation: &dyn Operation,
+        _: &dyn Operation,
         all_operations: &OpsLog,
     ) -> anyhow::Result<()> {
+        let Some(selected_operation) = all_operations.selected() else {
+            return Ok(());
+        };
+
         let vertices = Geometry::vertices(&self.device, selected_operation);
         let triangles = Geometry::triangles(&self.device, selected_operation);
 
