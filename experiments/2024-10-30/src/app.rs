@@ -109,7 +109,10 @@ impl ApplicationHandler for App {
                 window.request_redraw();
             }
             WindowEvent::RedrawRequested => {
-                if let Some(op) = self.ops.operations.get(self.selected_op) {
+                let selected_operation =
+                    self.ops.operations.get(self.selected_op);
+
+                if let Some(op) = selected_operation {
                     if let Err(err) = renderer.render(op) {
                         eprintln!("Render error: {err}");
                     }
