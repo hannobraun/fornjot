@@ -82,6 +82,21 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
+        let text_areas = [glyphon::TextArea {
+            buffer: &buffer,
+            left: 0.,
+            top: 0.,
+            scale: self.scale_factor,
+            bounds: glyphon::TextBounds {
+                left: 0,
+                top: 0,
+                right: surface_config.width as i32,
+                bottom: surface_config.height as i32,
+            },
+            default_color: glyphon::Color::rgb(0, 0, 0),
+            custom_glyphs: &[],
+        }];
+
         self.text_renderer
             .prepare(
                 device,
@@ -89,20 +104,7 @@ impl TextRenderer {
                 &mut self.font_system,
                 &mut self.text_atlas,
                 &self.viewport,
-                [glyphon::TextArea {
-                    buffer: &buffer,
-                    left: 0.,
-                    top: 0.,
-                    scale: self.scale_factor,
-                    bounds: glyphon::TextBounds {
-                        left: 0,
-                        top: 0,
-                        right: surface_config.width as i32,
-                        bottom: surface_config.height as i32,
-                    },
-                    default_color: glyphon::Color::rgb(0, 0, 0),
-                    custom_glyphs: &[],
-                }],
+                text_areas,
                 &mut self.swash_cache,
             )
             .unwrap();
