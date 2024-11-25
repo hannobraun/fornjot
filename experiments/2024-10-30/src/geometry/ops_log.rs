@@ -64,6 +64,10 @@ impl OpsLog {
     pub fn select_previous(&mut self) {
         self.selected = self.selected.saturating_sub(1);
     }
+
+    pub fn selected(&self) -> Option<&dyn Operation> {
+        self.operations.get(self.selected).map(|op| op as &_)
+    }
 }
 
 impl fmt::Display for OpsLog {

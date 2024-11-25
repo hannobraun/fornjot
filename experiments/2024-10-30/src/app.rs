@@ -106,9 +106,7 @@ impl ApplicationHandler for App {
                 window.request_redraw();
             }
             WindowEvent::RedrawRequested => {
-                if let Some(selected) =
-                    self.ops.operations.get(self.ops.selected)
-                {
+                if let Some(selected) = self.ops.selected() {
                     if let Err(err) = renderer.render(selected, &self.ops) {
                         eprintln!("Render error: {err}");
                     }
