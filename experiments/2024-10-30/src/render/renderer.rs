@@ -87,7 +87,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self, operation: &impl Operation) -> anyhow::Result<()> {
+    pub fn render(&mut self, operation: &impl Operation) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, operation);
         let triangles = Geometry::triangles(&self.device, operation);
 

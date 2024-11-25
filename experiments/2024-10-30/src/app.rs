@@ -56,7 +56,7 @@ impl ApplicationHandler for App {
         event: WindowEvent,
     ) {
         let (Some(window), Some(renderer)) =
-            (self.window.as_ref(), self.renderer.as_ref())
+            (self.window.as_ref(), self.renderer.as_mut())
         else {
             return;
         };
