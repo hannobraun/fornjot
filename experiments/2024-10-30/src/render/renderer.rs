@@ -90,7 +90,7 @@ impl Renderer {
     pub fn render(
         &mut self,
         selected_operation: &impl Operation,
-        last_operation: &OpsLog,
+        all_operations: &OpsLog,
     ) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, selected_operation);
         let triangles = Geometry::triangles(&self.device, selected_operation);
@@ -138,7 +138,7 @@ impl Renderer {
                 &self.queue,
                 &self.surface_config,
                 selected_operation,
-                last_operation,
+                all_operations,
                 &mut render_pass,
             )?;
         }
