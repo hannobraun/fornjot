@@ -93,6 +93,7 @@ impl TextRenderer {
 
     pub fn render(
         &self,
+        _: &wgpu::Device,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
         self.text_renderer.render(
