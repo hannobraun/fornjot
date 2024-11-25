@@ -90,6 +90,7 @@ impl Renderer {
     pub fn render(
         &mut self,
         selected_operation: &impl Operation,
+        _last_operation: &impl Operation,
     ) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, selected_operation);
         let triangles = Geometry::triangles(&self.device, selected_operation);
