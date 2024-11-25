@@ -88,20 +88,24 @@ impl TextRenderer {
             buffers.push(buffer);
         }
 
-        let text_areas = buffers.iter().map(|buffer| glyphon::TextArea {
-            buffer,
-            left: 0.,
-            top: 0.,
-            scale: self.scale_factor,
-            bounds: glyphon::TextBounds {
-                left: 0,
-                top: 0,
-                right: surface_config.width as i32,
-                bottom: surface_config.height as i32,
-            },
-            default_color: glyphon::Color::rgb(0, 0, 0),
-            custom_glyphs: &[],
-        });
+        let mut text_areas = Vec::new();
+
+        for buffer in &buffers {
+            text_areas.push(glyphon::TextArea {
+                buffer,
+                left: 0.,
+                top: 0.,
+                scale: self.scale_factor,
+                bounds: glyphon::TextBounds {
+                    left: 0,
+                    top: 0,
+                    right: surface_config.width as i32,
+                    bottom: surface_config.height as i32,
+                },
+                default_color: glyphon::Color::rgb(0, 0, 0),
+                custom_glyphs: &[],
+            });
+        }
 
         self.text_renderer
             .prepare(
