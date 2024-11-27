@@ -87,12 +87,10 @@ impl TextRenderer {
 
         buffer.shape_until_scroll(&mut self.font_system, false);
 
-        let top = 0.;
-
         let text_areas = [glyphon::TextArea {
             buffer: &buffer,
             left: 0.,
-            top,
+            top: 0.,
             scale: self.scale_factor,
             bounds: glyphon::TextBounds {
                 left: 0,
