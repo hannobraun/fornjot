@@ -87,7 +87,7 @@ impl TextRenderer {
 
         buffer.shape_until_scroll(&mut self.font_system, false);
 
-        let text_areas = [glyphon::TextArea {
+        let text_area = glyphon::TextArea {
             buffer: &buffer,
             left: 0.,
             top: 0.,
@@ -100,7 +100,7 @@ impl TextRenderer {
             },
             default_color: glyphon::Color::rgb(0, 0, 0),
             custom_glyphs: &[],
-        }];
+        };
 
         self.text_renderer
             .prepare(
@@ -109,7 +109,7 @@ impl TextRenderer {
                 &mut self.font_system,
                 &mut self.text_atlas,
                 &self.viewport,
-                text_areas,
+                [text_area],
                 &mut self.swash_cache,
             )
             .unwrap();
