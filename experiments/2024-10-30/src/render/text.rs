@@ -70,23 +70,25 @@ impl TextRenderer {
     ) -> anyhow::Result<()> {
         let mut buffers = Vec::new();
 
-        for op in &operations.operations {
-            let mut buffer = glyphon::Buffer::new(
-                &mut self.font_system,
-                glyphon::Metrics {
-                    font_size: 16.,
-                    line_height: 16.,
-                },
-            );
-            buffer.set_text(
-                &mut self.font_system,
-                &format!("{op}"),
-                glyphon::Attrs::new(),
-                glyphon::Shaping::Advanced,
-            );
+        let mut buffer = glyphon::Buffer::new(
+            &mut self.font_system,
+            glyphon::Metrics {
+                font_size: 16.,
+                line_height: 16.,
+            },
+        );
 
-            buffers.push(buffer);
+        for op in &operations.operations {
+            buffer.lines.push(glyphon::BufferLine::new(
+                format!("{op}"),
+                glyphon::cosmic_text::LineEnding::Lf,
+                glyphon::AttrsList::new(glyphon::Attrs::new()),
+                glyphon::Shaping::Advanced,
+            ));
         }
+
+        buffer.shape_until_scroll(&mut self.font_system, false);
+        buffers.push(buffer);
 
         let mut text_areas = Vec::new();
         let mut top = 0.;
