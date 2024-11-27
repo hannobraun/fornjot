@@ -87,10 +87,9 @@ impl TextRenderer {
 
         buffer.shape_until_scroll(&mut self.font_system, false);
 
-        let mut text_areas = Vec::new();
         let top = 0.;
 
-        text_areas.push(glyphon::TextArea {
+        let text_areas = [glyphon::TextArea {
             buffer: &buffer,
             left: 0.,
             top,
@@ -103,7 +102,7 @@ impl TextRenderer {
             },
             default_color: glyphon::Color::rgb(0, 0, 0),
             custom_glyphs: &[],
-        });
+        }];
 
         self.text_renderer
             .prepare(
