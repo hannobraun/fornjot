@@ -76,8 +76,12 @@ impl TextRenderer {
             },
         );
 
-        for op in operations.operations.iter() {
-            let attrs = glyphon::Attrs::new();
+        for (i, op) in operations.operations.iter().enumerate() {
+            let mut attrs = glyphon::Attrs::new();
+
+            if i == operations.selected {
+                attrs = attrs.color(glyphon::Color::rgb(0, 127, 0));
+            }
 
             buffer.lines.push(glyphon::BufferLine::new(
                 format!("{op}"),
