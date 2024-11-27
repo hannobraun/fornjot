@@ -1,3 +1,8 @@
+//! # Exporting geometry to 3MF
+//!
+//! Nothing interesting to see here! This is just a thin layer on top of
+//! [3mf-rs](threemf).
+
 use std::{collections::BTreeMap, fs::File};
 
 use crate::geometry::{Operation, OpsLog, Vertex};

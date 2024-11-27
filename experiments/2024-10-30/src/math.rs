@@ -1,3 +1,9 @@
+//! # Core math primitives
+//! 
+//! This is just a little math library to support the code in
+//! [`geometry`](crate::geometry). Nothing special.
+
+
 use std::{cmp::Ordering, ops};
 
 use iter_fixed::IntoIteratorFixed;

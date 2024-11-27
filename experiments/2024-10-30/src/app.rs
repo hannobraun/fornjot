@@ -1,3 +1,8 @@
+//! # [winit] event loop
+//!
+//! Nothing interesting to see here! This is all pretty standard stuff, as far
+//! as winit apps are concerned.
+
 use std::{collections::BTreeSet, sync::Arc};
 
 use winit::{
