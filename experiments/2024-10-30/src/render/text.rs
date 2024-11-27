@@ -77,10 +77,12 @@ impl TextRenderer {
         );
 
         for op in operations.operations.iter() {
+            let attrs = glyphon::Attrs::new();
+
             buffer.lines.push(glyphon::BufferLine::new(
                 format!("{op}"),
                 glyphon::cosmic_text::LineEnding::Lf,
-                glyphon::AttrsList::new(glyphon::Attrs::new()),
+                glyphon::AttrsList::new(attrs),
                 glyphon::Shaping::Advanced,
             ));
         }
