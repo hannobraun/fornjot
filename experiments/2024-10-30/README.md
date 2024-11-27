@@ -68,3 +68,9 @@ to describe the results here, as I have documented the code instead.
 
 If you're interested in details, take a look at the code itself, or check out
 the documentation (run `cargo doc --open` in this directory).
+
+_Note: My writing process for the documentation in the code was a bit light on
+proofreading (which probably reduced the total effort to a fraction of what it
+would have been). I'm not sure how many people are actually interested in seeing
+all of the details, so I was more interested in putting down the information and
+moving on the next experiment._
