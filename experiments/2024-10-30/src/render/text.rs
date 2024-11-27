@@ -89,12 +89,13 @@ impl TextRenderer {
         }
 
         let mut text_areas = Vec::new();
+        let mut top = 0.;
 
         for buffer in &buffers {
             text_areas.push(glyphon::TextArea {
                 buffer,
                 left: 0.,
-                top: 0.,
+                top,
                 scale: self.scale_factor,
                 bounds: glyphon::TextBounds {
                     left: 0,
@@ -105,6 +106,8 @@ impl TextRenderer {
                 default_color: glyphon::Color::rgb(0, 0, 0),
                 custom_glyphs: &[],
             });
+
+            top += 20.0 * self.scale_factor;
         }
 
         self.text_renderer
