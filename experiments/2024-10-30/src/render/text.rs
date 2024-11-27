@@ -76,7 +76,7 @@ impl TextRenderer {
             },
         );
 
-        for op in &operations.operations {
+        for op in operations.operations.iter() {
             buffer.lines.push(glyphon::BufferLine::new(
                 format!("{op}"),
                 glyphon::cosmic_text::LineEnding::Lf,
