@@ -21,7 +21,7 @@ nalgebra = "0.33.2"
 tobj = "4.0.2"
 raw-window-handle = "0.6.0"
 thiserror = "2.0.3"
-tracing = "0.1.40"
+tracing = "0.1.41"
 
 [dependencies.bytemuck]
 version = "1.20.0"
