@@ -9,7 +9,7 @@ pub struct Assets<'a> {
     pub bottom_texture: &'a [u8],
 }
 
-impl<'a> Assets<'a> {
+impl Assets<'_> {
     pub fn get_instance() -> Self {
         let cube_obj: &[u8] =
             include_bytes!("../assets/navigation_cube/cube.obj");
