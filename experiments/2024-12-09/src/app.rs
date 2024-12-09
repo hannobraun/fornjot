@@ -8,9 +8,13 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{geometry::OpsLog, render::Renderer};
+use crate::{geometry::OpsLog, render::Renderer, ui::OpsUi};
 
-pub fn run(mut ops: OpsLog) -> anyhow::Result<()> {
+pub fn run(ops: OpsLog) -> anyhow::Result<()> {
+    let mut ops = OpsUi {
+        ops_log: ops,
+        selected: 0,
+    };
     ops.select_last();
 
     let event_loop = EventLoop::new()?;
@@ -27,7 +31,7 @@ pub fn run(mut ops: OpsLog) -> anyhow::Result<()> {
 }
 
 struct App {
-    ops: OpsLog,
+    ops: OpsUi,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
     pressed_keys: BTreeSet<Key>,

@@ -6,6 +6,7 @@ mod geometry;
 mod math;
 mod model;
 mod render;
+mod ui;
 
 fn main() -> anyhow::Result<()> {
     let mut ops = geometry::OpsLog::default();

@@ -1,4 +1,4 @@
-use crate::geometry::OpsLog;
+use crate::ui::OpsUi;
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
@@ -62,7 +62,7 @@ impl TextRenderer {
 
     pub fn render(
         &mut self,
-        operations: &OpsLog,
+        operations: &OpsUi,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
@@ -76,7 +76,7 @@ impl TextRenderer {
             },
         );
 
-        for (i, op) in operations.operations.iter().enumerate() {
+        for (i, op) in operations.ops_log.operations.iter().enumerate() {
             let mut attrs = glyphon::Attrs::new();
 
             if i == operations.selected {

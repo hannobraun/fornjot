@@ -7,7 +7,6 @@ use super::{Operation, Triangle, Vertex};
 #[derive(Default)]
 pub struct OpsLog {
     pub operations: Vec<OperationInSequence>,
-    pub selected: usize,
 }
 
 impl OpsLog {
@@ -49,24 +48,6 @@ impl OpsLog {
             operations: self,
             results: (triangle,),
         }
-    }
-
-    pub fn select_last(&mut self) {
-        self.selected = self.operations.len().saturating_sub(1);
-    }
-
-    pub fn select_next(&mut self) {
-        if self.selected < self.operations.len() {
-            self.selected += 1;
-        }
-    }
-
-    pub fn select_previous(&mut self) {
-        self.selected = self.selected.saturating_sub(1);
-    }
-
-    pub fn selected(&self) -> Option<&dyn Operation> {
-        self.operations.get(self.selected).map(|op| op as &_)
     }
 }
 
