@@ -70,6 +70,9 @@ impl Operation for Triangle {
     }
 
     fn children(&self) -> Vec<Box<dyn Operation>> {
-        Vec::new()
+        self.vertices
+            .iter()
+            .map(|vertex| Box::new(*vertex) as _)
+            .collect()
     }
 }
