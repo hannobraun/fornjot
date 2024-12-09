@@ -1,0 +1,23 @@
+[workspace]
+
+[package]
+name = "fj"
+edition = "2021"
+
+[dependencies]
+anyhow = "*"
+glyphon = "*"
+iter_fixed = "*"
+pollster = "*"
+threemf = "*"
+tuples = "*"
+wgpu = "*"
+winit = "*"
+
+[dependencies.bytemuck]
+version = "*"
+features = ["derive"]
+
+[dependencies.glam]
+version = "*"
+features = ["bytemuck"]
