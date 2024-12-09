@@ -159,9 +159,9 @@ pub struct ClonedOperation {
 impl ClonedOperation {
     pub fn from_op(op: &dyn Operation) -> Self {
         let mut vertices = Vec::new();
-        let mut triangles = Vec::new();
-
         op.vertices(&mut vertices);
+
+        let mut triangles = Vec::new();
         op.triangles(&mut triangles);
 
         Self {
