@@ -73,6 +73,13 @@ impl Operation for OpsLog {
             op.triangles(triangles);
         }
     }
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        self.operations
+            .iter()
+            .map(|op| Box::new(op.clone()) as _)
+            .collect()
+    }
 }
 
 #[derive(Clone)]
@@ -94,6 +101,10 @@ impl Operation for OperationInSequence {
             op.triangles(triangles);
         }
         self.operation.triangles(triangles);
+    }
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        self.operation.children()
     }
 }
 
@@ -154,6 +165,7 @@ pub struct ClonedOperation {
     pub description: String,
     pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
+    pub children: Vec<ClonedOperation>,
 }
 
 impl ClonedOperation {
@@ -164,10 +176,17 @@ impl ClonedOperation {
         let mut triangles = Vec::new();
         op.triangles(&mut triangles);
 
+        let children = op
+            .children()
+            .into_iter()
+            .map(|op| Self::from_op(op.as_ref()))
+            .collect();
+
         Self {
             description: op.to_string(),
             vertices,
             triangles,
+            children,
         }
     }
 }
@@ -185,5 +204,12 @@ impl Operation for ClonedOperation {
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         triangles.extend(&self.triangles);
+    }
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        self.children
+            .iter()
+            .map(|op| Box::new(op.clone()) as _)
+            .collect()
     }
 }

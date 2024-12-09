@@ -33,6 +33,10 @@ impl Operation for Vertex {
     }
 
     fn triangles(&self, _: &mut Vec<Triangle>) {}
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        Vec::new()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -63,5 +67,9 @@ impl Operation for Triangle {
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         triangles.push(*self)
+    }
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        Vec::new()
     }
 }
