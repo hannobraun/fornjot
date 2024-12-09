@@ -75,6 +75,7 @@ impl Operation for OpsLog {
     }
 }
 
+#[derive(Clone)]
 pub struct OperationInSequence {
     pub operation: ClonedOperation,
     pub previous: Option<ClonedOperation>,
@@ -148,6 +149,7 @@ impl<'r, T> OperationResult<'r, T> {
     }
 }
 
+#[derive(Clone)]
 pub struct ClonedOperation {
     pub description: String,
     pub vertices: Vec<Vertex>,
