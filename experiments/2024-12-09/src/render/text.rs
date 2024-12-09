@@ -1,3 +1,5 @@
+use std::fmt::Write;
+
 use crate::ui::OpsUi;
 
 pub struct TextRenderer {
@@ -83,7 +85,8 @@ impl TextRenderer {
                 attrs = attrs.color(glyphon::Color::rgb(0, 127, 0));
             }
 
-            let line = format!("{op}");
+            let mut line = String::new();
+            write!(line, "{op}")?;
 
             buffer.lines.push(glyphon::BufferLine::new(
                 line,
