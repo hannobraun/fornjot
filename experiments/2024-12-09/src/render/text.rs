@@ -83,8 +83,10 @@ impl TextRenderer {
                 attrs = attrs.color(glyphon::Color::rgb(0, 127, 0));
             }
 
+            let line = format!("{op}");
+
             buffer.lines.push(glyphon::BufferLine::new(
-                format!("{op}"),
+                line,
                 glyphon::cosmic_text::LineEnding::Lf,
                 glyphon::AttrsList::new(attrs),
                 glyphon::Shaping::Advanced,
