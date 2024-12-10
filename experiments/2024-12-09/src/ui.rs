@@ -36,10 +36,10 @@ impl OperationView {
         self.selected = self.selected.saturating_sub(1);
     }
 
-    pub fn selected(&self) -> Option<&dyn Operation> {
+    pub fn selected(&self) -> Option<Box<dyn Operation>> {
         self.ops_log
             .operations
             .get(self.selected)
-            .map(|op| op as &_)
+            .map(|op| Box::new(op.clone()) as _)
     }
 }
