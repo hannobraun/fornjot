@@ -1,14 +1,14 @@
-use crate::geometry::{Operation, OpsLog};
+use crate::geometry::Operation;
 
 pub struct OperationView {
-    ops_log: OpsLog,
+    ops_log: Box<dyn Operation>,
     selected: usize,
 }
 
 impl OperationView {
-    pub fn new(operation: OpsLog) -> Self {
+    pub fn new(operation: impl Operation + 'static) -> Self {
         Self {
-            ops_log: operation,
+            ops_log: Box::new(operation),
             selected: 0,
         }
     }
