@@ -1,4 +1,6 @@
-use crate::geometry::Operation;
+use std::fmt;
+
+use crate::geometry::{Operation, Triangle, Vertex};
 
 pub struct OperationView {
     operation: Box<dyn Operation>,
@@ -49,5 +51,25 @@ impl OperationView {
 
     fn last_index(&self) -> usize {
         self.operations().len().saturating_sub(1)
+    }
+}
+
+impl fmt::Display for OperationView {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.operation)
+    }
+}
+
+impl Operation for OperationView {
+    fn vertices(&self, vertices: &mut Vec<Vertex>) {
+        self.operation.vertices(vertices);
+    }
+
+    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+        self.operation.triangles(triangles);
+    }
+
+    fn children(&self) -> Vec<Box<dyn Operation>> {
+        self.operation.children()
     }
 }
