@@ -6,6 +6,13 @@ pub struct OperationView {
 }
 
 impl OperationView {
+    pub fn new(operation: OpsLog) -> Self {
+        Self {
+            ops_log: operation,
+            selected: 0,
+        }
+    }
+
     pub fn select_last(&mut self) {
         self.selected = self.ops_log.operations.len().saturating_sub(1);
     }

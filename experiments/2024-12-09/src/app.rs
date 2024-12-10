@@ -11,10 +11,7 @@ use winit::{
 use crate::{geometry::OpsLog, render::Renderer, ui::OperationView};
 
 pub fn run(ops: OpsLog) -> anyhow::Result<()> {
-    let mut ops = OperationView {
-        ops_log: ops,
-        selected: 0,
-    };
+    let mut ops = OperationView::new(ops);
     ops.select_last();
 
     let event_loop = EventLoop::new()?;
