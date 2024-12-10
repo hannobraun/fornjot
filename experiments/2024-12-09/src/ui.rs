@@ -13,6 +13,10 @@ impl OperationView {
         }
     }
 
+    pub fn operations(&self) -> Vec<Box<dyn Operation>> {
+        self.ops_log.children()
+    }
+
     pub fn select_last(&mut self) {
         self.selected = self.ops_log.operations.len().saturating_sub(1);
     }

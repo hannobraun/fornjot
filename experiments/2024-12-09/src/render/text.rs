@@ -78,7 +78,7 @@ impl TextRenderer {
             },
         );
 
-        for (i, op) in operations.ops_log.operations.iter().enumerate() {
+        for (i, op) in operations.operations().iter().enumerate() {
             let mut attrs = glyphon::Attrs::new();
 
             if i == operations.selected {
