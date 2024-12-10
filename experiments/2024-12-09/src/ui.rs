@@ -1,11 +1,11 @@
 use crate::geometry::{Operation, OpsLog};
 
-pub struct OpsUi {
+pub struct OperationView {
     pub ops_log: OpsLog,
     pub selected: usize,
 }
 
-impl OpsUi {
+impl OperationView {
     pub fn select_last(&mut self) {
         self.selected = self.ops_log.operations.len().saturating_sub(1);
     }

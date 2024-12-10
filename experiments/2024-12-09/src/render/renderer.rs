@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::anyhow;
 use winit::window::Window;
 
-use crate::ui::OpsUi;
+use crate::ui::OperationView;
 
 use super::{geometry::Geometry, pipelines::Pipelines, text::TextRenderer};
 
@@ -87,7 +87,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&mut self, operations: &OpsUi) -> anyhow::Result<()> {
+    pub fn render(&mut self, operations: &OperationView) -> anyhow::Result<()> {
         let Some(selected_operation) = operations.selected() else {
             return Ok(());
         };

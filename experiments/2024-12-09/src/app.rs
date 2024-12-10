@@ -8,10 +8,10 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{geometry::OpsLog, render::Renderer, ui::OpsUi};
+use crate::{geometry::OpsLog, render::Renderer, ui::OperationView};
 
 pub fn run(ops: OpsLog) -> anyhow::Result<()> {
-    let mut ops = OpsUi {
+    let mut ops = OperationView {
         ops_log: ops,
         selected: 0,
     };
@@ -31,7 +31,7 @@ pub fn run(ops: OpsLog) -> anyhow::Result<()> {
 }
 
 struct App {
-    ops: OpsUi,
+    ops: OperationView,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
     pressed_keys: BTreeSet<Key>,

@@ -1,6 +1,6 @@
 use std::fmt::Write;
 
-use crate::ui::OpsUi;
+use crate::ui::OperationView;
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
@@ -64,7 +64,7 @@ impl TextRenderer {
 
     pub fn render(
         &mut self,
-        operations: &OpsUi,
+        operations: &OperationView,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
