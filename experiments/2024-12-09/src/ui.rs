@@ -28,7 +28,7 @@ impl OperationView {
 
     pub fn select_next(&mut self) {
         if let Some(selected) = self.selected {
-            if selected + 1 < self.operations().len() {
+            if selected < self.last_index() {
                 self.selected = Some(selected + 1);
             }
         }
