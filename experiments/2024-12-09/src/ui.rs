@@ -23,7 +23,8 @@ impl OperationView {
     }
 
     pub fn select_last(&mut self) {
-        self.selected = self.operations().len().saturating_sub(1);
+        let last_index = self.operations().len().saturating_sub(1);
+        self.selected = last_index;
     }
 
     pub fn select_next(&mut self) {
