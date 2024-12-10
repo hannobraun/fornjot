@@ -27,7 +27,7 @@ impl OperationView {
     }
 
     pub fn select_next(&mut self) {
-        if self.selected < self.ops_log.operations.len() {
+        if self.selected < self.operations().len() {
             self.selected += 1;
         }
     }
