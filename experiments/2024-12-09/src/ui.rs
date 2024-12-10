@@ -28,7 +28,7 @@ impl OperationView {
     }
 
     pub fn select_next(&mut self) {
-        if self.selected < self.operations().len() {
+        if self.selected + 1 < self.operations().len() {
             self.selected += 1;
         }
     }
