@@ -1,20 +1,20 @@
 use crate::geometry::Operation;
 
 pub struct OperationView {
-    ops_log: Box<dyn Operation>,
+    operation: Box<dyn Operation>,
     selected: usize,
 }
 
 impl OperationView {
     pub fn new(operation: impl Operation + 'static) -> Self {
         Self {
-            ops_log: Box::new(operation),
+            operation: Box::new(operation),
             selected: 0,
         }
     }
 
     pub fn operations(&self) -> Vec<(Box<dyn Operation>, bool)> {
-        self.ops_log
+        self.operation
             .children()
             .into_iter()
             .enumerate()
