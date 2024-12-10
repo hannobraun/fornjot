@@ -23,7 +23,7 @@ impl OperationView {
     }
 
     pub fn select_last(&mut self) {
-        let last_index = self.operations().len().saturating_sub(1);
+        let last_index = self.last_index();
         self.selected = Some(last_index);
     }
 
@@ -48,5 +48,9 @@ impl OperationView {
             .into_iter()
             .nth(selected)
             .map(|(op, _)| op)
+    }
+
+    fn last_index(&self) -> usize {
+        self.operations().len().saturating_sub(1)
     }
 }
