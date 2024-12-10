@@ -23,7 +23,7 @@ impl OperationView {
     }
 
     pub fn select_last(&mut self) {
-        self.selected = self.ops_log.operations.len().saturating_sub(1);
+        self.selected = self.operations().len().saturating_sub(1);
     }
 
     pub fn select_next(&mut self) {
