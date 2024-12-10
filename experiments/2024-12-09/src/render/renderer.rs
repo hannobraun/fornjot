@@ -92,10 +92,8 @@ impl Renderer {
             return Ok(());
         };
 
-        let vertices =
-            Geometry::vertices(&self.device, selected_operation.as_ref());
-        let triangles =
-            Geometry::triangles(&self.device, selected_operation.as_ref());
+        let vertices = Geometry::vertices(&self.device, &selected_operation);
+        let triangles = Geometry::triangles(&self.device, &selected_operation);
 
         let mut encoder = self
             .device

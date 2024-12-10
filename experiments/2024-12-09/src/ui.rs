@@ -15,12 +15,20 @@ impl OperationView {
         }
     }
 
-    pub fn operations(&self) -> Vec<(Box<dyn Operation>, bool)> {
+    pub fn operations(&self) -> Vec<(Self, bool)> {
         self.operation
             .children()
             .into_iter()
             .enumerate()
-            .map(|(i, op)| (op, Some(i) == self.selected))
+            .map(|(i, op)| {
+                (
+                    OperationView {
+                        operation: op,
+                        selected: None,
+                    },
+                    Some(i) == self.selected,
+                )
+            })
             .collect()
     }
 
@@ -40,7 +48,7 @@ impl OperationView {
         }
     }
 
-    pub fn selected(&self) -> Option<Box<dyn Operation>> {
+    pub fn selected(&self) -> Option<Self> {
         let selected = self.selected?;
 
         self.operations()
