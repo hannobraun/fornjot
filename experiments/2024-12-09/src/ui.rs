@@ -37,9 +37,9 @@ impl OperationView {
     }
 
     pub fn selected(&self) -> Option<Box<dyn Operation>> {
-        self.ops_log
-            .operations
-            .get(self.selected)
-            .map(|op| Box::new(op.clone()) as _)
+        self.operations()
+            .into_iter()
+            .nth(self.selected)
+            .map(|(op, _)| op)
     }
 }
