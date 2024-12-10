@@ -1,7 +1,7 @@
 use crate::geometry::{Operation, OpsLog};
 
 pub struct OperationView {
-    pub ops_log: OpsLog,
+    ops_log: OpsLog,
     pub selected: usize,
 }
 
