@@ -78,10 +78,10 @@ impl TextRenderer {
             },
         );
 
-        for (i, op) in operations.operations().into_iter().enumerate() {
+        for (op, selected) in operations.operations().into_iter() {
             let mut attrs = glyphon::Attrs::new();
 
-            if i == operations.selected {
+            if selected {
                 attrs = attrs.color(glyphon::Color::rgb(0, 127, 0));
             }
 

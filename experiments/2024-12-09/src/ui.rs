@@ -2,7 +2,7 @@ use crate::geometry::{Operation, OpsLog};
 
 pub struct OperationView {
     ops_log: OpsLog,
-    pub selected: usize,
+    selected: usize,
 }
 
 impl OperationView {
@@ -13,8 +13,13 @@ impl OperationView {
         }
     }
 
-    pub fn operations(&self) -> Vec<Box<dyn Operation>> {
-        self.ops_log.children()
+    pub fn operations(&self) -> Vec<(Box<dyn Operation>, bool)> {
+        self.ops_log
+            .children()
+            .into_iter()
+            .enumerate()
+            .map(|(i, op)| (op, i == self.selected))
+            .collect()
     }
 
     pub fn select_last(&mut self) {
