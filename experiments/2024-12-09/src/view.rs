@@ -5,31 +5,33 @@ use crate::geometry::{HandleAny, Operation, Triangle, Vertex};
 #[derive(Clone)]
 pub struct OperationView {
     operation: HandleAny,
+    children: Vec<Self>,
     selected: Option<usize>,
 }
 
 impl OperationView {
     pub fn new(operation: HandleAny) -> Self {
+        let children = operation
+            .children()
+            .into_iter()
+            .map(|op| Self::new(HandleAny::new(op)))
+            .collect();
+
         Self {
             operation,
+            children,
             selected: None,
         }
     }
 
     pub fn operations(&self) -> Vec<(Self, bool, usize)> {
         iter::once((self.clone(), true, 0))
-            .chain(self.operation.children().into_iter().enumerate().map(
-                |(i, op)| {
-                    (
-                        OperationView {
-                            operation: op,
-                            selected: None,
-                        },
-                        Some(i) == self.selected,
-                        1,
-                    )
-                },
-            ))
+            .chain(
+                self.children
+                    .iter()
+                    .enumerate()
+                    .map(|(i, op)| (op.clone(), Some(i) == self.selected, 1)),
+            )
             .collect()
     }
 
