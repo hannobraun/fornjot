@@ -21,7 +21,7 @@ pub fn run(shape: Shape) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        ops: view,
+        view,
         window: None,
         renderer: None,
         pressed_keys: BTreeSet::new(),
@@ -32,7 +32,7 @@ pub fn run(shape: Shape) -> anyhow::Result<()> {
 }
 
 struct App {
-    ops: OperationView,
+    view: OperationView,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
     pressed_keys: BTreeSet<Key>,
@@ -100,10 +100,10 @@ impl ApplicationHandler for App {
 
                 match logical_key {
                     Key::Named(NamedKey::ArrowDown) => {
-                        self.ops.select_next();
+                        self.view.select_next();
                     }
                     Key::Named(NamedKey::ArrowUp) => {
-                        self.ops.select_previous();
+                        self.view.select_previous();
                     }
                     _ => {}
                 }
@@ -111,7 +111,7 @@ impl ApplicationHandler for App {
                 window.request_redraw();
             }
             WindowEvent::RedrawRequested => {
-                if let Err(err) = renderer.render(&self.ops) {
+                if let Err(err) = renderer.render(&self.view) {
                     eprintln!("Render error: {err}");
                 }
             }
