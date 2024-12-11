@@ -83,7 +83,7 @@ impl Operation for OpsLog {
 }
 
 #[derive(Clone)]
-pub struct OperationInSequence {
+struct OperationInSequence {
     pub operation: ClonedOperation,
     pub previous: Option<ClonedOperation>,
 }
