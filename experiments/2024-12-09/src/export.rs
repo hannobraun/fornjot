@@ -4,17 +4,17 @@ use crate::geometry::{Operation, Shape, Vertex};
 
 pub fn export(shape: &Shape) -> anyhow::Result<()> {
     let mut shape_vertices = Vec::new();
-    let mut mesh_triangles = Vec::new();
+    let mut shape_triangles = Vec::new();
 
     shape.vertices(&mut shape_vertices);
-    shape.triangles(&mut mesh_triangles);
+    shape.triangles(&mut shape_triangles);
 
     let mut indices_by_vertex = BTreeMap::new();
 
     let mut vertices = Vec::new();
     let mut triangles = Vec::new();
 
-    for triangle in mesh_triangles {
+    for triangle in shape_triangles {
         let triangle = triangle.vertices.map(|vertex| {
             *indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = vertices.len();
