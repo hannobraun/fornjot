@@ -8,9 +8,9 @@ pub struct OperationView {
 }
 
 impl OperationView {
-    pub fn new(operation: impl Operation + 'static) -> Self {
+    pub fn new(operation: AnyOp) -> Self {
         Self {
-            operation: AnyOp::new(operation),
+            operation,
             selected: None,
         }
     }

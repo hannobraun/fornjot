@@ -8,10 +8,14 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{geometry::OpsLog, render::Renderer, ui::OperationView};
+use crate::{
+    geometry::{AnyOp, OpsLog},
+    render::Renderer,
+    ui::OperationView,
+};
 
 pub fn run(ops: OpsLog) -> anyhow::Result<()> {
-    let mut ops = OperationView::new(ops);
+    let mut ops = OperationView::new(AnyOp::new(ops));
     ops.select_last();
 
     let event_loop = EventLoop::new()?;
