@@ -25,7 +25,7 @@ impl OperationView {
     }
 
     pub fn operations(&self) -> impl Iterator<Item = (&Self, bool, usize)> {
-        self.operations_inner(true)
+        self.operations_inner(true, 0)
     }
 
     pub fn select_last(&mut self) {
@@ -53,12 +53,12 @@ impl OperationView {
     fn operations_inner(
         &self,
         selected: bool,
+        indent_level: usize,
     ) -> impl Iterator<Item = (&Self, bool, usize)> {
-        iter::once((self, selected, 0)).chain(
-            self.children
-                .iter()
-                .enumerate()
-                .map(move |(i, view)| (view, Some(i) == self.selected, 1)),
+        iter::once((self, selected, indent_level)).chain(
+            self.children.iter().enumerate().map(move |(i, view)| {
+                (view, Some(i) == self.selected, indent_level + 1)
+            }),
         )
     }
 
