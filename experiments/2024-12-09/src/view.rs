@@ -56,7 +56,7 @@ impl OperationView {
     }
 
     fn last_index(&self) -> usize {
-        self.operations().count().saturating_sub(1)
+        self.children.len().saturating_sub(1)
     }
 }
 
