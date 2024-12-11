@@ -6,7 +6,7 @@ use super::{Operation, Triangle, Vertex};
 
 #[derive(Default)]
 pub struct OpsLog {
-    pub operations: Vec<OperationInSequence>,
+    operations: Vec<OperationInSequence>,
 }
 
 impl OpsLog {
