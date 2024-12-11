@@ -25,7 +25,7 @@ impl OperationView {
     }
 
     pub fn operations(&self) -> impl Iterator<Item = (&Self, bool, usize)> {
-        self.operations_inner()
+        self.operations_inner(true)
     }
 
     pub fn select_last(&mut self) {
@@ -50,8 +50,11 @@ impl OperationView {
             .unwrap_or(self.clone())
     }
 
-    fn operations_inner(&self) -> impl Iterator<Item = (&Self, bool, usize)> {
-        iter::once((self, true, 0)).chain(
+    fn operations_inner(
+        &self,
+        selected: bool,
+    ) -> impl Iterator<Item = (&Self, bool, usize)> {
+        iter::once((self, selected, 0)).chain(
             self.children
                 .iter()
                 .enumerate()
