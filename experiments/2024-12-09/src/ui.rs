@@ -49,12 +49,12 @@ impl OperationView {
     }
 
     pub fn selected(&self) -> Option<Self> {
-        let selected = self.selected?;
-
-        self.operations()
-            .into_iter()
-            .nth(selected)
-            .map(|(op, _)| op)
+        self.selected.and_then(|selected| {
+            self.operations()
+                .into_iter()
+                .nth(selected)
+                .map(|(op, _)| op)
+        })
     }
 
     fn last_index(&self) -> usize {
