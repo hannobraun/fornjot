@@ -24,15 +24,13 @@ impl OperationView {
         }
     }
 
-    pub fn operations(&self) -> Vec<(&Self, bool, usize)> {
-        iter::once((self, true, 0))
-            .chain(
-                self.children
-                    .iter()
-                    .enumerate()
-                    .map(|(i, op)| (op, Some(i) == self.selected, 1)),
-            )
-            .collect()
+    pub fn operations(&self) -> impl Iterator<Item = (&Self, bool, usize)> {
+        iter::once((self, true, 0)).chain(
+            self.children
+                .iter()
+                .enumerate()
+                .map(|(i, op)| (op, Some(i) == self.selected, 1)),
+        )
     }
 
     pub fn select_last(&mut self) {
@@ -55,7 +53,6 @@ impl OperationView {
         self.selected
             .and_then(|selected| {
                 self.operations()
-                    .into_iter()
                     .nth(selected)
                     .map(|(op, _, _)| op)
                     .cloned()
@@ -64,7 +61,7 @@ impl OperationView {
     }
 
     fn last_index(&self) -> usize {
-        self.operations().len().saturating_sub(1)
+        self.operations().count().saturating_sub(1)
     }
 }
 

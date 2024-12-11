@@ -78,7 +78,7 @@ impl TextRenderer {
             },
         );
 
-        for (op, selected, indent) in operations.operations().into_iter() {
+        for (op, selected, indent) in operations.operations() {
             let mut attrs = glyphon::Attrs::new();
 
             if selected {
