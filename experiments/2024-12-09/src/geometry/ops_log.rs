@@ -5,11 +5,11 @@ use tuples::CombinRight;
 use super::{operation::HandleAny, Operation, Triangle, Vertex};
 
 #[derive(Default)]
-pub struct OpsLog {
+pub struct Shape {
     operations: Vec<OperationInSequence>,
 }
 
-impl OpsLog {
+impl Shape {
     pub fn vertex(
         &mut self,
         vertex: impl Into<Vertex>,
@@ -51,7 +51,7 @@ impl OpsLog {
     }
 }
 
-impl fmt::Display for OpsLog {
+impl fmt::Display for Shape {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let Some(op) = self.operations.last() {
             op.fmt(f)
@@ -61,7 +61,7 @@ impl fmt::Display for OpsLog {
     }
 }
 
-impl Operation for OpsLog {
+impl Operation for Shape {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         if let Some(op) = self.operations.last() {
             op.vertices(vertices);
@@ -115,7 +115,7 @@ impl fmt::Display for OperationInSequence {
 }
 
 pub struct OperationResult<'r, T> {
-    operations: &'r mut OpsLog,
+    operations: &'r mut Shape,
     results: T,
 }
 

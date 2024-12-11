@@ -9,12 +9,12 @@ use winit::{
 };
 
 use crate::{
-    geometry::{HandleAny, OpsLog},
+    geometry::{HandleAny, Shape},
     render::Renderer,
     ui::OperationView,
 };
 
-pub fn run(ops: OpsLog) -> anyhow::Result<()> {
+pub fn run(ops: Shape) -> anyhow::Result<()> {
     let mut ops = OperationView::new(HandleAny::new(ops));
     ops.select_last();
 

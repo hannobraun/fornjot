@@ -9,7 +9,7 @@ mod render;
 mod ui;
 
 fn main() -> anyhow::Result<()> {
-    let mut ops = geometry::OpsLog::default();
+    let mut ops = geometry::Shape::default();
     model::model(&mut ops);
 
     export::export(&ops)?;

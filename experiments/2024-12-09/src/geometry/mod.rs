@@ -4,6 +4,6 @@ mod primitives;
 
 pub use self::{
     operation::{HandleAny, Operation},
-    ops_log::OpsLog,
+    ops_log::Shape,
     primitives::{Triangle, Vertex},
 };
