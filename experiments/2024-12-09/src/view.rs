@@ -44,10 +44,10 @@ impl OperationView {
         }
     }
 
-    pub fn selected(&self) -> Self {
+    pub fn selected(&self) -> &Self {
         self.selected
-            .and_then(|selected| self.children.get(selected).cloned())
-            .unwrap_or(self.clone())
+            .and_then(|selected| self.children.get(selected))
+            .unwrap_or(self)
     }
 
     fn operations_inner(
