@@ -1,9 +1,9 @@
 mod operation;
-mod ops_log;
 mod primitives;
+mod shape;
 
 pub use self::{
     operation::{HandleAny, Operation},
-    ops_log::Shape,
     primitives::{Triangle, Vertex},
+    shape::Shape,
 };
