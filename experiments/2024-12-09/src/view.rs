@@ -24,13 +24,13 @@ impl OperationView {
         }
     }
 
-    pub fn operations(&self) -> Vec<(Self, bool, usize)> {
-        iter::once((self.clone(), true, 0))
+    pub fn operations(&self) -> Vec<(&Self, bool, usize)> {
+        iter::once((self, true, 0))
             .chain(
                 self.children
                     .iter()
                     .enumerate()
-                    .map(|(i, op)| (op.clone(), Some(i) == self.selected, 1)),
+                    .map(|(i, op)| (op, Some(i) == self.selected, 1)),
             )
             .collect()
     }
@@ -58,6 +58,7 @@ impl OperationView {
                     .into_iter()
                     .nth(selected)
                     .map(|(op, _, _)| op)
+                    .cloned()
             })
             .unwrap_or(self.clone())
     }
