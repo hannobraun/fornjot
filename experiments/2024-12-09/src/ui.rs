@@ -2,6 +2,7 @@ use std::fmt;
 
 use crate::geometry::{HandleAny, Operation, Triangle, Vertex};
 
+#[derive(Clone)]
 pub struct OperationView {
     operation: HandleAny,
     selected: Option<usize>,
