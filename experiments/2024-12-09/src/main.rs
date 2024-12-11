@@ -9,11 +9,11 @@ mod render;
 mod ui;
 
 fn main() -> anyhow::Result<()> {
-    let mut ops = geometry::Shape::default();
-    model::model(&mut ops);
+    let mut shape = geometry::Shape::default();
+    model::model(&mut shape);
 
-    export::export(&ops)?;
-    app::run(ops)?;
+    export::export(&shape)?;
+    app::run(shape)?;
 
     Ok(())
 }
