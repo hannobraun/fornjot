@@ -29,7 +29,7 @@ impl OperationView {
             self.children
                 .iter()
                 .enumerate()
-                .map(|(i, op)| (op, Some(i) == self.selected, 1)),
+                .map(|(i, view)| (view, Some(i) == self.selected, 1)),
         )
     }
 
