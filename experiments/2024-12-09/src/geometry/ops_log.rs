@@ -2,7 +2,7 @@ use std::{fmt, rc::Rc};
 
 use tuples::CombinRight;
 
-use super::{Operation, Triangle, Vertex};
+use super::{operation::AnyOp, Operation, Triangle, Vertex};
 
 #[derive(Default)]
 pub struct OpsLog {
@@ -17,7 +17,7 @@ impl OpsLog {
         let vertex = vertex.into();
 
         self.operations.push(OperationInSequence {
-            operation: Rc::new(vertex),
+            operation: AnyOp::new(vertex),
             previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
         });
 
@@ -34,7 +34,7 @@ impl OpsLog {
         let triangle = triangle.into();
 
         self.operations.push(OperationInSequence {
-            operation: Rc::new(triangle),
+            operation: AnyOp::new(triangle),
             previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
         });
 
@@ -78,7 +78,7 @@ impl Operation for OpsLog {
 
 #[derive(Clone)]
 struct OperationInSequence {
-    pub operation: Rc<dyn Operation>,
+    pub operation: AnyOp,
     pub previous: Option<Rc<dyn Operation>>,
 }
 
