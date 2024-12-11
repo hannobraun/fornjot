@@ -56,9 +56,9 @@ impl OperationView {
         indent_level: usize,
     ) -> Box<dyn Iterator<Item = (&Self, bool, usize)> + '_> {
         Box::new(iter::once((self, selected, indent_level)).chain(
-            self.children.iter().enumerate().map(move |(i, view)| {
+            self.children.iter().enumerate().flat_map(move |(i, view)| {
                 let selected = Some(i) == self.selected;
-                (view, selected, indent_level + 1)
+                view.operations_inner(selected, indent_level + 1)
             }),
         ))
     }
