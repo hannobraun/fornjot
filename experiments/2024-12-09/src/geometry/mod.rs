@@ -3,7 +3,7 @@ mod ops_log;
 mod primitives;
 
 pub use self::{
-    operation::Operation,
+    operation::{AnyOp, Operation},
     ops_log::OpsLog,
     primitives::{Triangle, Vertex},
 };

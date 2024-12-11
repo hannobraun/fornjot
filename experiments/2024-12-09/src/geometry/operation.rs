@@ -5,7 +5,7 @@ use super::{Triangle, Vertex};
 pub trait Operation: fmt::Display {
     fn vertices(&self, vertices: &mut Vec<Vertex>);
     fn triangles(&self, triangles: &mut Vec<Triangle>);
-    fn children(&self) -> Vec<Box<dyn Operation>>;
+    fn children(&self) -> Vec<AnyOp>;
 }
 
 #[derive(Clone)]
@@ -34,7 +34,7 @@ impl Operation for AnyOp {
         self.inner.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<Box<dyn Operation>> {
+    fn children(&self) -> Vec<AnyOp> {
         self.inner.children()
     }
 }

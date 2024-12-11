@@ -68,10 +68,10 @@ impl Operation for OpsLog {
         }
     }
 
-    fn children(&self) -> Vec<Box<dyn Operation>> {
+    fn children(&self) -> Vec<AnyOp> {
         self.operations
             .iter()
-            .map(|op| Box::new(op.clone()) as _)
+            .map(|op| AnyOp::new(op.clone()))
             .collect()
     }
 }
@@ -97,7 +97,7 @@ impl Operation for OperationInSequence {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<Box<dyn Operation>> {
+    fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
     }
 }

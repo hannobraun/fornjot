@@ -1,16 +1,16 @@
 use std::fmt;
 
-use crate::geometry::{Operation, Triangle, Vertex};
+use crate::geometry::{AnyOp, Operation, Triangle, Vertex};
 
 pub struct OperationView {
-    operation: Box<dyn Operation>,
+    operation: AnyOp,
     selected: Option<usize>,
 }
 
 impl OperationView {
     pub fn new(operation: impl Operation + 'static) -> Self {
         Self {
-            operation: Box::new(operation),
+            operation: AnyOp::new(operation),
             selected: None,
         }
     }
@@ -77,7 +77,7 @@ impl Operation for OperationView {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<Box<dyn Operation>> {
+    fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
     }
 }
