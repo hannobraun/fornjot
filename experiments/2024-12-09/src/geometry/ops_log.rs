@@ -2,7 +2,7 @@ use std::fmt;
 
 use tuples::CombinRight;
 
-use super::{operation::AnyOp, Operation, Triangle, Vertex};
+use super::{operation::HandleAny, Operation, Triangle, Vertex};
 
 #[derive(Default)]
 pub struct OpsLog {
@@ -17,8 +17,11 @@ impl OpsLog {
         let vertex = vertex.into();
 
         self.operations.push(OperationInSequence {
-            operation: AnyOp::new(vertex),
-            previous: self.operations.last().map(|op| AnyOp::new(op.clone())),
+            operation: HandleAny::new(vertex),
+            previous: self
+                .operations
+                .last()
+                .map(|op| HandleAny::new(op.clone())),
         });
 
         OperationResult {
@@ -34,8 +37,11 @@ impl OpsLog {
         let triangle = triangle.into();
 
         self.operations.push(OperationInSequence {
-            operation: AnyOp::new(triangle),
-            previous: self.operations.last().map(|op| AnyOp::new(op.clone())),
+            operation: HandleAny::new(triangle),
+            previous: self
+                .operations
+                .last()
+                .map(|op| HandleAny::new(op.clone())),
         });
 
         OperationResult {
@@ -68,18 +74,18 @@ impl Operation for OpsLog {
         }
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.operations
             .iter()
-            .map(|op| AnyOp::new(op.clone()))
+            .map(|op| HandleAny::new(op.clone()))
             .collect()
     }
 }
 
 #[derive(Clone)]
 struct OperationInSequence {
-    pub operation: AnyOp,
-    pub previous: Option<AnyOp>,
+    pub operation: HandleAny,
+    pub previous: Option<HandleAny>,
 }
 
 impl Operation for OperationInSequence {
@@ -97,7 +103,7 @@ impl Operation for OperationInSequence {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.operation.children()
     }
 }

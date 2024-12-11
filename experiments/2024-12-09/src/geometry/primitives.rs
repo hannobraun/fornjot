@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::math::Point;
 
-use super::{operation::AnyOp, Operation};
+use super::{operation::HandleAny, Operation};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
@@ -34,7 +34,7 @@ impl Operation for Vertex {
 
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         Vec::new()
     }
 }
@@ -69,10 +69,10 @@ impl Operation for Triangle {
         triangles.push(*self)
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.vertices
             .iter()
-            .map(|vertex| AnyOp::new(*vertex))
+            .map(|vertex| HandleAny::new(*vertex))
             .collect()
     }
 }

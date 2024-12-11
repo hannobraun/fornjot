@@ -1,14 +1,14 @@
 use std::fmt;
 
-use crate::geometry::{AnyOp, Operation, Triangle, Vertex};
+use crate::geometry::{HandleAny, Operation, Triangle, Vertex};
 
 pub struct OperationView {
-    operation: AnyOp,
+    operation: HandleAny,
     selected: Option<usize>,
 }
 
 impl OperationView {
-    pub fn new(operation: AnyOp) -> Self {
+    pub fn new(operation: HandleAny) -> Self {
         Self {
             operation,
             selected: None,
@@ -77,7 +77,7 @@ impl Operation for OperationView {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.operation.children()
     }
 }

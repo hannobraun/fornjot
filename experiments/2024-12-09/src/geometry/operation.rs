@@ -5,27 +5,27 @@ use super::{Triangle, Vertex};
 pub trait Operation: fmt::Display {
     fn vertices(&self, vertices: &mut Vec<Vertex>);
     fn triangles(&self, triangles: &mut Vec<Triangle>);
-    fn children(&self) -> Vec<AnyOp>;
+    fn children(&self) -> Vec<HandleAny>;
 }
 
 #[derive(Clone)]
-pub struct AnyOp {
+pub struct HandleAny {
     inner: Rc<dyn Operation>,
 }
 
-impl AnyOp {
+impl HandleAny {
     pub fn new(op: impl Operation + 'static) -> Self {
         Self { inner: Rc::new(op) }
     }
 }
 
-impl fmt::Display for AnyOp {
+impl fmt::Display for HandleAny {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.inner)
     }
 }
 
-impl Operation for AnyOp {
+impl Operation for HandleAny {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         self.inner.vertices(vertices);
     }
@@ -34,7 +34,7 @@ impl Operation for AnyOp {
         self.inner.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.inner.children()
     }
 }

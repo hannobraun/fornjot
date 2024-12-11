@@ -9,13 +9,13 @@ use winit::{
 };
 
 use crate::{
-    geometry::{AnyOp, OpsLog},
+    geometry::{HandleAny, OpsLog},
     render::Renderer,
     ui::OperationView,
 };
 
 pub fn run(ops: OpsLog) -> anyhow::Result<()> {
-    let mut ops = OperationView::new(AnyOp::new(ops));
+    let mut ops = OperationView::new(HandleAny::new(ops));
     ops.select_last();
 
     let event_loop = EventLoop::new()?;
