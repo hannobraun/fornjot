@@ -2,12 +2,12 @@ use std::{collections::BTreeMap, fs::File};
 
 use crate::geometry::{Operation, Shape, Vertex};
 
-pub fn export(mesh: &Shape) -> anyhow::Result<()> {
+pub fn export(shape: &Shape) -> anyhow::Result<()> {
     let mut mesh_vertices = Vec::new();
     let mut mesh_triangles = Vec::new();
 
-    mesh.vertices(&mut mesh_vertices);
-    mesh.triangles(&mut mesh_triangles);
+    shape.vertices(&mut mesh_vertices);
+    shape.triangles(&mut mesh_triangles);
 
     let mut indices_by_vertex = BTreeMap::new();
 
