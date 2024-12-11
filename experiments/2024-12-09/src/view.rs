@@ -58,7 +58,7 @@ impl OperationView {
             self.children
                 .iter()
                 .enumerate()
-                .map(|(i, view)| (view, Some(i) == self.selected, 1)),
+                .map(move |(i, view)| (view, Some(i) == self.selected, 1)),
         )
     }
 
