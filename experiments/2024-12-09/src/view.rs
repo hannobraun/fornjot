@@ -57,7 +57,8 @@ impl OperationView {
     ) -> impl Iterator<Item = (&Self, bool, usize)> {
         iter::once((self, selected, indent_level)).chain(
             self.children.iter().enumerate().map(move |(i, view)| {
-                (view, Some(i) == self.selected, indent_level + 1)
+                let selected = Some(i) == self.selected;
+                (view, selected, indent_level + 1)
             }),
         )
     }
