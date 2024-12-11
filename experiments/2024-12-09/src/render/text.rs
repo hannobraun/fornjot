@@ -78,7 +78,7 @@ impl TextRenderer {
             },
         );
 
-        for (op, selected, indent) in operations.operations() {
+        for (op, selected, indent_level) in operations.operations() {
             let mut attrs = glyphon::Attrs::new();
 
             if selected {
@@ -87,7 +87,7 @@ impl TextRenderer {
 
             let mut line = String::new();
 
-            for _ in 0..indent {
+            for _ in 0..indent_level {
                 write!(line, "\t")?;
             }
 
