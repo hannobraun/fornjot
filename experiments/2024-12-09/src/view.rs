@@ -66,6 +66,7 @@ impl OperationView {
     pub fn selected(&self) -> &Self {
         self.selected
             .and_then(|selected| self.children.get(selected))
+            .map(|child| child.selected())
             .unwrap_or(self)
     }
 
