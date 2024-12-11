@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, iter};
 
 use crate::geometry::{HandleAny, Operation, Triangle, Vertex};
 
@@ -17,20 +17,19 @@ impl OperationView {
     }
 
     pub fn operations(&self) -> Vec<(Self, bool, usize)> {
-        self.operation
-            .children()
-            .into_iter()
-            .enumerate()
-            .map(|(i, op)| {
-                (
-                    OperationView {
-                        operation: op,
-                        selected: None,
-                    },
-                    Some(i) == self.selected,
-                    0,
-                )
-            })
+        iter::once((self.clone(), true, 0))
+            .chain(self.operation.children().into_iter().enumerate().map(
+                |(i, op)| {
+                    (
+                        OperationView {
+                            operation: op,
+                            selected: None,
+                        },
+                        Some(i) == self.selected,
+                        1,
+                    )
+                },
+            ))
             .collect()
     }
 
