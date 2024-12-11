@@ -1,4 +1,4 @@
-use std::{fmt, rc::Rc};
+use std::fmt;
 
 use tuples::CombinRight;
 
@@ -18,7 +18,7 @@ impl OpsLog {
 
         self.operations.push(OperationInSequence {
             operation: AnyOp::new(vertex),
-            previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
+            previous: self.operations.last().map(|op| AnyOp::new(op.clone())),
         });
 
         OperationResult {
@@ -35,7 +35,7 @@ impl OpsLog {
 
         self.operations.push(OperationInSequence {
             operation: AnyOp::new(triangle),
-            previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
+            previous: self.operations.last().map(|op| AnyOp::new(op.clone())),
         });
 
         OperationResult {
@@ -79,7 +79,7 @@ impl Operation for OpsLog {
 #[derive(Clone)]
 struct OperationInSequence {
     pub operation: AnyOp,
-    pub previous: Option<Rc<dyn Operation>>,
+    pub previous: Option<AnyOp>,
 }
 
 impl Operation for OperationInSequence {
