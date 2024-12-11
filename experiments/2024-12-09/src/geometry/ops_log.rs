@@ -18,10 +18,7 @@ impl OpsLog {
 
         self.operations.push(OperationInSequence {
             operation: Rc::new(vertex),
-            previous: self
-                .operations
-                .last()
-                .map(|op| ClonedOperation::from_op(op)),
+            previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
         });
 
         OperationResult {
@@ -38,10 +35,7 @@ impl OpsLog {
 
         self.operations.push(OperationInSequence {
             operation: Rc::new(triangle),
-            previous: self
-                .operations
-                .last()
-                .map(|op| ClonedOperation::from_op(op)),
+            previous: self.operations.last().map(|op| Rc::new(op.clone()) as _),
         });
 
         OperationResult {
@@ -85,7 +79,7 @@ impl Operation for OpsLog {
 #[derive(Clone)]
 struct OperationInSequence {
     pub operation: Rc<dyn Operation>,
-    pub previous: Option<ClonedOperation>,
+    pub previous: Option<Rc<dyn Operation>>,
 }
 
 impl Operation for OperationInSequence {
@@ -157,59 +151,5 @@ impl<'r, T> OperationResult<'r, T> {
 
     pub fn results(self) -> T {
         self.results
-    }
-}
-
-#[derive(Clone)]
-pub struct ClonedOperation {
-    pub description: String,
-    pub vertices: Vec<Vertex>,
-    pub triangles: Vec<Triangle>,
-    pub children: Vec<ClonedOperation>,
-}
-
-impl ClonedOperation {
-    pub fn from_op(op: &dyn Operation) -> Self {
-        let mut vertices = Vec::new();
-        op.vertices(&mut vertices);
-
-        let mut triangles = Vec::new();
-        op.triangles(&mut triangles);
-
-        let children = op
-            .children()
-            .into_iter()
-            .map(|op| Self::from_op(op.as_ref()))
-            .collect();
-
-        Self {
-            description: op.to_string(),
-            vertices,
-            triangles,
-            children,
-        }
-    }
-}
-
-impl fmt::Display for ClonedOperation {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.description)
-    }
-}
-
-impl Operation for ClonedOperation {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(&self.vertices);
-    }
-
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
-        triangles.extend(&self.triangles);
-    }
-
-    fn children(&self) -> Vec<Box<dyn Operation>> {
-        self.children
-            .iter()
-            .map(|op| Box::new(op.clone()) as _)
-            .collect()
     }
 }
