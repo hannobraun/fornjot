@@ -15,13 +15,13 @@ use crate::{
 };
 
 pub fn run(shape: Shape) -> anyhow::Result<()> {
-    let mut ops = OperationView::new(HandleAny::new(shape));
-    ops.select_last();
+    let mut view = OperationView::new(HandleAny::new(shape));
+    view.select_last();
 
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        ops,
+        ops: view,
         window: None,
         renderer: None,
         pressed_keys: BTreeSet::new(),
