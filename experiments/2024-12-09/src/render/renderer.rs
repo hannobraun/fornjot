@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::anyhow;
 use winit::window::Window;
 
-use crate::ui::OperationView;
+use crate::view::OperationView;
 
 use super::{geometry::Geometry, pipelines::Pipelines, text::TextRenderer};
 

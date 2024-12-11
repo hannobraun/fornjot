@@ -11,7 +11,7 @@ use winit::{
 use crate::{
     geometry::{HandleAny, Shape},
     render::Renderer,
-    ui::OperationView,
+    view::OperationView,
 };
 
 pub fn run(shape: Shape) -> anyhow::Result<()> {

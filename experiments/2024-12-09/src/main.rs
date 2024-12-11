@@ -6,7 +6,7 @@ mod geometry;
 mod math;
 mod model;
 mod render;
-mod ui;
+mod view;
 
 fn main() -> anyhow::Result<()> {
     let mut shape = geometry::Shape::default();
