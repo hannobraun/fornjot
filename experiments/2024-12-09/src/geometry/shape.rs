@@ -53,11 +53,7 @@ impl Shape {
 
 impl fmt::Display for Shape {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(op) = self.operations.last() {
-            op.fmt(f)
-        } else {
-            write!(f, "empty operations log")
-        }
+        write!(f, "shape")
     }
 }
 
