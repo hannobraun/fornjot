@@ -51,12 +51,7 @@ impl OperationView {
 
     pub fn selected(&self) -> Self {
         self.selected
-            .and_then(|selected| {
-                self.operations()
-                    .nth(selected)
-                    .map(|(op, _, _)| op)
-                    .cloned()
-            })
+            .and_then(|selected| self.children.get(selected).cloned())
             .unwrap_or(self.clone())
     }
 
