@@ -70,6 +70,26 @@ impl OperationView {
             .unwrap_or(self)
     }
 
+    pub fn selected_mut(&mut self) -> &mut Self {
+        let Some(selected) = self.selected else {
+            return self;
+        };
+
+        // The way this is done, first checking for `is_none` and then
+        // `unwrap`ing below, is really ugly. But the borrow checker is forcing
+        // my hand.
+        //
+        // I've tried several variations of matching, and it can't see that in
+        // the `None` case, `self` no longer needs to be borrowed, preventing me
+        // from `returning it.
+
+        if self.children.get_mut(selected).is_none() {
+            return self;
+        };
+
+        self.children.get_mut(selected).unwrap().selected_mut()
+    }
+
     fn last_index(&self) -> usize {
         self.children.len().saturating_sub(1)
     }

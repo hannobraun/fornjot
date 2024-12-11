@@ -102,6 +102,9 @@ impl ApplicationHandler for App {
                     Key::Named(NamedKey::ArrowDown) => {
                         self.view.select_next();
                     }
+                    Key::Named(NamedKey::ArrowRight) => {
+                        self.view.selected_mut().select_last();
+                    }
                     Key::Named(NamedKey::ArrowUp) => {
                         self.view.select_previous();
                     }
