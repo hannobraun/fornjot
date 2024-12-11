@@ -78,7 +78,7 @@ impl TextRenderer {
             },
         );
 
-        for (op, selected) in operations.operations().into_iter() {
+        for (op, selected, indent) in operations.operations().into_iter() {
             let mut attrs = glyphon::Attrs::new();
 
             if selected {
@@ -86,6 +86,11 @@ impl TextRenderer {
             }
 
             let mut line = String::new();
+
+            for _ in 0..indent {
+                write!(line, "\t")?;
+            }
+
             write!(line, "{op}")?;
 
             buffer.lines.push(glyphon::BufferLine::new(

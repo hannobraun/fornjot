@@ -16,7 +16,7 @@ impl OperationView {
         }
     }
 
-    pub fn operations(&self) -> Vec<(Self, bool)> {
+    pub fn operations(&self) -> Vec<(Self, bool, usize)> {
         self.operation
             .children()
             .into_iter()
@@ -28,6 +28,7 @@ impl OperationView {
                         selected: None,
                     },
                     Some(i) == self.selected,
+                    0,
                 )
             })
             .collect()
@@ -55,7 +56,7 @@ impl OperationView {
                 self.operations()
                     .into_iter()
                     .nth(selected)
-                    .map(|(op, _)| op)
+                    .map(|(op, _, _)| op)
             })
             .unwrap_or(self.clone())
     }
