@@ -56,12 +56,17 @@ impl OperationView {
         indent_level: usize,
     ) -> Box<dyn Iterator<Item = (&Self, bool, usize)> + '_> {
         let self_ = iter::once((self, selected, indent_level));
-        Box::new(self_.chain(self.children.iter().enumerate().flat_map(
-            move |(i, view)| {
-                let selected = Some(i) == self.selected;
-                view.operations_inner(selected, indent_level + 1)
-            },
-        )))
+
+        if self.selected.is_some() {
+            Box::new(self_.chain(self.children.iter().enumerate().flat_map(
+                move |(i, view)| {
+                    let selected = Some(i) == self.selected;
+                    view.operations_inner(selected, indent_level + 1)
+                },
+            )))
+        } else {
+            Box::new(self_)
+        }
     }
 
     fn last_index(&self) -> usize {
