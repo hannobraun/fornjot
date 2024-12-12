@@ -90,6 +90,28 @@ impl OperationView {
         self.children.get_mut(selected).unwrap().selected_mut()
     }
 
+    pub fn parent_of_selected_mut(&mut self) -> &mut Self {
+        let Some(selected) = self.selected else {
+            return self;
+        };
+
+        // The same comment in `selected_mut` applies here too. Plus, some ugly
+        // duplication.
+
+        if self.children.get_mut(selected).is_none() {
+            return self;
+        };
+
+        if self.children.get_mut(selected).unwrap().selected.is_none() {
+            self
+        } else {
+            self.children
+                .get_mut(selected)
+                .unwrap()
+                .parent_of_selected_mut()
+        }
+    }
+
     fn last_index(&self) -> usize {
         self.children.len().saturating_sub(1)
     }
