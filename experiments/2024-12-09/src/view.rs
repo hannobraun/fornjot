@@ -63,6 +63,10 @@ impl OperationView {
         }
     }
 
+    pub fn select_none(&mut self) {
+        self.selected = None;
+    }
+
     pub fn selected(&self) -> &Self {
         self.selected
             .and_then(|selected| self.children.get(selected))

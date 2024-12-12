@@ -102,6 +102,9 @@ impl ApplicationHandler for App {
                     Key::Named(NamedKey::ArrowRight) => {
                         self.view.selected_mut().select_last();
                     }
+                    Key::Named(NamedKey::ArrowLeft) => {
+                        self.view.parent_of_selected_mut().select_none();
+                    }
                     Key::Named(NamedKey::ArrowDown) => {
                         self.view.parent_of_selected_mut().select_next();
                     }
