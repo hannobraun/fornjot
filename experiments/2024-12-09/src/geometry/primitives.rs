@@ -57,8 +57,7 @@ where
 
 impl fmt::Display for Triangle {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b, c] = self.vertices;
-        write!(f, "triangle {a} - {b} - {c}")
+        write!(f, "triangle")
     }
 }
 
