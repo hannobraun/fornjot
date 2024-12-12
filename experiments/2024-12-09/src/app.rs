@@ -15,8 +15,7 @@ use crate::{
 };
 
 pub fn run(shape: Shape) -> anyhow::Result<()> {
-    let mut view = OperationView::new(HandleAny::new(shape));
-    view.select_last();
+    let view = OperationView::new(HandleAny::new(shape));
 
     let event_loop = EventLoop::new()?;
 
