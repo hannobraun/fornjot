@@ -2,7 +2,10 @@ use std::fmt;
 
 use tuples::CombinRight;
 
-use super::{operation::HandleAny, Operation, Triangle, Vertex};
+use super::{
+    operation::{Handle, HandleAny},
+    Operation, Triangle, Vertex,
+};
 
 #[derive(Default)]
 pub struct Shape {
@@ -33,11 +36,11 @@ impl Shape {
     pub fn triangle(
         &mut self,
         triangle: impl Into<Triangle>,
-    ) -> OperationResult<(Triangle,)> {
-        let triangle = triangle.into();
+    ) -> OperationResult<(Handle<Triangle>,)> {
+        let triangle = Handle::new(triangle.into());
 
         self.operations.push(OperationInSequence {
-            operation: HandleAny::new(triangle.clone()),
+            operation: triangle.to_any(),
             previous: self
                 .operations
                 .last()
@@ -138,7 +141,7 @@ impl<'r, T> OperationResult<'r, T> {
         triangle: impl Into<Triangle>,
     ) -> OperationResult<'r, T::Out>
     where
-        T: CombinRight<Triangle>,
+        T: CombinRight<Handle<Triangle>>,
     {
         let OperationResult {
             results: (triangle,),

@@ -8,6 +8,41 @@ pub trait Operation: fmt::Display {
     fn children(&self) -> Vec<HandleAny>;
 }
 
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Handle<T> {
+    inner: Rc<T>,
+}
+
+impl<T> Handle<T> {
+    pub fn new(inner: T) -> Self {
+        Self {
+            inner: Rc::new(inner),
+        }
+    }
+
+    pub fn to_any(&self) -> HandleAny
+    where
+        T: Operation + 'static,
+    {
+        self.clone().into_any()
+    }
+
+    pub fn into_any(self) -> HandleAny
+    where
+        T: Operation + 'static,
+    {
+        HandleAny { inner: self.inner }
+    }
+}
+
+impl<T> Clone for Handle<T> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone(),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct HandleAny {
     inner: Rc<dyn Operation>,
