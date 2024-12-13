@@ -59,9 +59,10 @@ impl Geometry<triangles::Vertex> {
         let mut vertices = Vec::new();
 
         for triangle in &mesh_triangles {
-            let triangle = triangle.vertices.map(|vertex| {
+            let triangle = triangle.vertices.each_ref().map(|vertex| {
                 Vec3::from(
                     vertex
+                        .as_ref()
                         .point
                         .coords
                         .components
