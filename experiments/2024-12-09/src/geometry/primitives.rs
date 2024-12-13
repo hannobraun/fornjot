@@ -44,14 +44,9 @@ pub struct Triangle {
     pub vertices: [Vertex; 3],
 }
 
-impl<V> From<[V; 3]> for Triangle
-where
-    V: Into<Vertex>,
-{
-    fn from(vertices: [V; 3]) -> Self {
-        Self {
-            vertices: vertices.map(Into::into),
-        }
+impl From<[Vertex; 3]> for Triangle {
+    fn from(vertices: [Vertex; 3]) -> Self {
+        Self { vertices }
     }
 }
 
