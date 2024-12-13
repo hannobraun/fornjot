@@ -12,6 +12,9 @@ pub fn model(shape: &mut Shape) {
         .vertex([0.5, 0.5, 0.5])
         .results();
 
+    let [a, b, c, d, e, f, g, h] =
+        [a, b, c, d, e, f, g, h].map(|vertex| vertex.get());
+
     shape
         .triangle([a, e, g]) // left
         .triangle([a, g, c])

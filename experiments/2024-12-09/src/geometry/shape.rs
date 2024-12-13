@@ -16,11 +16,11 @@ impl Shape {
     pub fn vertex(
         &mut self,
         vertex: impl Into<Vertex>,
-    ) -> OperationResult<(Vertex,)> {
-        let vertex = vertex.into();
+    ) -> OperationResult<(Handle<Vertex>,)> {
+        let vertex = Handle::new(vertex.into());
 
         self.operations.push(OperationInSequence {
-            operation: HandleAny::new(vertex),
+            operation: vertex.to_any(),
             previous: self
                 .operations
                 .last()
@@ -124,7 +124,7 @@ impl<'r, T> OperationResult<'r, T> {
         vertex: impl Into<Vertex>,
     ) -> OperationResult<'r, T::Out>
     where
-        T: CombinRight<Vertex>,
+        T: CombinRight<Handle<Vertex>>,
     {
         let OperationResult {
             results: (vertex,), ..

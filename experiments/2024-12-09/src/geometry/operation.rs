@@ -20,6 +20,13 @@ impl<T> Handle<T> {
         }
     }
 
+    pub fn get(&self) -> T
+    where
+        T: Copy,
+    {
+        *self.as_ref()
+    }
+
     pub fn to_any(&self) -> HandleAny
     where
         T: Operation + 'static,
@@ -32,6 +39,12 @@ impl<T> Handle<T> {
         T: Operation + 'static,
     {
         HandleAny { inner: self.inner }
+    }
+}
+
+impl<T> AsRef<T> for Handle<T> {
+    fn as_ref(&self) -> &T {
+        self.inner.as_ref()
     }
 }
 
