@@ -39,7 +39,7 @@ impl Operation for Vertex {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {
     pub vertices: [Vertex; 3],
 }
@@ -60,7 +60,7 @@ impl Operation for Triangle {
     fn vertices(&self, _: &mut Vec<Vertex>) {}
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
-        triangles.push(*self)
+        triangles.push(self.clone())
     }
 
     fn children(&self) -> Vec<HandleAny> {

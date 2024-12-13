@@ -37,7 +37,7 @@ impl Shape {
         let triangle = triangle.into();
 
         self.operations.push(OperationInSequence {
-            operation: HandleAny::new(triangle),
+            operation: HandleAny::new(triangle.clone()),
             previous: self
                 .operations
                 .last()
