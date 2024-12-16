@@ -15,7 +15,10 @@ pub struct Shape {
 }
 
 impl Shape {
-    pub fn extend_with<T>(&mut self, _: &mut Store<T>) -> ShapeExtender<(), T> {
+    pub fn extend_with<'r, T>(
+        &'r mut self,
+        _: &'r mut Store<T>,
+    ) -> ShapeExtender<'r, (), T> {
         ShapeExtender::new(&mut self.sequence)
     }
 }
