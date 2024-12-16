@@ -1,4 +1,4 @@
-use std::{fmt, marker::PhantomData};
+use std::fmt;
 
 use tuples::CombinRight;
 
@@ -86,16 +86,6 @@ pub struct ShapeExtender<'r, NewOps, T> {
     store: &'r mut Store<T>,
     sequence: &'r mut Vec<OperationInSequence>,
     new_ops: NewOps,
-
-    // In principle, this isn't necessary, as `NewOps` and `T` are partially
-    // redundant. The way this struct is set up right now, it's only possible to
-    // add a single type of operation. So in theory, `NewOps` could be replaced
-    // with `[T; N]`, and we'd just need to track the value of `N` in addition
-    // to `T`.
-    //
-    // Unfortunately, the state of const expressions in Rust (at the time of
-    // writing) doesn't allow for this.
-    _t: PhantomData<T>,
 }
 
 impl<'r, T> ShapeExtender<'r, (), T> {
@@ -107,7 +97,6 @@ impl<'r, T> ShapeExtender<'r, (), T> {
             store,
             sequence,
             new_ops: (),
-            _t: PhantomData,
         }
     }
 }
@@ -129,7 +118,6 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
             store: self.store,
             sequence: self.sequence,
             new_ops: self.new_ops.push_right(vertex),
-            _t: PhantomData,
         }
     }
 
