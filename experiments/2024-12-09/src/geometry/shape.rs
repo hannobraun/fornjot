@@ -13,6 +13,13 @@ pub struct Shape {
 }
 
 impl Shape {
+    pub fn extend(&mut self) -> OperationResult<()> {
+        OperationResult {
+            operations: self,
+            results: (),
+        }
+    }
+
     pub fn vertex(
         &mut self,
         vertex: impl Into<Vertex>,

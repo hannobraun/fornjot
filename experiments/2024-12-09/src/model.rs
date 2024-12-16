@@ -2,6 +2,7 @@ use crate::geometry::Shape;
 
 pub fn model(shape: &mut Shape) {
     let (a, b, c, d, e, f, g, h) = shape
+        .extend()
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])
         .vertex([-0.5, 0.5, -0.5])
@@ -13,6 +14,7 @@ pub fn model(shape: &mut Shape) {
         .results();
 
     shape
+        .extend()
         .triangle([&a, &e, &g]) // left
         .triangle([&a, &g, &c])
         .triangle([&b, &d, &h]) // right
