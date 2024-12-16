@@ -91,10 +91,13 @@ impl<'r> ShapeExtender<'r, ()> {
     }
 }
 
-impl<'r, T> ShapeExtender<'r, T> {
-    pub fn vertex(self, vertex: impl Into<Vertex>) -> ShapeExtender<'r, T::Out>
+impl<'r, NewOps> ShapeExtender<'r, NewOps> {
+    pub fn vertex(
+        self,
+        vertex: impl Into<Vertex>,
+    ) -> ShapeExtender<'r, NewOps::Out>
     where
-        T: CombinRight<Handle<Vertex>>,
+        NewOps: CombinRight<Handle<Vertex>>,
     {
         let vertex = Handle::new(vertex.into());
 
@@ -112,9 +115,9 @@ impl<'r, T> ShapeExtender<'r, T> {
     pub fn triangle(
         self,
         triangle: impl Into<Triangle>,
-    ) -> ShapeExtender<'r, T::Out>
+    ) -> ShapeExtender<'r, NewOps::Out>
     where
-        T: CombinRight<Handle<Triangle>>,
+        NewOps: CombinRight<Handle<Triangle>>,
     {
         let triangle = Handle::new(triangle.into());
 
@@ -129,7 +132,7 @@ impl<'r, T> ShapeExtender<'r, T> {
         }
     }
 
-    pub fn get_new_ops(self) -> T {
+    pub fn get_new_ops(self) -> NewOps {
         self.new_ops
     }
 }
