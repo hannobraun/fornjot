@@ -17,9 +17,9 @@ pub struct Shape {
 impl Shape {
     pub fn extend_with<'r, T>(
         &'r mut self,
-        _: &'r mut Store<T>,
+        store: &'r mut Store<T>,
     ) -> ShapeExtender<'r, (), T> {
-        ShapeExtender::new(&mut self.sequence)
+        ShapeExtender::new(store, &mut self.sequence)
     }
 }
 
@@ -83,6 +83,7 @@ impl fmt::Display for OperationInSequence {
 }
 
 pub struct ShapeExtender<'r, NewOps, T> {
+    store: &'r mut Store<T>,
     sequence: &'r mut Vec<OperationInSequence>,
     new_ops: NewOps,
 
@@ -98,8 +99,12 @@ pub struct ShapeExtender<'r, NewOps, T> {
 }
 
 impl<'r, T> ShapeExtender<'r, (), T> {
-    fn new(sequence: &'r mut Vec<OperationInSequence>) -> Self {
+    fn new(
+        store: &'r mut Store<T>,
+        sequence: &'r mut Vec<OperationInSequence>,
+    ) -> Self {
         Self {
+            store,
             sequence,
             new_ops: (),
             _t: PhantomData,
@@ -121,6 +126,7 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
         });
 
         ShapeExtender {
+            store: self.store,
             sequence: self.sequence,
             new_ops: self.new_ops.push_right(vertex),
             _t: PhantomData,
