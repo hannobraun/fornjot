@@ -19,26 +19,6 @@ impl Shape {
             results: (),
         }
     }
-
-    pub fn triangle(
-        &mut self,
-        triangle: impl Into<Triangle>,
-    ) -> OperationResult<(Handle<Triangle>,)> {
-        let triangle = Handle::new(triangle.into());
-
-        self.operations.push(OperationInSequence {
-            operation: triangle.to_any(),
-            previous: self
-                .operations
-                .last()
-                .map(|op| HandleAny::new(op.clone())),
-        });
-
-        OperationResult {
-            operations: self,
-            results: (triangle,),
-        }
-    }
 }
 
 impl fmt::Display for Shape {
@@ -137,10 +117,16 @@ impl<'r, T> OperationResult<'r, T> {
     where
         T: CombinRight<Handle<Triangle>>,
     {
-        let OperationResult {
-            results: (triangle,),
-            ..
-        } = self.operations.triangle(triangle);
+        let triangle = Handle::new(triangle.into());
+
+        self.operations.operations.push(OperationInSequence {
+            operation: triangle.to_any(),
+            previous: self
+                .operations
+                .operations
+                .last()
+                .map(|op| HandleAny::new(op.clone())),
+        });
 
         OperationResult {
             operations: self.operations,
