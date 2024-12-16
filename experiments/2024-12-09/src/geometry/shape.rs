@@ -15,7 +15,7 @@ pub struct Shape {
 impl Shape {
     pub fn extend(&mut self) -> ShapeExtender<()> {
         ShapeExtender {
-            operations: &mut self.sequence,
+            sequence: &mut self.sequence,
             new_ops: (),
         }
     }
@@ -81,7 +81,7 @@ impl fmt::Display for OperationInSequence {
 }
 
 pub struct ShapeExtender<'r, T> {
-    operations: &'r mut Vec<OperationInSequence>,
+    sequence: &'r mut Vec<OperationInSequence>,
     new_ops: T,
 }
 
@@ -92,16 +92,13 @@ impl<'r, T> ShapeExtender<'r, T> {
     {
         let vertex = Handle::new(vertex.into());
 
-        self.operations.push(OperationInSequence {
+        self.sequence.push(OperationInSequence {
             operation: vertex.to_any(),
-            previous: self
-                .operations
-                .last()
-                .map(|op| HandleAny::new(op.clone())),
+            previous: self.sequence.last().map(|op| HandleAny::new(op.clone())),
         });
 
         ShapeExtender {
-            operations: self.operations,
+            sequence: self.sequence,
             new_ops: self.new_ops.push_right(vertex),
         }
     }
@@ -115,16 +112,13 @@ impl<'r, T> ShapeExtender<'r, T> {
     {
         let triangle = Handle::new(triangle.into());
 
-        self.operations.push(OperationInSequence {
+        self.sequence.push(OperationInSequence {
             operation: triangle.to_any(),
-            previous: self
-                .operations
-                .last()
-                .map(|op| HandleAny::new(op.clone())),
+            previous: self.sequence.last().map(|op| HandleAny::new(op.clone())),
         });
 
         ShapeExtender {
-            operations: self.operations,
+            sequence: self.sequence,
             new_ops: self.new_ops.push_right(triangle),
         }
     }
