@@ -9,13 +9,13 @@ use super::{
 
 #[derive(Default)]
 pub struct Shape {
-    operations: Vec<OperationInSequence>,
+    sequence: Vec<OperationInSequence>,
 }
 
 impl Shape {
     pub fn extend(&mut self) -> ShapeExtender<()> {
         ShapeExtender {
-            operations: &mut self.operations,
+            operations: &mut self.sequence,
             new_ops: (),
         }
     }
@@ -29,19 +29,19 @@ impl fmt::Display for Shape {
 
 impl Operation for Shape {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        if let Some(op) = self.operations.last() {
+        if let Some(op) = self.sequence.last() {
             op.vertices(vertices);
         }
     }
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
-        if let Some(op) = self.operations.last() {
+        if let Some(op) = self.sequence.last() {
             op.triangles(triangles);
         }
     }
 
     fn children(&self) -> Vec<HandleAny> {
-        self.operations
+        self.sequence
             .iter()
             .map(|op| HandleAny::new(op.clone()))
             .collect()
