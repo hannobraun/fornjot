@@ -97,12 +97,10 @@ impl<'r, T> ShapeExtender<'r, (), T> {
 }
 
 impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
-    pub fn vertex(
-        self,
-        vertex: impl Into<Vertex>,
-    ) -> ShapeExtender<'r, NewOps::Out, T>
+    pub fn add(self, vertex: impl Into<T>) -> ShapeExtender<'r, NewOps::Out, T>
     where
-        NewOps: CombinRight<Handle<Vertex>>,
+        NewOps: CombinRight<Handle<T>>,
+        T: Operation + 'static,
     {
         let vertex = Handle::new(vertex.into());
 
@@ -114,27 +112,6 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
         ShapeExtender {
             sequence: self.sequence,
             new_ops: self.new_ops.push_right(vertex),
-            _t: PhantomData,
-        }
-    }
-
-    pub fn triangle(
-        self,
-        triangle: impl Into<Triangle>,
-    ) -> ShapeExtender<'r, NewOps::Out, T>
-    where
-        NewOps: CombinRight<Handle<Triangle>>,
-    {
-        let triangle = Handle::new(triangle.into());
-
-        self.sequence.push(OperationInSequence {
-            operation: triangle.to_any(),
-            previous: self.sequence.last().map(|op| HandleAny::new(op.clone())),
-        });
-
-        ShapeExtender {
-            sequence: self.sequence,
-            new_ops: self.new_ops.push_right(triangle),
             _t: PhantomData,
         }
     }

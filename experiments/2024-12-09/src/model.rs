@@ -9,28 +9,28 @@ pub fn model(shape: &mut Shape) {
 
     let (a, b, c, d, e, f, g, h) = shape
         .extend_with(&mut vertices)
-        .vertex([-0.5, -0.5, -0.5])
-        .vertex([0.5, -0.5, -0.5])
-        .vertex([-0.5, 0.5, -0.5])
-        .vertex([0.5, 0.5, -0.5])
-        .vertex([-0.5, -0.5, 0.5])
-        .vertex([0.5, -0.5, 0.5])
-        .vertex([-0.5, 0.5, 0.5])
-        .vertex([0.5, 0.5, 0.5])
+        .add([-0.5, -0.5, -0.5])
+        .add([0.5, -0.5, -0.5])
+        .add([-0.5, 0.5, -0.5])
+        .add([0.5, 0.5, -0.5])
+        .add([-0.5, -0.5, 0.5])
+        .add([0.5, -0.5, 0.5])
+        .add([-0.5, 0.5, 0.5])
+        .add([0.5, 0.5, 0.5])
         .get_new_ops();
 
     shape
         .extend_with(&mut triangles)
-        .triangle([&a, &e, &g]) // left
-        .triangle([&a, &g, &c])
-        .triangle([&b, &d, &h]) // right
-        .triangle([&b, &h, &f])
-        .triangle([&a, &b, &f]) // front
-        .triangle([&a, &f, &e])
-        .triangle([&c, &h, &d]) // back
-        .triangle([&c, &g, &h])
-        .triangle([&a, &c, &b]) // bottom
-        .triangle([&b, &c, &d])
-        .triangle([&e, &f, &h]) // top
-        .triangle([&e, &h, &g]);
+        .add([&a, &e, &g]) // left
+        .add([&a, &g, &c])
+        .add([&b, &d, &h]) // right
+        .add([&b, &h, &f])
+        .add([&a, &b, &f]) // front
+        .add([&a, &f, &e])
+        .add([&c, &h, &d]) // back
+        .add([&c, &g, &h])
+        .add([&a, &c, &b]) // bottom
+        .add([&b, &c, &d])
+        .add([&e, &f, &h]) // top
+        .add([&e, &h, &g]);
 }
