@@ -20,26 +20,6 @@ impl Shape {
         }
     }
 
-    pub fn vertex(
-        &mut self,
-        vertex: impl Into<Vertex>,
-    ) -> OperationResult<(Handle<Vertex>,)> {
-        let vertex = Handle::new(vertex.into());
-
-        self.operations.push(OperationInSequence {
-            operation: vertex.to_any(),
-            previous: self
-                .operations
-                .last()
-                .map(|op| HandleAny::new(op.clone())),
-        });
-
-        OperationResult {
-            operations: self,
-            results: (vertex,),
-        }
-    }
-
     pub fn triangle(
         &mut self,
         triangle: impl Into<Triangle>,
@@ -133,9 +113,16 @@ impl<'r, T> OperationResult<'r, T> {
     where
         T: CombinRight<Handle<Vertex>>,
     {
-        let OperationResult {
-            results: (vertex,), ..
-        } = self.operations.vertex(vertex);
+        let vertex = Handle::new(vertex.into());
+
+        self.operations.operations.push(OperationInSequence {
+            operation: vertex.to_any(),
+            previous: self
+                .operations
+                .operations
+                .last()
+                .map(|op| HandleAny::new(op.clone())),
+        });
 
         OperationResult {
             operations: self.operations,
