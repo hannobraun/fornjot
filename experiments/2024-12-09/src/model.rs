@@ -1,8 +1,14 @@
-use crate::geometry::Shape;
+use crate::{
+    geometry::{Shape, Triangle, Vertex},
+    storage::Store,
+};
 
 pub fn model(shape: &mut Shape) {
+    let mut vertices = Store::<Vertex>::new();
+    let mut triangles = Store::<Triangle>::new();
+
     let (a, b, c, d, e, f, g, h) = shape
-        .extend()
+        .extend_with(&mut vertices)
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])
         .vertex([-0.5, 0.5, -0.5])
@@ -14,7 +20,7 @@ pub fn model(shape: &mut Shape) {
         .get_new_ops();
 
     shape
-        .extend()
+        .extend_with(&mut triangles)
         .triangle([&a, &e, &g]) // left
         .triangle([&a, &g, &c])
         .triangle([&b, &d, &h]) // right

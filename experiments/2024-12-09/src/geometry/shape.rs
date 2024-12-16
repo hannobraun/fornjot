@@ -1,6 +1,8 @@
-use std::fmt;
+use std::{fmt, marker::PhantomData};
 
 use tuples::CombinRight;
+
+use crate::storage::Store;
 
 use super::{
     operation::{Handle, HandleAny},
@@ -13,7 +15,7 @@ pub struct Shape {
 }
 
 impl Shape {
-    pub fn extend(&mut self) -> ShapeExtender<()> {
+    pub fn extend_with<T>(&mut self, _: &mut Store<T>) -> ShapeExtender<(), T> {
         ShapeExtender::new(&mut self.sequence)
     }
 }
@@ -77,25 +79,28 @@ impl fmt::Display for OperationInSequence {
     }
 }
 
-pub struct ShapeExtender<'r, NewOps> {
+pub struct ShapeExtender<'r, NewOps, T> {
     sequence: &'r mut Vec<OperationInSequence>,
     new_ops: NewOps,
+
+    _t: PhantomData<T>,
 }
 
-impl<'r> ShapeExtender<'r, ()> {
+impl<'r, T> ShapeExtender<'r, (), T> {
     fn new(sequence: &'r mut Vec<OperationInSequence>) -> Self {
         Self {
             sequence,
             new_ops: (),
+            _t: PhantomData,
         }
     }
 }
 
-impl<'r, NewOps> ShapeExtender<'r, NewOps> {
+impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
     pub fn vertex(
         self,
         vertex: impl Into<Vertex>,
-    ) -> ShapeExtender<'r, NewOps::Out>
+    ) -> ShapeExtender<'r, NewOps::Out, T>
     where
         NewOps: CombinRight<Handle<Vertex>>,
     {
@@ -109,13 +114,14 @@ impl<'r, NewOps> ShapeExtender<'r, NewOps> {
         ShapeExtender {
             sequence: self.sequence,
             new_ops: self.new_ops.push_right(vertex),
+            _t: PhantomData,
         }
     }
 
     pub fn triangle(
         self,
         triangle: impl Into<Triangle>,
-    ) -> ShapeExtender<'r, NewOps::Out>
+    ) -> ShapeExtender<'r, NewOps::Out, T>
     where
         NewOps: CombinRight<Handle<Triangle>>,
     {
@@ -129,6 +135,7 @@ impl<'r, NewOps> ShapeExtender<'r, NewOps> {
         ShapeExtender {
             sequence: self.sequence,
             new_ops: self.new_ops.push_right(triangle),
+            _t: PhantomData,
         }
     }
 

@@ -6,6 +6,7 @@ mod geometry;
 mod math;
 mod model;
 mod render;
+mod storage;
 mod view;
 
 fn main() -> anyhow::Result<()> {
