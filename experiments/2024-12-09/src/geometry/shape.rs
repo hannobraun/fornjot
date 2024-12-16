@@ -83,6 +83,14 @@ pub struct ShapeExtender<'r, NewOps, T> {
     sequence: &'r mut Vec<OperationInSequence>,
     new_ops: NewOps,
 
+    // In principle, this isn't necessary, as `NewOps` and `T` are partially
+    // redundant. The way this struct is set up right now, it's only possible to
+    // add a single type of operation. So in theory, `NewOps` could be replaced
+    // with `[T; N]`, and we'd just need to track the value of `N` in addition
+    // to `T`.
+    //
+    // Unfortunately, the state of const expressions in Rust (at the time of
+    // writing) doesn't allow for this.
     _t: PhantomData<T>,
 }
 
