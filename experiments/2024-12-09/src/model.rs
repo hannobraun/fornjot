@@ -11,7 +11,7 @@ pub fn model(shape: &mut Shape) {
         .vertex([0.5, -0.5, 0.5])
         .vertex([-0.5, 0.5, 0.5])
         .vertex([0.5, 0.5, 0.5])
-        .results();
+        .get_new_ops();
 
     shape
         .extend()

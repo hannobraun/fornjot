@@ -129,7 +129,7 @@ impl<'r, T> ShapeExtender<'r, T> {
         }
     }
 
-    pub fn results(self) -> T {
+    pub fn get_new_ops(self) -> T {
         self.new_operations
     }
 }
