@@ -16,7 +16,7 @@ impl Shape {
     pub fn extend(&mut self) -> ShapeExtender<()> {
         ShapeExtender {
             operations: &mut self.operations,
-            new_operations: (),
+            new_ops: (),
         }
     }
 }
@@ -82,7 +82,7 @@ impl fmt::Display for OperationInSequence {
 
 pub struct ShapeExtender<'r, T> {
     operations: &'r mut Vec<OperationInSequence>,
-    new_operations: T,
+    new_ops: T,
 }
 
 impl<'r, T> ShapeExtender<'r, T> {
@@ -102,7 +102,7 @@ impl<'r, T> ShapeExtender<'r, T> {
 
         ShapeExtender {
             operations: self.operations,
-            new_operations: self.new_operations.push_right(vertex),
+            new_ops: self.new_ops.push_right(vertex),
         }
     }
 
@@ -125,11 +125,11 @@ impl<'r, T> ShapeExtender<'r, T> {
 
         ShapeExtender {
             operations: self.operations,
-            new_operations: self.new_operations.push_right(triangle),
+            new_ops: self.new_ops.push_right(triangle),
         }
     }
 
     pub fn get_new_ops(self) -> T {
-        self.new_operations
+        self.new_ops
     }
 }
