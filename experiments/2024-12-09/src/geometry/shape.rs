@@ -77,9 +77,9 @@ impl fmt::Display for OperationInSequence {
     }
 }
 
-pub struct ShapeExtender<'r, T> {
+pub struct ShapeExtender<'r, NewOps> {
     sequence: &'r mut Vec<OperationInSequence>,
-    new_ops: T,
+    new_ops: NewOps,
 }
 
 impl<'r> ShapeExtender<'r, ()> {
