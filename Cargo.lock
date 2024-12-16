@@ -458,7 +458,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
 ]
 
 [[package]]
@@ -911,7 +911,7 @@ dependencies = [
  "fj-math",
  "fj-viewer",
  "fj-window",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "tracing",
  "tracing-subscriber",
 ]
@@ -928,7 +928,7 @@ dependencies = [
  "pretty_assertions",
  "robust",
  "spade",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "type-map",
 ]
 
@@ -939,7 +939,7 @@ dependencies = [
  "fj-interop",
  "fj-math",
  "stl",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "threemf",
  "wavefront_rs",
 ]
@@ -975,7 +975,7 @@ dependencies = [
  "image",
  "nalgebra",
  "raw-window-handle",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "tobj",
  "tracing",
  "wgpu",
@@ -989,7 +989,7 @@ dependencies = [
  "fj-math",
  "fj-viewer",
  "futures",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "winit",
 ]
 
@@ -2851,7 +2851,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
 ]
 
 [[package]]
@@ -3134,27 +3134,27 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "1.0.23"
+version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
+checksum = "3cb6eb87a131f756572d7fb904f6e7b68633f09cca868c5df1c4b8d1a694bbba"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "serde"
-version = "1.0.215"
+version = "1.0.216"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6513c1ad0b11a9376da888e3e0baa0077f1aed55c17f50e7b2397136129fb88f"
+checksum = "0b9781016e935a97e8beecf0c933758c97a5520d32930e460142b4cd80c6338e"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.215"
+version = "1.0.216"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad1e866f866923f252f05c889987993144fb74e722403468a4ebd70c3cd756c0"
+checksum = "46f859dbbf73865c6627ed570e78961cd3ac92407a2d117204c49232485da55e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3518,11 +3518,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.6"
+version = "2.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fec2a1820ebd077e2b90c4df007bebf344cd394098a13c563957d0afc83ea47"
+checksum = "93605438cbd668185516ab499d589afb7ee1859ea3d5fc8f6b0755e1c7443767"
 dependencies = [
- "thiserror-impl 2.0.6",
+ "thiserror-impl 2.0.7",
 ]
 
 [[package]]
@@ -3538,9 +3538,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.6"
+version = "2.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d65750cab40f4ff1929fb1ba509e9914eb756131cef4210da8d5d700d26f6312"
+checksum = "e1d8749b4531af2117677a5fcd12b1348a3fe2b81e36e61ffeac5c4aa3273e36"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4857,7 +4857,7 @@ dependencies = [
  "flate2",
  "indexmap",
  "memchr",
- "thiserror 2.0.6",
+ "thiserror 2.0.7",
  "zopfli",
 ]
 
