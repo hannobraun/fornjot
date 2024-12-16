@@ -17,7 +17,7 @@ pub fn model(shape: &mut Shape) {
         .add([0.5, -0.5, 0.5])
         .add([-0.5, 0.5, 0.5])
         .add([0.5, 0.5, 0.5])
-        .get_new_ops();
+        .get_added();
 
     shape
         .extend_with(&mut triangles)

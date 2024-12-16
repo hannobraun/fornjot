@@ -124,7 +124,7 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
         }
     }
 
-    pub fn get_new_ops(self) -> NewOps {
+    pub fn get_added(self) -> NewOps {
         self.new_ops
     }
 }
