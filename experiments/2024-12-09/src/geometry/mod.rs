@@ -3,7 +3,7 @@ mod primitives;
 mod shape;
 
 pub use self::{
-    operation::{HandleAny, Operation},
+    operation::{Handle, HandleAny, Operation},
     primitives::{Triangle, Vertex},
     shape::Shape,
 };
