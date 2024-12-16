@@ -14,10 +14,7 @@ pub struct Shape {
 
 impl Shape {
     pub fn extend(&mut self) -> ShapeExtender<()> {
-        ShapeExtender {
-            sequence: &mut self.sequence,
-            new_ops: (),
-        }
+        ShapeExtender::new(&mut self.sequence)
     }
 }
 
@@ -83,6 +80,15 @@ impl fmt::Display for OperationInSequence {
 pub struct ShapeExtender<'r, T> {
     sequence: &'r mut Vec<OperationInSequence>,
     new_ops: T,
+}
+
+impl<'r> ShapeExtender<'r, ()> {
+    fn new(sequence: &'r mut Vec<OperationInSequence>) -> Self {
+        Self {
+            sequence,
+            new_ops: (),
+        }
+    }
 }
 
 impl<'r, T> ShapeExtender<'r, T> {
