@@ -15,7 +15,7 @@ pub struct Shape {
 impl Shape {
     pub fn extend(&mut self) -> OperationResult<()> {
         OperationResult {
-            operations: self,
+            operations: &mut self.operations,
             results: (),
         }
     }
@@ -81,7 +81,7 @@ impl fmt::Display for OperationInSequence {
 }
 
 pub struct OperationResult<'r, T> {
-    operations: &'r mut Shape,
+    operations: &'r mut Vec<OperationInSequence>,
     results: T,
 }
 
@@ -95,10 +95,9 @@ impl<'r, T> OperationResult<'r, T> {
     {
         let vertex = Handle::new(vertex.into());
 
-        self.operations.operations.push(OperationInSequence {
+        self.operations.push(OperationInSequence {
             operation: vertex.to_any(),
             previous: self
-                .operations
                 .operations
                 .last()
                 .map(|op| HandleAny::new(op.clone())),
@@ -119,10 +118,9 @@ impl<'r, T> OperationResult<'r, T> {
     {
         let triangle = Handle::new(triangle.into());
 
-        self.operations.operations.push(OperationInSequence {
+        self.operations.push(OperationInSequence {
             operation: triangle.to_any(),
             previous: self
-                .operations
                 .operations
                 .last()
                 .map(|op| HandleAny::new(op.clone())),
