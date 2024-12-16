@@ -13,8 +13,8 @@ pub struct Shape {
 }
 
 impl Shape {
-    pub fn extend(&mut self) -> OperationResult<()> {
-        OperationResult {
+    pub fn extend(&mut self) -> ShapeExtender<()> {
+        ShapeExtender {
             operations: &mut self.operations,
             results: (),
         }
@@ -80,16 +80,13 @@ impl fmt::Display for OperationInSequence {
     }
 }
 
-pub struct OperationResult<'r, T> {
+pub struct ShapeExtender<'r, T> {
     operations: &'r mut Vec<OperationInSequence>,
     results: T,
 }
 
-impl<'r, T> OperationResult<'r, T> {
-    pub fn vertex(
-        self,
-        vertex: impl Into<Vertex>,
-    ) -> OperationResult<'r, T::Out>
+impl<'r, T> ShapeExtender<'r, T> {
+    pub fn vertex(self, vertex: impl Into<Vertex>) -> ShapeExtender<'r, T::Out>
     where
         T: CombinRight<Handle<Vertex>>,
     {
@@ -103,7 +100,7 @@ impl<'r, T> OperationResult<'r, T> {
                 .map(|op| HandleAny::new(op.clone())),
         });
 
-        OperationResult {
+        ShapeExtender {
             operations: self.operations,
             results: self.results.push_right(vertex),
         }
@@ -112,7 +109,7 @@ impl<'r, T> OperationResult<'r, T> {
     pub fn triangle(
         self,
         triangle: impl Into<Triangle>,
-    ) -> OperationResult<'r, T::Out>
+    ) -> ShapeExtender<'r, T::Out>
     where
         T: CombinRight<Handle<Triangle>>,
     {
@@ -126,7 +123,7 @@ impl<'r, T> OperationResult<'r, T> {
                 .map(|op| HandleAny::new(op.clone())),
         });
 
-        OperationResult {
+        ShapeExtender {
             operations: self.operations,
             results: self.results.push_right(triangle),
         }
