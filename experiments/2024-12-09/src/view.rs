@@ -1,20 +1,20 @@
 use std::{fmt, iter};
 
-use crate::geometry::{HandleAny, Operation, Triangle, Vertex};
+use crate::geometry::{AnyOp, Operation, Triangle, Vertex};
 
 #[derive(Clone)]
 pub struct OperationView {
-    operation: HandleAny,
+    operation: AnyOp,
     children: Vec<Self>,
     selected: Option<usize>,
 }
 
 impl OperationView {
-    pub fn new(operation: HandleAny) -> Self {
+    pub fn new(operation: AnyOp) -> Self {
         let children = operation
             .children()
             .into_iter()
-            .map(|op| Self::new(HandleAny::new(op)))
+            .map(|op| Self::new(AnyOp::new(op)))
             .collect();
 
         Self {
@@ -136,7 +136,7 @@ impl Operation for OperationView {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
     }
 }

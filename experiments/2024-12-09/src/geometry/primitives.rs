@@ -3,7 +3,7 @@ use std::fmt;
 use crate::math::Point;
 
 use super::{
-    operation::{Handle, HandleAny},
+    operation::{Handle, AnyOp},
     Operation,
 };
 
@@ -37,7 +37,7 @@ impl Operation for Vertex {
 
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         Vec::new()
     }
 }
@@ -68,7 +68,7 @@ impl Operation for Triangle {
         triangles.push(self.clone())
     }
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         self.vertices.iter().map(|vertex| vertex.to_any()).collect()
     }
 }

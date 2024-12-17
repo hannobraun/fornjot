@@ -5,7 +5,7 @@ use tuples::CombinRight;
 use crate::storage::Store;
 
 use super::{
-    operation::{Handle, HandleAny},
+    operation::{AnyOp, Handle},
     Operation, Triangle, Vertex,
 };
 
@@ -42,18 +42,18 @@ impl Operation for Shape {
         }
     }
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         self.sequence
             .iter()
-            .map(|op| HandleAny::new(op.clone()))
+            .map(|op| AnyOp::new(op.clone()))
             .collect()
     }
 }
 
 #[derive(Clone)]
 struct OperationInSequence {
-    pub operation: HandleAny,
-    pub previous: Option<HandleAny>,
+    pub operation: AnyOp,
+    pub previous: Option<AnyOp>,
 }
 
 impl Operation for OperationInSequence {
@@ -71,7 +71,7 @@ impl Operation for OperationInSequence {
         self.operation.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
     }
 }
@@ -111,7 +111,7 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
 
         self.sequence.push(OperationInSequence {
             operation: vertex.to_any(),
-            previous: self.sequence.last().map(|op| HandleAny::new(op.clone())),
+            previous: self.sequence.last().map(|op| AnyOp::new(op.clone())),
         });
 
         ShapeExtender {

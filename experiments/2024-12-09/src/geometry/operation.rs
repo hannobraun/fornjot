@@ -5,7 +5,7 @@ use super::{Triangle, Vertex};
 pub trait Operation: fmt::Display {
     fn vertices(&self, vertices: &mut Vec<Vertex>);
     fn triangles(&self, triangles: &mut Vec<Triangle>);
-    fn children(&self) -> Vec<HandleAny>;
+    fn children(&self) -> Vec<AnyOp>;
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -27,18 +27,18 @@ impl<T> Handle<T> {
         *self.as_ref()
     }
 
-    pub fn to_any(&self) -> HandleAny
+    pub fn to_any(&self) -> AnyOp
     where
         T: Operation + 'static,
     {
         self.clone().into_any()
     }
 
-    pub fn into_any(self) -> HandleAny
+    pub fn into_any(self) -> AnyOp
     where
         T: Operation + 'static,
     {
-        HandleAny { inner: self.inner }
+        AnyOp { inner: self.inner }
     }
 }
 
@@ -57,23 +57,23 @@ impl<T> Clone for Handle<T> {
 }
 
 #[derive(Clone)]
-pub struct HandleAny {
+pub struct AnyOp {
     inner: Rc<dyn Operation>,
 }
 
-impl HandleAny {
+impl AnyOp {
     pub fn new(op: impl Operation + 'static) -> Self {
         Self { inner: Rc::new(op) }
     }
 }
 
-impl fmt::Display for HandleAny {
+impl fmt::Display for AnyOp {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.inner)
     }
 }
 
-impl Operation for HandleAny {
+impl Operation for AnyOp {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         self.inner.vertices(vertices);
     }
@@ -82,7 +82,7 @@ impl Operation for HandleAny {
         self.inner.triangles(triangles);
     }
 
-    fn children(&self) -> Vec<HandleAny> {
+    fn children(&self) -> Vec<AnyOp> {
         self.inner.children()
     }
 }

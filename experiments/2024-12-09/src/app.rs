@@ -9,13 +9,13 @@ use winit::{
 };
 
 use crate::{
-    geometry::{HandleAny, Shape},
+    geometry::{AnyOp, Shape},
     render::Renderer,
     view::OperationView,
 };
 
 pub fn run(shape: Shape) -> anyhow::Result<()> {
-    let view = OperationView::new(HandleAny::new(shape));
+    let view = OperationView::new(AnyOp::new(shape));
 
     let event_loop = EventLoop::new()?;
 
