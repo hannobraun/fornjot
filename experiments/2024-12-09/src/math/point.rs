@@ -7,9 +7,9 @@ pub struct Point<const D: usize> {
     pub coords: Vector<D>,
 }
 
-impl<T> From<T> for Point<3>
+impl<T, const D: usize> From<T> for Point<D>
 where
-    T: Into<Vector<3>>,
+    T: Into<Vector<D>>,
 {
     fn from(coords: T) -> Self {
         Self {
