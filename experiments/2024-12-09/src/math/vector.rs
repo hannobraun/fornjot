@@ -20,9 +20,9 @@ where
     }
 }
 
-impl<T> ops::Add<T> for Vector<3>
+impl<T, const D: usize> ops::Add<T> for Vector<D>
 where
-    T: Into<Vector<3>>,
+    T: Into<Vector<D>>,
 {
     type Output = Self;
 
