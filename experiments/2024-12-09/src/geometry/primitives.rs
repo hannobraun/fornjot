@@ -3,7 +3,7 @@ use std::fmt;
 use crate::math::Point;
 
 use super::{
-    operation::{Handle, AnyOp},
+    operation::{AnyOp, Handle},
     Operation,
 };
 
