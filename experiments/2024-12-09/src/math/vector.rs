@@ -5,11 +5,11 @@ use iter_fixed::IntoIteratorFixed;
 use super::Scalar;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Vector {
-    pub components: [Scalar; 3],
+pub struct Vector<const D: usize> {
+    pub components: [Scalar; D],
 }
 
-impl<S> From<[S; 3]> for Vector
+impl<S> From<[S; 3]> for Vector<3>
 where
     S: Into<Scalar>,
 {
@@ -20,9 +20,9 @@ where
     }
 }
 
-impl<T> ops::Add<T> for Vector
+impl<T> ops::Add<T> for Vector<3>
 where
-    T: Into<Vector>,
+    T: Into<Vector<3>>,
 {
     type Output = Self;
 

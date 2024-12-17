@@ -4,12 +4,12 @@ use super::Vector;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point {
-    pub coords: Vector,
+    pub coords: Vector<3>,
 }
 
 impl<T> From<T> for Point
 where
-    T: Into<Vector>,
+    T: Into<Vector<3>>,
 {
     fn from(coords: T) -> Self {
         Self {
@@ -20,7 +20,7 @@ where
 
 impl<T> ops::Add<T> for Point
 where
-    T: Into<Vector>,
+    T: Into<Vector<3>>,
 {
     type Output = Self;
 
