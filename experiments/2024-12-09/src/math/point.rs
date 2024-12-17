@@ -3,11 +3,11 @@ use std::ops;
 use super::Vector;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Point {
-    pub coords: Vector<3>,
+pub struct Point<const D: usize> {
+    pub coords: Vector<D>,
 }
 
-impl<T> From<T> for Point
+impl<T> From<T> for Point<3>
 where
     T: Into<Vector<3>>,
 {
@@ -18,7 +18,7 @@ where
     }
 }
 
-impl<T> ops::Add<T> for Point
+impl<T> ops::Add<T> for Point<3>
 where
     T: Into<Vector<3>>,
 {

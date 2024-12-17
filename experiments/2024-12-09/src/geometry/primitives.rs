@@ -9,12 +9,12 @@ use super::{
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
-    pub point: Point,
+    pub point: Point<3>,
 }
 
 impl<P> From<P> for Vertex
 where
-    P: Into<Point>,
+    P: Into<Point<3>>,
 {
     fn from(point: P) -> Self {
         Self {
