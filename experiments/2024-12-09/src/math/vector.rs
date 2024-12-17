@@ -9,11 +9,11 @@ pub struct Vector<const D: usize> {
     pub components: [Scalar; D],
 }
 
-impl<S> From<[S; 3]> for Vector<3>
+impl<S, const D: usize> From<[S; D]> for Vector<D>
 where
     S: Into<Scalar>,
 {
-    fn from(components: [S; 3]) -> Self {
+    fn from(components: [S; D]) -> Self {
         Self {
             components: components.map(Into::into),
         }
