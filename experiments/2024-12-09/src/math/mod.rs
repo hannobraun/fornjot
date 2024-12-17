@@ -1,35 +1,10 @@
+mod point;
+
+pub use self::point::Point;
+
 use std::{cmp::Ordering, ops};
 
 use iter_fixed::IntoIteratorFixed;
-
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Point {
-    pub coords: Vector,
-}
-
-impl<T> From<T> for Point
-where
-    T: Into<Vector>,
-{
-    fn from(coords: T) -> Self {
-        Self {
-            coords: coords.into(),
-        }
-    }
-}
-
-impl<T> ops::Add<T> for Point
-where
-    T: Into<Vector>,
-{
-    type Output = Self;
-
-    fn add(self, other: T) -> Self::Output {
-        let other = other.into();
-        let coords = self.coords + other;
-        Self { coords }
-    }
-}
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vector {
