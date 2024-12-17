@@ -39,3 +39,22 @@ where
         Self { components }
     }
 }
+
+impl<S, const D: usize> ops::Mul<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn mul(self, scalar: S) -> Self::Output {
+        let scalar = scalar.into();
+
+        let components = self
+            .components
+            .into_iter_fixed()
+            .map(|v| v * scalar)
+            .collect();
+
+        Self { components }
+    }
+}
