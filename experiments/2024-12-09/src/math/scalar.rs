@@ -60,3 +60,15 @@ where
         Self::new(value)
     }
 }
+
+impl<S> ops::Mul<S> for Scalar
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn mul(self, other: S) -> Self::Output {
+        let value = self.value() * other.into().value();
+        Self::new(value)
+    }
+}
