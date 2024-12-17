@@ -15,13 +15,7 @@ pub fn model(shape: &mut Shape) {
             b: Vector::from([0., 1., 0.]),
         },
     };
-    let top = Plane {
-        origin: Point::from([0., 0., 0.5]),
-        coords: Bivector {
-            a: Vector::from([1., 0., 0.]),
-            b: Vector::from([0., 1., 0.]),
-        },
-    };
+    let top = bottom.translate([0., 0., 1.]);
 
     let (a, b, c, d, e, f, g, h) = shape
         .extend_with(&mut vertices)
