@@ -49,13 +49,13 @@ impl From<f64> for Scalar {
     }
 }
 
-impl<T> ops::Add<T> for Scalar
+impl<S> ops::Add<S> for Scalar
 where
-    T: Into<Scalar>,
+    S: Into<Scalar>,
 {
     type Output = Self;
 
-    fn add(self, other: T) -> Self::Output {
+    fn add(self, other: S) -> Self::Output {
         let value = self.value() + other.into().value();
         Self::new(value)
     }
