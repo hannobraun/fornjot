@@ -32,18 +32,21 @@ pub fn model(shape: &mut Shape) {
         .add(top.point_from_local(sketch.points[3]))
         .get_added();
 
+    let [a, b, c, d, e, f, g, h] =
+        [a, b, c, d, e, f, g, h].map(|vertex| vertex.point);
+
     shape
         .extend_with(&mut triangles)
-        .add([&a, &e, &g]) // left
-        .add([&a, &g, &c])
-        .add([&b, &d, &h]) // right
-        .add([&b, &h, &f])
-        .add([&a, &b, &f]) // front
-        .add([&a, &f, &e])
-        .add([&c, &h, &d]) // back
-        .add([&c, &g, &h])
-        .add([&a, &c, &b]) // bottom
-        .add([&b, &c, &d])
-        .add([&e, &f, &h]) // top
-        .add([&e, &h, &g]);
+        .add([a, e, g]) // left
+        .add([a, g, c])
+        .add([b, d, h]) // right
+        .add([b, h, f])
+        .add([a, b, f]) // front
+        .add([a, f, e])
+        .add([c, h, d]) // back
+        .add([c, g, h])
+        .add([a, c, b]) // bottom
+        .add([b, c, d])
+        .add([e, f, h]) // top
+        .add([e, h, g]);
 }

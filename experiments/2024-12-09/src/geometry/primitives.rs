@@ -2,10 +2,7 @@ use std::fmt;
 
 use crate::math::Point;
 
-use super::{
-    operation::{AnyOp, Handle},
-    Operation,
-};
+use super::{operation::AnyOp, Operation};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
@@ -47,10 +44,13 @@ pub struct Triangle {
     pub vertices: [Point<3>; 3],
 }
 
-impl From<[&Handle<Vertex>; 3]> for Triangle {
-    fn from(vertices: [&Handle<Vertex>; 3]) -> Self {
+impl<P> From<[P; 3]> for Triangle
+where
+    P: Into<Point<3>>,
+{
+    fn from(vertices: [P; 3]) -> Self {
         Self {
-            vertices: vertices.map(|vertex| vertex.point),
+            vertices: vertices.map(Into::into),
         }
     }
 }
