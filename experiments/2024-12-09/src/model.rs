@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{Shape, Triangle, Vertex},
+    geometry::{Shape, Sketch, Triangle, Vertex},
     math::{Bivector, Plane, Point, Vector},
     storage::Store,
 };
@@ -17,16 +17,19 @@ pub fn model(shape: &mut Shape) {
     };
     let top = bottom.translate([0., 0., 1.]);
 
+    let sketch =
+        Sketch::from([[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]]);
+
     let (a, b, c, d, e, f, g, h) = shape
         .extend_with(&mut vertices)
-        .add(bottom.point_from_local([-0.5, -0.5]))
-        .add(bottom.point_from_local([0.5, -0.5]))
-        .add(bottom.point_from_local([-0.5, 0.5]))
-        .add(bottom.point_from_local([0.5, 0.5]))
-        .add(top.point_from_local([-0.5, -0.5]))
-        .add(top.point_from_local([0.5, -0.5]))
-        .add(top.point_from_local([-0.5, 0.5]))
-        .add(top.point_from_local([0.5, 0.5]))
+        .add(bottom.point_from_local(sketch.points[0]))
+        .add(bottom.point_from_local(sketch.points[1]))
+        .add(bottom.point_from_local(sketch.points[2]))
+        .add(bottom.point_from_local(sketch.points[3]))
+        .add(top.point_from_local(sketch.points[0]))
+        .add(top.point_from_local(sketch.points[1]))
+        .add(top.point_from_local(sketch.points[2]))
+        .add(top.point_from_local(sketch.points[3]))
         .get_added();
 
     shape
