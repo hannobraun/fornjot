@@ -1,6 +1,8 @@
 use std::{fmt, ops::Deref, rc::Rc};
 
-use super::{Triangle, Vertex};
+use crate::topology::Vertex;
+
+use super::Triangle;
 
 pub trait Operation: fmt::Display {
     fn vertices(&self, vertices: &mut Vec<Vertex>);

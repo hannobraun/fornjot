@@ -2,11 +2,11 @@ use std::fmt;
 
 use tuples::CombinRight;
 
-use crate::storage::Store;
+use crate::{storage::Store, topology::Vertex};
 
 use super::{
     operation::{AnyOp, Handle},
-    Operation, Triangle, Vertex,
+    Operation, Triangle,
 };
 
 #[derive(Default)]

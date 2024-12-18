@@ -1,6 +1,9 @@
 use std::{fmt, iter};
 
-use crate::geometry::{AnyOp, Operation, Triangle, Vertex};
+use crate::{
+    geometry::{AnyOp, Operation, Triangle},
+    topology::Vertex,
+};
 
 #[derive(Clone)]
 pub struct OperationView {

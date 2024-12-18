@@ -5,7 +5,7 @@ mod sketch;
 
 pub use self::{
     operation::{AnyOp, Handle, Operation},
-    primitives::{Triangle, Vertex},
+    primitives::Triangle,
     shape::Shape,
     sketch::Sketch,
 };

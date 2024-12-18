@@ -1,7 +1,7 @@
 use crate::{
-    geometry::{Shape, Sketch, Triangle, Vertex},
+    geometry::{Shape, Sketch, Triangle},
     math::{Bivector, Plane, Point, Vector},
-    storage::Store,
+    storage::Store, topology::Vertex,
 };
 
 pub fn model(shape: &mut Shape) {
