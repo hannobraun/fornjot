@@ -44,13 +44,13 @@ impl Operation for Vertex {
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {
-    pub vertices: [Handle<Vertex>; 3],
+    pub vertices: [Point<3>; 3],
 }
 
 impl From<[&Handle<Vertex>; 3]> for Triangle {
     fn from(vertices: [&Handle<Vertex>; 3]) -> Self {
         Self {
-            vertices: vertices.map(|vertex| vertex.clone()),
+            vertices: vertices.map(|vertex| vertex.point),
         }
     }
 }
@@ -69,6 +69,6 @@ impl Operation for Triangle {
     }
 
     fn children(&self) -> Vec<AnyOp> {
-        self.vertices.iter().map(|vertex| vertex.to_any()).collect()
+        Vec::new()
     }
 }

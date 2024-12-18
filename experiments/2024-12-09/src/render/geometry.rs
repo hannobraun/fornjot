@@ -61,11 +61,7 @@ impl Geometry<triangles::Vertex> {
         for triangle in &mesh_triangles {
             let triangle = triangle.vertices.each_ref().map(|vertex| {
                 Vec3::from(
-                    vertex
-                        .point
-                        .coords
-                        .components
-                        .map(|coord| coord.value() as f32),
+                    vertex.coords.components.map(|coord| coord.value() as f32),
                 )
             });
             let normal = {

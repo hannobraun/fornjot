@@ -13,7 +13,6 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
 
     for triangle in shape_triangles {
         let triangle = triangle.vertices.map(|vertex| {
-            let vertex = vertex.point;
             *indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = vertices.len();
                 vertices.push(vertex);
