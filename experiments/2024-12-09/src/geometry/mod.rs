@@ -1,11 +1,11 @@
 mod operation;
-mod primitives;
 mod shape;
 mod sketch;
+mod triangle;
 
 pub use self::{
     operation::{AnyOp, Handle, Operation},
-    primitives::Triangle,
     shape::Shape,
     sketch::Sketch,
+    triangle::Triangle,
 };
