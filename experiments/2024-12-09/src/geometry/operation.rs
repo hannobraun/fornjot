@@ -1,4 +1,4 @@
-use std::{fmt, rc::Rc};
+use std::{fmt, ops::Deref, rc::Rc};
 
 use super::{Triangle, Vertex};
 
@@ -24,7 +24,7 @@ impl<T> Handle<T> {
     where
         T: Copy,
     {
-        *self.as_ref()
+        *self.deref()
     }
 
     pub fn to_any(&self) -> AnyOp
@@ -42,8 +42,10 @@ impl<T> Handle<T> {
     }
 }
 
-impl<T> AsRef<T> for Handle<T> {
-    fn as_ref(&self) -> &T {
+impl<T> Deref for Handle<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
         self.inner.as_ref()
     }
 }

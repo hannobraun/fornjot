@@ -62,7 +62,6 @@ impl Geometry<triangles::Vertex> {
             let triangle = triangle.vertices.each_ref().map(|vertex| {
                 Vec3::from(
                     vertex
-                        .as_ref()
                         .point
                         .coords
                         .components
