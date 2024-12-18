@@ -20,13 +20,6 @@ impl<T> Handle<T> {
         }
     }
 
-    pub fn get(&self) -> T
-    where
-        T: Copy,
-    {
-        *self.deref()
-    }
-
     pub fn to_any(&self) -> AnyOp
     where
         T: Operation + 'static,
