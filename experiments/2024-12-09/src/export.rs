@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::geometry::{Operation, Shape, Vertex};
+use crate::geometry::{Operation, Shape};
 
 pub fn export(shape: &Shape) -> anyhow::Result<()> {
     let mut shape_triangles = Vec::new();
@@ -16,7 +16,7 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
             let vertex = vertex.get();
             *indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = vertices.len();
-                vertices.push(vertex);
+                vertices.push(vertex.point);
                 index
             })
         });
@@ -28,7 +28,6 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
         vertices: threemf::model::Vertices {
             vertex: vertices
                 .into_iter()
-                .map(|Vertex { point }| point)
                 .map(|point| point.coords.components.map(|coord| coord.value()))
                 .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
                 .collect(),
