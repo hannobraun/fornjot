@@ -6,17 +6,18 @@ use crate::{
 };
 
 pub fn model(shape: &mut Shape) {
+    let mut surfaces = Store::<Plane>::new();
     let mut vertices = Store::<Vertex>::new();
     let mut triangles = Store::<Triangle>::new();
 
-    let bottom = Plane {
+    let bottom = surfaces.insert(Plane {
         origin: Point::from([0., 0., -0.5]),
         coords: Bivector {
             a: Vector::from([1., 0., 0.]),
             b: Vector::from([0., 1., 0.]),
         },
-    };
-    let top = bottom.translate([0., 0., 1.]);
+    });
+    let top = surfaces.insert(bottom.translate([0., 0., 1.]));
 
     let sketch =
         Sketch::from([[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]]);
