@@ -6,15 +6,15 @@ publish = false
 
 
 [dependencies]
-anyhow = "1.0.94"
+anyhow = "1.0.95"
 cargo_metadata = "0.19.1"
 cmd_lib = "1.9.5"
-env_logger = "0.11.5"
+env_logger = "0.11.6"
 log = "0.4.22"
 secstr = "0.5.0"
 semver = "1.0.24"
-serde_json = "1.0.133"
-thiserror = "2.0.7"
+serde_json = "1.0.134"
+thiserror = "2.0.9"
 
 [dependencies.autolib]
 path = "../autolib"
