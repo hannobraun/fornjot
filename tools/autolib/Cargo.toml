@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anyhow = "1.0.94"
+anyhow = "1.0.95"
 log = "0.4.22"
 regex = "1.11.1"
 semver = "1.0.24"
