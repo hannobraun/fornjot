@@ -72,3 +72,15 @@ where
         Self::new(value)
     }
 }
+
+impl<S> ops::Sub<S> for Scalar
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn sub(self, other: S) -> Self::Output {
+        let value = self.value() - other.into().value();
+        Self::new(value)
+    }
+}
