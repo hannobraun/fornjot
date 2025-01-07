@@ -17,6 +17,11 @@ impl Scalar {
         Self { value }
     }
 
+    #[allow(unused)] // code to use it is being worked on
+    pub fn zero() -> Self {
+        Self::new(0.)
+    }
+
     pub fn value(&self) -> f64 {
         self.value
     }
