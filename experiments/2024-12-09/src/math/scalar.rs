@@ -73,6 +73,15 @@ where
     }
 }
 
+impl ops::Neg for Scalar {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        let value = -self.value();
+        Self::new(value)
+    }
+}
+
 impl<S> ops::Sub<S> for Scalar
 where
     S: Into<Scalar>,
