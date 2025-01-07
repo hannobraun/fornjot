@@ -9,6 +9,22 @@ pub struct Vector<const D: usize> {
     pub components: [Scalar; D],
 }
 
+impl Vector<3> {
+    #[allow(unused)] // code to use it is being worked on
+    pub fn cross(self, other: Self) -> Self {
+        let [ax, ay, az] = self.components;
+        let [bx, by, bz] = other.components;
+
+        Self {
+            components: [
+                ay * bz - az * by,
+                az * bx - ax * bz,
+                ax * by - ay * bx,
+            ],
+        }
+    }
+}
+
 impl<S, const D: usize> From<[S; D]> for Vector<D>
 where
     S: Into<Scalar>,
