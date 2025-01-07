@@ -25,6 +25,12 @@ impl Scalar {
     pub fn value(&self) -> f64 {
         self.value
     }
+
+    #[allow(unused)] // code to use it is being worked on
+    pub fn sqrt(self) -> Self {
+        let value = self.value().sqrt();
+        Self::new(value)
+    }
 }
 
 impl Eq for Scalar {}
