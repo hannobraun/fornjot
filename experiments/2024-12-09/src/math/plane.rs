@@ -7,9 +7,17 @@ pub struct Plane {
 }
 
 impl Plane {
+    pub fn u(&self) -> Vector<3> {
+        self.coords.a
+    }
+
+    pub fn v(&self) -> Vector<3> {
+        self.coords.b
+    }
+
     #[allow(unused)] // code to use it is being worked on
     pub fn normal(&self) -> Vector<3> {
-        self.coords.a.cross(self.coords.b).normalize()
+        self.u().cross(self.v()).normalize()
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
