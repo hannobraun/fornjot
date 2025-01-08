@@ -17,7 +17,6 @@ impl Scalar {
         Self { value }
     }
 
-    #[allow(unused)] // code to use it is being worked on
     pub fn zero() -> Self {
         Self::new(0.)
     }
@@ -26,7 +25,6 @@ impl Scalar {
         self.value
     }
 
-    #[allow(unused)] // code to use it is being worked on
     pub fn sqrt(self) -> Self {
         let value = self.value().sqrt();
         Self::new(value)
