@@ -9,6 +9,18 @@ pub struct Vector<const D: usize> {
     pub components: [Scalar; D],
 }
 
+impl<const D: usize> Vector<D> {
+    #[allow(unused)] // code to use it is being worked on
+    pub fn magnitude(&self) -> Scalar {
+        self.components
+            .into_iter()
+            .map(|coord| coord * coord)
+            .reduce(|a, b| a + b)
+            .unwrap_or(Scalar::zero())
+            .sqrt()
+    }
+}
+
 impl Vector<3> {
     #[allow(unused)] // code to use it is being worked on
     pub fn cross(self, other: Self) -> Self {
