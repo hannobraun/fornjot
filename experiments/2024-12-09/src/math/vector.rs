@@ -10,7 +10,6 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
-    #[allow(unused)] // code to use it is being worked on
     pub fn magnitude(&self) -> Scalar {
         self.components
             .into_iter()
@@ -20,14 +19,12 @@ impl<const D: usize> Vector<D> {
             .sqrt()
     }
 
-    #[allow(unused)] // code to use it is being worked on
     pub fn normalize(self) -> Self {
         self / self.magnitude()
     }
 }
 
 impl Vector<3> {
-    #[allow(unused)] // code to use it is being worked on
     pub fn cross(self, other: Self) -> Self {
         let [ax, ay, az] = self.components;
         let [bx, by, bz] = other.components;
