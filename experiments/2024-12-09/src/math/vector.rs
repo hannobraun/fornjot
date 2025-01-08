@@ -56,6 +56,19 @@ where
     }
 }
 
+impl<S, const D: usize> ops::Div<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn div(self, scalar: S) -> Self::Output {
+        let scalar = scalar.into();
+        let components = self.components.map(|component| component / scalar);
+        Self { components }
+    }
+}
+
 impl<S, const D: usize> ops::Mul<S> for Vector<D>
 where
     S: Into<Scalar>,
