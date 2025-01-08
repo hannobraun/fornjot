@@ -72,6 +72,18 @@ where
     }
 }
 
+impl<S> ops::Div<S> for Scalar
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn div(self, other: S) -> Self::Output {
+        let value = self.value() / other.into().value();
+        Self::new(value)
+    }
+}
+
 impl<S> ops::Mul<S> for Scalar
 where
     S: Into<Scalar>,
