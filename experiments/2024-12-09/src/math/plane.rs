@@ -7,6 +7,11 @@ pub struct Plane {
 }
 
 impl Plane {
+    #[allow(unused)] // code to use it is being worked on
+    pub fn normal(&self) -> Vector<3> {
+        self.coords.a.cross(self.coords.b).normalize()
+    }
+
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
         self.origin + self.coords.a * u + self.coords.b * v
