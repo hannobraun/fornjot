@@ -19,6 +19,11 @@ impl<const D: usize> Vector<D> {
             .unwrap_or(Scalar::zero())
             .sqrt()
     }
+
+    #[allow(unused)] // code to use it is being worked on
+    pub fn normalize(self) -> Self {
+        self / self.magnitude()
+    }
 }
 
 impl Vector<3> {
