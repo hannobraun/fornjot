@@ -18,13 +18,13 @@ where
     }
 }
 
-impl<T, const D: usize> ops::Add<T> for Point<D>
+impl<V, const D: usize> ops::Add<V> for Point<D>
 where
-    T: Into<Vector<D>>,
+    V: Into<Vector<D>>,
 {
     type Output = Self;
 
-    fn add(self, other: T) -> Self::Output {
+    fn add(self, other: V) -> Self::Output {
         let other = other.into();
         let coords = self.coords + other;
         Self { coords }
