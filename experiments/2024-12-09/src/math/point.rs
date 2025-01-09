@@ -38,3 +38,12 @@ impl<const D: usize> ops::Sub<Point<D>> for Point<D> {
         self.coords - other.coords
     }
 }
+
+impl<const D: usize> ops::Sub<Vector<D>> for Point<D> {
+    type Output = Point<D>;
+
+    fn sub(self, other: Vector<D>) -> Self::Output {
+        let coords = self.coords - other;
+        Self { coords }
+    }
+}
