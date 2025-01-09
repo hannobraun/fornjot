@@ -101,3 +101,23 @@ where
         Self { components }
     }
 }
+
+impl<V, const D: usize> ops::Sub<V> for Vector<D>
+where
+    V: Into<Vector<D>>,
+{
+    type Output = Self;
+
+    fn sub(self, other: V) -> Self::Output {
+        let other = other.into();
+
+        let components = self
+            .components
+            .into_iter_fixed()
+            .zip(other.components)
+            .map(|(a, b)| a - b)
+            .collect();
+
+        Self { components }
+    }
+}
