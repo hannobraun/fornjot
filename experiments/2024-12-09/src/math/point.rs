@@ -30,3 +30,15 @@ where
         Self { coords }
     }
 }
+
+impl<P, const D: usize> ops::Sub<P> for Point<D>
+where
+    P: Into<Point<D>>,
+{
+    type Output = Vector<D>;
+
+    fn sub(self, other: P) -> Self::Output {
+        let other = other.into();
+        self.coords - other.coords
+    }
+}
