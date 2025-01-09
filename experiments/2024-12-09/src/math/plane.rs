@@ -15,7 +15,6 @@ impl Plane {
         self.coords.b
     }
 
-    #[allow(unused)] // code to use it is being worked on
     pub fn normal(&self) -> Vector<3> {
         self.u().cross(self.v()).normalize()
     }
