@@ -11,16 +11,20 @@ pub struct Vector<const D: usize> {
 
 impl<const D: usize> Vector<D> {
     pub fn magnitude(&self) -> Scalar {
-        self.components
-            .into_iter()
-            .map(|coord| coord * coord)
-            .reduce(|a, b| a + b)
-            .unwrap_or(Scalar::zero())
-            .sqrt()
+        self.dot(self).sqrt()
     }
 
     pub fn normalize(self) -> Self {
         self / self.magnitude()
+    }
+
+    pub fn dot(&self, other: &Self) -> Scalar {
+        self.components
+            .into_iter()
+            .zip(other.components)
+            .map(|(a, b)| a * b)
+            .reduce(|a, b| a + b)
+            .unwrap_or(Scalar::zero())
     }
 }
 
