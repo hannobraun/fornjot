@@ -20,7 +20,7 @@ pub fn model(shape: &mut Shape) {
     let top = surfaces.insert(bottom.translate([0., 0., 1.]));
 
     let sketch =
-        Sketch::from([[-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5], [0.5, 0.5]]);
+        Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
     let (a, b, c, d, e, f, g, h) = shape
         .extend_with(&mut vertices)
@@ -39,16 +39,16 @@ pub fn model(shape: &mut Shape) {
 
     shape
         .extend_with(&mut triangles)
-        .add([a, e, g]) // left
-        .add([a, g, c])
-        .add([b, d, h]) // right
-        .add([b, h, f])
+        .add([a, e, h]) // left
+        .add([a, h, d])
+        .add([b, c, g]) // right
+        .add([b, g, f])
         .add([a, b, f]) // front
         .add([a, f, e])
-        .add([c, h, d]) // back
-        .add([c, g, h])
-        .add([a, c, b]) // bottom
-        .add([b, c, d])
-        .add([e, f, h]) // top
-        .add([e, h, g]);
+        .add([d, g, c]) // back
+        .add([d, h, g])
+        .add([a, d, b]) // bottom
+        .add([b, d, c])
+        .add([e, f, g]) // top
+        .add([e, g, h]);
 }
