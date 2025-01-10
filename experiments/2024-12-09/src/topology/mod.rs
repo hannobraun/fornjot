@@ -1,3 +1,4 @@
+mod face;
 mod vertex;
 
-pub use self::vertex::Vertex;
+pub use self::{face::Face, vertex::Vertex};
