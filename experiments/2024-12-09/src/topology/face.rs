@@ -55,9 +55,14 @@ impl Operation for Face {
 
         triangulation
             .add_constraint_edges(
-                self.vertices.iter().map(|vertex| TriangulationPoint {
-                    point_surface: self.surface.project_point(vertex.point),
-                    point_vertex: vertex.point,
+                self.vertices.iter().map(|vertex| {
+                    let point_surface =
+                        self.surface.project_point(vertex.point);
+
+                    TriangulationPoint {
+                        point_surface,
+                        point_vertex: vertex.point,
+                    }
                 }),
                 true,
             )
