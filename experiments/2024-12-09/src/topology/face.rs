@@ -11,7 +11,7 @@ use crate::{
 use super::Vertex;
 
 pub struct Face {
-    pub surface: Handle<Plane>,
+    surface: Handle<Plane>,
     pub vertices: Vec<Handle<Vertex>>,
 }
 
