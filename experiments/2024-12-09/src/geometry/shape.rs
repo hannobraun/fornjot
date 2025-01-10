@@ -102,12 +102,12 @@ impl<'r, T> ShapeExtender<'r, (), T> {
 }
 
 impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
-    pub fn add(self, vertex: impl Into<T>) -> ShapeExtender<'r, NewOps::Out, T>
+    pub fn add(self, op: impl Into<T>) -> ShapeExtender<'r, NewOps::Out, T>
     where
         NewOps: CombinRight<Handle<T>>,
         T: Operation + 'static,
     {
-        let vertex = self.store.insert(vertex.into());
+        let vertex = self.store.insert(op.into());
 
         self.sequence.push(OperationInSequence {
             operation: vertex.to_any(),
