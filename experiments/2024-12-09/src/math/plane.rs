@@ -24,7 +24,6 @@ impl Plane {
         self.origin + self.coords.a * u + self.coords.b * v
     }
 
-    #[allow(unused)] // code to use it is being worked on
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
         let point = point.into();
         let origin_to_point = point - self.origin;
