@@ -14,10 +14,16 @@ pub fn model(shape: &mut Shape) {
         origin: Point::from([0., 0., -0.5]),
         coords: Bivector {
             a: Vector::from([1., 0., 0.]),
+            b: Vector::from([0., -1., 0.]),
+        },
+    });
+    let top = surfaces.insert(Plane {
+        origin: Point::from([0., 0., 0.5]),
+        coords: Bivector {
+            a: Vector::from([1., 0., 0.]),
             b: Vector::from([0., 1., 0.]),
         },
     });
-    let top = surfaces.insert(bottom.translate([0., 0., 1.]));
 
     let sketch =
         Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
@@ -39,16 +45,16 @@ pub fn model(shape: &mut Shape) {
 
     shape
         .extend_with(&mut triangles)
-        .add([a, e, h]) // left
-        .add([a, h, d])
-        .add([b, c, g]) // right
-        .add([b, g, f])
-        .add([a, b, f]) // front
-        .add([a, f, e])
-        .add([d, g, c]) // back
-        .add([d, h, g])
-        .add([a, d, b]) // bottom
-        .add([b, d, c])
+        .add([d, e, h]) // left
+        .add([d, h, a])
+        .add([c, b, g]) // right
+        .add([c, g, f])
+        .add([d, c, f]) // front
+        .add([d, f, e])
+        .add([a, g, b]) // back
+        .add([a, h, g])
+        .add([d, a, c]) // bottom
+        .add([c, a, b])
         .add([e, f, g]) // top
         .add([e, g, h]);
 }
