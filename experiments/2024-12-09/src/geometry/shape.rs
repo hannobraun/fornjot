@@ -107,17 +107,17 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
         NewOps: CombinRight<Handle<T>>,
         T: Operation + 'static,
     {
-        let vertex = self.store.insert(op.into());
+        let op = self.store.insert(op.into());
 
         self.sequence.push(OperationInSequence {
-            operation: vertex.to_any(),
+            operation: op.to_any(),
             previous: self.sequence.last().map(|op| AnyOp::new(op.clone())),
         });
 
         ShapeExtender {
             store: self.store,
             sequence: self.sequence,
-            new_ops: self.new_ops.push_right(vertex),
+            new_ops: self.new_ops.push_right(op),
         }
     }
 
