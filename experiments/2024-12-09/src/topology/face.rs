@@ -56,6 +56,23 @@ impl Operation for Face {
         triangulation
             .add_constraint_edges(
                 self.vertices.iter().map(|vertex| {
+                    // Here, we project a 3D point (from the vertex) into the
+                    // face's surface, creating a 2D point. Through the surface,
+                    // this 2D point has a position in 3D space.
+                    //
+                    // But this position isn't necessarily going to be the same
+                    // as the position of the original 3D point, due to
+                    // numerical inaccuracy.
+                    //
+                    // This doesn't matter. Neither does the fact, that other
+                    // faces might share the same vertices and project them into
+                    // their own surfaces, creating more redundancy.
+                    //
+                    // The reason that it doesn't, is that we're using the
+                    // projected 2D points _only_ for this local triangulation.
+                    // Once that tells us how the different 3D points must
+                    // connect, we use the original 3D points to build those
+                    // triangles. We never convert the 2D points back into 3D.
                     let point_surface =
                         self.surface.project_point(vertex.point);
 
