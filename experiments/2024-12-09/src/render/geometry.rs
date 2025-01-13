@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-
 use glam::Vec3;
 use wgpu::util::DeviceExt;
 
@@ -7,14 +5,13 @@ use crate::geometry::Operation;
 
 use super::pipelines::triangles;
 
-pub struct Geometry<V> {
+pub struct Geometry {
     pub vertices: wgpu::Buffer,
     pub indices: wgpu::Buffer,
     pub num_indices: u32,
-    _vertex: PhantomData<V>,
 }
 
-impl Geometry<triangles::Vertex> {
+impl Geometry {
     pub fn triangles(device: &wgpu::Device, operation: &dyn Operation) -> Self {
         let mut mesh_triangles = Vec::new();
         operation.triangles(&mut mesh_triangles);
@@ -53,11 +50,12 @@ impl Geometry<triangles::Vertex> {
     }
 }
 
-impl<V> Geometry<V> {
-    pub fn new(device: &wgpu::Device, vertices: &[V], indices: &[u32]) -> Self
-    where
-        V: bytemuck::NoUninit,
-    {
+impl Geometry {
+    pub fn new(
+        device: &wgpu::Device,
+        vertices: &[triangles::Vertex],
+        indices: &[u32],
+    ) -> Self {
         let Ok(num_indices) = indices.len().try_into() else {
             panic!("Unsupported number of indices: `{}`", indices.len());
         };
@@ -79,7 +77,6 @@ impl<V> Geometry<V> {
             vertices,
             indices,
             num_indices,
-            _vertex: PhantomData,
         }
     }
 }

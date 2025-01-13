@@ -109,7 +109,7 @@ impl<V> Pipeline<V> {
     pub fn draw(
         &self,
         render_pass: &mut wgpu::RenderPass,
-        geometry: &Geometry<V>,
+        geometry: &Geometry,
     ) {
         if geometry.num_indices > 0 {
             render_pass.set_index_buffer(
