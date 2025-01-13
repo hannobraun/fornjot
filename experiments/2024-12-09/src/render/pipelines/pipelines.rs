@@ -12,9 +12,10 @@ pub struct Pipelines {
 impl Pipelines {
     pub fn new(
         device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
+        surface_configuration: &wgpu::SurfaceConfiguration,
     ) -> Self {
-        let aspect_ratio = config.width as f32 / config.height as f32;
+        let aspect_ratio = surface_configuration.width as f32
+            / surface_configuration.height as f32;
         let uniforms =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
@@ -26,7 +27,7 @@ impl Pipelines {
 
         let triangles = Pipeline::new(
             device,
-            config,
+            surface_configuration,
             wgpu::include_wgsl!("shaders/triangles.wgsl"),
             &uniforms,
         );
