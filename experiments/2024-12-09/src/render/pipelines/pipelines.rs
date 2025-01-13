@@ -28,7 +28,6 @@ impl Pipelines {
         let triangles = Pipeline::new(
             device,
             surface_configuration,
-            wgpu::include_wgsl!("shaders/triangles.wgsl"),
             &uniforms,
         );
 

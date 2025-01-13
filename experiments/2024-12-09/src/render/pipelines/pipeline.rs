@@ -11,7 +11,6 @@ impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
         surface_configuration: &wgpu::SurfaceConfiguration,
-        shader_module_descriptor: wgpu::ShaderModuleDescriptor,
         uniforms: &wgpu::Buffer,
     ) -> Self {
         let bind_group_layout =
@@ -36,8 +35,9 @@ impl Pipeline {
                 push_constant_ranges: &[],
             });
 
-        let shader_module =
-            device.create_shader_module(shader_module_descriptor);
+        let shader_module = device.create_shader_module(wgpu::include_wgsl!(
+            "shaders/triangles.wgsl"
+        ));
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
