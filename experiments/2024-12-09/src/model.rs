@@ -3,24 +3,21 @@ use itertools::Itertools;
 use crate::{
     geometry::{Shape, Sketch, Triangle},
     math::{Bivector, Plane, Point, Vector},
-    storage::Store,
-    topology::{Face, Vertex},
+    storage::Stores,
+    topology::Face,
 };
 
 pub fn model(shape: &mut Shape) {
-    let mut faces = Store::<Face>::new();
-    let mut surfaces = Store::<Plane>::new();
-    let mut vertices = Store::<Vertex>::new();
-    let mut triangles = Store::<Triangle>::new();
+    let mut stores = Stores::new();
 
-    let bottom = surfaces.insert(Plane {
+    let bottom = stores.get().insert(Plane {
         origin: Point::from([0., 0., -0.5]),
         coords: Bivector {
             a: Vector::from([1., 0., 0.]),
             b: Vector::from([0., -1., 0.]),
         },
     });
-    let top = surfaces.insert(Plane {
+    let top = stores.get().insert(Plane {
         origin: Point::from([0., 0., 0.5]),
         coords: Bivector {
             a: Vector::from([1., 0., 0.]),
@@ -32,10 +29,10 @@ pub fn model(shape: &mut Shape) {
         Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
     let [bottom, top] =
-        [bottom, top].map(|plane| Face::new(&sketch, plane, &mut vertices));
+        [bottom, top].map(|plane| Face::new(&sketch, plane, stores.get()));
 
     let (bottom, top) = shape
-        .extend_with(&mut faces)
+        .extend_with(stores.get::<Face>())
         .add(bottom)
         .add(top)
         .get_added();
@@ -47,7 +44,7 @@ pub fn model(shape: &mut Shape) {
         [a, b, c, d, e, f, g, h].map(|vertex| vertex.point);
 
     shape
-        .extend_with(&mut triangles)
+        .extend_with(stores.get::<Triangle>())
         .add([d, e, h]) // left
         .add([d, h, a])
         .add([c, b, g]) // right
