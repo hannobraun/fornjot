@@ -135,10 +135,6 @@ impl Pipeline {
     }
 }
 
-pub trait IsVertex {
-    const ATTRIBUTES: &[wgpu::VertexAttribute];
-}
-
 fn default_transform(aspect_ratio: f32) -> Mat4 {
     let fov_y_radians = std::f32::consts::PI / 2.;
     let z_near = 0.1;
