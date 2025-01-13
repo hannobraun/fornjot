@@ -3,7 +3,7 @@ use wgpu::util::DeviceExt;
 
 use crate::geometry::Operation;
 
-use super::pipelines::triangles::Vertex;
+use super::vertex::Vertex;
 
 pub struct Geometry {
     pub vertices: wgpu::Buffer,
