@@ -48,9 +48,7 @@ impl Geometry {
 
         Self::new(device, &vertices, &indices)
     }
-}
 
-impl Geometry {
     pub fn new(
         device: &wgpu::Device,
         vertices: &[triangles::Vertex],
