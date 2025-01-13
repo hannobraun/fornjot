@@ -1,23 +1,19 @@
-use std::marker::PhantomData;
-
 use crate::render::geometry::Geometry;
 
-pub struct Pipeline<V> {
+use super::triangles;
+
+pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
-    _vertex: PhantomData<V>,
 }
 
-impl<V> Pipeline<V> {
+impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
         surface_configuration: &wgpu::SurfaceConfiguration,
         shader_module_descriptor: wgpu::ShaderModuleDescriptor,
         uniforms: &wgpu::Buffer,
-    ) -> Self
-    where
-        V: IsVertex,
-    {
+    ) -> Self {
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 label: None,
@@ -53,9 +49,10 @@ impl<V> Pipeline<V> {
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     buffers: &[wgpu::VertexBufferLayout {
-                        array_stride: size_of::<V>() as wgpu::BufferAddress,
+                        array_stride: size_of::<triangles::Vertex>()
+                            as wgpu::BufferAddress,
                         step_mode: wgpu::VertexStepMode::Vertex,
-                        attributes: V::ATTRIBUTES,
+                        attributes: triangles::Vertex::ATTRIBUTES,
                     }],
                 },
                 fragment: Some(wgpu::FragmentState {
@@ -102,7 +99,6 @@ impl<V> Pipeline<V> {
         Pipeline {
             render_pipeline,
             bind_group,
-            _vertex: PhantomData,
         }
     }
 

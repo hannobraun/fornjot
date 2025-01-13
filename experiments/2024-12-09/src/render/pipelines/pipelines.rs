@@ -3,10 +3,10 @@ use std::f32::consts::PI;
 use glam::{Mat4, Vec3};
 use wgpu::util::DeviceExt;
 
-use super::{triangles, Pipeline};
+use super::Pipeline;
 
 pub struct Pipelines {
-    pub triangles: Pipeline<triangles::Vertex>,
+    pub triangles: Pipeline,
 }
 
 impl Pipelines {
