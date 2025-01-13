@@ -3,7 +3,7 @@ use wgpu::util::DeviceExt;
 
 use crate::geometry::Operation;
 
-use super::pipelines::triangles;
+use super::pipelines::triangles::Vertex;
 
 pub struct Geometry {
     pub vertices: wgpu::Buffer,
@@ -36,7 +36,7 @@ impl Geometry {
 
             for point in triangle {
                 let index = vertices.len() as u32;
-                let vertex = triangles::Vertex {
+                let vertex = Vertex {
                     position: point.into(),
                     normal: normal.into(),
                 };
