@@ -46,7 +46,7 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &surface_config);
 
-        let pipelines = Pipeline::new(&device, &surface_config);
+        let pipeline = Pipeline::new(&device, &surface_config);
 
         let depth_view = {
             let depth_texture =
@@ -81,7 +81,7 @@ impl Renderer {
             device,
             queue,
             surface_config,
-            pipeline: pipelines,
+            pipeline,
             depth_view,
             text_renderer,
         })
