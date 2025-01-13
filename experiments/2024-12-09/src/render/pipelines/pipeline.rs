@@ -5,7 +5,7 @@ use wgpu::util::DeviceExt;
 
 use crate::render::{geometry::Geometry, vertex::Vertex};
 
-use super::pipelines::Uniforms;
+use super::uniforms::Uniforms;
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,

@@ -1,4 +1,4 @@
 mod pipeline;
-mod pipelines;
+mod uniforms;
 
 pub use self::pipeline::Pipeline;
