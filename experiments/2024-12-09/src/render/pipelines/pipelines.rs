@@ -1,22 +1,5 @@
 use glam::Mat4;
 
-use super::Pipeline;
-
-pub struct Pipelines {
-    pub triangles: Pipeline,
-}
-
-impl Pipelines {
-    pub fn new(
-        device: &wgpu::Device,
-        surface_configuration: &wgpu::SurfaceConfiguration,
-    ) -> Self {
-        let triangles = Pipeline::new(device, surface_configuration);
-
-        Self { triangles }
-    }
-}
-
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
 pub struct Uniforms {

@@ -3,4 +3,4 @@ mod pipelines;
 
 pub mod triangles;
 
-pub use self::{pipeline::Pipeline, pipelines::Pipelines};
+pub use self::pipeline::Pipeline;

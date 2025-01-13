@@ -5,14 +5,14 @@ use winit::window::Window;
 
 use crate::view::OperationView;
 
-use super::{geometry::Geometry, pipelines::Pipelines, text::TextRenderer};
+use super::{geometry::Geometry, pipelines::Pipeline, text::TextRenderer};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub surface_config: wgpu::SurfaceConfiguration,
-    pub pipelines: Pipelines,
+    pub pipelines: Pipeline,
     pub depth_view: wgpu::TextureView,
     pub text_renderer: TextRenderer,
 }
@@ -46,7 +46,7 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &surface_config);
 
-        let pipelines = Pipelines::new(&device, &surface_config);
+        let pipelines = Pipeline::new(&device, &surface_config);
 
         let depth_view = {
             let depth_texture =
@@ -128,7 +128,7 @@ impl Renderer {
                     occlusion_query_set: None,
                 });
 
-            self.pipelines.triangles.draw(&mut render_pass, &triangles);
+            self.pipelines.draw(&mut render_pass, &triangles);
             self.text_renderer.render(
                 operations,
                 &self.device,
