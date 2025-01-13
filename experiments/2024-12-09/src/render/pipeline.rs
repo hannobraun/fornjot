@@ -3,7 +3,7 @@ use std::f32::consts::PI;
 use glam::{Mat4, Vec3};
 use wgpu::util::DeviceExt;
 
-use crate::render::{geometry::Geometry, uniforms::Uniforms, vertex::Vertex};
+use super::{geometry::Geometry, uniforms::Uniforms, vertex::Vertex};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
