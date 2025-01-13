@@ -15,3 +15,9 @@ impl<T> Store<T> {
         Handle::new(op)
     }
 }
+
+impl<T> Default for Store<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
