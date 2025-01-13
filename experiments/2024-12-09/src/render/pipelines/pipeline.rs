@@ -5,7 +5,7 @@ use wgpu::util::DeviceExt;
 
 use crate::render::geometry::Geometry;
 
-use super::{pipelines::Uniforms, triangles};
+use super::{pipelines::Uniforms, triangles::Vertex};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
@@ -64,10 +64,10 @@ impl Pipeline {
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     buffers: &[wgpu::VertexBufferLayout {
-                        array_stride: size_of::<triangles::Vertex>()
+                        array_stride: size_of::<Vertex>()
                             as wgpu::BufferAddress,
                         step_mode: wgpu::VertexStepMode::Vertex,
-                        attributes: triangles::Vertex::ATTRIBUTES,
+                        attributes: Vertex::ATTRIBUTES,
                     }],
                 },
                 fragment: Some(wgpu::FragmentState {
