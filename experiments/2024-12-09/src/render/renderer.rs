@@ -12,7 +12,7 @@ pub struct Renderer {
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub surface_config: wgpu::SurfaceConfiguration,
-    pub pipelines: Pipeline,
+    pub pipeline: Pipeline,
     pub depth_view: wgpu::TextureView,
     pub text_renderer: TextRenderer,
 }
@@ -81,7 +81,7 @@ impl Renderer {
             device,
             queue,
             surface_config,
-            pipelines,
+            pipeline: pipelines,
             depth_view,
             text_renderer,
         })
@@ -128,7 +128,7 @@ impl Renderer {
                     occlusion_query_set: None,
                 });
 
-            self.pipelines.draw(&mut render_pass, &triangles);
+            self.pipeline.draw(&mut render_pass, &triangles);
             self.text_renderer.render(
                 operations,
                 &self.device,
