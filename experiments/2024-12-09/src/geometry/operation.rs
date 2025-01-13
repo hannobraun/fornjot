@@ -1,11 +1,8 @@
 use std::{fmt, ops::Deref, rc::Rc};
 
-use crate::topology::Vertex;
-
 use super::Triangle;
 
 pub trait Operation: fmt::Display {
-    fn vertices(&self, vertices: &mut Vec<Vertex>);
     fn triangles(&self, triangles: &mut Vec<Triangle>);
     fn children(&self) -> Vec<AnyOp>;
 }
@@ -71,10 +68,6 @@ impl fmt::Display for AnyOp {
 }
 
 impl Operation for AnyOp {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        self.inner.vertices(vertices);
-    }
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         self.inner.triangles(triangles);
     }

@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::{math::Point, topology::Vertex};
+use crate::math::Point;
 
 use super::{operation::AnyOp, Operation};
 
@@ -27,8 +27,6 @@ impl fmt::Display for Triangle {
 }
 
 impl Operation for Triangle {
-    fn vertices(&self, _: &mut Vec<Vertex>) {}
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         triangles.push(self.clone())
     }

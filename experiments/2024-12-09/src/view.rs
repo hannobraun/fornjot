@@ -1,9 +1,6 @@
 use std::{fmt, iter};
 
-use crate::{
-    geometry::{AnyOp, Operation, Triangle},
-    topology::Vertex,
-};
+use crate::geometry::{AnyOp, Operation, Triangle};
 
 #[derive(Clone)]
 pub struct OperationView {
@@ -131,10 +128,6 @@ impl fmt::Display for OperationView {
 }
 
 impl Operation for OperationView {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        self.operation.vertices(vertices);
-    }
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         self.operation.triangles(triangles);
     }

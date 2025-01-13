@@ -2,7 +2,7 @@ use std::fmt;
 
 use tuples::CombinRight;
 
-use crate::{storage::Store, topology::Vertex};
+use crate::storage::Store;
 
 use super::{
     operation::{AnyOp, Handle},
@@ -30,12 +30,6 @@ impl fmt::Display for Shape {
 }
 
 impl Operation for Shape {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        if let Some(op) = self.sequence.last() {
-            op.vertices(vertices);
-        }
-    }
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         if let Some(op) = self.sequence.last() {
             op.triangles(triangles);
@@ -57,13 +51,6 @@ struct OperationInSequence {
 }
 
 impl Operation for OperationInSequence {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        if let Some(op) = &self.previous {
-            op.vertices(vertices);
-        }
-        self.operation.vertices(vertices);
-    }
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         if let Some(op) = &self.previous {
             op.triangles(triangles);

@@ -43,10 +43,6 @@ impl fmt::Display for Face {
 }
 
 impl Operation for Face {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(self.vertices.iter().map(|vertex| **vertex));
-    }
-
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         // This is a placeholder implementation that only supports convex faces.
 

@@ -29,10 +29,6 @@ impl fmt::Display for Vertex {
 }
 
 impl Operation for Vertex {
-    fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.push(*self);
-    }
-
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 
     fn children(&self) -> Vec<AnyOp> {
