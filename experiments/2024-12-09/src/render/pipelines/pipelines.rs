@@ -3,10 +3,9 @@ use std::f32::consts::PI;
 use glam::{Mat4, Vec3};
 use wgpu::util::DeviceExt;
 
-use super::{triangles, vertices, Pipeline};
+use super::{triangles, Pipeline};
 
 pub struct Pipelines {
-    pub vertices: Pipeline<vertices::Vertex>,
     pub triangles: Pipeline<triangles::Vertex>,
 }
 
@@ -25,12 +24,6 @@ impl Pipelines {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
-        let vertices = Pipeline::new(
-            device,
-            config,
-            wgpu::include_wgsl!("shaders/vertices.wgsl"),
-            &uniforms,
-        );
         let triangles = Pipeline::new(
             device,
             config,
@@ -38,10 +31,7 @@ impl Pipelines {
             &uniforms,
         );
 
-        Self {
-            vertices,
-            triangles,
-        }
+        Self { triangles }
     }
 }
 

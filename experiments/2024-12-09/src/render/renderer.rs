@@ -90,7 +90,6 @@ impl Renderer {
     pub fn render(&mut self, operations: &OperationView) -> anyhow::Result<()> {
         let selected_operation = operations.selected();
 
-        let vertices = Geometry::vertices(&self.device, selected_operation);
         let triangles = Geometry::triangles(&self.device, selected_operation);
 
         let mut encoder = self
@@ -129,7 +128,6 @@ impl Renderer {
                     occlusion_query_set: None,
                 });
 
-            self.pipelines.vertices.draw(&mut render_pass, &vertices);
             self.pipelines.triangles.draw(&mut render_pass, &triangles);
             self.text_renderer.render(
                 operations,
