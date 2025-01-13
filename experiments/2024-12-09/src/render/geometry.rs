@@ -12,7 +12,7 @@ pub struct Geometry {
 }
 
 impl Geometry {
-    pub fn triangles(device: &wgpu::Device, operation: &dyn Operation) -> Self {
+    pub fn new(device: &wgpu::Device, operation: &dyn Operation) -> Self {
         let mut mesh_triangles = Vec::new();
         operation.triangles(&mut mesh_triangles);
 
@@ -46,14 +46,6 @@ impl Geometry {
             }
         }
 
-        Self::new(device, &vertices, &indices)
-    }
-
-    pub fn new(
-        device: &wgpu::Device,
-        vertices: &[triangles::Vertex],
-        indices: &[u32],
-    ) -> Self {
         let Ok(num_indices) = indices.len().try_into() else {
             panic!("Unsupported number of indices: `{}`", indices.len());
         };
@@ -61,13 +53,13 @@ impl Geometry {
         let vertices =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(vertices),
+                contents: bytemuck::cast_slice(&vertices),
                 usage: wgpu::BufferUsages::VERTEX,
             });
         let indices =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(indices),
+                contents: bytemuck::cast_slice(&indices),
                 usage: wgpu::BufferUsages::INDEX,
             });
 

@@ -90,7 +90,7 @@ impl Renderer {
     pub fn render(&mut self, operations: &OperationView) -> anyhow::Result<()> {
         let selected_operation = operations.selected();
 
-        let triangles = Geometry::triangles(&self.device, selected_operation);
+        let triangles = Geometry::new(&self.device, selected_operation);
 
         let mut encoder = self
             .device
