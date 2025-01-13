@@ -1,5 +1,5 @@
 mod geometry;
-mod pipelines;
+mod pipeline;
 mod renderer;
 mod text;
 mod uniforms;

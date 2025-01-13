@@ -5,7 +5,7 @@ use winit::window::Window;
 
 use crate::view::OperationView;
 
-use super::{geometry::Geometry, pipelines::Pipeline, text::TextRenderer};
+use super::{geometry::Geometry, pipeline::Pipeline, text::TextRenderer};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
