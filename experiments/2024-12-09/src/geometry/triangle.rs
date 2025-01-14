@@ -6,7 +6,7 @@ use super::{operation::AnyOp, Operation};
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {
-    pub vertices: [Point<3>; 3],
+    pub points: [Point<3>; 3],
 }
 
 impl<P> From<[P; 3]> for Triangle
@@ -15,7 +15,7 @@ where
 {
     fn from(vertices: [P; 3]) -> Self {
         Self {
-            vertices: vertices.map(Into::into),
+            points: vertices.map(Into::into),
         }
     }
 }

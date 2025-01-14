@@ -84,7 +84,7 @@ impl Operation for Face {
         triangles.extend(triangulation.inner_faces().map(|triangle| {
             let vertices =
                 triangle.vertices().map(|vertex| vertex.data().point_vertex);
-            Triangle { vertices }
+            Triangle { points: vertices }
         }));
     }
 
