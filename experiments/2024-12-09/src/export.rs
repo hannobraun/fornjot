@@ -8,14 +8,14 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
 
     let mut indices_by_vertex = BTreeMap::new();
 
-    let mut vertices = Vec::new();
+    let mut points = Vec::new();
     let mut triangles = Vec::new();
 
     for triangle in shape_triangles {
         let triangle = triangle.points.map(|point| {
             *indices_by_vertex.entry(point).or_insert_with(|| {
-                let index = vertices.len();
-                vertices.push(point);
+                let index = points.len();
+                points.push(point);
                 index
             })
         });
@@ -25,7 +25,7 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
 
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices {
-            vertex: vertices
+            vertex: points
                 .into_iter()
                 .map(|point| point.coords.components.map(|coord| coord.value()))
                 .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
