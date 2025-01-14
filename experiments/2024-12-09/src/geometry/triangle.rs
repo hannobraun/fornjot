@@ -13,9 +13,9 @@ impl<P> From<[P; 3]> for Triangle
 where
     P: Into<Point<3>>,
 {
-    fn from(vertices: [P; 3]) -> Self {
+    fn from(points: [P; 3]) -> Self {
         Self {
-            points: vertices.map(Into::into),
+            points: points.map(Into::into),
         }
     }
 }
