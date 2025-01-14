@@ -12,10 +12,10 @@ pub fn export(shape: &Shape) -> anyhow::Result<()> {
     let mut triangles = Vec::new();
 
     for triangle in shape_triangles {
-        let triangle = triangle.points.map(|vertex| {
-            *indices_by_vertex.entry(vertex).or_insert_with(|| {
+        let triangle = triangle.points.map(|point| {
+            *indices_by_vertex.entry(point).or_insert_with(|| {
                 let index = vertices.len();
-                vertices.push(vertex);
+                vertices.push(point);
                 index
             })
         });
