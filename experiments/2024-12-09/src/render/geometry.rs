@@ -20,9 +20,9 @@ impl Geometry {
         let mut vertices = Vec::new();
 
         for triangle in &mesh_triangles {
-            let triangle = triangle.points.each_ref().map(|vertex| {
+            let triangle = triangle.points.each_ref().map(|point| {
                 Vec3::from(
-                    vertex.coords.components.map(|coord| coord.value() as f32),
+                    point.coords.components.map(|coord| coord.value() as f32),
                 )
             });
             let normal = {
