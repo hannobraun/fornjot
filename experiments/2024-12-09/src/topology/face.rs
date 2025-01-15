@@ -43,7 +43,7 @@ impl fmt::Display for Face {
 }
 
 impl Operation for Face {
-    fn triangles(&self, triangles: &mut TriMesh) {
+    fn triangles(&self, mesh: &mut TriMesh) {
         // This is a placeholder implementation that only supports convex faces.
 
         let mut triangulation =
@@ -81,11 +81,13 @@ impl Operation for Face {
             )
             .unwrap();
 
-        triangles.triangles.extend(triangulation.inner_faces().map(|triangle| {
-            let points =
-                triangle.vertices().map(|vertex| vertex.data().point_vertex);
-            Triangle { points }
-        }));
+        mesh.triangles
+            .extend(triangulation.inner_faces().map(|triangle| {
+                let points = triangle
+                    .vertices()
+                    .map(|vertex| vertex.data().point_vertex);
+                Triangle { points }
+            }));
     }
 
     fn children(&self) -> Vec<AnyOp> {
