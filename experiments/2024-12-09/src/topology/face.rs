@@ -43,7 +43,7 @@ impl fmt::Display for Face {
 }
 
 impl Operation for Face {
-    fn triangles(&self) -> TriMesh {
+    fn tri_mesh(&self) -> TriMesh {
         // This is a placeholder implementation that only supports convex faces.
 
         let mut triangulation =

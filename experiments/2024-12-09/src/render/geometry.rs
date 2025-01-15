@@ -13,7 +13,7 @@ pub struct Geometry {
 
 impl Geometry {
     pub fn new(device: &wgpu::Device, operation: &dyn Operation) -> Self {
-        let tri_mesh = operation.triangles();
+        let tri_mesh = operation.tri_mesh();
 
         let mut indices = Vec::new();
         let mut vertices = Vec::new();

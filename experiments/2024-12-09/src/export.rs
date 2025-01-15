@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, fs::File};
 use crate::geometry::{Operation, Shape};
 
 pub fn export(shape: &Shape) -> anyhow::Result<()> {
-    let tri_mesh = shape.triangles();
+    let tri_mesh = shape.tri_mesh();
 
     let mut indices_by_vertex = BTreeMap::new();
 

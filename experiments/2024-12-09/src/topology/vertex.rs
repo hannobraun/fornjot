@@ -29,7 +29,7 @@ impl fmt::Display for Vertex {
 }
 
 impl Operation for Vertex {
-    fn triangles(&self) -> TriMesh {
+    fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }
 
