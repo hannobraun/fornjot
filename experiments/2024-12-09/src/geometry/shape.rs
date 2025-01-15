@@ -52,11 +52,11 @@ struct OperationInSequence {
 }
 
 impl Operation for OperationInSequence {
-    fn triangles(&self, triangles: &mut TriMesh) {
+    fn triangles(&self, mesh: &mut TriMesh) {
         if let Some(op) = &self.previous {
-            op.triangles(triangles);
+            op.triangles(mesh);
         }
-        self.operation.triangles(triangles);
+        self.operation.triangles(mesh);
     }
 
     fn children(&self) -> Vec<AnyOp> {
