@@ -13,13 +13,13 @@ pub struct Geometry {
 
 impl Geometry {
     pub fn new(device: &wgpu::Device, operation: &dyn Operation) -> Self {
-        let mut mesh_triangles = TriMesh::new();
-        operation.triangles(&mut mesh_triangles);
+        let mut tri_mesh = TriMesh::new();
+        operation.triangles(&mut tri_mesh);
 
         let mut indices = Vec::new();
         let mut vertices = Vec::new();
 
-        for triangle in &mesh_triangles.triangles {
+        for triangle in &tri_mesh.triangles {
             let triangle = triangle.points.each_ref().map(|point| {
                 Vec3::from(
                     point.coords.components.map(|coord| coord.value() as f32),
