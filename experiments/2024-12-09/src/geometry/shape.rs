@@ -31,9 +31,9 @@ impl fmt::Display for Shape {
 }
 
 impl Operation for Shape {
-    fn triangles(&self, triangles: &mut TriMesh) {
+    fn triangles(&self, mesh: &mut TriMesh) {
         if let Some(op) = self.sequence.last() {
-            op.triangles(triangles);
+            op.triangles(mesh);
         }
     }
 
