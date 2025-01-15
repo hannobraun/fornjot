@@ -68,8 +68,8 @@ impl fmt::Display for AnyOp {
 }
 
 impl Operation for AnyOp {
-    fn triangles(&self, triangles: &mut TriMesh) {
-        self.inner.triangles(triangles);
+    fn triangles(&self, mesh: &mut TriMesh) {
+        self.inner.triangles(mesh);
     }
 
     fn children(&self) -> Vec<AnyOp> {
