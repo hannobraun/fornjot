@@ -1,6 +1,6 @@
 use std::{fmt, iter};
 
-use crate::geometry::{AnyOp, Operation, Triangle};
+use crate::geometry::{AnyOp, Operation, TriMesh};
 
 #[derive(Clone)]
 pub struct OperationView {
@@ -128,7 +128,7 @@ impl fmt::Display for OperationView {
 }
 
 impl Operation for OperationView {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+    fn triangles(&self, triangles: &mut TriMesh) {
         self.operation.triangles(triangles);
     }
 

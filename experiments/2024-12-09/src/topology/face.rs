@@ -3,7 +3,7 @@ use std::fmt;
 use spade::Triangulation;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, Sketch, Triangle},
+    geometry::{AnyOp, Handle, Operation, Sketch, TriMesh, Triangle},
     math::{Plane, Point},
     storage::Store,
 };
@@ -43,7 +43,7 @@ impl fmt::Display for Face {
 }
 
 impl Operation for Face {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+    fn triangles(&self, triangles: &mut TriMesh) {
         // This is a placeholder implementation that only supports convex faces.
 
         let mut triangulation =
@@ -81,7 +81,7 @@ impl Operation for Face {
             )
             .unwrap();
 
-        triangles.extend(triangulation.inner_faces().map(|triangle| {
+        triangles.triangles.extend(triangulation.inner_faces().map(|triangle| {
             let points =
                 triangle.vertices().map(|vertex| vertex.data().point_vertex);
             Triangle { points }

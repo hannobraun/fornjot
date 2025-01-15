@@ -6,7 +6,8 @@ use crate::storage::Store;
 
 use super::{
     operation::{AnyOp, Handle},
-    Operation, Triangle,
+    tri_mesh::TriMesh,
+    Operation,
 };
 
 #[derive(Default)]
@@ -30,7 +31,7 @@ impl fmt::Display for Shape {
 }
 
 impl Operation for Shape {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+    fn triangles(&self, triangles: &mut TriMesh) {
         if let Some(op) = self.sequence.last() {
             op.triangles(triangles);
         }
@@ -51,7 +52,7 @@ struct OperationInSequence {
 }
 
 impl Operation for OperationInSequence {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+    fn triangles(&self, triangles: &mut TriMesh) {
         if let Some(op) = &self.previous {
             op.triangles(triangles);
         }

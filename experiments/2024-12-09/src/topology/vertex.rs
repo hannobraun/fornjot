@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    geometry::{AnyOp, Operation, Triangle},
+    geometry::{AnyOp, Operation, TriMesh},
     math::Point,
 };
 
@@ -29,7 +29,7 @@ impl fmt::Display for Vertex {
 }
 
 impl Operation for Vertex {
-    fn triangles(&self, _: &mut Vec<Triangle>) {}
+    fn triangles(&self, _: &mut TriMesh) {}
 
     fn children(&self) -> Vec<AnyOp> {
         Vec::new()

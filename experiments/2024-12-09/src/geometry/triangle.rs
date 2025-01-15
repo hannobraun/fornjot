@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::math::Point;
 
-use super::{operation::AnyOp, Operation};
+use super::{operation::AnyOp, Operation, TriMesh};
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {
@@ -27,8 +27,8 @@ impl fmt::Display for Triangle {
 }
 
 impl Operation for Triangle {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
-        triangles.push(self.clone())
+    fn triangles(&self, triangles: &mut TriMesh) {
+        triangles.triangles.push(self.clone())
     }
 
     fn children(&self) -> Vec<AnyOp> {

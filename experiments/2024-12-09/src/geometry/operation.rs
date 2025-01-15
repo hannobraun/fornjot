@@ -1,9 +1,9 @@
 use std::{fmt, ops::Deref, rc::Rc};
 
-use super::Triangle;
+use super::tri_mesh::TriMesh;
 
 pub trait Operation: fmt::Display {
-    fn triangles(&self, triangles: &mut Vec<Triangle>);
+    fn triangles(&self, triangles: &mut TriMesh);
     fn children(&self) -> Vec<AnyOp>;
 }
 
@@ -68,7 +68,7 @@ impl fmt::Display for AnyOp {
 }
 
 impl Operation for AnyOp {
-    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+    fn triangles(&self, triangles: &mut TriMesh) {
         self.inner.triangles(triangles);
     }
 
