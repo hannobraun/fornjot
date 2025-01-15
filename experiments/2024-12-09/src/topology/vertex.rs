@@ -29,7 +29,9 @@ impl fmt::Display for Vertex {
 }
 
 impl Operation for Vertex {
-    fn triangles(&self, _: &mut TriMesh) {}
+    fn triangles(&self) -> TriMesh {
+        TriMesh::new()
+    }
 
     fn children(&self) -> Vec<AnyOp> {
         Vec::new()

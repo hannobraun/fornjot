@@ -3,7 +3,7 @@ use std::{fmt, ops::Deref, rc::Rc};
 use super::tri_mesh::TriMesh;
 
 pub trait Operation: fmt::Display {
-    fn triangles(&self, mesh: &mut TriMesh);
+    fn triangles(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
 }
 
@@ -68,8 +68,8 @@ impl fmt::Display for AnyOp {
 }
 
 impl Operation for AnyOp {
-    fn triangles(&self, mesh: &mut TriMesh) {
-        self.inner.triangles(mesh);
+    fn triangles(&self) -> TriMesh {
+        self.inner.triangles()
     }
 
     fn children(&self) -> Vec<AnyOp> {

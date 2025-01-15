@@ -27,8 +27,10 @@ impl fmt::Display for Triangle {
 }
 
 impl Operation for Triangle {
-    fn triangles(&self, mesh: &mut TriMesh) {
-        mesh.triangles.push(self.clone())
+    fn triangles(&self) -> TriMesh {
+        TriMesh {
+            triangles: vec![self.clone()],
+        }
     }
 
     fn children(&self) -> Vec<AnyOp> {

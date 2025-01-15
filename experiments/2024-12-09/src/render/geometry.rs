@@ -1,7 +1,7 @@
 use glam::Vec3;
 use wgpu::util::DeviceExt;
 
-use crate::geometry::{Operation, TriMesh};
+use crate::geometry::Operation;
 
 use super::vertex::Vertex;
 
@@ -13,8 +13,7 @@ pub struct Geometry {
 
 impl Geometry {
     pub fn new(device: &wgpu::Device, operation: &dyn Operation) -> Self {
-        let mut tri_mesh = TriMesh::new();
-        operation.triangles(&mut tri_mesh);
+        let tri_mesh = operation.triangles();
 
         let mut indices = Vec::new();
         let mut vertices = Vec::new();

@@ -31,9 +31,11 @@ impl fmt::Display for Shape {
 }
 
 impl Operation for Shape {
-    fn triangles(&self, mesh: &mut TriMesh) {
+    fn triangles(&self) -> TriMesh {
         if let Some(op) = self.sequence.last() {
-            op.triangles(mesh);
+            op.triangles()
+        } else {
+            TriMesh::new()
         }
     }
 
@@ -52,11 +54,14 @@ struct OperationInSequence {
 }
 
 impl Operation for OperationInSequence {
-    fn triangles(&self, mesh: &mut TriMesh) {
-        if let Some(op) = &self.previous {
-            op.triangles(mesh);
-        }
-        self.operation.triangles(mesh);
+    fn triangles(&self) -> TriMesh {
+        let mesh = if let Some(op) = &self.previous {
+            op.triangles()
+        } else {
+            TriMesh::new()
+        };
+
+        mesh.merge(self.operation.triangles())
     }
 
     fn children(&self) -> Vec<AnyOp> {

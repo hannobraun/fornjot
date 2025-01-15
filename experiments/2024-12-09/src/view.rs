@@ -128,8 +128,8 @@ impl fmt::Display for OperationView {
 }
 
 impl Operation for OperationView {
-    fn triangles(&self, mesh: &mut TriMesh) {
-        self.operation.triangles(mesh);
+    fn triangles(&self) -> TriMesh {
+        self.operation.triangles()
     }
 
     fn children(&self) -> Vec<AnyOp> {

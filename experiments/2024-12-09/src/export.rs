@@ -1,10 +1,9 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::geometry::{Operation, Shape, TriMesh};
+use crate::geometry::{Operation, Shape};
 
 pub fn export(shape: &Shape) -> anyhow::Result<()> {
-    let mut tri_mesh = TriMesh::new();
-    shape.triangles(&mut tri_mesh);
+    let tri_mesh = shape.triangles();
 
     let mut indices_by_vertex = BTreeMap::new();
 

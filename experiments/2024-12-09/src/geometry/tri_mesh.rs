@@ -10,4 +10,9 @@ impl TriMesh {
             triangles: Vec::new(),
         }
     }
+
+    pub fn merge(mut self, other: Self) -> Self {
+        self.triangles.extend(other.triangles);
+        self
+    }
 }
