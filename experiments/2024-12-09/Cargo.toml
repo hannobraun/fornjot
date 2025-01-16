@@ -14,7 +14,7 @@ pollster = "*"
 spade = "*"
 threemf = "*"
 tuples = "*"
-wgpu = "*"
+wgpu = "23"      # needs to stay in sync with `glyphon`
 winit = "*"
 
 [dependencies.bytemuck]
