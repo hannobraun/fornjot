@@ -34,6 +34,10 @@ impl Face {
 
         Self { surface, vertices }
     }
+
+    pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
+        self.vertices.iter()
+    }
 }
 
 impl fmt::Display for Face {

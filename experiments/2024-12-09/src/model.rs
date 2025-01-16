@@ -37,8 +37,8 @@ pub fn model(shape: &mut Shape) {
         .add(top)
         .get_added();
 
-    let [a, b, c, d] = bottom.vertices.iter().collect_array().unwrap();
-    let [e, f, g, h] = top.vertices.iter().collect_array().unwrap();
+    let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
+    let [e, f, g, h] = top.vertices().collect_array().unwrap();
 
     let [a, b, c, d, e, f, g, h] =
         [a, b, c, d, e, f, g, h].map(|vertex| vertex.point);
