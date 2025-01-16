@@ -12,7 +12,7 @@ use super::Vertex;
 
 pub struct Face {
     surface: Handle<Plane>,
-    pub vertices: Vec<Handle<Vertex>>,
+    vertices: Vec<Handle<Vertex>>,
 }
 
 impl Face {
