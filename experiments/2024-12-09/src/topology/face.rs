@@ -1,5 +1,3 @@
-use std::fmt;
-
 use spade::Triangulation;
 
 use crate::{
@@ -37,12 +35,6 @@ impl Face {
 
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.vertices.iter()
-    }
-}
-
-impl fmt::Display for Face {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "face")
     }
 }
 

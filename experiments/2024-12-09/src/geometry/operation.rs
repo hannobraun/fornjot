@@ -1,8 +1,8 @@
-use std::{fmt, ops::Deref, rc::Rc};
+use std::{ops::Deref, rc::Rc};
 
 use super::tri_mesh::TriMesh;
 
-pub trait Operation: fmt::Display {
+pub trait Operation {
     fn label(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
@@ -59,12 +59,6 @@ pub struct AnyOp {
 impl AnyOp {
     pub fn new(op: impl Operation + 'static) -> Self {
         Self { inner: Rc::new(op) }
-    }
-}
-
-impl fmt::Display for AnyOp {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.inner)
     }
 }
 

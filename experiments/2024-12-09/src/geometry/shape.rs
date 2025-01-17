@@ -1,5 +1,3 @@
-use std::fmt;
-
 use tuples::CombinRight;
 
 use crate::storage::Store;
@@ -21,12 +19,6 @@ impl Shape {
         store: &'r mut Store<T>,
     ) -> ShapeExtender<'r, (), T> {
         ShapeExtender::new(store, &mut self.sequence)
-    }
-}
-
-impl fmt::Display for Shape {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "shape")
     }
 }
 
@@ -74,12 +66,6 @@ impl Operation for OperationInSequence {
 
     fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
-    }
-}
-
-impl fmt::Display for OperationInSequence {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.operation.fmt(f)
     }
 }
 

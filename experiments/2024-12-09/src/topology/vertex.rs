@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     geometry::{AnyOp, Operation, TriMesh},
     math::Point,
@@ -18,13 +16,6 @@ where
         Self {
             point: point.into(),
         }
-    }
-}
-
-impl fmt::Display for Vertex {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [x, y, z] = self.point.coords.components.map(|s| s.value());
-        write!(f, "vertex {x:.2}, {y:.2}, {z:.2}")
     }
 }
 

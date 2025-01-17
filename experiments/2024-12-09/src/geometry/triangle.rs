@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::math::Point;
 
 use super::{operation::AnyOp, Operation, TriMesh};
@@ -17,12 +15,6 @@ where
         Self {
             points: points.map(Into::into),
         }
-    }
-}
-
-impl fmt::Display for Triangle {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "triangle")
     }
 }
 

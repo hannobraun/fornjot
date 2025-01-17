@@ -1,4 +1,4 @@
-use std::{fmt, iter};
+use std::iter;
 
 use crate::geometry::{AnyOp, Operation, TriMesh};
 
@@ -118,12 +118,6 @@ impl OperationView {
 
     fn last_index(&self) -> usize {
         self.children.len().saturating_sub(1)
-    }
-}
-
-impl fmt::Display for OperationView {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.operation)
     }
 }
 
