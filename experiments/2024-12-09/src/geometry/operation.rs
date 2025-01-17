@@ -3,6 +3,7 @@ use std::{fmt, ops::Deref, rc::Rc};
 use super::tri_mesh::TriMesh;
 
 pub trait Operation: fmt::Display {
+    fn label(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
 }
@@ -68,6 +69,10 @@ impl fmt::Display for AnyOp {
 }
 
 impl Operation for AnyOp {
+    fn label(&self) -> &'static str {
+        self.inner.label()
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         self.inner.tri_mesh()
     }

@@ -128,6 +128,10 @@ impl fmt::Display for OperationView {
 }
 
 impl Operation for OperationView {
+    fn label(&self) -> &'static str {
+        self.operation.label()
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         self.operation.tri_mesh()
     }

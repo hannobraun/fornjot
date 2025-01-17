@@ -47,6 +47,10 @@ impl fmt::Display for Face {
 }
 
 impl Operation for Face {
+    fn label(&self) -> &'static str {
+        "Face"
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         // This is a placeholder implementation that only supports convex faces.
 

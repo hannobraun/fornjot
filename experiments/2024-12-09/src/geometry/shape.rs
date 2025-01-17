@@ -31,6 +31,10 @@ impl fmt::Display for Shape {
 }
 
 impl Operation for Shape {
+    fn label(&self) -> &'static str {
+        "Shape"
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         if let Some(op) = self.sequence.last() {
             op.tri_mesh()
@@ -54,6 +58,10 @@ struct OperationInSequence {
 }
 
 impl Operation for OperationInSequence {
+    fn label(&self) -> &'static str {
+        self.operation.label()
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         let mesh = if let Some(op) = &self.previous {
             op.tri_mesh()

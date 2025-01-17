@@ -29,6 +29,10 @@ impl fmt::Display for Vertex {
 }
 
 impl Operation for Vertex {
+    fn label(&self) -> &'static str {
+        "Vertex"
+    }
+
     fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }
