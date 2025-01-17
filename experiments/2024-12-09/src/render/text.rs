@@ -1,6 +1,6 @@
 use std::fmt::Write;
 
-use crate::view::OperationView;
+use crate::{geometry::Operation, view::OperationView};
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
@@ -91,7 +91,7 @@ impl TextRenderer {
                 write!(line, "\t")?;
             }
 
-            write!(line, "{op}")?;
+            write!(line, "{}", op.label())?;
 
             buffer.lines.push(glyphon::BufferLine::new(
                 line,
