@@ -28,11 +28,13 @@ impl Operation for Shape {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        if let Some(op) = self.sequence.last() {
-            op.tri_mesh()
-        } else {
-            TriMesh::new()
+        let mut tri_mesh = TriMesh::new();
+
+        for op in &self.sequence {
+            tri_mesh = tri_mesh.merge(op.tri_mesh());
         }
+
+        tri_mesh
     }
 
     fn children(&self) -> Vec<AnyOp> {
@@ -46,7 +48,6 @@ impl Operation for Shape {
 #[derive(Clone)]
 struct OperationInSequence {
     pub operation: AnyOp,
-    pub previous: Option<AnyOp>,
 }
 
 impl Operation for OperationInSequence {
@@ -55,13 +56,7 @@ impl Operation for OperationInSequence {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        let mesh = if let Some(op) = &self.previous {
-            op.tri_mesh()
-        } else {
-            TriMesh::new()
-        };
-
-        mesh.merge(self.operation.tri_mesh())
+        self.operation.tri_mesh()
     }
 
     fn children(&self) -> Vec<AnyOp> {
@@ -98,7 +93,6 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
 
         self.sequence.push(OperationInSequence {
             operation: op.to_any(),
-            previous: self.sequence.last().map(|op| AnyOp::new(op.clone())),
         });
 
         ShapeExtender {
