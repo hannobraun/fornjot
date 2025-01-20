@@ -44,7 +44,6 @@ impl Plane {
         self
     }
 
-    #[allow(unused)] // fell out of use, but will need again soon
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             origin: self.origin + offset,
