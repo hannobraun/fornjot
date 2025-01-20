@@ -10,18 +10,20 @@ use crate::{
 pub fn model(shape: &mut Shape) {
     let mut stores = Stores::new();
 
-    let top = stores.get().insert(Plane {
-        origin: Point::from([0., 0., 0.5]),
-        coords: Bivector {
-            a: Vector::from([1., 0., 0.]),
-            b: Vector::from([0., 1., 0.]),
-        },
-    });
+    let top = {
+        let top = stores.get().insert(Plane {
+            origin: Point::from([0., 0., 0.5]),
+            coords: Bivector {
+                a: Vector::from([1., 0., 0.]),
+                b: Vector::from([0., 1., 0.]),
+            },
+        });
 
-    let sketch =
-        Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
+        let sketch =
+            Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-    let top = Face::new(&sketch, top, stores.get());
+        Face::new(&sketch, top, stores.get())
+    };
 
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 
