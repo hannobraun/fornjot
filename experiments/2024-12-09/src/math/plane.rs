@@ -1,6 +1,6 @@
 use super::{Bivector, Point, Vector};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Plane {
     pub origin: Point<3>,
     pub coords: Bivector<3>,
