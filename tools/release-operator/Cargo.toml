@@ -10,10 +10,10 @@ anyhow = "1.0.95"
 cargo_metadata = "0.19.1"
 cmd_lib = "1.9.5"
 env_logger = "0.11.6"
-log = "0.4.22"
+log = "0.4.25"
 secstr = "0.5.0"
-semver = "1.0.24"
-serde_json = "1.0.135"
+semver = "1.0.25"
+serde_json = "1.0.137"
 thiserror = "2.0.11"
 
 [dependencies.autolib]
