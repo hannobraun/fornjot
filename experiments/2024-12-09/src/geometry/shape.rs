@@ -10,7 +10,7 @@ use super::{
 
 #[derive(Default)]
 pub struct Shape {
-    sequence: Vec<AnyOp>,
+    children: Vec<AnyOp>,
 }
 
 impl Shape {
@@ -18,7 +18,7 @@ impl Shape {
         &'r mut self,
         store: &'r mut Store<T>,
     ) -> ShapeExtender<'r, (), T> {
-        ShapeExtender::new(store, &mut self.sequence)
+        ShapeExtender::new(store, &mut self.children)
     }
 }
 
@@ -30,7 +30,7 @@ impl Operation for Shape {
     fn tri_mesh(&self) -> TriMesh {
         let mut tri_mesh = TriMesh::new();
 
-        for op in &self.sequence {
+        for op in &self.children {
             tri_mesh = tri_mesh.merge(op.tri_mesh());
         }
 
@@ -38,7 +38,7 @@ impl Operation for Shape {
     }
 
     fn children(&self) -> Vec<AnyOp> {
-        self.sequence
+        self.children
             .iter()
             .map(|op| AnyOp::new(op.clone()))
             .collect()
