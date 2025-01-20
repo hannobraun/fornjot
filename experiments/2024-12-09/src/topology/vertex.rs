@@ -1,11 +1,20 @@
 use crate::{
     geometry::{AnyOp, Operation, TriMesh},
-    math::Point,
+    math::{Point, Vector},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
     pub point: Point<3>,
+}
+
+impl Vertex {
+    #[allow(unused)] // code that uses it is being worked on
+    pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
+        Self {
+            point: self.point + offset,
+        }
+    }
 }
 
 impl<P> From<P> for Vertex
