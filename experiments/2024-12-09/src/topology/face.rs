@@ -38,7 +38,6 @@ impl Face {
         self.vertices.iter()
     }
 
-    #[allow(unused)] // code that uses it is being worked on
     pub fn flip(&self, surfaces: &mut Store<Plane>) -> Self {
         Self {
             surface: surfaces.insert(self.surface.flip()),
@@ -46,7 +45,6 @@ impl Face {
         }
     }
 
-    #[allow(unused)] // code that uses it is being worked on
     pub fn translate(
         &self,
         offset: impl Into<Vector<3>>,
