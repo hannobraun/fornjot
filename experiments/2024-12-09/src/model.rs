@@ -21,7 +21,7 @@ pub fn model(shape: &mut Shape) {
     let sketch =
         Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-    let [top] = [top].map(|plane| Face::new(&sketch, plane, stores.get()));
+    let top = Face::new(&sketch, top, stores.get());
 
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 
