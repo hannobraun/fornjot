@@ -47,7 +47,7 @@ impl Operation for Shape {
 
 pub struct ShapeExtender<'r, NewOps, T> {
     store: &'r mut Store<T>,
-    sequence: &'r mut Vec<AnyOp>,
+    ops: &'r mut Vec<AnyOp>,
     new_ops: NewOps,
 }
 
@@ -55,7 +55,7 @@ impl<'r, T> ShapeExtender<'r, (), T> {
     fn new(store: &'r mut Store<T>, sequence: &'r mut Vec<AnyOp>) -> Self {
         Self {
             store,
-            sequence,
+            ops: sequence,
             new_ops: (),
         }
     }
@@ -69,11 +69,11 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
     {
         let op = self.store.insert(op.into());
 
-        self.sequence.push(op.to_any());
+        self.ops.push(op.to_any());
 
         ShapeExtender {
             store: self.store,
-            sequence: self.sequence,
+            ops: self.ops,
             new_ops: self.new_ops.push_right(op),
         }
     }
