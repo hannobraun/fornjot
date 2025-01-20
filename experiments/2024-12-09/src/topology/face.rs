@@ -8,6 +8,7 @@ use crate::{
 
 use super::Vertex;
 
+#[derive(Debug)]
 pub struct Face {
     surface: Handle<Plane>,
     vertices: Vec<Handle<Vertex>>,
