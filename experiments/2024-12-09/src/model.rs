@@ -11,7 +11,7 @@ pub fn model(shape: &mut Shape) {
     let mut stores = Stores::new();
 
     let top = {
-        let top = stores.get().insert(Plane {
+        let surface = stores.get().insert(Plane {
             origin: Point::from([0., 0., 0.5]),
             coords: Bivector {
                 a: Vector::from([1., 0., 0.]),
@@ -22,7 +22,7 @@ pub fn model(shape: &mut Shape) {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-        Face::new(&sketch, top, stores.get())
+        Face::new(&sketch, surface, stores.get())
     };
 
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
