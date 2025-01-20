@@ -10,7 +10,7 @@ use super::{
 
 #[derive(Default)]
 pub struct Shape {
-    sequence: Vec<OperationInSequence>,
+    sequence: Vec<AnyOp>,
 }
 
 impl Shape {
@@ -45,36 +45,14 @@ impl Operation for Shape {
     }
 }
 
-#[derive(Clone)]
-struct OperationInSequence {
-    pub operation: AnyOp,
-}
-
-impl Operation for OperationInSequence {
-    fn label(&self) -> &'static str {
-        self.operation.label()
-    }
-
-    fn tri_mesh(&self) -> TriMesh {
-        self.operation.tri_mesh()
-    }
-
-    fn children(&self) -> Vec<AnyOp> {
-        self.operation.children()
-    }
-}
-
 pub struct ShapeExtender<'r, NewOps, T> {
     store: &'r mut Store<T>,
-    sequence: &'r mut Vec<OperationInSequence>,
+    sequence: &'r mut Vec<AnyOp>,
     new_ops: NewOps,
 }
 
 impl<'r, T> ShapeExtender<'r, (), T> {
-    fn new(
-        store: &'r mut Store<T>,
-        sequence: &'r mut Vec<OperationInSequence>,
-    ) -> Self {
+    fn new(store: &'r mut Store<T>, sequence: &'r mut Vec<AnyOp>) -> Self {
         Self {
             store,
             sequence,
@@ -91,9 +69,7 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
     {
         let op = self.store.insert(op.into());
 
-        self.sequence.push(OperationInSequence {
-            operation: op.to_any(),
-        });
+        self.sequence.push(op.to_any());
 
         ShapeExtender {
             store: self.store,
