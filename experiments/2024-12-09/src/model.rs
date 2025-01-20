@@ -10,13 +10,6 @@ use crate::{
 pub fn model(shape: &mut Shape) {
     let mut stores = Stores::new();
 
-    let bottom = stores.get().insert(Plane {
-        origin: Point::from([0., 0., -0.5]),
-        coords: Bivector {
-            a: Vector::from([1., 0., 0.]),
-            b: Vector::from([0., -1., 0.]),
-        },
-    });
     let top = stores.get().insert(Plane {
         origin: Point::from([0., 0., 0.5]),
         coords: Bivector {
@@ -28,8 +21,9 @@ pub fn model(shape: &mut Shape) {
     let sketch =
         Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-    let [bottom, top] =
-        [bottom, top].map(|plane| Face::new(&sketch, plane, stores.get()));
+    let [top] = [top].map(|plane| Face::new(&sketch, plane, stores.get()));
+
+    let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 
     let (bottom, top) = shape
         .extend_with(stores.get::<Face>())
@@ -45,12 +39,12 @@ pub fn model(shape: &mut Shape) {
 
     shape
         .extend_with(stores.get::<Triangle>())
-        .add([d, e, h]) // left
-        .add([d, h, a])
-        .add([c, b, g]) // right
-        .add([c, g, f])
-        .add([d, c, f]) // front
-        .add([d, f, e])
-        .add([a, g, b]) // back
-        .add([a, h, g]);
+        .add([a, e, h]) // left
+        .add([a, h, d])
+        .add([b, c, g]) // right
+        .add([b, g, f])
+        .add([a, b, f]) // front
+        .add([a, f, e])
+        .add([d, g, c]) // back
+        .add([d, h, g]);
 }
