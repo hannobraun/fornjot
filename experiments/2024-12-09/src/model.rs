@@ -11,6 +11,9 @@ pub fn model(shape: &mut Shape) {
     let mut stores = Stores::new();
 
     let top = {
+        let sketch =
+            Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
+
         let surface = stores.get().insert(Plane {
             origin: Point::from([0., 0., 0.5]),
             coords: Bivector {
@@ -18,9 +21,6 @@ pub fn model(shape: &mut Shape) {
                 b: Vector::from([0., 1., 0.]),
             },
         });
-
-        let sketch =
-            Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
         Face::new(&sketch, surface, stores.get())
     };
