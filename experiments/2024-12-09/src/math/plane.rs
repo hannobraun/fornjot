@@ -39,7 +39,6 @@ impl Plane {
         Point::from([u, v])
     }
 
-    #[allow(unused)] // code that uses it is being worked on
     pub fn flip(mut self) -> Self {
         self.coords.b = -self.coords.b;
         self
