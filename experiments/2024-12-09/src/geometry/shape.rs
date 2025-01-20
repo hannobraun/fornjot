@@ -52,10 +52,10 @@ pub struct ShapeExtender<'r, NewOps, T> {
 }
 
 impl<'r, T> ShapeExtender<'r, (), T> {
-    fn new(store: &'r mut Store<T>, sequence: &'r mut Vec<AnyOp>) -> Self {
+    fn new(store: &'r mut Store<T>, ops: &'r mut Vec<AnyOp>) -> Self {
         Self {
             store,
-            ops: sequence,
+            ops,
             new_ops: (),
         }
     }
