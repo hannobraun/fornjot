@@ -36,6 +36,14 @@ impl Face {
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.vertices.iter()
     }
+
+    #[allow(unused)] // code that uses it is being worked on
+    pub fn flip(&self, surfaces: &mut Store<Plane>) -> Self {
+        Self {
+            surface: surfaces.insert(self.surface.flip()),
+            vertices: self.vertices.clone(),
+        }
+    }
 }
 
 impl Operation for Face {
