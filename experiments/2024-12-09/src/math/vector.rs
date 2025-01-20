@@ -106,6 +106,14 @@ where
     }
 }
 
+impl<const D: usize> ops::Neg for Vector<D> {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        self * -1.
+    }
+}
+
 impl<V, const D: usize> ops::Sub<V> for Vector<D>
 where
     V: Into<Vector<D>>,
