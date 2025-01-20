@@ -24,7 +24,6 @@ pub fn model(shape: &mut Shape) {
 
         Face::new(&sketch, surface, stores.get())
     };
-
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 
     let (bottom, top) = shape
