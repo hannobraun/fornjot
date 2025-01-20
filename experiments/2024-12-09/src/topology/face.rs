@@ -2,8 +2,8 @@ use spade::Triangulation;
 
 use crate::{
     geometry::{AnyOp, Handle, Operation, Sketch, TriMesh, Triangle},
-    math::{Plane, Point},
-    storage::Store,
+    math::{Plane, Point, Vector},
+    storage::{Store, Stores},
 };
 
 use super::Vertex;
@@ -43,6 +43,24 @@ impl Face {
         Self {
             surface: surfaces.insert(self.surface.flip()),
             vertices: self.vertices.clone(),
+        }
+    }
+
+    #[allow(unused)] // code that uses it is being worked on
+    pub fn translate(
+        &self,
+        offset: impl Into<Vector<3>>,
+        stores: &mut Stores,
+    ) -> Self {
+        let offset = offset.into();
+
+        Self {
+            surface: stores.get().insert(self.surface.translate(offset)),
+            vertices: self
+                .vertices
+                .iter()
+                .map(|vertex| stores.get().insert(vertex.translate(offset)))
+                .collect(),
         }
     }
 }
