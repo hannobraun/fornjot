@@ -9,7 +9,6 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    #[allow(unused)] // code that uses it is being worked on
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             point: self.point + offset,
