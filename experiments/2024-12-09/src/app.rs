@@ -8,14 +8,10 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{
-    geometry::{AnyOp, Shape},
-    render::Renderer,
-    view::OperationView,
-};
+use crate::{geometry::AnyOp, render::Renderer, view::OperationView};
 
-pub fn run(shape: Shape) -> anyhow::Result<()> {
-    let view = OperationView::new(AnyOp::new(shape));
+pub fn run(shape: AnyOp) -> anyhow::Result<()> {
+    let view = OperationView::new(shape);
 
     let event_loop = EventLoop::new()?;
 

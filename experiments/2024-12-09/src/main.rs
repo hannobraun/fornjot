@@ -15,7 +15,7 @@ fn main() -> anyhow::Result<()> {
     model::model(&mut shape);
 
     export::export(&shape)?;
-    app::run(shape)?;
+    app::run(geometry::AnyOp::new(shape))?;
 
     Ok(())
 }
