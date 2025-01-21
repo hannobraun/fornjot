@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Shape, Sketch, Triangle},
+    geometry::{Shape, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
     topology::Face,
@@ -35,17 +35,20 @@ pub fn model(shape: &mut Shape) {
     let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
     let [e, f, g, h] = top.vertices().collect_array().unwrap();
 
-    let [a, b, c, d, e, f, g, h] =
-        [a, b, c, d, e, f, g, h].map(|vertex| vertex.point);
+    let [left, right, front, back] =
+        [[a, e, h, d], [b, c, g, f], [a, b, f, e], [c, d, h, g]].map(
+            |[q, r, s, t]| {
+                let surface = stores.get().insert(Plane::from_points(
+                    [q, r, s].map(|vertex| vertex.point),
+                ));
+                Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()))
+            },
+        );
 
     shape
-        .extend_with(stores.get::<Triangle>())
-        .add([a, e, h]) // left
-        .add([a, h, d])
-        .add([b, c, g]) // right
-        .add([b, g, f])
-        .add([a, b, f]) // front
-        .add([a, f, e])
-        .add([d, g, c]) // back
-        .add([d, h, g]);
+        .extend_with(stores.get::<Face>())
+        .add(left)
+        .add(right)
+        .add(front)
+        .add(back);
 }
