@@ -11,10 +11,10 @@ mod topology;
 mod view;
 
 fn main() -> anyhow::Result<()> {
-    let shape = model::model();
+    let model = model::model();
 
-    export::export(&shape)?;
-    app::run(geometry::AnyOp::new(shape))?;
+    export::export(&model)?;
+    app::run(geometry::AnyOp::new(model))?;
 
     Ok(())
 }
