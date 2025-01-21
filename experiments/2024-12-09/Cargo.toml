@@ -7,14 +7,14 @@ edition = "2021"
 [dependencies]
 anyhow = "*"
 anymap3 = "*"
-glyphon = "0.7"  # needs to stay in sync with `wgpu`
+glyphon = "*"
 iter_fixed = "*"
 itertools = "*"
 pollster = "*"
 spade = "*"
 threemf = "*"
 tuples = "*"
-wgpu = "23"      # needs to stay in sync with `glyphon`
+wgpu = "*"
 winit = "*"
 
 [dependencies.bytemuck]
