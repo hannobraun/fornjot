@@ -29,7 +29,7 @@ impl Face {
                 let vertex = Vertex::from(point);
                 vertices.insert(vertex)
             })
-            .collect();
+            .collect::<Vec<_>>();
 
         Self { surface, vertices }
     }
