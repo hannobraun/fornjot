@@ -1,13 +1,13 @@
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Shape, Sketch},
+    geometry::{AnyOp, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
     topology::{Face, Solid},
 };
 
-pub fn model() -> Shape {
+pub fn model() -> AnyOp {
     let mut stores = Stores::new();
 
     let top = {
@@ -44,7 +44,5 @@ pub fn model() -> Shape {
             .map(|face| stores.get().insert(face)),
     );
 
-    let mut shape = Shape::default();
-    shape.extend_with(stores.get::<Solid>()).add(solid);
-    shape
+    AnyOp::new(solid)
 }
