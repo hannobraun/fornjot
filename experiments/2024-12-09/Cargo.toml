@@ -13,7 +13,6 @@ itertools = "*"
 pollster = "*"
 spade = "*"
 threemf = "*"
-tuples = "*"
 wgpu = "*"
 winit = "*"
 
