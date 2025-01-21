@@ -15,6 +15,16 @@ pub struct Face {
 }
 
 impl Face {
+    pub fn new(
+        surface: Handle<Plane>,
+        vertices: impl IntoIterator<Item = Handle<Vertex>>,
+    ) -> Self {
+        Self {
+            surface,
+            vertices: vertices.into_iter().collect(),
+        }
+    }
+
     pub fn from_sketch(
         sketch: &Sketch,
         surface: Handle<Plane>,
@@ -31,7 +41,7 @@ impl Face {
             })
             .collect::<Vec<_>>();
 
-        Self { surface, vertices }
+        Self::new(surface, vertices)
     }
 
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
