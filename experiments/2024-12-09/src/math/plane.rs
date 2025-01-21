@@ -7,6 +7,14 @@ pub struct Plane {
 }
 
 impl Plane {
+    #[allow(unused)] // code using this is being worked on
+    pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
+        Self {
+            origin: a,
+            coords: Bivector { a: b - a, b: c - a },
+        }
+    }
+
     pub fn u(&self) -> Vector<3> {
         self.coords.a
     }
