@@ -15,7 +15,7 @@ pub struct Face {
 }
 
 impl Face {
-    pub fn new(
+    pub fn from_sketch(
         sketch: &Sketch,
         surface: Handle<Plane>,
         vertices: &mut Store<Vertex>,
