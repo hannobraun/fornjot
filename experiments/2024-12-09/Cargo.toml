@@ -7,7 +7,7 @@ edition = "2021"
 [dependencies]
 anyhow = "*"
 anymap3 = "*"
-glyphon = "*"
+glyphon = "0.7"  # needs to stay in sync with `wgpu`
 iter_fixed = "*"
 itertools = "*"
 pollster = "*"
