@@ -2,8 +2,8 @@ use std::{collections::BTreeMap, fs::File};
 
 use crate::geometry::Operation;
 
-pub fn export(shape: &dyn Operation) -> anyhow::Result<()> {
-    let tri_mesh = shape.tri_mesh();
+pub fn export(op: &dyn Operation) -> anyhow::Result<()> {
+    let tri_mesh = op.tri_mesh();
 
     let mut indices_by_vertex = BTreeMap::new();
 
