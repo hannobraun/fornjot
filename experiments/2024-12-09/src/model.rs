@@ -7,7 +7,7 @@ use crate::{
     topology::{Face, Solid},
 };
 
-pub fn model(shape: &mut Shape) {
+pub fn model() -> Shape {
     let mut stores = Stores::new();
 
     let top = {
@@ -44,5 +44,7 @@ pub fn model(shape: &mut Shape) {
             .map(|face| stores.get().insert(face)),
     );
 
+    let mut shape = Shape::default();
     shape.extend_with(stores.get::<Solid>()).add(solid);
+    shape
 }

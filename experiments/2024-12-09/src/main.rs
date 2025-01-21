@@ -11,8 +11,7 @@ mod topology;
 mod view;
 
 fn main() -> anyhow::Result<()> {
-    let mut shape = geometry::Shape::default();
-    model::model(&mut shape);
+    let shape = model::model();
 
     export::export(&shape)?;
     app::run(geometry::AnyOp::new(shape))?;
