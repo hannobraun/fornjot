@@ -77,8 +77,4 @@ impl<'r, NewOps, T> ShapeExtender<'r, NewOps, T> {
             new_ops: self.new_ops.push_right(op),
         }
     }
-
-    pub fn get_added(self) -> NewOps {
-        self.new_ops
-    }
 }

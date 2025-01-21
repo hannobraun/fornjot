@@ -4,7 +4,7 @@ use crate::{
     geometry::{Shape, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
-    topology::Face,
+    topology::{Face, Solid},
 };
 
 pub fn model(shape: &mut Shape) {
@@ -26,12 +26,6 @@ pub fn model(shape: &mut Shape) {
     };
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 
-    let (bottom, top) = shape
-        .extend_with(stores.get::<Face>())
-        .add(bottom)
-        .add(top)
-        .get_added();
-
     let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
     let [e, f, g, h] = top.vertices().collect_array().unwrap();
 
@@ -45,10 +39,10 @@ pub fn model(shape: &mut Shape) {
             },
         );
 
-    shape
-        .extend_with(stores.get::<Face>())
-        .add(left)
-        .add(right)
-        .add(front)
-        .add(back);
+    let solid = Solid::new(
+        [bottom, top, left, right, front, back]
+            .map(|face| stores.get().insert(face)),
+    );
+
+    shape.extend_with(stores.get::<Solid>()).add(solid);
 }
