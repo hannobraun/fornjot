@@ -22,7 +22,7 @@ pub fn model(shape: &mut Shape) {
             },
         });
 
-        Face::from_sketch(&sketch, surface, stores.get())
+        sketch.to_face(surface, stores.get())
     };
     let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
 

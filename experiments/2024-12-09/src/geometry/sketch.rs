@@ -1,7 +1,34 @@
-use crate::math::Point;
+use crate::{
+    math::{Plane, Point},
+    storage::Store,
+    topology::{Face, Vertex},
+};
+
+use super::Handle;
 
 pub struct Sketch {
     pub points: Vec<Point<2>>,
+}
+
+impl Sketch {
+    pub fn to_face(
+        &self,
+        surface: Handle<Plane>,
+        vertices: &mut Store<Vertex>,
+    ) -> Face {
+        let vertices = self
+            .points
+            .iter()
+            .copied()
+            .map(|point| {
+                let point = surface.point_from_local(point);
+                let vertex = Vertex::from(point);
+                vertices.insert(vertex)
+            })
+            .collect::<Vec<_>>();
+
+        Face::new(surface, vertices)
+    }
 }
 
 impl<I, P> From<I> for Sketch

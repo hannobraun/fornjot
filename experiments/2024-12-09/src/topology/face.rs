@@ -1,7 +1,7 @@
 use spade::Triangulation;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, Sketch, TriMesh, Triangle},
+    geometry::{AnyOp, Handle, Operation, TriMesh, Triangle},
     math::{Plane, Point, Vector},
     storage::{Store, Stores},
 };
@@ -23,25 +23,6 @@ impl Face {
             surface,
             vertices: vertices.into_iter().collect(),
         }
-    }
-
-    pub fn from_sketch(
-        sketch: &Sketch,
-        surface: Handle<Plane>,
-        vertices: &mut Store<Vertex>,
-    ) -> Self {
-        let vertices = sketch
-            .points
-            .iter()
-            .copied()
-            .map(|point| {
-                let point = surface.point_from_local(point);
-                let vertex = Vertex::from(point);
-                vertices.insert(vertex)
-            })
-            .collect::<Vec<_>>();
-
-        Self::new(surface, vertices)
     }
 
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
