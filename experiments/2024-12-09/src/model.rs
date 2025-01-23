@@ -14,7 +14,7 @@ pub fn model() -> AnyOp {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-        let surface = stores.get().insert(Plane {
+        let surface = stores.surfaces.insert(Plane {
             origin: Point::from([0., 0., 0.5]),
             coords: Bivector {
                 a: Vector::from([1., 0., 0.]),
@@ -22,9 +22,11 @@ pub fn model() -> AnyOp {
             },
         });
 
-        sketch.to_face(surface, stores.get())
+        sketch.to_face(surface, &mut stores.vertices)
     };
-    let bottom = top.flip(stores.get()).translate([0., 0., -1.], &mut stores);
+    let bottom = top
+        .flip(&mut stores.surfaces)
+        .translate([0., 0., -1.], &mut stores);
 
     let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
     let [e, f, g, h] = top.vertices().collect_array().unwrap();
@@ -32,7 +34,7 @@ pub fn model() -> AnyOp {
     let [left, right, front, back] =
         [[a, e, h, d], [b, c, g, f], [a, b, f, e], [c, d, h, g]].map(
             |[q, r, s, t]| {
-                let surface = stores.get().insert(Plane::from_points(
+                let surface = stores.surfaces.insert(Plane::from_points(
                     [q, r, s].map(|vertex| vertex.point),
                 ));
                 Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()))
@@ -41,7 +43,7 @@ pub fn model() -> AnyOp {
 
     let solid = Solid::new(
         [bottom, top, left, right, front, back]
-            .map(|face| stores.get().insert(face)),
+            .map(|face| stores.faces.insert(face)),
     );
 
     AnyOp::new(solid)

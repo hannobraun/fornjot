@@ -1,21 +1,21 @@
 use std::marker::PhantomData;
 
-use anymap3::AnyMap;
-
-use crate::geometry::Handle;
+use crate::{
+    geometry::Handle,
+    math::Plane,
+    topology::{Face, Vertex},
+};
 
 #[derive(Default)]
 pub struct Stores {
-    inner: AnyMap,
+    pub faces: Store<Face>,
+    pub surfaces: Store<Plane>,
+    pub vertices: Store<Vertex>,
 }
 
 impl Stores {
     pub fn new() -> Self {
         Self::default()
-    }
-
-    pub fn get<T: 'static>(&mut self) -> &mut Store<T> {
-        self.inner.entry::<Store<T>>().or_default()
     }
 }
 

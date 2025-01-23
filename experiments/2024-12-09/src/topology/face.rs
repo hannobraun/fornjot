@@ -44,11 +44,11 @@ impl Face {
         let offset = offset.into();
 
         Self {
-            surface: stores.get().insert(self.surface.translate(offset)),
+            surface: stores.surfaces.insert(self.surface.translate(offset)),
             vertices: self
                 .vertices
                 .iter()
-                .map(|vertex| stores.get().insert(vertex.translate(offset)))
+                .map(|vertex| stores.vertices.insert(vertex.translate(offset)))
                 .collect(),
         }
     }
