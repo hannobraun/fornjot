@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 use crate::{
     geometry::{AnyOp, Sketch},
     math::{Bivector, Plane, Point, Vector},
@@ -30,21 +28,21 @@ pub fn model() -> AnyOp {
         &mut stores.vertices,
     );
 
-    let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
-    let [e, f, g, h] = top.vertices().collect_array().unwrap();
-
-    let [left, right, front, back] =
-        [[a, e, h, d], [b, c, g, f], [a, b, f, e], [c, d, h, g]].map(
-            |[q, r, s, t]| {
-                let surface = stores.surfaces.insert(Plane::from_points(
-                    [q, r, s].map(|vertex| vertex.point),
-                ));
-                Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()))
-            },
-        );
+    let side_faces = bottom
+        .half_edges()
+        .zip(top.half_edges())
+        .map(|([q, r], [t, s])| {
+            let surface = stores.surfaces.insert(Plane::from_points(
+                [q, r, s].map(|vertex| vertex.point),
+            ));
+            Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()))
+        })
+        .collect::<Vec<_>>();
 
     let solid = Solid::new(
-        [bottom, top, left, right, front, back]
+        [bottom, top]
+            .into_iter()
+            .chain(side_faces)
             .map(|face| stores.faces.insert(face)),
     );
 

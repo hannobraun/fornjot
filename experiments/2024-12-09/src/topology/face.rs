@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
@@ -25,8 +26,16 @@ impl Face {
         }
     }
 
+    #[allow(unused)] // fell out of use, but will likely be required again
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.vertices.iter()
+    }
+
+    pub fn half_edges(&self) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
+        self.vertices
+            .iter()
+            .circular_tuple_windows()
+            .map(|(a, b)| [a, b])
     }
 
     pub fn flip(&self, surfaces: &mut Store<Plane>) -> Self {
