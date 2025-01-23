@@ -24,9 +24,11 @@ pub fn model() -> AnyOp {
 
         sketch.to_face(surface, &mut stores.vertices)
     };
-    let bottom = top
-        .flip(&mut stores.surfaces)
-        .translate([0., 0., -1.], &mut stores);
+    let bottom = top.flip(&mut stores.surfaces).translate(
+        [0., 0., -1.],
+        &mut stores.surfaces,
+        &mut stores.vertices,
+    );
 
     let [a, b, c, d] = bottom.vertices().collect_array().unwrap();
     let [e, f, g, h] = top.vertices().collect_array().unwrap();
