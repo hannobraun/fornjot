@@ -6,7 +6,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "*"
-anymap3 = "*"
 glyphon = "*"
 iter_fixed = "*"
 itertools = "*"
