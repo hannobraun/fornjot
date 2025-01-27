@@ -18,7 +18,7 @@ workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 nalgebra = "0.33.2"
-tobj = "4.0.2"
+tobj = "4.0.3"
 raw-window-handle = "0.6.0"
 thiserror = "2.0.11"
 tracing = "0.1.41"
@@ -33,7 +33,7 @@ default-features = false
 features = ["png", "jpeg"]
 
 [dependencies.wgpu]
-version = "23.0.1"
+version = "24.0.1"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
