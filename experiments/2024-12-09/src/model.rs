@@ -28,6 +28,8 @@ pub fn model() -> AnyOp {
         &mut stores.vertices,
     );
 
+    let [bottom, top] = [bottom, top].map(|face| stores.faces.insert(face));
+
     let side_faces = bottom
         .half_edges()
         .zip(top.half_edges())
@@ -35,16 +37,13 @@ pub fn model() -> AnyOp {
             let surface = stores.surfaces.insert(Plane::from_points(
                 [q, r, s].map(|vertex| vertex.point),
             ));
-            Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()))
+            let face =
+                Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()));
+            stores.faces.insert(face)
         })
         .collect::<Vec<_>>();
 
-    let solid = Solid::new(
-        [bottom, top]
-            .into_iter()
-            .chain(side_faces)
-            .map(|face| stores.faces.insert(face)),
-    );
+    let solid = Solid::new([bottom, top].into_iter().chain(side_faces));
 
     AnyOp::new(solid)
 }
