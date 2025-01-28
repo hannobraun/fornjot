@@ -1,4 +1,8 @@
-use crate::geometry::{AnyOp, Handle, Operation, TriMesh};
+use crate::{
+    geometry::{AnyOp, Handle, Operation, TriMesh},
+    math::Plane,
+    storage::Store,
+};
 
 use super::Face;
 
@@ -11,6 +15,29 @@ impl Solid {
         Self {
             faces: faces.into_iter().collect(),
         }
+    }
+
+    pub fn connect_faces(
+        [a, b]: [Handle<Face>; 2],
+        surfaces: &mut Store<Plane>,
+        faces: &mut Store<Face>,
+    ) -> Self {
+        let side_faces = a
+            .half_edges()
+            .zip(b.half_edges())
+            .map(|([q, r], [t, s])| {
+                let surface = surfaces.insert(Plane::from_points(
+                    [q, r, s].map(|vertex| vertex.point),
+                ));
+                let face = Face::new(
+                    surface,
+                    [q, r, s, t].map(|vertex| vertex.clone()),
+                );
+                faces.insert(face)
+            })
+            .collect::<Vec<_>>();
+
+        Solid::new([a, b].into_iter().chain(side_faces))
     }
 }
 

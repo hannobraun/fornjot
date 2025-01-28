@@ -2,7 +2,7 @@ use crate::{
     geometry::{AnyOp, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
-    topology::{Face, Solid},
+    topology::Solid,
 };
 
 pub fn model() -> AnyOp {
@@ -30,20 +30,11 @@ pub fn model() -> AnyOp {
 
     let [bottom, top] = [bottom, top].map(|face| stores.faces.insert(face));
 
-    let side_faces = bottom
-        .half_edges()
-        .zip(top.half_edges())
-        .map(|([q, r], [t, s])| {
-            let surface = stores.surfaces.insert(Plane::from_points(
-                [q, r, s].map(|vertex| vertex.point),
-            ));
-            let face =
-                Face::new(surface, [q, r, s, t].map(|vertex| vertex.clone()));
-            stores.faces.insert(face)
-        })
-        .collect::<Vec<_>>();
-
-    let solid = Solid::new([bottom, top].into_iter().chain(side_faces));
+    let solid = Solid::connect_faces(
+        [bottom, top],
+        &mut stores.surfaces,
+        &mut stores.faces,
+    );
 
     AnyOp::new(solid)
 }
