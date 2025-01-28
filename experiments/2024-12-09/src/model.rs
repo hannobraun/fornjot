@@ -32,8 +32,8 @@ pub fn model() -> AnyOp {
 
     let solid = Solid::connect_faces(
         [bottom, top],
-        &mut stores.surfaces,
         &mut stores.faces,
+        &mut stores.surfaces,
     );
 
     AnyOp::new(solid)

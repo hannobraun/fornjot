@@ -19,8 +19,8 @@ impl Solid {
 
     pub fn connect_faces(
         [a, b]: [Handle<Face>; 2],
-        surfaces: &mut Store<Plane>,
         faces: &mut Store<Face>,
+        surfaces: &mut Store<Plane>,
     ) -> Self {
         let side_faces = a
             .half_edges()
