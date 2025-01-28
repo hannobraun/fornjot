@@ -22,18 +22,15 @@ pub fn model() -> AnyOp {
 
         sketch.to_face(surface, &mut stores.vertices)
     };
-    let bottom = top.flip(&mut stores.surfaces).translate(
+
+    let top = stores.faces.insert(top);
+
+    let solid = Solid::sweep_from(
+        top,
         [0., 0., -1.],
-        &mut stores.surfaces,
-        &mut stores.vertices,
-    );
-
-    let [bottom, top] = [bottom, top].map(|face| stores.faces.insert(face));
-
-    let solid = Solid::connect_faces(
-        [bottom, top],
         &mut stores.faces,
         &mut stores.surfaces,
+        &mut stores.vertices,
     );
 
     AnyOp::new(solid)

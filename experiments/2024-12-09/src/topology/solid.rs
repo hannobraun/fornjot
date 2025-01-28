@@ -1,10 +1,10 @@
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
-    math::Plane,
+    math::{Plane, Vector},
     storage::Store,
 };
 
-use super::Face;
+use super::{Face, Vertex};
 
 pub struct Solid {
     faces: Vec<Handle<Face>>,
@@ -15,6 +15,19 @@ impl Solid {
         Self {
             faces: faces.into_iter().collect(),
         }
+    }
+
+    pub fn sweep_from(
+        origin: Handle<Face>,
+        path: impl Into<Vector<3>>,
+        faces: &mut Store<Face>,
+        surfaces: &mut Store<Plane>,
+        vertices: &mut Store<Vertex>,
+    ) -> Self {
+        let target = faces
+            .insert(origin.flip(surfaces).translate(path, surfaces, vertices));
+
+        Solid::connect_faces([target, origin], faces, surfaces)
     }
 
     pub fn connect_faces(
