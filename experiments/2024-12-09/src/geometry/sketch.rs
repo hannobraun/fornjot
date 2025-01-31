@@ -1,7 +1,7 @@
 use crate::{
     math::{Plane, Point},
     storage::Store,
-    topology::{Face, Vertex},
+    topology::{face::Face, vertex::Vertex},
 };
 
 use super::Handle;

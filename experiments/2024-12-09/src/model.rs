@@ -2,7 +2,7 @@ use crate::{
     geometry::{AnyOp, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
-    topology::Solid,
+    topology::solid::Solid,
 };
 
 pub fn model() -> AnyOp {

@@ -4,7 +4,7 @@ use crate::{
     storage::Store,
 };
 
-use super::{sweep::SweepExt, Face, Vertex};
+use super::{face::Face, sweep::SweepExt, vertex::Vertex};
 
 pub struct Solid {
     faces: Vec<Handle<Face>>,

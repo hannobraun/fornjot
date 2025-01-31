@@ -4,7 +4,7 @@ use crate::{
     storage::Store,
 };
 
-use super::{Face, Solid, Vertex};
+use super::{face::Face, solid::Solid, vertex::Vertex};
 
 pub trait SweepExt {
     /// Sweep a face along a path, creating a solid

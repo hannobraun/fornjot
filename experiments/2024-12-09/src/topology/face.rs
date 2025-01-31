@@ -7,7 +7,7 @@ use crate::{
     storage::Store,
 };
 
-use super::Vertex;
+use super::vertex::Vertex;
 
 #[derive(Debug)]
 pub struct Face {

@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use crate::{
     geometry::Handle,
     math::Plane,
-    topology::{Face, Vertex},
+    topology::{face::Face, vertex::Vertex},
 };
 
 #[derive(Default)]
