@@ -19,6 +19,8 @@ where
 }
 
 impl Operation for Triangle {
+    type Output = Self;
+
     fn label(&self) -> &'static str {
         "Triangle"
     }

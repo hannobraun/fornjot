@@ -3,6 +3,10 @@ use std::{ops::Deref, rc::Rc};
 use super::tri_mesh::TriMesh;
 
 pub trait Operation {
+    type Output
+    where
+        Self: Sized;
+
     fn label(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
@@ -63,6 +67,8 @@ impl AnyOp {
 }
 
 impl Operation for AnyOp {
+    type Output = Self;
+
     fn label(&self) -> &'static str {
         self.inner.label()
     }

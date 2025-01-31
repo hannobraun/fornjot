@@ -65,6 +65,8 @@ impl Face {
 }
 
 impl Operation for Face {
+    type Output = Self;
+
     fn label(&self) -> &'static str {
         "Face"
     }

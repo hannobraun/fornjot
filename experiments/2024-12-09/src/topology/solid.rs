@@ -88,6 +88,8 @@ impl Solid {
 }
 
 impl Operation for Solid {
+    type Output = Self;
+
     fn label(&self) -> &'static str {
         "Solid"
     }

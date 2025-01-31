@@ -28,6 +28,8 @@ where
 }
 
 impl Operation for Vertex {
+    type Output = Self;
+
     fn label(&self) -> &'static str {
         "Vertex"
     }
