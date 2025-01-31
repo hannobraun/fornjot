@@ -1,10 +1,34 @@
 use crate::{
-    geometry::Handle,
+    geometry::{AnyOp, Handle, Operation, TriMesh},
     math::{Plane, Vector},
     storage::Store,
 };
 
 use super::{face::Face, solid::Solid, vertex::Vertex};
+
+pub struct Sweep {
+    output: Solid,
+}
+
+impl Operation for Sweep {
+    type Output = Solid;
+
+    fn output(&self) -> &Self::Output {
+        &self.output
+    }
+
+    fn label(&self) -> &'static str {
+        "Sweep"
+    }
+
+    fn tri_mesh(&self) -> TriMesh {
+        self.output.tri_mesh()
+    }
+
+    fn children(&self) -> Vec<AnyOp> {
+        self.output.children()
+    }
+}
 
 pub trait SweepExt {
     /// Sweep a face along a path, creating a solid
@@ -24,7 +48,7 @@ pub trait SweepExt {
         faces: &mut Store<Face>,
         surfaces: &mut Store<Plane>,
         vertices: &mut Store<Vertex>,
-    ) -> Solid;
+    ) -> Sweep;
 }
 
 impl SweepExt for Handle<Face> {
@@ -34,10 +58,12 @@ impl SweepExt for Handle<Face> {
         faces: &mut Store<Face>,
         surfaces: &mut Store<Plane>,
         vertices: &mut Store<Vertex>,
-    ) -> Solid {
+    ) -> Sweep {
         let target = faces
             .insert(self.flip(surfaces).translate(path, surfaces, vertices));
 
-        Solid::connect_faces([target, self], faces, surfaces)
+        let solid = Solid::connect_faces([target, self], faces, surfaces);
+
+        Sweep { output: solid }
     }
 }
