@@ -60,10 +60,10 @@ impl SweepExt for Handle<Face> {
         vertices: &mut Store<Vertex>,
     ) -> Sweep {
         let bottom = self;
-        let target = faces
+        let top = faces
             .insert(bottom.flip(surfaces).translate(path, surfaces, vertices));
 
-        let solid = Solid::connect_faces([target, bottom], faces, surfaces);
+        let solid = Solid::connect_faces([top, bottom], faces, surfaces);
 
         Sweep { output: solid }
     }
