@@ -1411,21 +1411,12 @@ checksum = "afbdc74edc00b6f6a218ca6a5364d6226a259d4b8ea1af4a0ea063f27e179f4d"
 
 [[package]]
 name = "quick-xml"
-version = "0.36.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7649a7b4df05aed9ea7ec6f628c67c9953a43869b8bc50929569b2999d443fe"
-dependencies = [
- "memchr",
- "serde",
-]
-
-[[package]]
-name = "quick-xml"
 version = "0.37.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "165859e9e55f79d67b96c5d96f4e88b6f2695a1972849c15a6a3f5c59fc2c003"
 dependencies = [
  "memchr",
+ "serde",
 ]
 
 [[package]]
@@ -1852,13 +1843,13 @@ dependencies = [
 
 [[package]]
 name = "threemf"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb5fd806deaf82c90e87d9bf7d2a43fc1782bdeadc161bf1f5cd5b0f2096c693"
+checksum = "e7d946000a45b7cd15c3e64d781b2ea4270f30f82c2712de3267195d4fb24475"
 dependencies = [
- "quick-xml 0.36.2",
+ "quick-xml",
  "serde",
- "thiserror 1.0.69",
+ "thiserror 2.0.11",
  "zip",
 ]
 
@@ -2199,7 +2190,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "896fdafd5d28145fce7958917d69f2fd44469b1d4e861cb5961bcbeebc6d1484"
 dependencies = [
  "proc-macro2",
- "quick-xml 0.37.2",
+ "quick-xml",
  "quote",
 ]
 
