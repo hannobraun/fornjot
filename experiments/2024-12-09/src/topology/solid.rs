@@ -4,7 +4,7 @@ use crate::{
     storage::Store,
 };
 
-use super::{Face, Vertex};
+use super::{sweep::SweepExt, Face, Vertex};
 
 pub struct Solid {
     faces: Vec<Handle<Face>>,
@@ -35,10 +35,7 @@ impl Solid {
         surfaces: &mut Store<Plane>,
         vertices: &mut Store<Vertex>,
     ) -> Self {
-        let target = faces
-            .insert(origin.flip(surfaces).translate(path, surfaces, vertices));
-
-        Solid::connect_faces([target, origin], faces, surfaces)
+        origin.sweep(path, faces, surfaces, vertices)
     }
 
     /// Connect two faces by creating a side wall of faces from their vertices
