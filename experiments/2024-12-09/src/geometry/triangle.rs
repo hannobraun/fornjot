@@ -21,6 +21,10 @@ where
 impl Operation for Triangle {
     type Output = Self;
 
+    fn output(&self) -> &Self::Output {
+        self
+    }
+
     fn label(&self) -> &'static str {
         "Triangle"
     }

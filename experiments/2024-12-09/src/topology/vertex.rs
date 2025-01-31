@@ -30,6 +30,10 @@ where
 impl Operation for Vertex {
     type Output = Self;
 
+    fn output(&self) -> &Self::Output {
+        self
+    }
+
     fn label(&self) -> &'static str {
         "Vertex"
     }

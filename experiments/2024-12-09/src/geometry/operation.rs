@@ -7,6 +7,11 @@ pub trait Operation {
     where
         Self: Sized;
 
+    #[allow(unused)] // currently working on the code using this
+    fn output(&self) -> &Self::Output
+    where
+        Self: Sized;
+
     fn label(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
@@ -68,6 +73,10 @@ impl AnyOp {
 
 impl Operation for AnyOp {
     type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
+    }
 
     fn label(&self) -> &'static str {
         self.inner.label()

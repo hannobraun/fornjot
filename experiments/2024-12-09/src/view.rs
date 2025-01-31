@@ -124,6 +124,10 @@ impl OperationView {
 impl Operation for OperationView {
     type Output = Self;
 
+    fn output(&self) -> &Self::Output {
+        self
+    }
+
     fn label(&self) -> &'static str {
         self.operation.label()
     }

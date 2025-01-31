@@ -66,6 +66,10 @@ impl Solid {
 impl Operation for Solid {
     type Output = Self;
 
+    fn output(&self) -> &Self::Output {
+        self
+    }
+
     fn label(&self) -> &'static str {
         "Solid"
     }
