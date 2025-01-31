@@ -2,7 +2,7 @@ use crate::{
     geometry::{AnyOp, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
-    topology::solid::Solid,
+    topology::sweep::SweepExt,
 };
 
 pub fn model() -> AnyOp {
@@ -25,8 +25,7 @@ pub fn model() -> AnyOp {
 
     let top = stores.faces.insert(top);
 
-    let solid = Solid::sweep_from(
-        top,
+    let solid = top.sweep(
         [0., 0., -1.],
         &mut stores.faces,
         &mut stores.surfaces,

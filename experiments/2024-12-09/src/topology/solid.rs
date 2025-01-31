@@ -1,10 +1,10 @@
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
-    math::{Plane, Vector},
+    math::Plane,
     storage::Store,
 };
 
-use super::{face::Face, sweep::SweepExt, vertex::Vertex};
+use super::face::Face;
 
 pub struct Solid {
     faces: Vec<Handle<Face>>,
@@ -15,16 +15,6 @@ impl Solid {
         Self {
             faces: faces.into_iter().collect(),
         }
-    }
-
-    pub fn sweep_from(
-        origin: Handle<Face>,
-        path: impl Into<Vector<3>>,
-        faces: &mut Store<Face>,
-        surfaces: &mut Store<Plane>,
-        vertices: &mut Store<Vertex>,
-    ) -> Self {
-        origin.sweep(path, faces, surfaces, vertices)
     }
 
     /// Connect two faces by creating a side wall of faces from their vertices
