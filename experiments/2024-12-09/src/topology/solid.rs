@@ -35,6 +35,12 @@ impl Solid {
         faces: &mut Store<Face>,
         surfaces: &mut Store<Plane>,
     ) -> Self {
+        assert_eq!(
+            a.vertices().count(),
+            b.vertices().count(),
+            "Can only connect faces that have the same number of vertices.",
+        );
+
         let side_faces = a
             .half_edges()
             .zip(b.half_edges())
