@@ -1,3 +1,5 @@
+use std::fmt;
+
 use itertools::Itertools;
 use spade::Triangulation;
 
@@ -71,8 +73,8 @@ impl Operation for Face {
         self
     }
 
-    fn display(&self) -> &'static str {
-        "Face"
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Face")
     }
 
     fn tri_mesh(&self) -> TriMesh {

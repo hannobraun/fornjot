@@ -12,7 +12,7 @@ pub trait Operation {
     where
         Self: Sized;
 
-    fn display(&self) -> &'static str;
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
 
@@ -30,7 +30,7 @@ pub struct OperationDisplay<'r> {
 
 impl fmt::Display for OperationDisplay<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.op.display())
+        self.op.display(f)
     }
 }
 
@@ -95,8 +95,8 @@ impl Operation for AnyOp {
         self
     }
 
-    fn display(&self) -> &'static str {
-        self.inner.display()
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.inner.display(f)
     }
 
     fn tri_mesh(&self) -> TriMesh {

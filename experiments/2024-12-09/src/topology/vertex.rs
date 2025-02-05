@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::{
     geometry::{AnyOp, Operation, TriMesh},
     math::{Point, Vector},
@@ -34,8 +36,8 @@ impl Operation for Vertex {
         self
     }
 
-    fn display(&self) -> &'static str {
-        "Vertex"
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Vertex")
     }
 
     fn tri_mesh(&self) -> TriMesh {

@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::math::Point;
 
 use super::{operation::AnyOp, Operation, TriMesh};
@@ -25,8 +27,8 @@ impl Operation for Triangle {
         self
     }
 
-    fn display(&self) -> &'static str {
-        "Triangle"
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Triangle")
     }
 
     fn tri_mesh(&self) -> TriMesh {

@@ -1,4 +1,4 @@
-use std::iter;
+use std::{fmt, iter};
 
 use crate::geometry::{AnyOp, Operation, TriMesh};
 
@@ -128,8 +128,8 @@ impl Operation for OperationView {
         self
     }
 
-    fn display(&self) -> &'static str {
-        self.operation.display()
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.operation.display(f)
     }
 
     fn tri_mesh(&self) -> TriMesh {

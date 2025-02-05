@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
     math::{Plane, Vector},
@@ -17,8 +19,8 @@ impl Operation for Sweep {
         &self.output
     }
 
-    fn display(&self) -> &'static str {
-        "Sweep"
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Sweep")
     }
 
     fn tri_mesh(&self) -> TriMesh {

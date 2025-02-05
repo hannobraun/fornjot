@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
     math::Plane,
@@ -70,8 +72,8 @@ impl Operation for Solid {
         self
     }
 
-    fn display(&self) -> &'static str {
-        "Solid"
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Solid")
     }
 
     fn tri_mesh(&self) -> TriMesh {
