@@ -70,7 +70,7 @@ impl Operation for Solid {
         self
     }
 
-    fn label(&self) -> &'static str {
+    fn display(&self) -> &'static str {
         "Solid"
     }
 

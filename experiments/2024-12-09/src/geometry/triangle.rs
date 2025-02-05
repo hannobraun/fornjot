@@ -25,7 +25,7 @@ impl Operation for Triangle {
         self
     }
 
-    fn label(&self) -> &'static str {
+    fn display(&self) -> &'static str {
         "Triangle"
     }
 

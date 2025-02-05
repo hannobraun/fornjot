@@ -34,7 +34,7 @@ impl Operation for Vertex {
         self
     }
 
-    fn label(&self) -> &'static str {
+    fn display(&self) -> &'static str {
         "Vertex"
     }
 

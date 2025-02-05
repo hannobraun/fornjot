@@ -71,7 +71,7 @@ impl Operation for Face {
         self
     }
 
-    fn label(&self) -> &'static str {
+    fn display(&self) -> &'static str {
         "Face"
     }
 

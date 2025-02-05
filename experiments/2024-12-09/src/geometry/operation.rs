@@ -12,7 +12,7 @@ pub trait Operation {
     where
         Self: Sized;
 
-    fn label(&self) -> &'static str;
+    fn display(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
 }
@@ -78,8 +78,8 @@ impl Operation for AnyOp {
         self
     }
 
-    fn label(&self) -> &'static str {
-        self.inner.label()
+    fn display(&self) -> &'static str {
+        self.inner.display()
     }
 
     fn tri_mesh(&self) -> TriMesh {

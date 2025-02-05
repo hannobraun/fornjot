@@ -128,8 +128,8 @@ impl Operation for OperationView {
         self
     }
 
-    fn label(&self) -> &'static str {
-        self.operation.label()
+    fn display(&self) -> &'static str {
+        self.operation.display()
     }
 
     fn tri_mesh(&self) -> TriMesh {

@@ -17,7 +17,7 @@ impl Operation for Sweep {
         &self.output
     }
 
-    fn label(&self) -> &'static str {
+    fn display(&self) -> &'static str {
         "Sweep"
     }
 

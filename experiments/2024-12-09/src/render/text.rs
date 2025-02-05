@@ -91,7 +91,7 @@ impl TextRenderer {
                 write!(line, "\t")?;
             }
 
-            write!(line, "{}", op.label())?;
+            write!(line, "{}", op.display())?;
 
             buffer.lines.push(glyphon::BufferLine::new(
                 line,
