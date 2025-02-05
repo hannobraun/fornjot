@@ -1,4 +1,4 @@
-use std::{ops::Deref, rc::Rc};
+use std::{fmt, ops::Deref, rc::Rc};
 
 use super::tri_mesh::TriMesh;
 
@@ -15,6 +15,23 @@ pub trait Operation {
     fn display(&self) -> &'static str;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
+
+    fn label(&self) -> OperationDisplay
+    where
+        Self: Sized,
+    {
+        OperationDisplay { op: self as &_ }
+    }
+}
+
+pub struct OperationDisplay<'r> {
+    pub op: &'r dyn Operation,
+}
+
+impl fmt::Display for OperationDisplay<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.op.display())
+    }
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
