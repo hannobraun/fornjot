@@ -58,6 +58,6 @@ impl Operation for Sweep {
     }
 
     fn children(&self) -> Vec<AnyOp> {
-        self.output.children()
+        vec![self.output.to_any()]
     }
 }
