@@ -19,11 +19,11 @@ pub trait ConnectExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn connect(self, other: Handle<Face>) -> Solid;
+    fn connect(self, other: Handle<Face>) -> Connect;
 }
 
 impl ConnectExt for Handle<Face> {
-    fn connect(self, other: Handle<Face>) -> Solid {
+    fn connect(self, other: Handle<Face>) -> Connect {
         assert_eq!(
             self.vertices().count(),
             other.vertices().count(),
@@ -45,6 +45,11 @@ impl ConnectExt for Handle<Face> {
             })
             .collect::<Vec<_>>();
 
-        Solid::new([self, other].into_iter().chain(side_faces))
+        let output = Solid::new([self, other].into_iter().chain(side_faces));
+        Connect { output }
     }
+}
+
+pub struct Connect {
+    pub output: Solid,
 }

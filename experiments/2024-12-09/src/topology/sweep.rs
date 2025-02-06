@@ -29,7 +29,9 @@ impl SweepExt for Handle<Face> {
 
         let solid = top.connect(bottom);
 
-        Sweep { output: solid }
+        Sweep {
+            output: solid.output,
+        }
     }
 }
 
