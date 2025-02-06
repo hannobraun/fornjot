@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{AnyOp, Sketch},
+    geometry::{AnyOp, Handle, Sketch},
     math::{Bivector, Plane, Point, Vector},
     storage::Stores,
     topology::sweep::SweepExt,
@@ -12,7 +12,7 @@ pub fn model() -> AnyOp {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-        let surface = stores.surfaces.insert(Plane {
+        let surface = Handle::new(Plane {
             origin: Point::from([0., 0., 0.5]),
             coords: Bivector {
                 a: Vector::from([1., 0., 0.]),
@@ -23,7 +23,7 @@ pub fn model() -> AnyOp {
         sketch.to_face(surface, &mut stores.vertices)
     };
 
-    let top = stores.faces.insert(top);
+    let top = Handle::new(top);
 
     let solid = top.sweep(
         [0., 0., -1.],

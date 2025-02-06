@@ -1,7 +1,6 @@
 use std::marker::PhantomData;
 
 use crate::{
-    geometry::Handle,
     math::Plane,
     topology::{face::Face, vertex::Vertex},
 };
@@ -26,10 +25,6 @@ pub struct Store<T> {
 impl<T> Store<T> {
     pub fn new() -> Self {
         Self { _t: PhantomData }
-    }
-
-    pub fn insert(&mut self, op: T) -> Handle<T> {
-        Handle::new(op)
     }
 }
 

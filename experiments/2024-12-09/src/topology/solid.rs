@@ -37,8 +37,8 @@ impl Solid {
     /// this operation.
     pub fn connect_faces(
         [a, b]: [Handle<Face>; 2],
-        faces: &mut Store<Face>,
-        surfaces: &mut Store<Plane>,
+        _: &mut Store<Face>,
+        _: &mut Store<Plane>,
     ) -> Self {
         assert_eq!(
             a.vertices().count(),
@@ -50,14 +50,14 @@ impl Solid {
             .half_edges()
             .zip(b.half_edges())
             .map(|([q, r], [t, s])| {
-                let surface = surfaces.insert(Plane::from_points(
+                let surface = Handle::new(Plane::from_points(
                     [q, r, s].map(|vertex| vertex.point),
                 ));
                 let face = Face::new(
                     surface,
                     [q, r, s, t].map(|vertex| vertex.clone()),
                 );
-                faces.insert(face)
+                Handle::new(face)
             })
             .collect::<Vec<_>>();
 

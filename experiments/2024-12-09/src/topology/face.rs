@@ -40,9 +40,9 @@ impl Face {
             .map(|(a, b)| [a, b])
     }
 
-    pub fn flip(&self, surfaces: &mut Store<Plane>) -> Self {
+    pub fn flip(&self, _: &mut Store<Plane>) -> Self {
         Self {
-            surface: surfaces.insert(self.surface.flip()),
+            surface: Handle::new(self.surface.flip()),
             vertices: self.vertices.clone(),
         }
     }
@@ -50,17 +50,17 @@ impl Face {
     pub fn translate(
         &self,
         offset: impl Into<Vector<3>>,
-        surfaces: &mut Store<Plane>,
-        vertices: &mut Store<Vertex>,
+        _: &mut Store<Plane>,
+        _: &mut Store<Vertex>,
     ) -> Self {
         let offset = offset.into();
 
         Self {
-            surface: surfaces.insert(self.surface.translate(offset)),
+            surface: Handle::new(self.surface.translate(offset)),
             vertices: self
                 .vertices
                 .iter()
-                .map(|vertex| vertices.insert(vertex.translate(offset)))
+                .map(|vertex| Handle::new(vertex.translate(offset)))
                 .collect(),
         }
     }
