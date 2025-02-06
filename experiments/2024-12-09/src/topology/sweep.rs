@@ -39,7 +39,7 @@ impl SweepExt for Handle<Face> {
 }
 
 pub struct Sweep {
-    output: Handle<Connect>,
+    pub output: Handle<Connect>,
 }
 
 impl Operation for Sweep {
