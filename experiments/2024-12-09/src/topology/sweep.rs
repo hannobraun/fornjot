@@ -5,7 +5,7 @@ use crate::{
     math::Vector,
 };
 
-use super::{face::Face, solid::Solid};
+use super::{connect::ConnectExt, face::Face, solid::Solid};
 
 pub trait SweepExt {
     /// Sweep a face along a path, creating a solid
@@ -27,7 +27,7 @@ impl SweepExt for Handle<Face> {
         let bottom = self;
         let top = Handle::new(bottom.flip().translate(path));
 
-        let solid = Solid::connect_faces([top, bottom]);
+        let solid = top.connect(bottom);
 
         Sweep { output: solid }
     }

@@ -1,3 +1,4 @@
+pub mod connect;
 pub mod face;
 pub mod solid;
 pub mod sweep;
