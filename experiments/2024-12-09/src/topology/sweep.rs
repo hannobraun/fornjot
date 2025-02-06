@@ -28,7 +28,6 @@ impl SweepExt for Handle<Face> {
         let top = Handle::new(bottom.flip().translate(path));
 
         let output = top.connect(bottom);
-
         Sweep {
             output: output.output,
         }
