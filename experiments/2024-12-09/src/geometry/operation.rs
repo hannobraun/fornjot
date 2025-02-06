@@ -7,7 +7,6 @@ pub trait Operation {
     where
         Self: Sized;
 
-    #[allow(unused)] // currently working on the code using this
     fn output(&self) -> &Self::Output
     where
         Self: Sized;
