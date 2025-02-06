@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::geometry::{AnyOp, Handle, Operation, TriMesh};
+use crate::geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh};
 
 use super::face::Face;
 
@@ -17,12 +17,6 @@ impl Solid {
 }
 
 impl Operation for Solid {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Solid")
     }
@@ -39,5 +33,12 @@ impl Operation for Solid {
 
     fn children(&self) -> Vec<AnyOp> {
         self.faces.iter().map(|face| face.to_any()).collect()
+    }
+}
+impl OperationOutput for Solid {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }

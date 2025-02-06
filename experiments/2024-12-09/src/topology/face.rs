@@ -4,7 +4,7 @@ use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, TriMesh, Triangle},
+    geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh, Triangle},
     math::{Plane, Point, Vector},
 };
 
@@ -61,12 +61,6 @@ impl Face {
 }
 
 impl Operation for Face {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Face")
     }
@@ -123,6 +117,14 @@ impl Operation for Face {
 
     fn children(&self) -> Vec<AnyOp> {
         self.vertices.iter().map(|vertex| vertex.to_any()).collect()
+    }
+}
+
+impl OperationOutput for Face {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }
 

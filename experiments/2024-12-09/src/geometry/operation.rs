@@ -3,14 +3,6 @@ use std::{fmt, ops::Deref, rc::Rc};
 use super::tri_mesh::TriMesh;
 
 pub trait Operation {
-    type Output
-    where
-        Self: Sized;
-
-    fn output(&self) -> &Self::Output
-    where
-        Self: Sized;
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<AnyOp>;
@@ -21,6 +13,16 @@ pub trait Operation {
     {
         OperationDisplay { op: self as &_ }
     }
+}
+
+pub trait OperationOutput: Operation {
+    type Output
+    where
+        Self: Sized;
+
+    fn output(&self) -> &Self::Output
+    where
+        Self: Sized;
 }
 
 pub struct OperationDisplay<'r> {
@@ -88,12 +90,6 @@ impl AnyOp {
 }
 
 impl Operation for AnyOp {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.inner.display(f)?;
         write!(f, " ({:?})", Rc::as_ptr(&self.inner))?;
@@ -107,5 +103,13 @@ impl Operation for AnyOp {
 
     fn children(&self) -> Vec<AnyOp> {
         self.inner.children()
+    }
+}
+
+impl OperationOutput for AnyOp {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }

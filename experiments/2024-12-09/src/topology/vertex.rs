@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    geometry::{AnyOp, Operation, TriMesh},
+    geometry::{AnyOp, Operation, OperationOutput, TriMesh},
     math::{Point, Vector},
 };
 
@@ -30,12 +30,6 @@ where
 }
 
 impl Operation for Vertex {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Vertex")
     }
@@ -46,5 +40,13 @@ impl Operation for Vertex {
 
     fn children(&self) -> Vec<AnyOp> {
         Vec::new()
+    }
+}
+
+impl OperationOutput for Vertex {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }

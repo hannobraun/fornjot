@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, TriMesh},
+    geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh},
     math::Plane,
 };
 
@@ -62,12 +62,6 @@ pub struct Connect {
 }
 
 impl Operation for Connect {
-    type Output = Solid;
-
-    fn output(&self) -> &Self::Output {
-        &self.output
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Connect")
     }
@@ -78,5 +72,13 @@ impl Operation for Connect {
 
     fn children(&self) -> Vec<AnyOp> {
         vec![self.output.to_any()]
+    }
+}
+
+impl OperationOutput for Connect {
+    type Output = Solid;
+
+    fn output(&self) -> &Self::Output {
+        &self.output
     }
 }

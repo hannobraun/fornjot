@@ -2,7 +2,10 @@ use std::fmt;
 
 use crate::math::Point;
 
-use super::{operation::AnyOp, Operation, TriMesh};
+use super::{
+    operation::{AnyOp, OperationOutput},
+    Operation, TriMesh,
+};
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {
@@ -21,12 +24,6 @@ where
 }
 
 impl Operation for Triangle {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Triangle")
     }
@@ -39,5 +36,13 @@ impl Operation for Triangle {
 
     fn children(&self) -> Vec<AnyOp> {
         Vec::new()
+    }
+}
+
+impl OperationOutput for Triangle {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }

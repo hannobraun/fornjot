@@ -1,6 +1,6 @@
 use std::{fmt, iter};
 
-use crate::geometry::{AnyOp, Operation, TriMesh};
+use crate::geometry::{AnyOp, Operation, OperationOutput, TriMesh};
 
 #[derive(Clone)]
 pub struct OperationView {
@@ -119,12 +119,6 @@ impl OperationView {
 }
 
 impl Operation for OperationView {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
-        self
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.operation.display(f)
     }
@@ -135,5 +129,13 @@ impl Operation for OperationView {
 
     fn children(&self) -> Vec<AnyOp> {
         self.operation.children()
+    }
+}
+
+impl OperationOutput for OperationView {
+    type Output = Self;
+
+    fn output(&self) -> &Self::Output {
+        self
     }
 }

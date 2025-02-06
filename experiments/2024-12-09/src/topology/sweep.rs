@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, TriMesh},
+    geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh},
     math::Vector,
 };
 
@@ -43,12 +43,6 @@ pub struct Sweep {
 }
 
 impl Operation for Sweep {
-    type Output = Solid;
-
-    fn output(&self) -> &Self::Output {
-        self.output.output()
-    }
-
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Sweep")
     }
@@ -59,5 +53,13 @@ impl Operation for Sweep {
 
     fn children(&self) -> Vec<AnyOp> {
         vec![self.output.to_any()]
+    }
+}
+
+impl OperationOutput for Sweep {
+    type Output = Solid;
+
+    fn output(&self) -> &Self::Output {
+        self.output.output()
     }
 }
