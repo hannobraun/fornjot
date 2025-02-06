@@ -16,13 +16,9 @@ pub trait Operation {
 }
 
 pub trait OperationOutput: Operation {
-    type Output
-    where
-        Self: Sized;
+    type Output;
 
-    fn output(&self) -> &Self::Output
-    where
-        Self: Sized;
+    fn output(&self) -> &Self::Output;
 }
 
 pub struct OperationDisplay<'r> {
