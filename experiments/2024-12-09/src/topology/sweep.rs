@@ -56,10 +56,8 @@ impl Operation for Sweep {
     }
 }
 
-impl OperationOutput for Sweep {
-    type Output = Solid;
-
-    fn output(&self) -> &Self::Output {
+impl OperationOutput<Solid> for Sweep {
+    fn output(&self) -> &Solid {
         self.output.output()
     }
 }

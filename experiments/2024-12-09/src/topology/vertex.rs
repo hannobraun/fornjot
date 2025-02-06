@@ -44,9 +44,7 @@ impl Operation for Vertex {
 }
 
 impl OperationOutput for Vertex {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }

@@ -40,9 +40,7 @@ impl Operation for Triangle {
 }
 
 impl OperationOutput for Triangle {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }

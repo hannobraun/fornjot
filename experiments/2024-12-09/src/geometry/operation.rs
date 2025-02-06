@@ -15,10 +15,8 @@ pub trait Operation {
     }
 }
 
-pub trait OperationOutput: Operation {
-    type Output;
-
-    fn output(&self) -> &Self::Output;
+pub trait OperationOutput<Output = Self>: Operation {
+    fn output(&self) -> &Output;
 }
 
 pub struct OperationDisplay<'r> {
@@ -103,9 +101,7 @@ impl Operation for AnyOp {
 }
 
 impl OperationOutput for AnyOp {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }

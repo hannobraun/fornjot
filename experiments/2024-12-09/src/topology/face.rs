@@ -121,9 +121,7 @@ impl Operation for Face {
 }
 
 impl OperationOutput for Face {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }

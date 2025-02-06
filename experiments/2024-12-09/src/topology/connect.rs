@@ -75,10 +75,8 @@ impl Operation for Connect {
     }
 }
 
-impl OperationOutput for Connect {
-    type Output = Solid;
-
-    fn output(&self) -> &Self::Output {
+impl OperationOutput<Solid> for Connect {
+    fn output(&self) -> &Solid {
         &self.output
     }
 }

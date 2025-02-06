@@ -36,9 +36,7 @@ impl Operation for Solid {
     }
 }
 impl OperationOutput for Solid {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }

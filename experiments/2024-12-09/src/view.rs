@@ -133,9 +133,7 @@ impl Operation for OperationView {
 }
 
 impl OperationOutput for OperationView {
-    type Output = Self;
-
-    fn output(&self) -> &Self::Output {
+    fn output(&self) -> &Self {
         self
     }
 }
