@@ -51,12 +51,14 @@ impl ConnectExt for Handle<Face> {
             .collect::<Vec<_>>();
 
         let output = Solid::new([self, other].into_iter().chain(side_faces));
-        Connect { output }
+        Connect {
+            output: Handle::new(output),
+        }
     }
 }
 
 pub struct Connect {
-    pub output: Solid,
+    pub output: Handle<Solid>,
 }
 
 impl Operation for Connect {
