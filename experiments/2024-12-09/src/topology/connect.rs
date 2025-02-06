@@ -77,6 +77,6 @@ impl Operation for Connect {
     }
 
     fn children(&self) -> Vec<AnyOp> {
-        self.output.children()
+        vec![self.output.to_any()]
     }
 }
