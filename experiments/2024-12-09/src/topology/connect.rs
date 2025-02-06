@@ -1,4 +1,9 @@
-use crate::{geometry::Handle, math::Plane};
+use std::fmt;
+
+use crate::{
+    geometry::{AnyOp, Handle, Operation, TriMesh},
+    math::Plane,
+};
 
 use super::{face::Face, solid::Solid};
 
@@ -52,4 +57,24 @@ impl ConnectExt for Handle<Face> {
 
 pub struct Connect {
     pub output: Solid,
+}
+
+impl Operation for Connect {
+    type Output = Solid;
+
+    fn output(&self) -> &Self::Output {
+        &self.output
+    }
+
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Connect")
+    }
+
+    fn tri_mesh(&self) -> TriMesh {
+        self.output.tri_mesh()
+    }
+
+    fn children(&self) -> Vec<AnyOp> {
+        self.output.children()
+    }
 }
