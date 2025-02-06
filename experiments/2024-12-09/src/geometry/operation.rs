@@ -97,6 +97,7 @@ impl Operation for AnyOp {
 
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.inner.display(f)?;
+        write!(f, " ({:?})", Rc::as_ptr(&self.inner))?;
 
         Ok(())
     }
