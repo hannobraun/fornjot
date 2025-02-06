@@ -27,10 +27,10 @@ impl SweepExt for Handle<Face> {
         let bottom = self;
         let top = Handle::new(bottom.flip().translate(path));
 
-        let solid = top.connect(bottom);
+        let output = top.connect(bottom);
 
         Sweep {
-            output: solid.output,
+            output: output.output,
         }
     }
 }
