@@ -11,11 +11,8 @@ pub struct OperationView {
 
 impl OperationView {
     pub fn new(operation: AnyOp) -> Self {
-        let children = operation
-            .children()
-            .into_iter()
-            .map(|op| Self::new(AnyOp::new(op)))
-            .collect();
+        let children =
+            operation.children().into_iter().map(Self::new).collect();
 
         Self {
             operation,
