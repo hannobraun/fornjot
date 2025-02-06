@@ -3,7 +3,7 @@ use crate::geometry::Handle;
 use super::{face::Face, solid::Solid};
 
 pub trait ConnectExt {
-    /// Connect two faces by creating a side wall of faces from their vertices
+    /// # Connect two faces by creating a side wall of faces from their vertices
     ///
     /// ## Panics
     ///

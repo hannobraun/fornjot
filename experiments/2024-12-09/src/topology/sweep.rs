@@ -8,7 +8,7 @@ use crate::{
 use super::{connect::ConnectExt, face::Face, solid::Solid};
 
 pub trait SweepExt {
-    /// Sweep a face along a path, creating a solid
+    /// # Sweep a face along a path, creating a solid
     ///
     /// ## Implementation Note
     ///
