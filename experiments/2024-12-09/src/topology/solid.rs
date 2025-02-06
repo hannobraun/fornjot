@@ -1,9 +1,6 @@
 use std::fmt;
 
-use crate::{
-    geometry::{AnyOp, Handle, Operation, TriMesh},
-    math::Plane,
-};
+use crate::geometry::{AnyOp, Handle, Operation, TriMesh};
 
 use super::face::Face;
 
@@ -16,31 +13,6 @@ impl Solid {
         Self {
             faces: faces.into_iter().collect(),
         }
-    }
-
-    pub fn connect_faces([a, b]: [Handle<Face>; 2]) -> Self {
-        assert_eq!(
-            a.vertices().count(),
-            b.vertices().count(),
-            "Can only connect faces that have the same number of vertices.",
-        );
-
-        let side_faces = a
-            .half_edges()
-            .zip(b.half_edges())
-            .map(|([q, r], [t, s])| {
-                let surface = Handle::new(Plane::from_points(
-                    [q, r, s].map(|vertex| vertex.point),
-                ));
-                let face = Face::new(
-                    surface,
-                    [q, r, s, t].map(|vertex| vertex.clone()),
-                );
-                Handle::new(face)
-            })
-            .collect::<Vec<_>>();
-
-        Solid::new([a, b].into_iter().chain(side_faces))
     }
 }
 

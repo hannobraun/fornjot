@@ -1,4 +1,4 @@
-use crate::geometry::Handle;
+use crate::{geometry::Handle, math::Plane};
 
 use super::{face::Face, solid::Solid};
 
@@ -24,6 +24,27 @@ pub trait ConnectExt {
 
 impl ConnectExt for Handle<Face> {
     fn connect(self, other: Handle<Face>) -> Solid {
-        Solid::connect_faces([self, other])
+        assert_eq!(
+            self.vertices().count(),
+            other.vertices().count(),
+            "Can only connect faces that have the same number of vertices.",
+        );
+
+        let side_faces = self
+            .half_edges()
+            .zip(other.half_edges())
+            .map(|([q, r], [t, s])| {
+                let surface = Handle::new(Plane::from_points(
+                    [q, r, s].map(|vertex| vertex.point),
+                ));
+                let face = Face::new(
+                    surface,
+                    [q, r, s, t].map(|vertex| vertex.clone()),
+                );
+                Handle::new(face)
+            })
+            .collect::<Vec<_>>();
+
+        Solid::new([self, other].into_iter().chain(side_faces))
     }
 }
