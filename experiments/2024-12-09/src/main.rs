@@ -13,7 +13,7 @@ fn main() -> anyhow::Result<()> {
     let model = model::model();
 
     export::export(&model)?;
-    app::run(geometry::AnyOp::new(model))?;
+    app::run(model)?;
 
     Ok(())
 }
