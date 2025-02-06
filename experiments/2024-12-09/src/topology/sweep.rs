@@ -2,11 +2,10 @@ use std::fmt;
 
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
-    math::{Plane, Vector},
-    storage::Store,
+    math::Vector,
 };
 
-use super::{face::Face, solid::Solid, vertex::Vertex};
+use super::{face::Face, solid::Solid};
 
 pub trait SweepExt {
     /// Sweep a face along a path, creating a solid
@@ -20,29 +19,15 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(
-        self,
-        path: impl Into<Vector<3>>,
-        faces: &mut Store<Face>,
-        surfaces: &mut Store<Plane>,
-        vertices: &mut Store<Vertex>,
-    ) -> Sweep;
+    fn sweep(self, path: impl Into<Vector<3>>) -> Sweep;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(
-        self,
-        path: impl Into<Vector<3>>,
-        faces: &mut Store<Face>,
-        surfaces: &mut Store<Plane>,
-        vertices: &mut Store<Vertex>,
-    ) -> Sweep {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Sweep {
         let bottom = self;
-        let top = Handle::new(
-            bottom.flip(surfaces).translate(path, surfaces, vertices),
-        );
+        let top = Handle::new(bottom.flip().translate(path));
 
-        let solid = Solid::connect_faces([top, bottom], faces, surfaces);
+        let solid = Solid::connect_faces([top, bottom]);
 
         Sweep { output: solid }
     }

@@ -3,7 +3,6 @@ use std::fmt;
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh},
     math::Plane,
-    storage::Store,
 };
 
 use super::face::Face;
@@ -35,11 +34,7 @@ impl Solid {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    pub fn connect_faces(
-        [a, b]: [Handle<Face>; 2],
-        _: &mut Store<Face>,
-        _: &mut Store<Plane>,
-    ) -> Self {
+    pub fn connect_faces([a, b]: [Handle<Face>; 2]) -> Self {
         assert_eq!(
             a.vertices().count(),
             b.vertices().count(),

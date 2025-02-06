@@ -6,7 +6,6 @@ mod geometry;
 mod math;
 mod model;
 mod render;
-mod storage;
 mod topology;
 mod view;
 

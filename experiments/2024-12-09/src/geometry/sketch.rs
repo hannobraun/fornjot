@@ -1,6 +1,5 @@
 use crate::{
     math::{Plane, Point},
-    storage::Store,
     topology::{face::Face, vertex::Vertex},
 };
 
@@ -11,11 +10,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn to_face(
-        &self,
-        surface: Handle<Plane>,
-        _: &mut Store<Vertex>,
-    ) -> Face {
+    pub fn to_face(&self, surface: Handle<Plane>) -> Face {
         let vertices = self
             .points
             .iter()

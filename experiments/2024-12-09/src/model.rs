@@ -1,13 +1,10 @@
 use crate::{
     geometry::{AnyOp, Handle, Sketch},
     math::{Bivector, Plane, Point, Vector},
-    storage::Stores,
     topology::sweep::SweepExt,
 };
 
 pub fn model() -> AnyOp {
-    let mut stores = Stores::new();
-
     let top = {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
@@ -20,17 +17,12 @@ pub fn model() -> AnyOp {
             },
         });
 
-        sketch.to_face(surface, &mut stores.vertices)
+        sketch.to_face(surface)
     };
 
     let top = Handle::new(top);
 
-    let solid = top.sweep(
-        [0., 0., -1.],
-        &mut stores.faces,
-        &mut stores.surfaces,
-        &mut stores.vertices,
-    );
+    let solid = top.sweep([0., 0., -1.]);
 
     AnyOp::new(solid)
 }

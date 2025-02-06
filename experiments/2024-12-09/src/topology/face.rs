@@ -6,7 +6,6 @@ use spade::Triangulation;
 use crate::{
     geometry::{AnyOp, Handle, Operation, TriMesh, Triangle},
     math::{Plane, Point, Vector},
-    storage::Store,
 };
 
 use super::vertex::Vertex;
@@ -40,19 +39,14 @@ impl Face {
             .map(|(a, b)| [a, b])
     }
 
-    pub fn flip(&self, _: &mut Store<Plane>) -> Self {
+    pub fn flip(&self) -> Self {
         Self {
             surface: Handle::new(self.surface.flip()),
             vertices: self.vertices.clone(),
         }
     }
 
-    pub fn translate(
-        &self,
-        offset: impl Into<Vector<3>>,
-        _: &mut Store<Plane>,
-        _: &mut Store<Vertex>,
-    ) -> Self {
+    pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
         Self {
