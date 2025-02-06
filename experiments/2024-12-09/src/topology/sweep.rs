@@ -32,12 +32,14 @@ impl SweepExt for Handle<Face> {
         let top = Handle::new(bottom.flip().translate(path));
 
         let output = top.connect(bottom);
-        Sweep { output }
+        Sweep {
+            output: Handle::new(output),
+        }
     }
 }
 
 pub struct Sweep {
-    output: Connect,
+    output: Handle<Connect>,
 }
 
 impl Operation for Sweep {
