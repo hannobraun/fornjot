@@ -96,7 +96,9 @@ impl Operation for AnyOp {
     }
 
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.inner.display(f)
+        self.inner.display(f)?;
+
+        Ok(())
     }
 
     fn tri_mesh(&self) -> TriMesh {
