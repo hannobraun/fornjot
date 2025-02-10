@@ -1,4 +1,4 @@
-use std::{fmt, ops::Deref, rc::Rc};
+use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
 use super::tri_mesh::TriMesh;
 
@@ -29,7 +29,6 @@ impl fmt::Display for OperationDisplay<'_> {
     }
 }
 
-#[derive(Ord, PartialOrd)]
 pub struct Handle<T> {
     inner: Rc<T>,
 }
@@ -74,9 +73,21 @@ impl<T> Deref for Handle<T> {
 
 impl<T> Eq for Handle<T> {}
 
+impl<T> Ord for Handle<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        Rc::as_ptr(&self.inner).cmp(&Rc::as_ptr(&other.inner))
+    }
+}
+
 impl<T> PartialEq for Handle<T> {
     fn eq(&self, other: &Self) -> bool {
         Rc::ptr_eq(&self.inner, &other.inner)
+    }
+}
+
+impl<T> PartialOrd for Handle<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 
