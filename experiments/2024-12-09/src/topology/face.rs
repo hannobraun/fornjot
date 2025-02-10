@@ -12,13 +12,13 @@ use super::vertex::Vertex;
 
 #[derive(Debug)]
 pub struct Face {
-    surface: Handle<Plane>,
+    surface: Plane,
     vertices: Vec<Handle<Vertex>>,
 }
 
 impl Face {
     pub fn new(
-        surface: Handle<Plane>,
+        surface: Plane,
         vertices: impl IntoIterator<Item = Handle<Vertex>>,
     ) -> Self {
         Self {
@@ -41,7 +41,7 @@ impl Face {
 
     pub fn flip(&self) -> Self {
         Self {
-            surface: Handle::new(self.surface.flip()),
+            surface: self.surface.flip(),
             vertices: self.vertices.clone(),
         }
     }
@@ -50,7 +50,7 @@ impl Face {
         let offset = offset.into();
 
         Self {
-            surface: Handle::new(self.surface.translate(offset)),
+            surface: self.surface.translate(offset),
             vertices: self
                 .vertices
                 .iter()

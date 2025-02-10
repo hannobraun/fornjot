@@ -10,7 +10,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn to_face(&self, surface: Handle<Plane>) -> Face {
+    pub fn to_face(&self, surface: Plane) -> Face {
         let vertices = self
             .points
             .iter()

@@ -9,13 +9,13 @@ pub fn model() -> AnyOp {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
 
-        let surface = Handle::new(Plane {
+        let surface = Plane {
             origin: Point::from([0., 0., 0.5]),
             coords: Bivector {
                 a: Vector::from([1., 0., 0.]),
                 b: Vector::from([0., 1., 0.]),
             },
-        });
+        };
 
         sketch.to_face(surface)
     };
