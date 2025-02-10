@@ -29,7 +29,7 @@ impl fmt::Display for OperationDisplay<'_> {
     }
 }
 
-#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Eq, Ord, PartialEq, PartialOrd)]
 pub struct Handle<T> {
     inner: Rc<T>,
 }
@@ -69,6 +69,14 @@ impl<T> Deref for Handle<T> {
 
     fn deref(&self) -> &T {
         self.inner.as_ref()
+    }
+}
+
+impl<T> fmt::Debug for Handle<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("Handle")
+            .field("inner", &Rc::as_ptr(&self.inner))
+            .finish()
     }
 }
 
