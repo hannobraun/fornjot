@@ -75,7 +75,9 @@ impl<T> Eq for Handle<T> {}
 
 impl<T> Ord for Handle<T> {
     fn cmp(&self, other: &Self) -> Ordering {
-        Rc::as_ptr(&self.inner).cmp(&Rc::as_ptr(&other.inner))
+        Rc::as_ptr(&self.inner)
+            .cast::<()>()
+            .cmp(&Rc::as_ptr(&other.inner).cast::<()>())
     }
 }
 
