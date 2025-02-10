@@ -29,7 +29,7 @@ impl fmt::Display for OperationDisplay<'_> {
     }
 }
 
-#[derive(Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Ord, PartialOrd)]
 pub struct Handle<T> {
     inner: Rc<T>,
 }
@@ -69,6 +69,14 @@ impl<T> Deref for Handle<T> {
 
     fn deref(&self) -> &T {
         self.inner.as_ref()
+    }
+}
+
+impl<T> Eq for Handle<T> {}
+
+impl<T> PartialEq for Handle<T> {
+    fn eq(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.inner, &other.inner)
     }
 }
 
