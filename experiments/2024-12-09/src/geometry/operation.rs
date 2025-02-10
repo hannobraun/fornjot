@@ -30,27 +30,21 @@ impl fmt::Display for OperationDisplay<'_> {
 }
 
 pub struct Handle<T> {
-    inner: Rc<T>,
+    inner: Rc<dyn OperationOutput<T>>,
 }
 
 impl<T> Handle<T> {
-    pub fn new(inner: T) -> Self {
+    pub fn new(inner: impl OperationOutput<T> + 'static) -> Self {
         Self {
             inner: Rc::new(inner),
         }
     }
 
-    pub fn to_any(&self) -> AnyOp
-    where
-        T: Operation + 'static,
-    {
+    pub fn to_any(&self) -> AnyOp {
         self.clone().into_any()
     }
 
-    pub fn into_any(self) -> AnyOp
-    where
-        T: Operation + 'static,
-    {
+    pub fn into_any(self) -> AnyOp {
         AnyOp { inner: self.inner }
     }
 }
@@ -67,7 +61,7 @@ impl<T> Deref for Handle<T> {
     type Target = T;
 
     fn deref(&self) -> &T {
-        self.inner.as_ref()
+        self.inner.output()
     }
 }
 
