@@ -56,19 +56,19 @@ impl<T> Handle<T> {
     }
 }
 
-impl<T> Deref for Handle<T> {
-    type Target = T;
-
-    fn deref(&self) -> &T {
-        self.inner.as_ref()
-    }
-}
-
 impl<T> Clone for Handle<T> {
     fn clone(&self) -> Self {
         Self {
             inner: self.inner.clone(),
         }
+    }
+}
+
+impl<T> Deref for Handle<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        self.inner.as_ref()
     }
 }
 
