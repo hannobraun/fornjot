@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, TriMesh},
+    geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh},
     math::Vector,
 };
 
@@ -40,5 +40,11 @@ impl Operation for Translate {
 
     fn children(&self) -> Vec<AnyOp> {
         vec![self.output.to_any()]
+    }
+}
+
+impl OperationOutput<Face> for Translate {
+    fn output(&self) -> &Face {
+        &self.output
     }
 }
