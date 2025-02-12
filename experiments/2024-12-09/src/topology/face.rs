@@ -27,7 +27,6 @@ impl Face {
         }
     }
 
-    #[allow(unused)] // fell out of use, but will likely be required again
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.vertices.iter()
     }
