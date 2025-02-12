@@ -28,7 +28,7 @@ pub trait SweepExt {
 impl SweepExt for Handle<Face> {
     fn sweep(self, path: impl Into<Vector<3>>) -> Sweep {
         let bottom = self;
-        let top = bottom.flip().output.translate(path);
+        let top = bottom.flip().translate(path);
 
         let output = top.output.connect(bottom);
         Sweep {
