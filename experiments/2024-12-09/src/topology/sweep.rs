@@ -5,7 +5,7 @@ use crate::{
     math::Vector,
 };
 
-use super::{connect::ConnectExt, face::Face, solid::Solid};
+use super::{connect::ConnectExt, face::Face, flip::FlipExt, solid::Solid};
 
 pub trait SweepExt {
     /// # Sweep a face along a path, creating a solid
