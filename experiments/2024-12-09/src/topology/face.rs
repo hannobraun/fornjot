@@ -40,10 +40,7 @@ impl Face {
     }
 
     pub fn flip(&self) -> Self {
-        Self {
-            surface: self.surface.flip(),
-            vertices: self.vertices.clone(),
-        }
+        Self::new(self.surface.flip(), self.vertices.clone())
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
