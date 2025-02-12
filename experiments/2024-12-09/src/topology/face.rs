@@ -42,10 +42,6 @@ impl Face {
             .map(|(a, b)| [a, b])
     }
 
-    pub fn flip(&self) -> Self {
-        Self::new(self.surface().flip(), self.vertices().cloned())
-    }
-
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
