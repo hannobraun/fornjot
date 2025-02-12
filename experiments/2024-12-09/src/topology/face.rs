@@ -47,8 +47,7 @@ impl Face {
 
         Self::new(
             self.surface().translate(offset),
-            self.vertices
-                .iter()
+            self.vertices()
                 .map(|vertex| Handle::new(vertex.translate(offset))),
         )
     }
