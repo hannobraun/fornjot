@@ -27,6 +27,10 @@ impl Face {
         }
     }
 
+    pub fn surface(&self) -> &Plane {
+        &self.surface
+    }
+
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.vertices.iter()
     }
@@ -39,7 +43,7 @@ impl Face {
     }
 
     pub fn flip(&self) -> Self {
-        Self::new(self.surface.flip(), self.vertices().cloned())
+        Self::new(self.surface().flip(), self.vertices().cloned())
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
