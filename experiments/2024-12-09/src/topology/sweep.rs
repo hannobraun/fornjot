@@ -30,7 +30,7 @@ impl SweepExt for Handle<Face> {
         let bottom = self;
         let top = bottom.clone().flip().output.translate(path);
 
-        let output = top.connect(bottom);
+        let output = top.output.connect(bottom);
         Sweep {
             output: Handle::new(output),
         }
