@@ -8,11 +8,14 @@ pub trait FlipExt {
     fn flip(self) -> Flip;
 }
 
-impl FlipExt for Handle<Face> {
+impl<T> FlipExt for &T
+where
+    T: OperationOutput<Face>,
+{
     fn flip(self) -> Flip {
         let output = Handle::new(Face::new(
-            self.surface().flip(),
-            self.vertices().cloned(),
+            self.output().surface().flip(),
+            self.output().vertices().cloned(),
         ));
 
         Flip { output }
