@@ -45,14 +45,12 @@ impl Face {
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
-        Self {
-            surface: self.surface.translate(offset),
-            vertices: self
-                .vertices
+        Self::new(
+            self.surface.translate(offset),
+            self.vertices
                 .iter()
-                .map(|vertex| Handle::new(vertex.translate(offset)))
-                .collect(),
-        }
+                .map(|vertex| Handle::new(vertex.translate(offset))),
+        )
     }
 }
 
