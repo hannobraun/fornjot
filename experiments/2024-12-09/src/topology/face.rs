@@ -5,7 +5,7 @@ use spade::Triangulation;
 
 use crate::{
     geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh, Triangle},
-    math::{Plane, Point, Vector},
+    math::{Plane, Point},
 };
 
 use super::vertex::Vertex;
@@ -40,16 +40,6 @@ impl Face {
             .iter()
             .circular_tuple_windows()
             .map(|(a, b)| [a, b])
-    }
-
-    pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
-        let offset = offset.into();
-
-        Self::new(
-            self.surface().translate(offset),
-            self.vertices()
-                .map(|vertex| Handle::new(vertex.translate(offset))),
-        )
     }
 }
 
