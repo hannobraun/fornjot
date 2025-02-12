@@ -1,4 +1,6 @@
-use crate::geometry::Handle;
+use std::fmt;
+
+use crate::geometry::{AnyOp, Handle, Operation, TriMesh};
 
 use super::face::Face;
 
@@ -19,4 +21,18 @@ impl FlipExt for Handle<Face> {
 
 pub struct Flip {
     pub output: Handle<Face>,
+}
+
+impl Operation for Flip {
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Flip")
+    }
+
+    fn tri_mesh(&self) -> TriMesh {
+        self.output.tri_mesh()
+    }
+
+    fn children(&self) -> Vec<AnyOp> {
+        vec![self.output.to_any()]
+    }
 }
