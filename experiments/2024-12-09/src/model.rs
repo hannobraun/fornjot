@@ -1,10 +1,10 @@
 use crate::{
-    geometry::{AnyOp, Handle, Sketch},
+    geometry::{Handle, HandleAny, Sketch},
     math::{Bivector, Plane, Point, Vector},
     topology::sweep::SweepExt,
 };
 
-pub fn model() -> AnyOp {
+pub fn model() -> HandleAny {
     let top = {
         let sketch =
             Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
@@ -24,5 +24,5 @@ pub fn model() -> AnyOp {
 
     let solid = top.sweep([0., 0., -1.]);
 
-    AnyOp::new(solid)
+    HandleAny::new(solid)
 }

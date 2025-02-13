@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh};
+use crate::geometry::{Handle, HandleAny, Operation, OperationOutput, TriMesh};
 
 use super::face::Face;
 
@@ -35,7 +35,7 @@ impl Operation for Flip {
         self.output.tri_mesh()
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         vec![self.output.to_any()]
     }
 }

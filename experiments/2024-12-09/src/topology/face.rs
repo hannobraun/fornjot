@@ -4,7 +4,9 @@ use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
-    geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh, Triangle},
+    geometry::{
+        Handle, HandleAny, Operation, OperationOutput, TriMesh, Triangle,
+    },
     math::{Plane, Point},
 };
 
@@ -98,7 +100,7 @@ impl Operation for Face {
         mesh
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.vertices.iter().map(|vertex| vertex.to_any()).collect()
     }
 }

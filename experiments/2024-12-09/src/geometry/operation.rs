@@ -5,7 +5,7 @@ use super::tri_mesh::TriMesh;
 pub trait Operation {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
     fn tri_mesh(&self) -> TriMesh;
-    fn children(&self) -> Vec<AnyOp>;
+    fn children(&self) -> Vec<HandleAny>;
 
     fn label(&self) -> OperationDisplay
     where
@@ -40,12 +40,12 @@ impl<T> Handle<T> {
         }
     }
 
-    pub fn to_any(&self) -> AnyOp {
+    pub fn to_any(&self) -> HandleAny {
         self.clone().into_any()
     }
 
-    pub fn into_any(self) -> AnyOp {
-        AnyOp { inner: self.inner }
+    pub fn into_any(self) -> HandleAny {
+        HandleAny { inner: self.inner }
     }
 }
 
@@ -96,17 +96,17 @@ impl<T> fmt::Debug for Handle<T> {
 }
 
 #[derive(Clone)]
-pub struct AnyOp {
+pub struct HandleAny {
     inner: Rc<dyn Operation>,
 }
 
-impl AnyOp {
+impl HandleAny {
     pub fn new(op: impl Operation + 'static) -> Self {
         Self { inner: Rc::new(op) }
     }
 }
 
-impl Operation for AnyOp {
+impl Operation for HandleAny {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.inner.display(f)?;
         write!(f, " ({:?})", Rc::as_ptr(&self.inner))?;
@@ -118,12 +118,12 @@ impl Operation for AnyOp {
         self.inner.tri_mesh()
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.inner.children()
     }
 }
 
-impl OperationOutput for AnyOp {
+impl OperationOutput for HandleAny {
     fn output(&self) -> &Self {
         self
     }

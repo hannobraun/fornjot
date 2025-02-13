@@ -3,7 +3,7 @@ use std::fmt;
 use crate::math::Point;
 
 use super::{
-    operation::{AnyOp, OperationOutput},
+    operation::{HandleAny, OperationOutput},
     Operation, TriMesh,
 };
 
@@ -34,7 +34,7 @@ impl Operation for Triangle {
         }
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         Vec::new()
     }
 }

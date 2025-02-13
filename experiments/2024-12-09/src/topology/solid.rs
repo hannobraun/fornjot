@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::geometry::{AnyOp, Handle, Operation, OperationOutput, TriMesh};
+use crate::geometry::{Handle, HandleAny, Operation, OperationOutput, TriMesh};
 
 use super::face::Face;
 
@@ -31,7 +31,7 @@ impl Operation for Solid {
         tri_mesh
     }
 
-    fn children(&self) -> Vec<AnyOp> {
+    fn children(&self) -> Vec<HandleAny> {
         self.faces.iter().map(|face| face.to_any()).collect()
     }
 }
