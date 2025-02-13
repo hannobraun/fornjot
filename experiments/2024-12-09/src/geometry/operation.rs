@@ -109,6 +109,12 @@ impl<T> Operation for Handle<T> {
     }
 }
 
+impl<T> OperationOutput<T> for Handle<T> {
+    fn output(&self) -> &T {
+        self.inner.output()
+    }
+}
+
 #[derive(Clone)]
 pub struct HandleAny {
     inner: Rc<dyn Operation>,
