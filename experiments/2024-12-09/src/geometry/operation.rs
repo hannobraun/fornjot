@@ -95,6 +95,20 @@ impl<T> fmt::Debug for Handle<T> {
     }
 }
 
+impl<T> Operation for Handle<T> {
+    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.inner.display(f)
+    }
+
+    fn tri_mesh(&self) -> TriMesh {
+        self.inner.tri_mesh()
+    }
+
+    fn children(&self) -> Vec<HandleAny> {
+        self.inner.children()
+    }
+}
+
 #[derive(Clone)]
 pub struct HandleAny {
     inner: Rc<dyn Operation>,
