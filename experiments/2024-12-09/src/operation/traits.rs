@@ -26,7 +26,7 @@ pub struct OperationDisplay<'r> {
 }
 
 impl fmt::Display for OperationDisplay<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.op.display(f)
     }
 }
