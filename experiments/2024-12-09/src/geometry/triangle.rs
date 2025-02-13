@@ -1,11 +1,11 @@
 use std::fmt;
 
-use crate::math::Point;
-
-use super::{
-    operation::{HandleAny, OperationOutput},
-    Operation, TriMesh,
+use crate::{
+    math::Point,
+    operation::{HandleAny, Operation, OperationOutput},
 };
+
+use super::TriMesh;
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle {

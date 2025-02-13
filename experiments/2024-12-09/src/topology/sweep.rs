@@ -1,8 +1,9 @@
 use std::fmt;
 
 use crate::{
-    geometry::{Handle, HandleAny, Operation, OperationOutput, TriMesh},
+    geometry::TriMesh,
     math::Vector,
+    operation::{Handle, HandleAny, Operation, OperationOutput},
 };
 
 use super::{

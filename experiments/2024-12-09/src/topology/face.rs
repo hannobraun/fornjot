@@ -4,10 +4,9 @@ use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
-    geometry::{
-        Handle, HandleAny, Operation, OperationOutput, TriMesh, Triangle,
-    },
+    geometry::{TriMesh, Triangle},
     math::{Plane, Point},
+    operation::{Handle, HandleAny, Operation, OperationOutput},
 };
 
 use super::vertex::Vertex;

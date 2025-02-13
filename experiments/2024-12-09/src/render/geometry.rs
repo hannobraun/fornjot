@@ -1,7 +1,7 @@
 use glam::Vec3;
 use wgpu::util::DeviceExt;
 
-use crate::geometry::Operation;
+use crate::operation::Operation;
 
 use super::vertex::Vertex;
 

@@ -1,9 +1,8 @@
 use crate::{
     math::{Plane, Point},
+    operation::Handle,
     topology::{face::Face, vertex::Vertex},
 };
-
-use super::Handle;
 
 pub struct Sketch {
     pub points: Vec<Point<2>>,

@@ -1,8 +1,9 @@
 use std::fmt;
 
 use crate::{
-    geometry::{HandleAny, Operation, OperationOutput, TriMesh},
+    geometry::TriMesh,
     math::{Point, Vector},
+    operation::{HandleAny, Operation, OperationOutput},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]

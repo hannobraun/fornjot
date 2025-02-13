@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::geometry::Operation;
+use crate::operation::Operation;
 
 pub fn export(op: &dyn Operation) -> anyhow::Result<()> {
     let tri_mesh = op.tri_mesh();

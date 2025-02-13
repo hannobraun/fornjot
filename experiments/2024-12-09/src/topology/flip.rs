@@ -1,6 +1,9 @@
 use std::fmt;
 
-use crate::geometry::{Handle, HandleAny, Operation, OperationOutput, TriMesh};
+use crate::{
+    geometry::TriMesh,
+    operation::{Handle, HandleAny, Operation, OperationOutput},
+};
 
 use super::face::Face;
 

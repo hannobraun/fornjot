@@ -1,6 +1,7 @@
 use crate::{
-    geometry::{Handle, HandleAny, Sketch},
+    geometry::Sketch,
     math::{Bivector, Plane, Point, Vector},
+    operation::{Handle, HandleAny},
     topology::sweep::SweepExt,
 };
 

@@ -1,6 +1,9 @@
 use std::{fmt, iter};
 
-use crate::geometry::{HandleAny, Operation, OperationOutput, TriMesh};
+use crate::{
+    geometry::TriMesh,
+    operation::{HandleAny, Operation, OperationOutput},
+};
 
 #[derive(Clone)]
 pub struct OperationView {

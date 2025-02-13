@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, fmt, rc::Rc};
 
-use super::tri_mesh::TriMesh;
+use crate::geometry::TriMesh;
 
 pub trait Operation {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
