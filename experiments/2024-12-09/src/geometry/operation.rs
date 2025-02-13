@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
+use std::{cmp::Ordering, fmt, rc::Rc};
 
 use super::tri_mesh::TriMesh;
 
@@ -54,14 +54,6 @@ impl<T> Clone for Handle<T> {
         Self {
             inner: self.inner.clone(),
         }
-    }
-}
-
-impl<T> Deref for Handle<T> {
-    type Target = T;
-
-    fn deref(&self) -> &T {
-        self.inner.output()
     }
 }
 
