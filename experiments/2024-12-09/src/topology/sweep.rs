@@ -3,7 +3,7 @@ use std::fmt;
 use crate::{
     geometry::TriMesh,
     math::Vector,
-    operation::{Handle, HandleAny, Operation, OperationOutput},
+    operation::{Handle, HandleAny, Operation, OperationOutput, WithLabel},
 };
 
 use super::{
@@ -52,7 +52,10 @@ impl Operation for Sweep {
     }
 
     fn children(&self) -> Vec<HandleAny> {
-        vec![self.output.to_any()]
+        vec![HandleAny::new(WithLabel {
+            text: "Output",
+            op: self.output.clone(),
+        })]
     }
 }
 
