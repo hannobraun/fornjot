@@ -82,7 +82,7 @@ impl OperationView {
         //
         // I've tried several variations of matching, and it can't see that in
         // the `None` case, `self` no longer needs to be borrowed, preventing me
-        // from `returning it.
+        // from returning it.
 
         if self.children.get_mut(selected).is_none() {
             return self;
