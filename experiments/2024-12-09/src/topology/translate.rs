@@ -22,7 +22,7 @@ where
             self.output().surface().translate(offset),
             self.output()
                 .vertices()
-                .map(|vertex| Handle::new(vertex.translate(offset))),
+                .map(|vertex| Handle::new(vertex.output().translate(offset))),
         ));
 
         Translate { output }
@@ -49,6 +49,6 @@ impl Operation for Translate {
 
 impl OperationOutput<Face> for Translate {
     fn output(&self) -> &Face {
-        &self.output
+        self.output.output()
     }
 }

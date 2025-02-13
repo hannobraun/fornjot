@@ -42,6 +42,6 @@ impl Operation for Flip {
 
 impl OperationOutput<Face> for Flip {
     fn output(&self) -> &Face {
-        &self.output
+        self.output.output()
     }
 }

@@ -30,17 +30,19 @@ pub trait ConnectExt {
 impl ConnectExt for Handle<Face> {
     fn connect(self, other: Self) -> Connect {
         assert_eq!(
-            self.vertices().count(),
-            other.vertices().count(),
+            self.output().vertices().count(),
+            other.output().vertices().count(),
             "Can only connect faces that have the same number of vertices.",
         );
 
         let side_faces = self
+            .output()
             .half_edges()
-            .zip(other.half_edges())
+            .zip(other.output().half_edges())
             .map(|([q, r], [t, s])| {
-                let surface =
-                    Plane::from_points([q, r, s].map(|vertex| vertex.point));
+                let surface = Plane::from_points(
+                    [q, r, s].map(|vertex| vertex.output().point),
+                );
                 let face = Face::new(
                     surface,
                     [q, r, s, t].map(|vertex| vertex.clone()),
@@ -76,6 +78,6 @@ impl Operation for Connect {
 
 impl OperationOutput<Solid> for Connect {
     fn output(&self) -> &Solid {
-        &self.output
+        self.output.output()
     }
 }

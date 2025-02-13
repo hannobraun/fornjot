@@ -77,11 +77,11 @@ impl Operation for Face {
                     // connect, we use the original 3D points to build those
                     // triangles. We never convert the 2D points back into 3D.
                     let point_surface =
-                        self.surface.project_point(vertex.point);
+                        self.surface.project_point(vertex.output().point);
 
                     TriangulationPoint {
                         point_surface,
-                        point_vertex: vertex.point,
+                        point_vertex: vertex.output().point,
                     }
                 }),
                 true,
