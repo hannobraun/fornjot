@@ -7,7 +7,9 @@ use crate::{
 };
 
 use super::{
-    connect::ConnectExt, face::Face, flip::FlipExt, solid::Solid,
+    connect::{Connect, ConnectExt},
+    face::Face,
+    flip::FlipExt,
     translate::TranslateExt,
 };
 
@@ -32,14 +34,12 @@ impl SweepExt for Handle<Face> {
         let top = Handle::new(bottom.flip().translate(path));
 
         let output = top.connect(bottom);
-        Sweep {
-            output: Handle::new(output),
-        }
+        Sweep { output }
     }
 }
 
 pub struct Sweep {
-    pub output: Handle<Solid>,
+    pub output: Connect,
 }
 
 impl Operation for Sweep {
@@ -56,8 +56,8 @@ impl Operation for Sweep {
     }
 }
 
-impl OperationOutput<Solid> for Sweep {
-    fn output(&self) -> &Solid {
-        self.output.output()
+impl OperationOutput<Connect> for Sweep {
+    fn output(&self) -> &Connect {
+        &self.output
     }
 }
