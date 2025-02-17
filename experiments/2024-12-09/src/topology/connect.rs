@@ -59,6 +59,7 @@ impl ConnectExt for Handle<Face> {
     }
 }
 
+#[derive(Clone)]
 pub struct Connect {
     pub output: Handle<Solid>,
 }
