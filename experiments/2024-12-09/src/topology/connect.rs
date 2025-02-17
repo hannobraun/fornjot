@@ -77,9 +77,3 @@ impl Operation for Connect {
         vec![self.output.to_any()]
     }
 }
-
-impl OperationOutput<Solid> for Connect {
-    fn output(&self) -> &Solid {
-        self.output.output()
-    }
-}

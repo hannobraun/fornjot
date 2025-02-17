@@ -2,7 +2,7 @@ use std::{fmt, rc::Rc};
 
 use crate::geometry::TriMesh;
 
-use super::{Operation, OperationOutput};
+use super::Operation;
 
 #[derive(Clone)]
 pub struct HandleAny {
@@ -29,11 +29,5 @@ impl Operation for HandleAny {
 
     fn children(&self) -> Vec<HandleAny> {
         self.inner.children()
-    }
-}
-
-impl OperationOutput for HandleAny {
-    fn output(&self) -> &Self {
-        self
     }
 }
