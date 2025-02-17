@@ -48,7 +48,7 @@ impl Operation for Sweep {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        self.output.tri_mesh()
+        self.output().tri_mesh()
     }
 
     fn children(&self) -> Vec<HandleAny> {
