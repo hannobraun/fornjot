@@ -52,7 +52,7 @@ impl Operation for Sweep {
     }
 
     fn children(&self) -> Vec<HandleAny> {
-        vec![HandleAny::new(self.output.clone())]
+        vec![HandleAny::new(self.output().clone())]
     }
 }
 
