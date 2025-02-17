@@ -7,5 +7,4 @@ pub use self::{
     handle::Handle,
     handle_any::HandleAny,
     traits::{Operation, OperationOutput},
-    with_label::WithLabel,
 };
