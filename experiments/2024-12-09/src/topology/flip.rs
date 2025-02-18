@@ -10,10 +10,7 @@ pub trait FlipExt {
     fn flip(self) -> Flip;
 }
 
-impl<T> FlipExt for &T
-where
-    T: OperationOutput<Face>,
-{
+impl FlipExt for &Face {
     fn flip(self) -> Flip {
         let output = Handle::new(Face::new(
             self.output().surface().flip(),
