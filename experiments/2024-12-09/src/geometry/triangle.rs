@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     math::Point,
-    operation::{HandleAny, Operation},
+    operation::{HandleAny, Object},
 };
 
 use super::TriMesh;
@@ -23,7 +23,7 @@ where
     }
 }
 
-impl Operation for Triangle {
+impl Object for Triangle {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Triangle")
     }

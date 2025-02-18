@@ -1,6 +1,6 @@
 use std::fmt::Write;
 
-use crate::{operation::Operation, view::OperationView};
+use crate::{operation::Object, view::OperationView};
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,

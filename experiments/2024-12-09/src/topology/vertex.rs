@@ -3,7 +3,7 @@ use std::fmt;
 use crate::{
     geometry::TriMesh,
     math::{Point, Vector},
-    operation::{HandleAny, Operation},
+    operation::{HandleAny, Object},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -30,7 +30,7 @@ where
     }
 }
 
-impl Operation for Vertex {
+impl Object for Vertex {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Vertex")
     }

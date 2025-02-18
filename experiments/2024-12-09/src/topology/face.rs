@@ -6,7 +6,7 @@ use spade::Triangulation;
 use crate::{
     geometry::{TriMesh, Triangle},
     math::{Plane, Point},
-    operation::{Handle, HandleAny, Operation},
+    operation::{Handle, HandleAny, Object},
 };
 
 use super::vertex::Vertex;
@@ -44,7 +44,7 @@ impl Face {
     }
 }
 
-impl Operation for Face {
+impl Object for Face {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Face")
     }

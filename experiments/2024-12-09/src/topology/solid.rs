@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     geometry::TriMesh,
-    operation::{Handle, HandleAny, Operation},
+    operation::{Handle, HandleAny, Object},
 };
 
 use super::face::Face;
@@ -20,7 +20,7 @@ impl Solid {
     }
 }
 
-impl Operation for Solid {
+impl Object for Solid {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Solid")
     }

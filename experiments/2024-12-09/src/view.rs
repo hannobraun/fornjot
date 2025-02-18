@@ -2,7 +2,7 @@ use std::{fmt, iter};
 
 use crate::{
     geometry::TriMesh,
-    operation::{HandleAny, Operation},
+    operation::{HandleAny, Object},
 };
 
 #[derive(Clone)]
@@ -121,7 +121,7 @@ impl OperationView {
     }
 }
 
-impl Operation for OperationView {
+impl Object for OperationView {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.operation.display(f)
     }

@@ -4,7 +4,7 @@ use crate::geometry::TriMesh;
 
 use super::HandleAny;
 
-pub trait Operation {
+pub trait Object {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<HandleAny>;
@@ -18,7 +18,7 @@ pub trait Operation {
 }
 
 pub struct OperationDisplay<'r> {
-    pub op: &'r dyn Operation,
+    pub op: &'r dyn Object,
 }
 
 impl fmt::Display for OperationDisplay<'_> {

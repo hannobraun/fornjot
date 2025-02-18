@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
-use super::{HandleAny, Operation};
+use super::{HandleAny, Object};
 
 pub struct Handle<T> {
     inner: Rc<T>,
@@ -16,7 +16,7 @@ impl<T> Handle<T> {
 
 impl<T> Handle<T>
 where
-    T: Operation + 'static,
+    T: Object + 'static,
 {
     pub fn to_any(&self) -> HandleAny {
         self.clone().into_any()
