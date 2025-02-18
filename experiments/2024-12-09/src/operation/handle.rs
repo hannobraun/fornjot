@@ -1,18 +1,23 @@
 use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
-use super::{HandleAny, OperationOutput};
+use super::{HandleAny, Operation};
 
 pub struct Handle<T> {
-    inner: Rc<dyn OperationOutput<T>>,
+    inner: Rc<T>,
 }
 
 impl<T> Handle<T> {
-    pub fn new(inner: impl OperationOutput<T> + 'static) -> Self {
+    pub fn new(inner: T) -> Self {
         Self {
             inner: Rc::new(inner),
         }
     }
+}
 
+impl<T> Handle<T>
+where
+    T: Operation + 'static,
+{
     pub fn to_any(&self) -> HandleAny {
         self.clone().into_any()
     }
@@ -34,7 +39,7 @@ impl<T> Deref for Handle<T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
-        self.inner.output()
+        &self.inner
     }
 }
 
