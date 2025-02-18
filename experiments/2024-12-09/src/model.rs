@@ -2,7 +2,7 @@ use crate::{
     geometry::Sketch,
     math::{Bivector, Plane, Point, Vector},
     operation::{Handle, HandleAny},
-    topology::sweep::SweepExt,
+    operations::sweep::SweepExt,
 };
 
 pub fn model() -> HandleAny {
