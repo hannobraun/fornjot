@@ -1,11 +1,11 @@
-use crate::{operation::Handle, topology::face::Face};
+use crate::topology::face::Face;
 
 pub trait FlipExt {
-    fn flip(self) -> Handle<Face>;
+    fn flip(self) -> Face;
 }
 
 impl FlipExt for &Face {
-    fn flip(self) -> Handle<Face> {
-        Handle::new(Face::new(self.surface().flip(), self.vertices().cloned()))
+    fn flip(self) -> Face {
+        Face::new(self.surface().flip(), self.vertices().cloned())
     }
 }
