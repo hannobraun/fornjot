@@ -18,6 +18,7 @@ pub trait Operation {
 }
 
 pub trait OperationOutput<Output = Self>: Operation {
+    #[allow(unused)] // ongoing cleanup
     fn output(&self) -> &Output;
 }
 
