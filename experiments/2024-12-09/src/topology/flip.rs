@@ -3,9 +3,8 @@ use std::fmt;
 use crate::{
     geometry::TriMesh,
     operation::{Handle, HandleAny, Operation, OperationOutput},
+    topology::face::Face,
 };
-
-use super::face::Face;
 
 pub trait FlipExt {
     fn flip(self) -> Flip;
