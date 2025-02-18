@@ -1,8 +1,6 @@
 use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
-use crate::geometry::TriMesh;
-
-use super::{HandleAny, Operation, OperationOutput};
+use super::{HandleAny, OperationOutput};
 
 pub struct Handle<T> {
     inner: Rc<dyn OperationOutput<T>>,
@@ -67,25 +65,5 @@ impl<T> fmt::Debug for Handle<T> {
         f.debug_struct("Handle")
             .field("inner", &Rc::as_ptr(&self.inner))
             .finish()
-    }
-}
-
-impl<T> Operation for Handle<T> {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.inner.display(f)
-    }
-
-    fn tri_mesh(&self) -> TriMesh {
-        self.inner.tri_mesh()
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        self.inner.children()
-    }
-}
-
-impl<T> OperationOutput<T> for Handle<T> {
-    fn output(&self) -> &T {
-        self.inner.output()
     }
 }
