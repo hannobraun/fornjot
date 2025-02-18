@@ -7,10 +7,7 @@ use crate::{
 };
 
 use super::{
-    connect::{Connect, ConnectExt},
-    face::Face,
-    flip::FlipExt,
-    solid::Solid,
+    connect::ConnectExt, face::Face, flip::FlipExt, solid::Solid,
     translate::TranslateExt,
 };
 
@@ -40,7 +37,7 @@ impl SweepExt for Handle<Face> {
 }
 
 pub struct Sweep {
-    pub output: Connect,
+    pub output: Handle<Solid>,
 }
 
 impl Operation for Sweep {
@@ -59,6 +56,6 @@ impl Operation for Sweep {
 
 impl OperationOutput<Solid> for Sweep {
     fn output(&self) -> &Solid {
-        self.output.output.output()
+        self.output.output()
     }
 }
