@@ -23,16 +23,15 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, path: impl Into<Vector<3>>) -> Sweep;
+    fn sweep(self, path: impl Into<Vector<3>>) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, path: impl Into<Vector<3>>) -> Sweep {
+    fn sweep(self, path: impl Into<Vector<3>>) -> Solid {
         let bottom = self;
         let top = Handle::new(bottom.flip().translate(path));
 
-        let output = top.connect(bottom);
-        Sweep { output }
+        top.connect(bottom)
     }
 }
 
