@@ -18,10 +18,9 @@ pub fn model() -> HandleAny {
             },
         };
 
-        sketch.to_face(surface)
+        let face = sketch.to_face(surface);
+        Handle::new(face)
     };
-
-    let top = Handle::new(top);
 
     let solid = top.sweep([0., 0., -1.]);
 
