@@ -1,9 +1,10 @@
-use crate::{math::Vector, operation::Handle};
-
-use super::{
-    connect::ConnectExt, face::Face, flip::FlipExt, solid::Solid,
-    translate::TranslateExt,
+use crate::{
+    math::Vector,
+    operation::Handle,
+    topology::{face::Face, solid::Solid},
 };
+
+use super::{connect::ConnectExt, flip::FlipExt, translate::TranslateExt};
 
 pub trait SweepExt {
     /// # Sweep a face along a path, creating a solid
