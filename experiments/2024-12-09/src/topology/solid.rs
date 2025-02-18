@@ -7,6 +7,7 @@ use crate::{
 
 use super::face::Face;
 
+#[derive(Clone)]
 pub struct Solid {
     faces: Vec<Handle<Face>>,
 }
