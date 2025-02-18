@@ -1,9 +1,6 @@
-use std::fmt;
-
 use crate::{
-    geometry::TriMesh,
     math::Vector,
-    operation::{Handle, HandleAny, Operation, OperationOutput},
+    operation::{Handle, OperationOutput},
 };
 
 use super::face::Face;
@@ -22,29 +19,5 @@ impl TranslateExt for &Face {
                 .vertices()
                 .map(|vertex| Handle::new(vertex.output().translate(offset))),
         ))
-    }
-}
-
-pub struct Translate {
-    pub output: Handle<Face>,
-}
-
-impl Operation for Translate {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Translate")
-    }
-
-    fn tri_mesh(&self) -> TriMesh {
-        self.output.tri_mesh()
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        vec![self.output.to_any()]
-    }
-}
-
-impl OperationOutput<Face> for Translate {
-    fn output(&self) -> &Face {
-        self.output.output()
     }
 }
