@@ -13,8 +13,8 @@ pub trait FlipExt {
 impl FlipExt for &Face {
     fn flip(self) -> Flip {
         let output = Handle::new(Face::new(
-            self.output().surface().flip(),
-            self.output().vertices().cloned(),
+            self.surface().flip(),
+            self.vertices().cloned(),
         ));
 
         Flip { output }
