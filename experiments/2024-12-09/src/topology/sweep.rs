@@ -10,6 +10,7 @@ use super::{
     connect::{Connect, ConnectExt},
     face::Face,
     flip::FlipExt,
+    solid::Solid,
     translate::TranslateExt,
 };
 
@@ -56,8 +57,8 @@ impl Operation for Sweep {
     }
 }
 
-impl OperationOutput<Connect> for Sweep {
-    fn output(&self) -> &Connect {
-        &self.output
+impl OperationOutput<Solid> for Sweep {
+    fn output(&self) -> &Solid {
+        self.output.output.output()
     }
 }
