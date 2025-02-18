@@ -1,6 +1,6 @@
 use crate::{
     math::Plane,
-    operation::{Handle, OperationOutput},
+    operation::Handle,
     topology::{face::Face, solid::Solid},
 };
 
@@ -36,9 +36,8 @@ impl ConnectExt for Handle<Face> {
             .half_edges()
             .zip(other.half_edges())
             .map(|([q, r], [t, s])| {
-                let surface = Plane::from_points(
-                    [q, r, s].map(|vertex| vertex.output().point),
-                );
+                let surface =
+                    Plane::from_points([q, r, s].map(|vertex| vertex.point));
                 let face = Face::new(
                     surface,
                     [q, r, s, t].map(|vertex| vertex.clone()),
