@@ -1,9 +1,8 @@
 use crate::{
     math::Plane,
     operation::{Handle, OperationOutput},
+    topology::{face::Face, solid::Solid},
 };
-
-use super::{face::Face, solid::Solid};
 
 pub trait ConnectExt {
     /// # Connect two faces by creating a side wall of faces from their vertices
