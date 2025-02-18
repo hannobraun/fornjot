@@ -5,7 +5,7 @@ mod export;
 mod geometry;
 mod math;
 mod model;
-mod operation;
+mod object;
 mod operations;
 mod render;
 mod topology;

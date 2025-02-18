@@ -3,7 +3,7 @@ use std::fmt;
 use crate::{
     geometry::TriMesh,
     math::{Point, Vector},
-    operation::{HandleAny, Object},
+    object::{HandleAny, Object},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]

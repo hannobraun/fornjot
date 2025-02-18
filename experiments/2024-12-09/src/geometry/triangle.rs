@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     math::Point,
-    operation::{HandleAny, Object},
+    object::{HandleAny, Object},
 };
 
 use super::TriMesh;

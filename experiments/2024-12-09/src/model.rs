@@ -1,7 +1,7 @@
 use crate::{
     geometry::Sketch,
     math::{Bivector, Plane, Point, Vector},
-    operation::{Handle, HandleAny},
+    object::{Handle, HandleAny},
     operations::sweep::SweepExt,
 };
 

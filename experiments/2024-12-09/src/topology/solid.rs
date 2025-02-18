@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     geometry::TriMesh,
-    operation::{Handle, HandleAny, Object},
+    object::{Handle, HandleAny, Object},
 };
 
 use super::face::Face;

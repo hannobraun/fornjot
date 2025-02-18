@@ -1,4 +1,4 @@
-use crate::{math::Vector, operation::Handle, topology::face::Face};
+use crate::{math::Vector, object::Handle, topology::face::Face};
 
 pub trait TranslateExt {
     fn translate(self, offset: impl Into<Vector<3>>) -> Face;

@@ -1,6 +1,6 @@
 use crate::{
     math::{Plane, Point},
-    operation::Handle,
+    object::Handle,
     topology::{face::Face, vertex::Vertex},
 };
 

@@ -6,7 +6,7 @@ use spade::Triangulation;
 use crate::{
     geometry::{TriMesh, Triangle},
     math::{Plane, Point},
-    operation::{Handle, HandleAny, Object},
+    object::{Handle, HandleAny, Object},
 };
 
 use super::vertex::Vertex;

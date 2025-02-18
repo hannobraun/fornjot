@@ -8,7 +8,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{operation::HandleAny, render::Renderer, view::OperationView};
+use crate::{object::HandleAny, render::Renderer, view::OperationView};
 
 pub fn run(shape: HandleAny) -> anyhow::Result<()> {
     let view = OperationView::new(shape);

@@ -2,7 +2,7 @@ use std::{fmt, iter};
 
 use crate::{
     geometry::TriMesh,
-    operation::{HandleAny, Object},
+    object::{HandleAny, Object},
 };
 
 #[derive(Clone)]
