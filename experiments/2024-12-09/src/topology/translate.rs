@@ -1,9 +1,8 @@
 use crate::{
     math::Vector,
     operation::{Handle, OperationOutput},
+    topology::face::Face,
 };
-
-use super::face::Face;
 
 pub trait TranslateExt {
     fn translate(self, offset: impl Into<Vector<3>>) -> Face;
