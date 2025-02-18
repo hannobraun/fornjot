@@ -12,10 +12,7 @@ pub trait TranslateExt {
     fn translate(self, offset: impl Into<Vector<3>>) -> Translate;
 }
 
-impl<T> TranslateExt for &T
-where
-    T: OperationOutput<Face>,
-{
+impl TranslateExt for &Face {
     fn translate(self, offset: impl Into<Vector<3>>) -> Translate {
         let offset = offset.into();
 
