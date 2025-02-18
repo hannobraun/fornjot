@@ -7,17 +7,12 @@ use crate::{
 };
 
 pub trait FlipExt {
-    fn flip(self) -> Flip;
+    fn flip(self) -> Handle<Face>;
 }
 
 impl FlipExt for &Face {
-    fn flip(self) -> Flip {
-        let output = Handle::new(Face::new(
-            self.surface().flip(),
-            self.vertices().cloned(),
-        ));
-
-        Flip { output }
+    fn flip(self) -> Handle<Face> {
+        Handle::new(Face::new(self.surface().flip(), self.vertices().cloned()))
     }
 }
 
