@@ -2,7 +2,7 @@ use std::{fmt, iter};
 
 use crate::{
     geometry::TriMesh,
-    operation::{HandleAny, Operation, OperationOutput},
+    operation::{HandleAny, Operation},
 };
 
 #[derive(Clone)]
@@ -132,11 +132,5 @@ impl Operation for OperationView {
 
     fn children(&self) -> Vec<HandleAny> {
         self.operation.children()
-    }
-}
-
-impl OperationOutput for OperationView {
-    fn output(&self) -> &Self {
-        self
     }
 }

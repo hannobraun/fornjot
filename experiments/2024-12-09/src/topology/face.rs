@@ -6,7 +6,7 @@ use spade::Triangulation;
 use crate::{
     geometry::{TriMesh, Triangle},
     math::{Plane, Point},
-    operation::{Handle, HandleAny, Operation, OperationOutput},
+    operation::{Handle, HandleAny, Operation},
 };
 
 use super::vertex::Vertex;
@@ -101,12 +101,6 @@ impl Operation for Face {
 
     fn children(&self) -> Vec<HandleAny> {
         self.vertices.iter().map(|vertex| vertex.to_any()).collect()
-    }
-}
-
-impl OperationOutput for Face {
-    fn output(&self) -> &Self {
-        self
     }
 }
 

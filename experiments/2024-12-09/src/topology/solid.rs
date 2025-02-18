@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     geometry::TriMesh,
-    operation::{Handle, HandleAny, Operation, OperationOutput},
+    operation::{Handle, HandleAny, Operation},
 };
 
 use super::face::Face;
@@ -37,10 +37,5 @@ impl Operation for Solid {
 
     fn children(&self) -> Vec<HandleAny> {
         self.faces.iter().map(|face| face.to_any()).collect()
-    }
-}
-impl OperationOutput for Solid {
-    fn output(&self) -> &Self {
-        self
     }
 }

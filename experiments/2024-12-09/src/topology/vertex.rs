@@ -3,7 +3,7 @@ use std::fmt;
 use crate::{
     geometry::TriMesh,
     math::{Point, Vector},
-    operation::{HandleAny, Operation, OperationOutput},
+    operation::{HandleAny, Operation},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -41,11 +41,5 @@ impl Operation for Vertex {
 
     fn children(&self) -> Vec<HandleAny> {
         Vec::new()
-    }
-}
-
-impl OperationOutput for Vertex {
-    fn output(&self) -> &Self {
-        self
     }
 }
