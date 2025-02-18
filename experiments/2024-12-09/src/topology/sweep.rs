@@ -37,7 +37,7 @@ impl SweepExt for Handle<Face> {
 }
 
 pub struct Sweep {
-    pub output: Handle<Solid>,
+    pub output: Solid,
 }
 
 impl Operation for Sweep {
