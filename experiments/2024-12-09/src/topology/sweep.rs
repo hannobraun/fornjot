@@ -1,10 +1,4 @@
-use std::fmt;
-
-use crate::{
-    geometry::TriMesh,
-    math::Vector,
-    operation::{Handle, HandleAny, Operation, OperationOutput},
-};
+use crate::{math::Vector, operation::Handle};
 
 use super::{
     connect::ConnectExt, face::Face, flip::FlipExt, solid::Solid,
@@ -32,29 +26,5 @@ impl SweepExt for Handle<Face> {
         let top = Handle::new(bottom.flip().translate(path));
 
         top.connect(bottom)
-    }
-}
-
-pub struct Sweep {
-    pub output: Solid,
-}
-
-impl Operation for Sweep {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Sweep")
-    }
-
-    fn tri_mesh(&self) -> TriMesh {
-        self.output().tri_mesh()
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        vec![HandleAny::new(self.output().clone())]
-    }
-}
-
-impl OperationOutput<Solid> for Sweep {
-    fn output(&self) -> &Solid {
-        self.output.output()
     }
 }
