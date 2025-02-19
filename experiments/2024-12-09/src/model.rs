@@ -7,11 +7,10 @@ use crate::{
 
 pub fn model() -> HandleAny {
     let top = {
-        let sketch =
-            Sketch::from([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]]);
+        let sketch = Sketch::from([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]]);
 
         let surface = Plane {
-            origin: Point::from([0., 0., 0.5]),
+            origin: Point::from([0., 0., 1.]),
             coords: Bivector {
                 a: Vector::from([1., 0., 0.]),
                 b: Vector::from([0., 1., 0.]),
@@ -22,7 +21,7 @@ pub fn model() -> HandleAny {
         Handle::new(face)
     };
 
-    let solid = top.sweep([0., 0., -1.]);
+    let solid = top.sweep([0., 0., -2.]);
 
     HandleAny::new(solid)
 }
