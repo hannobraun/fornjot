@@ -46,13 +46,14 @@ pub fn triangulate<'r>(
         )
         .unwrap();
 
+    let triangles = triangulation.inner_faces().map(|triangle| {
+        let points =
+            triangle.vertices().map(|vertex| vertex.data().point_vertex);
+        Triangle { points }
+    });
+
     let mut mesh = TriMesh::new();
-    mesh.triangles
-        .extend(triangulation.inner_faces().map(|triangle| {
-            let points =
-                triangle.vertices().map(|vertex| vertex.data().point_vertex);
-            Triangle { points }
-        }));
+    mesh.triangles.extend(triangles);
 
     mesh
 }
