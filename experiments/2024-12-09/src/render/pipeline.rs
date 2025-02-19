@@ -139,7 +139,7 @@ fn default_transform(aspect_ratio: f32) -> Mat4 {
     let z_far = 10.;
 
     Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far)
-        * Mat4::from_translation(Vec3::new(0., 0., -2.))
+        * Mat4::from_translation(Vec3::new(0., 0., -4.))
         * Mat4::from_rotation_x(-PI / 4.)
         * Mat4::from_rotation_z(PI / 4.)
 }
