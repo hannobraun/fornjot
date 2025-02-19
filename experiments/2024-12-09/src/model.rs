@@ -7,7 +7,23 @@ use crate::{
 
 pub fn model() -> HandleAny {
     let top = {
-        let sketch = Sketch::from([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]]);
+        let sketch = Sketch::from([
+            // outer boundary
+            [-1., -1.],
+            [1., -1.],
+            [1., 1.],
+            [-1., 1.],
+            // connection to inner boundary
+            [-1., -1.],
+            // inner boundary
+            [-0.5, -0.5],
+            [-0.5, 0.5],
+            [0.5, 0.5],
+            [0.5, -0.5],
+            // connection to outer boundary
+            [-0.5, -0.5],
+            // half-edge between last and first vertex is implicit, so we're done here
+        ]);
 
         let surface = Plane {
             origin: Point::from([0., 0., 1.]),
