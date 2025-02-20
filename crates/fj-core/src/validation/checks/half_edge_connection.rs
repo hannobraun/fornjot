@@ -4,7 +4,7 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Sketch, Surface},
-    validation::{validation_check::ValidationCheck, ValidationConfig},
+    validation::{ValidationConfig, validation_check::ValidationCheck},
 };
 
 /// # Adjacent [`HalfEdge`]s in [`Cycle`] are not connected
@@ -156,6 +156,7 @@ fn check_cycle<'r>(
 mod tests {
 
     use crate::{
+        Core,
         geometry::LocalVertexGeom,
         operations::{
             build::{BuildFace, BuildHalfEdge},
@@ -163,7 +164,6 @@ mod tests {
         },
         topology::{Face, HalfEdge},
         validation::ValidationCheck,
-        Core,
     };
 
     use super::AdjacentHalfEdgesNotConnected;

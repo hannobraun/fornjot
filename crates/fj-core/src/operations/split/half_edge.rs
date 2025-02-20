@@ -1,11 +1,11 @@
 use fj_math::Point;
 
 use crate::{
+    Core,
     geometry::LocalVertexGeom,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Cycle, HalfEdge, Vertex},
-    Core,
 };
 
 /// Split a [`HalfEdge`] into two

@@ -1,10 +1,10 @@
 use std::{error::Error as _, fmt};
 
 use fj_core::{
+    Core,
     algorithms::{bounding_volume::BoundingVolume, triangulate::Triangulate},
     geometry::{InvalidTolerance, Tolerance},
     validation::{ValidationConfig, ValidationErrors},
-    Core,
 };
 use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};

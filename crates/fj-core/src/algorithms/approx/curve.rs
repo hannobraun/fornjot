@@ -4,14 +4,14 @@ use fj_math::{Circle, Line, Point};
 
 use crate::{
     geometry::{
-        repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
         CurveBoundary, Geometry, Path, Tolerance,
+        repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
     },
     storage::Handle,
     topology::{Curve, Surface},
 };
 
-use super::{circle::approx_circle, line::approx_line, ApproxPoint};
+use super::{ApproxPoint, circle::approx_circle, line::approx_line};
 
 /// Approximate the provided curve
 ///
@@ -209,16 +209,17 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
+        Core,
         algorithms::approx::{
-            circle::approx_circle, curve::approx_curve, ApproxPoint,
+            ApproxPoint, circle::approx_circle, curve::approx_curve,
         },
         geometry::{
+            CurveBoundary, Path,
             repr::tri_mesh::convert_point_surface_to_global,
-            surfaces::SweptCurve, CurveBoundary, Path,
+            surfaces::SweptCurve,
         },
         operations::build::BuildSurface,
         topology::Surface,
-        Core,
     };
 
     #[test]

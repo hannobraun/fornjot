@@ -6,11 +6,11 @@ mod polygon;
 use fj_interop::Mesh;
 use fj_math::Point;
 
-use crate::{geometry::Tolerance, operations::presentation::GetColor, Core};
+use crate::{Core, geometry::Tolerance, operations::presentation::GetColor};
 
 use self::polygon::Polygon;
 
-use super::approx::{face::FaceApprox, Approx};
+use super::approx::{Approx, face::FaceApprox};
 
 /// Triangulate a shape
 pub trait Triangulate: Sized {
@@ -80,9 +80,10 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::approx::{face::approx_face, ApproxCache},
+        Core,
+        algorithms::approx::{ApproxCache, face::approx_face},
         geometry::{
-            repr::tri_mesh::convert_point_surface_to_global, Tolerance,
+            Tolerance, repr::tri_mesh::convert_point_surface_to_global,
         },
         operations::{
             build::{BuildCycle, BuildFace},
@@ -91,7 +92,6 @@ mod tests {
         },
         storage::Handle,
         topology::{Cycle, Face},
-        Core,
     };
 
     use super::Triangulate;

@@ -3,9 +3,9 @@
 //! See [`DeriveFrom`].
 
 use crate::{
+    Core,
     storage::Handle,
     topology::{AnyObject, Stored},
-    Core,
 };
 
 /// Mark a store object as derived from another

@@ -1,13 +1,13 @@
 use fj_math::Vector;
 
 use crate::{
+    Core,
     operations::insert::Insert,
     storage::Handle,
     topology::{Face, Sketch, Solid, Surface},
-    Core,
 };
 
-use super::{face::SweepFace, SweepCache};
+use super::{SweepCache, face::SweepFace};
 
 /// # Sweep a [`Sketch`]
 ///

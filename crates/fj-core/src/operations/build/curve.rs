@@ -1,9 +1,9 @@
 use crate::{
+    Core,
     geometry::Path,
     operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, Surface},
-    Core,
 };
 
 /// Build a [`Curve`]

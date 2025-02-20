@@ -195,6 +195,7 @@ impl<T, U> ReferenceCounter<T, U> {
 #[cfg(test)]
 mod tests {
     use crate::{
+        Core,
         operations::{
             build::{BuildShell, BuildSketch, BuildSolid},
             update::{
@@ -203,8 +204,7 @@ mod tests {
             },
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
-        validation::{checks::MultipleReferencesToObject, ValidationCheck},
-        Core,
+        validation::{ValidationCheck, checks::MultipleReferencesToObject},
     };
 
     #[test]

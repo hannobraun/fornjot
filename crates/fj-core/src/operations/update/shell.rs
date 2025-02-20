@@ -1,8 +1,8 @@
 use crate::{
+    Core,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Face, Shell},
-    Core,
 };
 
 /// Update a [`Shell`]

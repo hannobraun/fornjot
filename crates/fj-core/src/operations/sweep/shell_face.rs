@@ -1,6 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
+    Core,
     operations::{
         derive::DeriveFrom,
         insert::Insert,
@@ -11,7 +12,6 @@ use crate::{
     },
     storage::Handle,
     topology::{Face, Region, Shell},
-    Core,
 };
 
 /// # Sweep a [`Face`] that is part of a [`Shell`]

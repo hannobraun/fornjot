@@ -1,10 +1,10 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
+    Core,
     operations::{build::BuildCycle, insert::Insert},
     storage::Handle,
     topology::{Cycle, Region, Surface},
-    Core,
 };
 
 /// Build a [`Region`]

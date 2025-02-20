@@ -10,10 +10,10 @@ use crate::{
 };
 
 use super::{
-    device::Device, draw_config::DrawConfig, drawables::Drawables,
-    geometries::Geometries, navigation_cube::NavigationCubeRenderer,
-    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DeviceError, DEPTH_FORMAT, SAMPLE_COUNT,
+    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
+    draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
+    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
 
 /// Graphics rendering state and target abstraction

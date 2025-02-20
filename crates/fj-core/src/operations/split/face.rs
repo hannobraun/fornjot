@@ -3,6 +3,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
+    Core,
     geometry::LocalVertexGeom,
     operations::{
         build::{BuildCycle, BuildHalfEdge},
@@ -15,7 +16,6 @@ use crate::{
     },
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Shell},
-    Core,
 };
 
 /// Split a face into two
@@ -248,13 +248,13 @@ mod tests {
     use fj_interop::Color;
 
     use crate::{
+        Core,
         operations::{
             build::BuildShell,
             presentation::{GetColor, SetColor},
             split::SplitFace,
         },
         topology::Shell,
-        Core,
     };
 
     #[test]

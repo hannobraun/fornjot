@@ -11,9 +11,9 @@ use crate::{
 };
 
 use super::{
-    half_edge::{approx_half_edge, HalfEdgeApprox},
-    vertex::approx_vertex,
     ApproxCache, ApproxPoint,
+    half_edge::{HalfEdgeApprox, approx_half_edge},
+    vertex::approx_vertex,
 };
 
 /// Approximate the provided cycle

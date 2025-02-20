@@ -1,10 +1,10 @@
 use fj_math::Vector;
 
 use crate::{
+    Core,
     operations::{insert::Insert, presentation::GetColor},
     storage::Handle,
     topology::{Face, Shell},
-    Core,
 };
 
 use super::{SweepCache, SweepRegion};

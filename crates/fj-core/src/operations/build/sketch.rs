@@ -1,9 +1,9 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
+    Core,
     operations::update::UpdateSketch,
     topology::{Region, Sketch, Topology},
-    Core,
 };
 
 use super::BuildRegion;

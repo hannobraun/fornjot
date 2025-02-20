@@ -90,7 +90,7 @@ mod tests {
 
     use super::Arc;
 
-    use approx::{assert_abs_diff_eq, AbsDiffEq};
+    use approx::{AbsDiffEq, assert_abs_diff_eq};
 
     #[test]
     fn arc_construction() {

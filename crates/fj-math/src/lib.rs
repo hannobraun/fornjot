@@ -50,7 +50,7 @@ pub use self::{
     arc::Arc,
     bivector::Bivector,
     circle::Circle,
-    coordinates::{Uv, Xyz, T},
+    coordinates::{T, Uv, Xyz},
     line::Line,
     line_segment::LineSegment,
     point::Point,

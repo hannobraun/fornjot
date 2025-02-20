@@ -2,11 +2,11 @@ use crate::{
     geometry::Geometry,
     topology::Face,
     validation::{
+        ValidationCheck, ValidationConfig, ValidationError,
         checks::{
             AdjacentHalfEdgesNotConnected, FaceHasNoBoundary,
             InteriorCycleHasInvalidWinding,
         },
-        ValidationCheck, ValidationConfig, ValidationError,
     },
 };
 

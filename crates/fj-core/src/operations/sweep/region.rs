@@ -2,12 +2,12 @@ use fj_interop::Color;
 use fj_math::Vector;
 
 use crate::{
+    Core,
     operations::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
     },
     storage::Handle,
     topology::{Cycle, Face, Region, Surface},
-    Core,
 };
 
 use super::{SweepCache, SweepCycle};

@@ -1,7 +1,7 @@
 use fj_interop::Model;
 use fj_viewer::{
-    InputEvent, RendererInitError, Screen, ScreenSize, Viewer,
-    DEFAULT_CAMERA_TUNING_CONFIG,
+    DEFAULT_CAMERA_TUNING_CONFIG, InputEvent, RendererInitError, Screen,
+    ScreenSize, Viewer,
 };
 use futures::executor::block_on;
 use winit::{

@@ -35,13 +35,13 @@ impl ValidationCheck<Face> for FaceHasNoBoundary {
 #[cfg(test)]
 mod tests {
     use crate::{
+        Core,
         operations::{
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
         topology::{Cycle, Face},
-        validation::{checks::FaceHasNoBoundary, ValidationCheck},
-        Core,
+        validation::{ValidationCheck, checks::FaceHasNoBoundary},
     };
 
     #[test]

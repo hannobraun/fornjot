@@ -1,8 +1,8 @@
 use crate::{
+    Core,
     operations::insert::Insert,
     storage::Handle,
     topology::{Region, Surface},
-    Core,
 };
 
 use super::TransformObject;

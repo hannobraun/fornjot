@@ -1,10 +1,10 @@
 use fj_math::Transform;
 
 use crate::{
+    Core,
     operations::insert::Insert,
     storage::Handle,
     topology::{HalfEdge, Surface},
-    Core,
 };
 
 use super::{TransformCache, TransformObject};

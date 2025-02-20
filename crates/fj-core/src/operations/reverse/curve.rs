@@ -1,8 +1,8 @@
 use crate::{
+    Core,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Curve, Surface},
-    Core,
 };
 
 use super::ReverseCurveCoordinateSystems;

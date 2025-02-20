@@ -1,17 +1,17 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
+    Core,
     geometry::{
+        Path,
         repr::tri_mesh::{
             convert_point_surface_to_global, convert_vector_surface_to_global,
         },
         surfaces::SweptCurve,
-        Path,
     },
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
-    Core,
 };
 
 /// # Sweep a [`Path`]

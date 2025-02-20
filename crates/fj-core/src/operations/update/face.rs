@@ -1,8 +1,8 @@
 use crate::{
+    Core,
     operations::{build::Polygon, derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Face, Region},
-    Core,
 };
 
 /// Update a [`Face`]

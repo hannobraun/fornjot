@@ -1,8 +1,8 @@
 use crate::{
+    Core,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Cycle, HalfEdge},
-    Core,
 };
 
 /// Update a [`Cycle`]

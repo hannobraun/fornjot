@@ -2,10 +2,10 @@ use fj_math::Transform;
 use itertools::Itertools;
 
 use crate::{
+    Core,
     operations::insert::Insert,
     storage::Handle,
     topology::{Cycle, Surface},
-    Core,
 };
 
 use super::{TransformCache, TransformObject};

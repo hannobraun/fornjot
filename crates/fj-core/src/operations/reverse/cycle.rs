@@ -1,7 +1,7 @@
 use crate::{
+    Core,
     operations::{derive::DeriveFrom, insert::Insert},
     topology::{Cycle, HalfEdge},
-    Core,
 };
 
 use super::Reverse;

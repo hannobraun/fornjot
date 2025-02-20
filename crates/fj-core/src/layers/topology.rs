@@ -6,7 +6,7 @@ use crate::{
     validation::Validation,
 };
 
-use super::{validation::ValidateObject, Command, Event, Layer};
+use super::{Command, Event, Layer, validation::ValidateObject};
 
 impl Layer<Topology> {
     /// Insert an object into the stores

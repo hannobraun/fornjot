@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 use crate::{geometry::Geometry, topology::Solid};
 
-use super::{face::FaceApprox, Approx, ApproxCache, Tolerance};
+use super::{Approx, ApproxCache, Tolerance, face::FaceApprox};
 
 impl Approx for &Solid {
     type Approximation = BTreeSet<FaceApprox>;

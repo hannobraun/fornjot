@@ -72,6 +72,7 @@ impl ValidationCheck<Face> for InteriorCycleHasInvalidWinding {
 #[cfg(test)]
 mod tests {
     use crate::{
+        Core,
         operations::{
             build::{BuildCycle, BuildFace},
             derive::DeriveFrom,
@@ -80,8 +81,7 @@ mod tests {
             update::{UpdateFace, UpdateRegion},
         },
         topology::{Cycle, Face, Region},
-        validation::{checks::InteriorCycleHasInvalidWinding, ValidationCheck},
-        Core,
+        validation::{ValidationCheck, checks::InteriorCycleHasInvalidWinding},
     };
 
     #[test]

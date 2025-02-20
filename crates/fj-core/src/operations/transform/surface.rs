@@ -1,15 +1,15 @@
 use fj_math::Transform;
 
 use crate::{
+    Core,
     geometry::{
+        SurfaceGeom,
         repr::tri_mesh::TriMesh,
         surfaces::{SweptCurve, TransformedSurface},
-        SurfaceGeom,
     },
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
-    Core,
 };
 
 use super::{TransformCache, TransformObject};

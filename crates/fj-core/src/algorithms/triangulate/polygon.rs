@@ -2,7 +2,7 @@ use fj_interop::ext::SliceExt;
 use fj_math::{LineSegment, Point, PolyChain, Triangle};
 
 use crate::algorithms::intersect::{
-    ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
+    HorizontalRayToTheRight, Intersect, ray_segment::RaySegmentIntersection,
 };
 
 #[derive(Default)]

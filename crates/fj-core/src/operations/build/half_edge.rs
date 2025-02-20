@@ -1,11 +1,11 @@
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
+    Core,
     geometry::{CurveBoundary, LocalCurveGeom, Path},
     operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, HalfEdge, Surface, Vertex},
-    Core,
 };
 
 /// Build a [`HalfEdge`]

@@ -4,6 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
+    Core,
     geometry::{CurveBoundary, LocalVertexGeom},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
@@ -16,7 +17,6 @@ use crate::{
         },
     },
     topology::{Curve, Face, HalfEdge, Shell, Surface, Vertex},
-    Core,
 };
 
 /// Build a [`Shell`]

@@ -2,7 +2,7 @@ use fj_math::Transform;
 use wgpu::util::DeviceExt;
 
 use super::{
-    model::{self, load_model, DrawModel, Model},
+    model::{self, DrawModel, Model, load_model},
     transform,
 };
 

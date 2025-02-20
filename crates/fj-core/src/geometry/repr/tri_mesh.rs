@@ -2,7 +2,7 @@
 
 use fj_math::{Point, Vector};
 
-use crate::geometry::{traits::GenTriMesh, Geometry, Tolerance};
+use crate::geometry::{Geometry, Tolerance, traits::GenTriMesh};
 
 /// # A triangle mesh, the uniform intermediate representation of a surface
 ///

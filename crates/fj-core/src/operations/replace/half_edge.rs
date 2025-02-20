@@ -1,10 +1,10 @@
 use std::ops::Deref;
 
 use crate::{
+    Core,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
-    Core,
 };
 
 use super::ReplaceOutput;

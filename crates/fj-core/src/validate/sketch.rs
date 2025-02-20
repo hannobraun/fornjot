@@ -5,8 +5,8 @@ use crate::{
     storage::Handle,
     topology::{Cycle, HalfEdge, Region, Sketch},
     validation::{
-        checks::{AdjacentHalfEdgesNotConnected, MultipleReferencesToObject},
         ValidationCheck,
+        checks::{AdjacentHalfEdgesNotConnected, MultipleReferencesToObject},
     },
 };
 
@@ -114,7 +114,7 @@ impl SketchValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        assert_contains_err,
+        Core, assert_contains_err,
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
@@ -123,7 +123,6 @@ mod tests {
         },
         topology::{Cycle, Region, Sketch},
         validate::{SketchValidationError, Validate, ValidationError},
-        Core,
     };
 
     #[test]

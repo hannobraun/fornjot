@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    Core,
     operations::{
         insert::Insert, replace::ReplaceHalfEdge, split::SplitHalfEdge,
         update::UpdateHalfEdge,
@@ -8,7 +9,6 @@ use crate::{
     queries::{CycleOfHalfEdge, SiblingOfHalfEdge},
     storage::Handle,
     topology::{HalfEdge, Shell},
-    Core,
 };
 
 /// Split a pair of [`HalfEdge`]s into two

@@ -1,7 +1,8 @@
-use fj_interop::{ext::ArrayExt, Color};
+use fj_interop::{Color, ext::ArrayExt};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
+    Core,
     geometry::{CurveBoundary, LocalVertexGeom},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
@@ -12,10 +13,9 @@ use crate::{
     },
     storage::Handle,
     topology::{Curve, Cycle, Face, HalfEdge, Region, Surface, Vertex},
-    Core,
 };
 
-use super::{vertex::SweepVertex, SweepCache, SweepSurfacePath};
+use super::{SweepCache, SweepSurfacePath, vertex::SweepVertex};
 
 /// # Sweep a [`HalfEdge`]
 ///

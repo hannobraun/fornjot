@@ -1,11 +1,11 @@
 use crate::{
+    Core,
     operations::build::{Polygon, TetrahedronShell},
     storage::Handle,
     topology::{
         Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
         Vertex,
     },
-    Core,
 };
 
 use super::{IsInsertedNo, IsInsertedYes};

@@ -10,16 +10,16 @@ mod solid;
 mod surface;
 mod vertex;
 
-use std::collections::{btree_map, BTreeMap};
+use std::collections::{BTreeMap, btree_map};
 
 use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
+    Core,
     operations::insert::Insert,
     storage::{Handle, ObjectId},
     topology::{AnyObject, Stored},
-    Core,
 };
 
 use super::derive::DeriveFrom;

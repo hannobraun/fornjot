@@ -3,10 +3,10 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
+    Core,
     geometry::repr::tri_mesh::convert_point_surface_to_global,
     storage::Handle,
     topology::{Cycle, Face, Region, Shell},
-    Core,
 };
 
 use super::{

@@ -1,10 +1,10 @@
 use std::iter::repeat;
 
 use crate::{
-    geometry::{repr::tri_mesh::convert_point_surface_to_global, Geometry},
+    geometry::{Geometry, repr::tri_mesh::convert_point_surface_to_global},
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Vertex},
-    validation::{checks::MultipleReferencesToObject, ValidationCheck},
+    validation::{ValidationCheck, checks::MultipleReferencesToObject},
 };
 use fj_math::Point;
 

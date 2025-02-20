@@ -8,11 +8,11 @@ use crate::{
 };
 
 use super::{
+    Path, VertexGeom,
     repr::{polyline::Polyline, tri_mesh::TriMesh},
     surfaces::SweptCurve,
     traits::{GenPolyline, GenTriMesh},
     vertex::LocalVertexGeom,
-    Path, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects

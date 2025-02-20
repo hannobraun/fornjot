@@ -1,13 +1,13 @@
 use std::borrow::Borrow;
 
 use crate::{
+    Core,
     operations::{
         build::Polygon,
         derive::DeriveFrom,
         insert::{Insert, IsInsertedNo, IsInsertedYes},
     },
     topology::Face,
-    Core,
 };
 
 use super::Reverse;

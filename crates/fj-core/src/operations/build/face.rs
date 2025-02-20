@@ -4,13 +4,13 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
+    Core,
     operations::{
         build::{BuildCycle, BuildRegion, BuildSurface},
         insert::{Insert, IsInserted, IsInsertedNo},
     },
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
-    Core,
 };
 
 /// Build a [`Face`]

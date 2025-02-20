@@ -3,6 +3,7 @@ use std::ops::RangeInclusive;
 use itertools::Itertools;
 
 use crate::{
+    Core,
     geometry::LocalCurveGeom,
     operations::{
         build::BuildHalfEdge,
@@ -11,7 +12,6 @@ use crate::{
     },
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
-    Core,
 };
 
 /// Join a [`Cycle`] to another

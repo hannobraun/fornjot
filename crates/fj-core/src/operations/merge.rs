@@ -3,7 +3,7 @@
 //! See [`Merge`], which is currently the only trait in this module, for more
 //! information.
 
-use crate::{topology::Solid, Core};
+use crate::{Core, topology::Solid};
 
 use super::update::UpdateSolid;
 

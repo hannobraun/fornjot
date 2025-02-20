@@ -13,8 +13,8 @@ use crate::{
 };
 
 use super::{
-    curve::{approx_curve_with_cache, CurveApproxCache},
     ApproxPoint,
+    curve::{CurveApproxCache, approx_curve_with_cache},
 };
 
 /// Approximate the provided half-edge

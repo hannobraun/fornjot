@@ -1,13 +1,13 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
+    Core,
     geometry::{
-        repr::tri_mesh::TriMesh, surfaces::SweptCurve, Path, SurfaceGeom,
+        Path, SurfaceGeom, repr::tri_mesh::TriMesh, surfaces::SweptCurve,
     },
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
-    Core,
 };
 
 /// Build a [`Surface`]

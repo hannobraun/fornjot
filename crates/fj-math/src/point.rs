@@ -1,8 +1,8 @@
 use std::{fmt, ops};
 
 use super::{
-    coordinates::{Uv, Xyz, T},
     Scalar, Vector,
+    coordinates::{T, Uv, Xyz},
 };
 
 /// An n-dimensional point

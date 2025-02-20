@@ -3,8 +3,8 @@ use std::{fmt, ops};
 use crate::Bivector;
 
 use super::{
-    coordinates::{Uv, Xyz, T},
     Scalar,
+    coordinates::{T, Uv, Xyz},
 };
 
 /// An n-dimensional vector

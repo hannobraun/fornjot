@@ -4,8 +4,8 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{
-        repr::tri_mesh::convert_point_surface_to_global, CurveBoundary,
-        Geometry, Tolerance,
+        CurveBoundary, Geometry, Tolerance,
+        repr::tri_mesh::convert_point_surface_to_global,
     },
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
@@ -269,6 +269,7 @@ fn distances(
 #[cfg(test)]
 mod tests {
     use crate::{
+        Core,
         operations::{
             build::BuildShell,
             geometry::UpdateCurveGeometry,
@@ -280,9 +281,8 @@ mod tests {
         },
         topology::{Curve, Shell},
         validation::{
-            checks::CoincidentHalfEdgesAreNotSiblings, ValidationCheck,
+            ValidationCheck, checks::CoincidentHalfEdgesAreNotSiblings,
         },
-        Core,
     };
 
     #[test]

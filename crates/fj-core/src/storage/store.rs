@@ -26,8 +26,8 @@ use std::{marker::PhantomData, sync::Arc};
 use parking_lot::RwLock;
 
 use super::{
-    blocks::{Blocks, Index},
     Handle,
+    blocks::{Blocks, Index},
 };
 
 /// Append-only object storage

@@ -73,10 +73,10 @@ impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
 #[cfg(test)]
 mod tests {
     use crate::{
+        Core,
         operations::{build::BuildShell, update::UpdateShell},
         topology::Shell,
-        validation::{checks::HalfEdgeHasNoSibling, ValidationCheck},
-        Core,
+        validation::{ValidationCheck, checks::HalfEdgeHasNoSibling},
     };
 
     #[test]
@@ -93,11 +93,13 @@ mod tests {
         )?;
 
         let invalid = valid.shell.remove_face(&valid.abc.face);
-        assert!(HalfEdgeHasNoSibling::check_and_return_first_error(
-            &invalid,
-            &core.layers.geometry,
-        )
-        .is_err());
+        assert!(
+            HalfEdgeHasNoSibling::check_and_return_first_error(
+                &invalid,
+                &core.layers.geometry,
+            )
+            .is_err()
+        );
 
         Ok(())
     }

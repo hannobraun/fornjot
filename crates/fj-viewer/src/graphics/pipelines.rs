@@ -1,9 +1,9 @@
 use std::mem::size_of;
 
 use super::{
+    DEPTH_FORMAT, SAMPLE_COUNT,
     shaders::{Shader, Shaders},
     vertices::Vertex,
-    DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 #[derive(Debug)]

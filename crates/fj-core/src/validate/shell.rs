@@ -2,8 +2,8 @@ use crate::{
     geometry::Geometry,
     topology::Shell,
     validation::{
-        checks::{CoincidentHalfEdgesAreNotSiblings, HalfEdgeHasNoSibling},
         ValidationCheck,
+        checks::{CoincidentHalfEdgesAreNotSiblings, HalfEdgeHasNoSibling},
     },
 };
 

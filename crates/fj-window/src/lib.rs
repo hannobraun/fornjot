@@ -12,6 +12,6 @@ mod display;
 mod window;
 
 pub use self::{
-    display::{display, Error},
+    display::{Error, display},
     window::WindowError,
 };
