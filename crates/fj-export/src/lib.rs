@@ -27,15 +27,15 @@ use fj_math::{Point, Triangle};
 /// the provided path is used to switch between supported types.
 pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     match path.extension() {
-        Some(extension) if extension.to_ascii_uppercase() == "3MF" => {
+        Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
             export_3mf(mesh, &mut file)
         }
-        Some(extension) if extension.to_ascii_uppercase() == "STL" => {
+        Some(extension) if extension.eq_ignore_ascii_case("STL") => {
             let mut file = File::create(path)?;
             export_stl(mesh, &mut file)
         }
-        Some(extension) if extension.to_ascii_uppercase() == "OBJ" => {
+        Some(extension) if extension.eq_ignore_ascii_case("OBJ") => {
             let mut file = File::create(path)?;
             export_obj(mesh, &mut file)
         }
