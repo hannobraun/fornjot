@@ -2,7 +2,7 @@
 
 [package]
 name = "fj"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = "*"
