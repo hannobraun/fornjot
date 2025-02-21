@@ -59,7 +59,7 @@ fn triangles(vertices: &[Handle<Vertex>], surface: &Plane) -> Vec<Triangle> {
                 triangle.vertices().map(|vertex| vertex.data().point_vertex);
             Triangle { points }
         })
-        .collect::<Vec<_>>()
+        .collect()
 }
 
 struct TriangulationPoint {
