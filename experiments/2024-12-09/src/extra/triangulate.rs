@@ -70,7 +70,7 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<Triangle> {
         .collect()
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 struct TriangulationPoint {
     point_surface: Point<2>,
     point_vertex: Point<3>,
