@@ -75,6 +75,8 @@ fn points(
 fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
+    // We're passing duplicate points to the triangulation here. It doesn't seem
+    // to mind though.
     triangulation
         .add_constraint_edges(points.iter().copied(), true)
         .unwrap();
