@@ -14,7 +14,10 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
     let triangles = triangles(&points);
 
     let mut mesh = TriMesh::new();
-    mesh.triangles.extend(triangles);
+    mesh.triangles.extend(triangles.into_iter().map(|triangle| {
+        let points = triangle.map(|point| point.point_vertex);
+        Triangle { points }
+    }));
 
     mesh
 }
@@ -53,7 +56,7 @@ fn points(
         .collect()
 }
 
-fn triangles(points: &[TriangulationPoint]) -> Vec<Triangle<3>> {
+fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation
@@ -62,11 +65,7 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<Triangle<3>> {
 
     triangulation
         .inner_faces()
-        .map(|triangle| {
-            let points =
-                triangle.vertices().map(|vertex| vertex.data().point_vertex);
-            Triangle { points }
-        })
+        .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
         .collect()
 }
 
