@@ -12,9 +12,9 @@ pub struct Triangle<const D: usize> {
     pub points: [Point<D>; 3],
 }
 
-impl<P> From<[P; 3]> for Triangle<3>
+impl<P, const D: usize> From<[P; 3]> for Triangle<D>
 where
-    P: Into<Point<3>>,
+    P: Into<Point<D>>,
 {
     fn from(points: [P; 3]) -> Self {
         Self {
