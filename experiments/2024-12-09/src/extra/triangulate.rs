@@ -62,6 +62,7 @@ fn triangles(vertices: &[Handle<Vertex>], surface: &Plane) -> Vec<Triangle> {
         .collect()
 }
 
+#[derive(Clone, Copy)]
 struct TriangulationPoint {
     point_surface: Point<2>,
     point_vertex: Point<3>,
