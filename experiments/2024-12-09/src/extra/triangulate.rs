@@ -7,17 +7,14 @@ use crate::{
     topology::vertex::Vertex,
 };
 
-pub fn triangulate<'r>(
-    vertices: impl IntoIterator<Item = &'r Handle<Vertex>>,
-    surface: &Plane,
-) -> TriMesh {
+pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
     // This is a placeholder implementation that only supports convex faces.
 
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation
         .add_constraint_edges(
-            vertices.into_iter().map(|vertex| {
+            vertices.iter().map(|vertex| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
                 // point has a position in 3D space.
