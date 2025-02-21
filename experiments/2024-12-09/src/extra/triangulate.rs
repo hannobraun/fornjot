@@ -14,8 +14,6 @@ use crate::{
 };
 
 pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
-    // This is a placeholder implementation that only supports convex faces.
-
     let points = points(vertices, surface);
     let triangles = triangles(&points);
 
