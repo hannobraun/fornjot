@@ -18,25 +18,24 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
 
     let points = points(vertices, surface);
     let triangles = triangles(&points);
+
     let polygon = polygon(&points);
+    let triangles_in_face = triangles
+        .into_iter()
+        .filter(|triangle| {
+            let points = triangle.map(|point| point.point_surface);
+            let triangle = Triangle { points };
+
+            let [x, y] = triangle.center().coords.components.map(|s| s.value());
+            polygon.contains(&Coord { x, y })
+        })
+        .map(|triangle| {
+            let points = triangle.map(|point| point.point_vertex);
+            Triangle { points }
+        });
 
     let mut mesh = TriMesh::new();
-    mesh.triangles.extend(
-        triangles
-            .into_iter()
-            .filter(|triangle| {
-                let points = triangle.map(|point| point.point_surface);
-                let triangle = Triangle { points };
-
-                let [x, y] =
-                    triangle.center().coords.components.map(|s| s.value());
-                polygon.contains(&Coord { x, y })
-            })
-            .map(|triangle| {
-                let points = triangle.map(|point| point.point_vertex);
-                Triangle { points }
-            }),
-    );
+    mesh.triangles.extend(triangles_in_face);
 
     mesh
 }
