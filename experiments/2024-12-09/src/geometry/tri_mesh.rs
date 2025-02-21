@@ -1,5 +1,6 @@
 use super::Triangle;
 
+#[derive(Debug)]
 pub struct TriMesh {
     pub triangles: Vec<Triangle<3>>,
 }
