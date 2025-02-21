@@ -19,6 +19,10 @@ winit = "*"
 version = "*"
 features = ["derive"]
 
+[dependencies.geo]
+version = "*"
+default-features = false
+
 [dependencies.glam]
 version = "*"
 features = ["bytemuck"]
