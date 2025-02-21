@@ -8,11 +8,11 @@ use crate::{
 use super::TriMesh;
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct Triangle {
-    pub points: [Point<3>; 3],
+pub struct Triangle<const D: usize> {
+    pub points: [Point<D>; 3],
 }
 
-impl<P> From<[P; 3]> for Triangle
+impl<P> From<[P; 3]> for Triangle<3>
 where
     P: Into<Point<3>>,
 {
@@ -23,7 +23,7 @@ where
     }
 }
 
-impl Object for Triangle {
+impl Object for Triangle<3> {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Triangle")
     }

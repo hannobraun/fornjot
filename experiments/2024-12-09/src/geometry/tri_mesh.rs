@@ -1,7 +1,7 @@
 use super::Triangle;
 
 pub struct TriMesh {
-    pub triangles: Vec<Triangle>,
+    pub triangles: Vec<Triangle<3>>,
 }
 
 impl TriMesh {

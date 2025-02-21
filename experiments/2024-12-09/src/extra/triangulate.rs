@@ -53,7 +53,7 @@ fn points(
         .collect()
 }
 
-fn triangles(points: &[TriangulationPoint]) -> Vec<Triangle> {
+fn triangles(points: &[TriangulationPoint]) -> Vec<Triangle<3>> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation
