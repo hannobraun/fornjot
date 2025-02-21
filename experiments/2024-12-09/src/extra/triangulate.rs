@@ -1,3 +1,9 @@
+use std::{
+    collections::{BTreeSet, VecDeque},
+    mem,
+};
+
+use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 use crate::{
@@ -12,12 +18,25 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
 
     let points = points(vertices, surface);
     let triangles = triangles(&points);
+    let polygon = polygon(&points);
 
     let mut mesh = TriMesh::new();
-    mesh.triangles.extend(triangles.into_iter().map(|triangle| {
-        let points = triangle.map(|point| point.point_vertex);
-        Triangle { points }
-    }));
+    mesh.triangles.extend(
+        triangles
+            .into_iter()
+            .filter(|triangle| {
+                let points = triangle.map(|point| point.point_surface);
+                let triangle = Triangle { points };
+
+                let [x, y] =
+                    triangle.center().coords.components.map(|s| s.value());
+                polygon.contains(&Coord { x, y })
+            })
+            .map(|triangle| {
+                let points = triangle.map(|point| point.point_vertex);
+                Triangle { points }
+            }),
+    );
 
     mesh
 }
@@ -67,6 +86,49 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
         .inner_faces()
         .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
         .collect()
+}
+
+fn polygon(points: &[TriangulationPoint]) -> Polygon {
+    // This is a placeholder implementation that is probably not well-tested and
+    // probably doesn't support polygons with multiple holes.
+
+    let mut line_strings = VecDeque::new();
+    let mut current_line_string = Vec::new();
+    let mut visited_points = BTreeSet::new();
+
+    for point in points {
+        if visited_points.contains(point) {
+            line_strings.push_back(mem::take(&mut current_line_string));
+            continue;
+        }
+
+        let [x, y] = point.point_surface.coords.components.map(|s| s.value());
+        current_line_string.push(Coord { x, y });
+        visited_points.insert(point);
+    }
+
+    let (exterior, interiors) = if let Some(exterior) = line_strings.pop_front()
+    {
+        line_strings.push_back(mem::take(&mut current_line_string));
+
+        let exterior = LineString::new(exterior);
+        let interiors = line_strings
+            .into_iter()
+            .filter_map(|line_string| {
+                (!line_string.is_empty())
+                    .then_some(LineString::new(line_string))
+            })
+            .collect();
+
+        (exterior, interiors)
+    } else {
+        let exterior = LineString::new(current_line_string);
+        let interiors = Vec::new();
+
+        (exterior, interiors)
+    };
+
+    Polygon::new(exterior, interiors)
 }
 
 #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
