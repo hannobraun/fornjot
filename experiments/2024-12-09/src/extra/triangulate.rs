@@ -43,11 +43,14 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
         )
         .unwrap();
 
-    let triangles = triangulation.inner_faces().map(|triangle| {
-        let points =
-            triangle.vertices().map(|vertex| vertex.data().point_vertex);
-        Triangle { points }
-    });
+    let triangles = triangulation
+        .inner_faces()
+        .map(|triangle| {
+            let points =
+                triangle.vertices().map(|vertex| vertex.data().point_vertex);
+            Triangle { points }
+        })
+        .collect::<Vec<_>>();
 
     let mut mesh = TriMesh::new();
     mesh.triangles.extend(triangles);
