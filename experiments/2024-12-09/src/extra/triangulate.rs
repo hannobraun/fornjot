@@ -10,6 +10,15 @@ use crate::{
 pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
     // This is a placeholder implementation that only supports convex faces.
 
+    let triangles = triangles(vertices, surface);
+
+    let mut mesh = TriMesh::new();
+    mesh.triangles.extend(triangles);
+
+    mesh
+}
+
+fn triangles(vertices: &[Handle<Vertex>], surface: &Plane) -> Vec<Triangle> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation
@@ -43,19 +52,14 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
         )
         .unwrap();
 
-    let triangles = triangulation
+    triangulation
         .inner_faces()
         .map(|triangle| {
             let points =
                 triangle.vertices().map(|vertex| vertex.data().point_vertex);
             Triangle { points }
         })
-        .collect::<Vec<_>>();
-
-    let mut mesh = TriMesh::new();
-    mesh.triangles.extend(triangles);
-
-    mesh
+        .collect::<Vec<_>>()
 }
 
 struct TriangulationPoint {
