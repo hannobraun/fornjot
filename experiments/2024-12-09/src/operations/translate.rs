@@ -10,8 +10,9 @@ impl TranslateExt for &Face {
 
         Face::new(
             self.surface().translate(offset),
-            self.half_edges()
-                .map(|vertex| Handle::new(vertex.start().translate(offset))),
+            self.half_edges().map(|half_edge| {
+                Handle::new(half_edge.start().translate(offset))
+            }),
         )
     }
 }
