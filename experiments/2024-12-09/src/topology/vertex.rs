@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::{
     geometry::TriMesh,
-    math::{Point, Vector},
+    math::Point,
     object::{HandleAny, Object},
 };
 
@@ -15,12 +15,6 @@ impl Vertex {
     pub fn new(point: impl Into<Point<3>>) -> Self {
         let point = point.into();
         Self { point }
-    }
-
-    pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
-        Self {
-            point: self.point + offset,
-        }
     }
 }
 
