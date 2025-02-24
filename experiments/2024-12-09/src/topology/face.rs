@@ -22,10 +22,9 @@ impl Face {
         surface: Plane,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
-        let half_edges = half_edges.into_iter().collect();
         Self {
             surface,
-            half_edges,
+            half_edges: half_edges.into_iter().collect(),
         }
     }
 
