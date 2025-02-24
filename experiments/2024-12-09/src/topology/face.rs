@@ -22,13 +22,13 @@ impl Face {
         surface: Plane,
         vertices: impl IntoIterator<Item = Handle<Vertex>>,
     ) -> Self {
-        let vertices = vertices
+        let half_edges = vertices
             .into_iter()
             .map(|vertex| Handle::new(HalfEdge::new(vertex)))
             .collect();
         Self {
             surface,
-            half_edges: vertices,
+            half_edges,
         }
     }
 
