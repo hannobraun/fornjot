@@ -28,10 +28,6 @@ impl Face {
         }
     }
 
-    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<HalfEdge>> {
-        self.half_edges.iter()
-    }
-
     pub fn start_and_end_vertices(
         &self,
     ) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
@@ -52,6 +48,9 @@ impl Object for Face {
     }
 
     fn children(&self) -> Vec<HandleAny> {
-        self.half_edges().map(|vertex| vertex.to_any()).collect()
+        self.half_edges
+            .iter()
+            .map(|vertex| vertex.to_any())
+            .collect()
     }
 }

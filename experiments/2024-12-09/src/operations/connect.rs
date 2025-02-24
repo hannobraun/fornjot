@@ -27,8 +27,8 @@ pub trait ConnectExt {
 impl ConnectExt for Handle<Face> {
     fn connect(self, other: Self) -> Solid {
         assert_eq!(
-            self.half_edges().count(),
-            other.half_edges().count(),
+            self.half_edges.len(),
+            other.half_edges.len(),
             "Can only connect faces that have the same number of vertices.",
         );
 
