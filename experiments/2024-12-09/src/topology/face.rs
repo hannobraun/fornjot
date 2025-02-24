@@ -13,8 +13,8 @@ use super::{half_edge::HalfEdge, vertex::Vertex};
 
 #[derive(Debug)]
 pub struct Face {
-    surface: Plane,
-    half_edges: Vec<Handle<HalfEdge>>,
+    pub surface: Plane,
+    pub half_edges: Vec<Handle<HalfEdge>>,
 }
 
 impl Face {
