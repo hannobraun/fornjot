@@ -14,12 +14,16 @@ impl TranslateExt for Face {
 
         Face::new(
             self.surface().translate(offset),
-            self.half_edges().map(|half_edge| {
-                Handle::new(HalfEdge::new(Handle::new(
-                    half_edge.start().translate(offset),
-                )))
-            }),
+            self.half_edges()
+                .map(|half_edge| Handle::new(half_edge.translate(offset))),
         )
+    }
+}
+
+impl TranslateExt for HalfEdge {
+    fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        let start = self.start().translate(offset);
+        HalfEdge::new(Handle::new(start))
     }
 }
 
