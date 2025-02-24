@@ -17,7 +17,7 @@ impl Sketch {
 
         let half_edges = vertices
             .into_iter()
-            .map(|vertex| Handle::new(HalfEdge { start: vertex }));
+            .map(|start| Handle::new(HalfEdge { start }));
 
         Face::new(surface, half_edges)
     }
