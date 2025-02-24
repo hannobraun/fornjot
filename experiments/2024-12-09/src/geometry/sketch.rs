@@ -26,7 +26,7 @@ impl Sketch {
 
         let mut internal_pairs = BTreeMap::new();
 
-        for (a, b) in vertices.iter().circular_tuple_windows() {
+        for (a, b) in vertices.iter().cloned().circular_tuple_windows() {
             let mut pair = [a, b];
             pair.sort();
 
@@ -37,10 +37,15 @@ impl Sketch {
             }
         }
 
-        let half_edges = vertices
-            .into_iter()
-            .circular_tuple_windows()
-            .map(|(start, _)| Handle::new(HalfEdge { start }));
+        let half_edges = vertices.into_iter().circular_tuple_windows().map(
+            |(start, end)| {
+                let mut pair = [start.clone(), end];
+                pair.sort();
+
+                let is_internal = internal_pairs.contains_key(&pair);
+                Handle::new(HalfEdge { start, is_internal })
+            },
+        );
 
         Face::new(surface, half_edges)
     }

@@ -26,6 +26,7 @@ impl TranslateExt for HalfEdge {
 
         HalfEdge {
             start: Handle::new(start),
+            is_internal: self.is_internal,
         }
     }
 }

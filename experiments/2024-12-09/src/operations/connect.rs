@@ -43,6 +43,7 @@ impl ConnectExt for Handle<Face> {
                     [q, r, s, t].map(|vertex| {
                         Handle::new(HalfEdge {
                             start: vertex.clone(),
+                            is_internal: false,
                         })
                     }),
                 );
