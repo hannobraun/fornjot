@@ -28,10 +28,6 @@ impl Face {
         }
     }
 
-    pub fn surface(&self) -> &Plane {
-        &self.surface
-    }
-
     pub fn half_edges(&self) -> impl Iterator<Item = &Handle<HalfEdge>> {
         self.half_edges.iter()
     }
@@ -52,7 +48,7 @@ impl Object for Face {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        triangulate(&self.half_edges, self.surface())
+        triangulate(&self.half_edges, &self.surface)
     }
 
     fn children(&self) -> Vec<HandleAny> {

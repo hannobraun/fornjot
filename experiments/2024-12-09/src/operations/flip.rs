@@ -6,6 +6,6 @@ pub trait FlipExt {
 
 impl FlipExt for &Face {
     fn flip(self) -> Face {
-        Face::new(self.surface().flip(), self.half_edges().cloned())
+        Face::new(self.surface.flip(), self.half_edges().cloned())
     }
 }
