@@ -39,7 +39,8 @@ impl Sketch {
 
         let half_edges = vertices
             .into_iter()
-            .map(|start| Handle::new(HalfEdge { start }));
+            .circular_tuple_windows()
+            .map(|(start, _)| Handle::new(HalfEdge { start }));
 
         Face::new(surface, half_edges)
     }
