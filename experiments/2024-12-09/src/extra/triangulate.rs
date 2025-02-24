@@ -10,10 +10,10 @@ use crate::{
     geometry::{TriMesh, Triangle},
     math::{Plane, Point},
     object::Handle,
-    topology::vertex::Vertex,
+    topology::half_edge::HalfEdge,
 };
 
-pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
+pub fn triangulate(vertices: &[Handle<HalfEdge>], surface: &Plane) -> TriMesh {
     let points = points(vertices, surface);
     let triangles = triangles(&points);
 
@@ -39,7 +39,7 @@ pub fn triangulate(vertices: &[Handle<Vertex>], surface: &Plane) -> TriMesh {
 }
 
 fn points(
-    vertices: &[Handle<Vertex>],
+    vertices: &[Handle<HalfEdge>],
     surface: &Plane,
 ) -> Vec<TriangulationPoint> {
     vertices
@@ -62,11 +62,11 @@ fn points(
             // tells us how the different 3D points must connect, we use the
             // original 3D points to build those triangles. We never convert
             // the 2D points back into 3D.
-            let point_surface = surface.project_point(vertex.point);
+            let point_surface = surface.project_point(vertex.start().point);
 
             TriangulationPoint {
                 point_surface,
-                point_vertex: vertex.point,
+                point_vertex: vertex.start().point,
             }
         })
         .collect()

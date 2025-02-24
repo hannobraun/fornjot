@@ -59,7 +59,7 @@ impl Object for Face {
         let mut vertices = Vec::new();
         vertices.extend(self.half_edges().cloned());
 
-        triangulate(&vertices, self.surface())
+        triangulate(&self.half_edges, self.surface())
     }
 
     fn children(&self) -> Vec<HandleAny> {
