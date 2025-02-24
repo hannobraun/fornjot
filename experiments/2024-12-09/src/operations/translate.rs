@@ -5,11 +5,11 @@ use crate::{
 };
 
 pub trait TranslateExt {
-    fn translate(self, offset: impl Into<Vector<3>>) -> Self;
+    fn translate(&self, offset: impl Into<Vector<3>>) -> Self;
 }
 
 impl TranslateExt for Face {
-    fn translate(self, offset: impl Into<Vector<3>>) -> Self {
+    fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
         Face::new(
@@ -24,7 +24,7 @@ impl TranslateExt for Face {
 }
 
 impl TranslateExt for Vertex {
-    fn translate(self, offset: impl Into<Vector<3>>) -> Self {
+    fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
         Vertex::new(self.point + offset)
     }
