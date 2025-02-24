@@ -36,8 +36,8 @@ impl Face {
         &self.surface
     }
 
-    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<Vertex>> {
-        self.half_edges.iter().map(|half_edge| half_edge.start())
+    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<HalfEdge>> {
+        self.half_edges.iter()
     }
 
     pub fn start_and_end_vertices(

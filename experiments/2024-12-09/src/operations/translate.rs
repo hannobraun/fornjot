@@ -11,7 +11,7 @@ impl TranslateExt for &Face {
         Face::new(
             self.surface().translate(offset),
             self.half_edges()
-                .map(|vertex| Handle::new(vertex.translate(offset))),
+                .map(|vertex| Handle::new(vertex.start().translate(offset))),
         )
     }
 }
