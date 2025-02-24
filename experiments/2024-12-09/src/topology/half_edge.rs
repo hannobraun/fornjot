@@ -8,7 +8,7 @@ use crate::{
 use super::vertex::Vertex;
 
 pub struct HalfEdge {
-    start: Handle<Vertex>,
+    pub start: Handle<Vertex>,
 }
 
 impl HalfEdge {
