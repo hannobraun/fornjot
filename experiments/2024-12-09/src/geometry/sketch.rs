@@ -10,11 +10,14 @@ pub struct Sketch {
 
 impl Sketch {
     pub fn to_face(&self, surface: Plane) -> Face {
-        let half_edges = self.points.iter().copied().map(|point| {
+        let vertices = self.points.iter().copied().map(|point| {
             let point = surface.point_from_local(point);
-            let vertex = Handle::new(Vertex::new(point));
-            Handle::new(HalfEdge { start: vertex })
+            Handle::new(Vertex::new(point))
         });
+
+        let half_edges = vertices
+            .into_iter()
+            .map(|vertex| Handle::new(HalfEdge { start: vertex }));
 
         Face::new(surface, half_edges)
     }
