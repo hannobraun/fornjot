@@ -12,8 +12,7 @@ impl Sketch {
     pub fn to_face(&self, surface: Plane) -> Face {
         let half_edges = self.points.iter().copied().map(|point| {
             let point = surface.point_from_local(point);
-            let vertex = Vertex::new(point);
-            let vertex = Handle::new(vertex);
+            let vertex = Handle::new(Vertex::new(point));
             Handle::new(HalfEdge::new(vertex))
         });
 
