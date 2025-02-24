@@ -42,10 +42,10 @@ pub fn triangulate(
 }
 
 fn points(
-    vertices: &[Handle<HalfEdge>],
+    half_edges: &[Handle<HalfEdge>],
     surface: &Plane,
 ) -> Vec<TriangulationPoint> {
-    vertices
+    half_edges
         .iter()
         .map(|vertex| {
             // Here, we project a 3D point (from the vertex) into the face's
