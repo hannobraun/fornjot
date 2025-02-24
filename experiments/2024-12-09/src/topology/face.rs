@@ -14,7 +14,7 @@ use super::{half_edge::HalfEdge, vertex::Vertex};
 #[derive(Debug)]
 pub struct Face {
     surface: Plane,
-    vertices: Vec<Handle<HalfEdge>>,
+    half_edges: Vec<Handle<HalfEdge>>,
 }
 
 impl Face {
@@ -26,7 +26,10 @@ impl Face {
             .into_iter()
             .map(|vertex| Handle::new(HalfEdge::new(vertex)))
             .collect();
-        Self { surface, vertices }
+        Self {
+            surface,
+            half_edges: vertices,
+        }
     }
 
     pub fn surface(&self) -> &Plane {
@@ -34,11 +37,11 @@ impl Face {
     }
 
     pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
-        self.vertices.iter().map(|half_edge| half_edge.start())
+        self.half_edges.iter().map(|half_edge| half_edge.start())
     }
 
     pub fn half_edges(&self) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
-        self.vertices
+        self.half_edges
             .iter()
             .circular_tuple_windows()
             .map(|(a, b)| [a.start(), b.start()])
