@@ -1,7 +1,7 @@
 use crate::{
     math::{Plane, Point},
     object::Handle,
-    topology::{face::Face, vertex::Vertex},
+    topology::{face::Face, half_edge::HalfEdge, vertex::Vertex},
 };
 
 pub struct Sketch {
@@ -10,11 +10,16 @@ pub struct Sketch {
 
 impl Sketch {
     pub fn to_face(&self, surface: Plane) -> Face {
-        let vertices = self.points.iter().copied().map(|point| {
-            let point = surface.point_from_local(point);
-            let vertex = Vertex::new(point);
-            Handle::new(vertex)
-        });
+        let vertices = self
+            .points
+            .iter()
+            .copied()
+            .map(|point| {
+                let point = surface.point_from_local(point);
+                let vertex = Vertex::new(point);
+                Handle::new(vertex)
+            })
+            .map(|vertex| Handle::new(HalfEdge::new(vertex)));
 
         Face::new(surface, vertices)
     }

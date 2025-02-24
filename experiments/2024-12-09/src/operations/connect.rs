@@ -1,7 +1,7 @@
 use crate::{
     math::Plane,
     object::Handle,
-    topology::{face::Face, solid::Solid},
+    topology::{face::Face, half_edge::HalfEdge, solid::Solid},
 };
 
 pub trait ConnectExt {
@@ -40,7 +40,9 @@ impl ConnectExt for Handle<Face> {
                     Plane::from_points([q, r, s].map(|vertex| vertex.point));
                 let face = Face::new(
                     surface,
-                    [q, r, s, t].map(|vertex| vertex.clone()),
+                    [q, r, s, t].map(|vertex| {
+                        Handle::new(HalfEdge::new(vertex.clone()))
+                    }),
                 );
                 Handle::new(face)
             })

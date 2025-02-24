@@ -1,7 +1,7 @@
 use crate::{
     math::Vector,
     object::Handle,
-    topology::{face::Face, vertex::Vertex},
+    topology::{face::Face, half_edge::HalfEdge, vertex::Vertex},
 };
 
 pub trait TranslateExt {
@@ -15,7 +15,9 @@ impl TranslateExt for Face {
         Face::new(
             self.surface().translate(offset),
             self.half_edges().map(|half_edge| {
-                Handle::new(half_edge.start().translate(offset))
+                Handle::new(HalfEdge::new(Handle::new(
+                    half_edge.start().translate(offset),
+                )))
             }),
         )
     }
