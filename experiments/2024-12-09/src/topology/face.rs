@@ -40,7 +40,9 @@ impl Face {
         self.half_edges.iter().map(|half_edge| half_edge.start())
     }
 
-    pub fn half_edges(&self) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
+    pub fn start_and_end_vertices(
+        &self,
+    ) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
         self.half_edges
             .iter()
             .circular_tuple_windows()

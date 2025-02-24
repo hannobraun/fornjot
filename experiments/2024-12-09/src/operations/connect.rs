@@ -33,8 +33,8 @@ impl ConnectExt for Handle<Face> {
         );
 
         let side_faces = self
-            .half_edges()
-            .zip(other.half_edges())
+            .start_and_end_vertices()
+            .zip(other.start_and_end_vertices())
             .map(|([q, r], [t, s])| {
                 let surface =
                     Plane::from_points([q, r, s].map(|vertex| vertex.point));
