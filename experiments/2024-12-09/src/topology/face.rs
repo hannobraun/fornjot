@@ -36,7 +36,7 @@ impl Face {
         &self.surface
     }
 
-    pub fn vertices(&self) -> impl Iterator<Item = &Handle<Vertex>> {
+    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<Vertex>> {
         self.half_edges.iter().map(|half_edge| half_edge.start())
     }
 
@@ -57,12 +57,12 @@ impl Object for Face {
 
     fn tri_mesh(&self) -> TriMesh {
         let mut vertices = Vec::new();
-        vertices.extend(self.vertices().cloned());
+        vertices.extend(self.half_edges().cloned());
 
         triangulate(&vertices, self.surface())
     }
 
     fn children(&self) -> Vec<HandleAny> {
-        self.vertices().map(|vertex| vertex.to_any()).collect()
+        self.half_edges().map(|vertex| vertex.to_any()).collect()
     }
 }
