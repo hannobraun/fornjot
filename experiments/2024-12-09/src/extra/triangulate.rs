@@ -13,8 +13,11 @@ use crate::{
     topology::half_edge::HalfEdge,
 };
 
-pub fn triangulate(vertices: &[Handle<HalfEdge>], surface: &Plane) -> TriMesh {
-    let points = points(vertices, surface);
+pub fn triangulate(
+    half_edges: &[Handle<HalfEdge>],
+    surface: &Plane,
+) -> TriMesh {
+    let points = points(half_edges, surface);
     let triangles = triangles(&points);
 
     let polygon = polygon(&points);
