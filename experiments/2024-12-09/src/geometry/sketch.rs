@@ -1,3 +1,7 @@
+use std::collections::BTreeMap;
+
+use itertools::Itertools;
+
 use crate::{
     math::{Plane, Point},
     object::Handle,
@@ -19,6 +23,19 @@ impl Sketch {
                 Handle::new(Vertex::new(point))
             })
             .collect::<Vec<_>>();
+
+        let mut internal_pairs = BTreeMap::new();
+
+        for (a, b) in vertices.iter().circular_tuple_windows() {
+            let mut pair = [a, b];
+            pair.sort();
+
+            if let Some(internal) = internal_pairs.get_mut(&pair) {
+                *internal = true;
+            } else {
+                internal_pairs.insert(pair, false);
+            }
+        }
 
         let half_edges = vertices
             .into_iter()
