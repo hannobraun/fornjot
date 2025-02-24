@@ -56,9 +56,6 @@ impl Object for Face {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        let mut vertices = Vec::new();
-        vertices.extend(self.half_edges().cloned());
-
         triangulate(&self.half_edges, self.surface())
     }
 
