@@ -24,17 +24,6 @@ impl Vertex {
     }
 }
 
-impl<P> From<P> for Vertex
-where
-    P: Into<Point<3>>,
-{
-    fn from(point: P) -> Self {
-        Self {
-            point: point.into(),
-        }
-    }
-}
-
 impl Object for Vertex {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Vertex")
