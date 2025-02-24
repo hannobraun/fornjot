@@ -22,10 +22,8 @@ impl Face {
         surface: Plane,
         vertices: impl IntoIterator<Item = Handle<Vertex>>,
     ) -> Self {
-        Self {
-            surface,
-            vertices: vertices.into_iter().collect(),
-        }
+        let vertices = vertices.into_iter().collect();
+        Self { surface, vertices }
     }
 
     pub fn surface(&self) -> &Plane {
