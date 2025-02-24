@@ -23,7 +23,9 @@ impl TranslateExt for Face {
 impl TranslateExt for HalfEdge {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let start = self.start().translate(offset);
-        HalfEdge::new(Handle::new(start))
+        HalfEdge {
+            start: Handle::new(start),
+        }
     }
 }
 

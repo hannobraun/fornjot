@@ -41,7 +41,9 @@ impl ConnectExt for Handle<Face> {
                 let face = Face::new(
                     surface,
                     [q, r, s, t].map(|vertex| {
-                        Handle::new(HalfEdge::new(vertex.clone()))
+                        Handle::new(HalfEdge {
+                            start: vertex.clone(),
+                        })
                     }),
                 );
                 Handle::new(face)

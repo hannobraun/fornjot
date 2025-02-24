@@ -12,10 +12,6 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    pub fn new(start: Handle<Vertex>) -> Self {
-        Self { start }
-    }
-
     pub fn start(&self) -> &Handle<Vertex> {
         &self.start
     }
