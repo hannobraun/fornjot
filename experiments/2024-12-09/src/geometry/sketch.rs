@@ -10,7 +10,7 @@ pub struct Sketch {
 
 impl Sketch {
     pub fn to_face(&self, surface: Plane) -> Face {
-        let vertices = self
+        let half_edges = self
             .points
             .iter()
             .copied()
@@ -21,7 +21,7 @@ impl Sketch {
             })
             .map(|vertex| Handle::new(HalfEdge::new(vertex)));
 
-        Face::new(surface, vertices)
+        Face::new(surface, half_edges)
     }
 }
 
