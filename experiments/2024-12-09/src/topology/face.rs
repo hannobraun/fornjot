@@ -20,9 +20,9 @@ pub struct Face {
 impl Face {
     pub fn new(
         surface: Plane,
-        vertices: impl IntoIterator<Item = Handle<HalfEdge>>,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
-        let half_edges = vertices.into_iter().collect();
+        let half_edges = half_edges.into_iter().collect();
         Self {
             surface,
             half_edges,
