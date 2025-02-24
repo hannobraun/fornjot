@@ -65,11 +65,11 @@ fn points(
             // tells us how the different 3D points must connect, we use the
             // original 3D points to build those triangles. We never convert
             // the 2D points back into 3D.
-            let point_surface = surface.project_point(half_edge.start().point);
+            let point_surface = surface.project_point(half_edge.start.point);
 
             TriangulationPoint {
                 point_surface,
-                point_vertex: half_edge.start().point,
+                point_vertex: half_edge.start.point,
             }
         })
         .collect()

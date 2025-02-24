@@ -42,7 +42,7 @@ impl Face {
         self.half_edges
             .iter()
             .circular_tuple_windows()
-            .map(|(a, b)| [a.start(), b.start()])
+            .map(|(a, b)| [&a.start, &b.start])
     }
 }
 
