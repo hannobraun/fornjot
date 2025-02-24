@@ -4,7 +4,7 @@ pub trait TranslateExt {
     fn translate(self, offset: impl Into<Vector<3>>) -> Face;
 }
 
-impl TranslateExt for &Face {
+impl TranslateExt for Face {
     fn translate(self, offset: impl Into<Vector<3>>) -> Face {
         let offset = offset.into();
 
