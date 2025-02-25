@@ -7,7 +7,7 @@ use crate::{
 
 use super::{MeshTriangle, TriMesh};
 
-#[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle<const D: usize> {
     pub points: [Point<D>; 3],
 }
@@ -39,7 +39,7 @@ impl Object for Triangle<3> {
     fn tri_mesh(&self) -> TriMesh {
         TriMesh {
             triangles: vec![MeshTriangle {
-                inner: self.clone(),
+                inner: *self,
                 is_internal: false,
             }],
         }
