@@ -16,6 +16,10 @@ impl TriMesh {
         self.triangles.extend(other.triangles);
         self
     }
+
+    pub fn all_triangles(&self) -> impl Iterator<Item = Triangle<3>> {
+        self.triangles.iter().map(|triangle| triangle.inner)
+    }
 }
 
 #[derive(Debug)]

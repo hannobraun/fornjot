@@ -10,8 +10,8 @@ pub fn export(op: &dyn Object) -> anyhow::Result<()> {
     let mut points = Vec::new();
     let mut triangles = Vec::new();
 
-    for triangle in tri_mesh.triangles {
-        let triangle = triangle.inner.points.map(|point| {
+    for triangle in tri_mesh.all_triangles() {
+        let triangle = triangle.points.map(|point| {
             *indices_by_vertex.entry(point).or_insert_with(|| {
                 let index = points.len();
                 points.push(point);
