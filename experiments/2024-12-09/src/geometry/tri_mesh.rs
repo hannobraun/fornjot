@@ -21,4 +21,6 @@ impl TriMesh {
 #[derive(Debug)]
 pub struct MeshTriangle {
     pub inner: Triangle<3>,
+    #[allow(unused)] // code using this is being worked on
+    pub is_internal: bool,
 }

@@ -31,6 +31,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
             let points = triangle.map(|point| point.point_vertex);
             MeshTriangle {
                 inner: Triangle { points },
+                is_internal: face.is_internal,
             }
         });
 

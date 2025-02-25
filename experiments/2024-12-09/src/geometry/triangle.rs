@@ -40,6 +40,7 @@ impl Object for Triangle<3> {
         TriMesh {
             triangles: vec![MeshTriangle {
                 inner: self.clone(),
+                is_internal: false,
             }],
         }
     }
