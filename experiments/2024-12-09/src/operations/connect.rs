@@ -35,7 +35,7 @@ impl ConnectExt for Handle<Face> {
         let side_faces = self
             .half_edges_with_end_vertex()
             .zip(other.half_edges_with_end_vertex())
-            .map(|([q, r], [t, s])| {
+            .map(|((q, r), (t, s))| {
                 let surface =
                     Plane::from_points([q, r, s].map(|vertex| vertex.point));
                 let face = Face::new(

@@ -30,11 +30,11 @@ impl Face {
 
     pub fn half_edges_with_end_vertex(
         &self,
-    ) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
+    ) -> impl Iterator<Item = (&Handle<Vertex>, &Handle<Vertex>)> {
         self.half_edges
             .iter()
             .circular_tuple_windows()
-            .map(|(a, b)| [&a.start, &b.start])
+            .map(|(a, b)| (&a.start, &b.start))
     }
 }
 
