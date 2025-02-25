@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use itertools::Itertools;
 
@@ -14,35 +14,36 @@ pub struct Sketch {
 
 impl Sketch {
     pub fn to_face(&self, surface: Plane) -> Face {
+        let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self
             .points
             .iter()
             .copied()
             .map(|point| {
                 let point = surface.point_from_local(point);
-                Handle::new(Vertex::new(point))
+                let vertex = Handle::new(Vertex::new(point));
+
+                vertices_by_local_point
+                    .entry(point)
+                    .or_default()
+                    .push(vertex.clone());
+
+                vertex
             })
             .collect::<Vec<_>>();
 
-        let mut internal_pairs = BTreeMap::new();
-
-        for (a, b) in vertices.iter().cloned().circular_tuple_windows() {
-            let mut pair = [a, b];
-            pair.sort();
-
-            if let Some(internal) = internal_pairs.get_mut(&pair) {
-                *internal = true;
-            } else {
-                internal_pairs.insert(pair, false);
+        let mut coincident_vertices = BTreeSet::new();
+        for vertices in vertices_by_local_point.into_values() {
+            if vertices.len() > 1 {
+                coincident_vertices.extend(vertices);
             }
         }
 
         let half_edges = vertices.into_iter().circular_tuple_windows().map(
             |(start, end)| {
-                let mut pair = [start.clone(), end];
-                pair.sort();
+                let is_internal = coincident_vertices.contains(&start)
+                    && coincident_vertices.contains(&end);
 
-                let is_internal = internal_pairs.contains_key(&pair);
                 Handle::new(HalfEdge { start, is_internal })
             },
         );
