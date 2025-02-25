@@ -28,7 +28,7 @@ impl Face {
         }
     }
 
-    pub fn start_and_end_vertices(
+    pub fn half_edges_with_end_vertex(
         &self,
     ) -> impl Iterator<Item = [&Handle<Vertex>; 2]> {
         self.half_edges
