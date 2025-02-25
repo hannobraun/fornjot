@@ -15,16 +15,19 @@ use super::{half_edge::HalfEdge, vertex::Vertex};
 pub struct Face {
     pub surface: Plane,
     pub half_edges: Vec<Handle<HalfEdge>>,
+    pub is_internal: bool,
 }
 
 impl Face {
     pub fn new(
         surface: Plane,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+        is_internal: bool,
     ) -> Self {
         Self {
             surface,
             half_edges: half_edges.into_iter().collect(),
+            is_internal,
         }
     }
 

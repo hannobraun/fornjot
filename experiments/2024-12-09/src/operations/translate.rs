@@ -17,6 +17,7 @@ impl TranslateExt for Face {
             self.half_edges
                 .iter()
                 .map(|half_edge| Handle::new(half_edge.translate(offset))),
+            self.is_internal,
         )
     }
 }

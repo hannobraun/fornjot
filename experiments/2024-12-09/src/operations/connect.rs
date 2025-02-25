@@ -57,6 +57,7 @@ impl ConnectExt for Handle<Face> {
                             is_internal: false,
                         })
                     }),
+                    q.is_internal,
                 );
                 Handle::new(face)
             })

@@ -47,7 +47,7 @@ impl Sketch {
             },
         );
 
-        Face::new(surface, half_edges)
+        Face::new(surface, half_edges, false)
     }
 }
 
