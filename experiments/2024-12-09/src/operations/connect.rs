@@ -36,11 +36,12 @@ impl ConnectExt for Handle<Face> {
             .half_edges_with_end_vertex()
             .zip(other.half_edges_with_end_vertex())
             .map(|((q, r), (t, s))| {
-                let surface =
-                    Plane::from_points([q, r, s].map(|vertex| vertex.point));
+                let surface = Plane::from_points(
+                    [&q.start, r, s].map(|vertex| vertex.point),
+                );
                 let face = Face::new(
                     surface,
-                    [q, r, s, t].map(|vertex| {
+                    [&q.start, r, s, &t.start].map(|vertex| {
                         Handle::new(HalfEdge {
                             start: vertex.clone(),
                             is_internal: false,
