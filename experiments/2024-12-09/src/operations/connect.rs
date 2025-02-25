@@ -12,6 +12,9 @@ pub trait ConnectExt {
     /// Panics, if the two faces provided do not have the same number of
     /// half-edges.
     ///
+    /// Panics, if an internal half-edge of one face would connect to an
+    /// external half-edge of the other.
+    ///
     /// ## Implementation Note
     ///
     /// This method has very particular (and undocumented) requirements about
