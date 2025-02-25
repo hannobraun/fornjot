@@ -7,7 +7,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 use crate::{
-    geometry::{TriMesh, Triangle},
+    geometry::{MeshTriangle, TriMesh, Triangle},
     math::{Plane, Point},
     object::Handle,
     topology::half_edge::HalfEdge,
@@ -32,7 +32,9 @@ pub fn triangulate(
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_vertex);
-            Triangle { points }
+            MeshTriangle {
+                inner: Triangle { points },
+            }
         });
 
     let mut mesh = TriMesh::new();

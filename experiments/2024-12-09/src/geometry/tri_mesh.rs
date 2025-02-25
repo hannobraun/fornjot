@@ -2,7 +2,7 @@ use super::Triangle;
 
 #[derive(Debug)]
 pub struct TriMesh {
-    pub triangles: Vec<Triangle<3>>,
+    pub triangles: Vec<MeshTriangle>,
 }
 
 impl TriMesh {
@@ -16,4 +16,9 @@ impl TriMesh {
         self.triangles.extend(other.triangles);
         self
     }
+}
+
+#[derive(Debug)]
+pub struct MeshTriangle {
+    pub inner: Triangle<3>,
 }

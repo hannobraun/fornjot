@@ -19,7 +19,7 @@ impl Geometry {
         let mut vertices = Vec::new();
 
         for triangle in &tri_mesh.triangles {
-            let triangle = triangle.points.each_ref().map(|point| {
+            let triangle = triangle.inner.points.each_ref().map(|point| {
                 Vec3::from(
                     point.coords.components.map(|coord| coord.value() as f32),
                 )
