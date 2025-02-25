@@ -10,14 +10,11 @@ use crate::{
     geometry::{MeshTriangle, TriMesh, Triangle},
     math::{Plane, Point},
     object::Handle,
-    topology::half_edge::HalfEdge,
+    topology::{face::Face, half_edge::HalfEdge},
 };
 
-pub fn triangulate(
-    half_edges: &[Handle<HalfEdge>],
-    surface: &Plane,
-) -> TriMesh {
-    let points = points(half_edges, surface);
+pub fn triangulate(face: &Face) -> TriMesh {
+    let points = points(&face.half_edges, &face.surface);
     let triangles = triangles(&points);
 
     let polygon = polygon(&points);

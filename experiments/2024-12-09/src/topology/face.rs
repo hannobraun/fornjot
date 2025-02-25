@@ -47,7 +47,7 @@ impl Object for Face {
     }
 
     fn tri_mesh(&self) -> TriMesh {
-        triangulate(&self.half_edges, &self.surface)
+        triangulate(self)
     }
 
     fn children(&self) -> Vec<HandleAny> {
