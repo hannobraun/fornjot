@@ -36,6 +36,13 @@ impl ConnectExt for Handle<Face> {
             .half_edges_with_end_vertex()
             .zip(other.half_edges_with_end_vertex())
             .map(|((q, r), (t, s))| {
+                if q.is_internal != t.is_internal {
+                    panic!(
+                        "Trying to connect an internal half-edge of one face \
+                        to an external half-edge of another"
+                    );
+                }
+
                 let surface = Plane::from_points(
                     [&q.start, r, s].map(|vertex| vertex.point),
                 );
