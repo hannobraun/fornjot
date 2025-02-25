@@ -10,7 +10,7 @@ pub trait ConnectExt {
     /// ## Panics
     ///
     /// Panics, if the two faces provided do not have the same number of
-    /// vertices.
+    /// half-edges.
     ///
     /// ## Implementation Note
     ///
