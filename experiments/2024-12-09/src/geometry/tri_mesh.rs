@@ -20,6 +20,12 @@ impl TriMesh {
     pub fn all_triangles(&self) -> impl Iterator<Item = Triangle<3>> {
         self.triangles.iter().map(|triangle| triangle.inner)
     }
+
+    pub fn external_triangles(&self) -> impl Iterator<Item = Triangle<3>> {
+        self.triangles.iter().filter_map(|triangle| {
+            (!triangle.is_internal).then_some(triangle.inner)
+        })
+    }
 }
 
 #[derive(Debug)]
