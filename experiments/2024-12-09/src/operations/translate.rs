@@ -37,6 +37,7 @@ impl TranslateExt for HalfEdge {
 
 impl TranslateExt for Surface {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        let offset = offset.into();
         let geometry = self.geometry.translate(offset);
         Self { geometry }
     }
