@@ -1,4 +1,7 @@
-use crate::topology::{face::Face, surface::Surface};
+use crate::{
+    object::Handle,
+    topology::{face::Face, surface::Surface},
+};
 
 pub trait FlipExt {
     fn flip(&self) -> Self;
@@ -7,7 +10,7 @@ pub trait FlipExt {
 impl FlipExt for Face {
     fn flip(&self) -> Self {
         Face::new(
-            self.surface.flip(),
+            Handle::new(self.surface.flip()),
             self.half_edges.clone(),
             self.is_internal,
         )

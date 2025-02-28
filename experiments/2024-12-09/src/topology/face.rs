@@ -19,12 +19,12 @@ pub struct Face {
 
 impl Face {
     pub fn new(
-        surface: Surface,
+        surface: Handle<Surface>,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
         is_internal: bool,
     ) -> Self {
         Self {
-            surface: Handle::new(surface),
+            surface,
             half_edges: half_edges.into_iter().collect(),
             is_internal,
         }
