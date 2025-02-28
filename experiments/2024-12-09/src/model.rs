@@ -3,6 +3,7 @@ use crate::{
     math::{Bivector, Plane, Point, Vector},
     object::{Handle, HandleAny},
     operations::sweep::SweepExt,
+    topology::surface::Surface,
 };
 
 pub fn model() -> HandleAny {
@@ -33,7 +34,7 @@ pub fn model() -> HandleAny {
             },
         };
 
-        let face = sketch.to_face(surface);
+        let face = sketch.to_face(Surface { geometry: surface });
         Handle::new(face)
     };
 

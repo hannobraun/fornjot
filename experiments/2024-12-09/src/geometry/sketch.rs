@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use itertools::Itertools;
 
 use crate::{
-    math::{Plane, Point},
+    math::Point,
     object::Handle,
     topology::{
         face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
@@ -15,14 +15,14 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn to_face(&self, surface: Plane) -> Face {
+    pub fn to_face(&self, surface: Surface) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self
             .points
             .iter()
             .copied()
             .map(|point| {
-                let point = surface.point_from_local(point);
+                let point = surface.geometry.point_from_local(point);
                 let vertex = Handle::new(Vertex::new(point));
 
                 vertices_by_local_point
@@ -50,7 +50,7 @@ impl Sketch {
             },
         );
 
-        Face::new(Surface { geometry: surface }, half_edges, false)
+        Face::new(surface, half_edges, false)
     }
 }
 
