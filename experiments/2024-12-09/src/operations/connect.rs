@@ -52,13 +52,13 @@ impl ConnectExt for Handle<Face> {
                     }
                 };
 
-                let surface = Surface {
+                let surface = Handle::new(Surface {
                     geometry: Plane::from_points(
                         [&q.start, r, s].map(|vertex| vertex.point),
                     ),
-                };
+                });
                 let face = Face::new(
-                    Handle::new(surface),
+                    surface,
                     [&q.start, r, s, &t.start].map(|vertex| {
                         Handle::new(HalfEdge {
                             start: vertex.clone(),
