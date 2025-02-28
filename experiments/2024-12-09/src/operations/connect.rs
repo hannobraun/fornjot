@@ -53,9 +53,9 @@ impl ConnectExt for Handle<Face> {
                 };
 
                 let surface = Handle::new(Surface {
-                    geometry: Plane::from_points(
+                    geometry: Box::new(Plane::from_points(
                         [&q.start, r, s].map(|vertex| vertex.point),
-                    ),
+                    )),
                 });
                 let face = Face::new(
                     surface,
