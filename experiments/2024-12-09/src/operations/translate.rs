@@ -1,7 +1,9 @@
 use crate::{
     math::Vector,
     object::Handle,
-    topology::{face::Face, half_edge::HalfEdge, vertex::Vertex},
+    topology::{
+        face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
+    },
 };
 
 pub trait TranslateExt {
@@ -30,6 +32,13 @@ impl TranslateExt for HalfEdge {
             start: Handle::new(start),
             is_internal: self.is_internal,
         }
+    }
+}
+
+impl TranslateExt for Surface {
+    fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        let geometry = self.geometry.translate(offset);
+        Self { geometry }
     }
 }
 
