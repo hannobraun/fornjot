@@ -12,7 +12,7 @@ use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
 
 #[derive(Debug)]
 pub struct Face {
-    pub surface: Surface,
+    pub surface: Handle<Surface>,
     pub half_edges: Vec<Handle<HalfEdge>>,
     pub is_internal: bool,
 }
@@ -24,7 +24,7 @@ impl Face {
         is_internal: bool,
     ) -> Self {
         Self {
-            surface,
+            surface: Handle::new(surface),
             half_edges: half_edges.into_iter().collect(),
             is_internal,
         }
