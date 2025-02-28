@@ -16,8 +16,7 @@ impl FlipExt for Face {
 
 impl FlipExt for Surface {
     fn flip(&self) -> Self {
-        Self {
-            geometry: self.geometry.flip(),
-        }
+        let geometry = self.geometry.flip();
+        Self { geometry }
     }
 }
