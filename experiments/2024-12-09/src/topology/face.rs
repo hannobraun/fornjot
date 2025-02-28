@@ -5,7 +5,6 @@ use itertools::Itertools;
 use crate::{
     extra::triangulate::triangulate,
     geometry::TriMesh,
-    math::Plane,
     object::{Handle, HandleAny, Object},
 };
 
@@ -20,12 +19,12 @@ pub struct Face {
 
 impl Face {
     pub fn new(
-        surface: Plane,
+        surface: Surface,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
         is_internal: bool,
     ) -> Self {
         Self {
-            surface: Surface { geometry: surface },
+            surface,
             half_edges: half_edges.into_iter().collect(),
             is_internal,
         }

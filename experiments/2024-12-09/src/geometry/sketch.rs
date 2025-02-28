@@ -5,7 +5,9 @@ use itertools::Itertools;
 use crate::{
     math::{Plane, Point},
     object::Handle,
-    topology::{face::Face, half_edge::HalfEdge, vertex::Vertex},
+    topology::{
+        face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
+    },
 };
 
 pub struct Sketch {
@@ -48,7 +50,7 @@ impl Sketch {
             },
         );
 
-        Face::new(surface, half_edges, false)
+        Face::new(Surface { geometry: surface }, half_edges, false)
     }
 }
 

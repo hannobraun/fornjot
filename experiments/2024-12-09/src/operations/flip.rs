@@ -7,7 +7,7 @@ pub trait FlipExt {
 impl FlipExt for Face {
     fn flip(&self) -> Self {
         Face::new(
-            self.surface.flip().geometry,
+            self.surface.flip(),
             self.half_edges.clone(),
             self.is_internal,
         )
