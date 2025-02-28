@@ -9,12 +9,11 @@ use spade::Triangulation;
 use crate::{
     geometry::{MeshTriangle, TriMesh, Triangle},
     math::Point,
-    object::Handle,
-    topology::{face::Face, half_edge::HalfEdge, surface::Surface},
+    topology::face::Face,
 };
 
 pub fn triangulate(face: &Face) -> TriMesh {
-    let points = points(&face.half_edges, &face.surface);
+    let points = points(face);
     let triangles = triangles(&points);
 
     let polygon = polygon(&points);
@@ -41,11 +40,8 @@ pub fn triangulate(face: &Face) -> TriMesh {
     mesh
 }
 
-fn points(
-    half_edges: &[Handle<HalfEdge>],
-    surface: &Surface,
-) -> Vec<TriangulationPoint> {
-    half_edges
+fn points(face: &Face) -> Vec<TriangulationPoint> {
+    face.half_edges
         .iter()
         .map(|half_edge| {
             // Here, we project a 3D point (from the vertex) into the face's
@@ -66,7 +62,7 @@ fn points(
             // original 3D points to build those triangles. We never convert
             // the 2D points back into 3D.
             let point_surface =
-                surface.geometry.project_point(half_edge.start.point);
+                face.surface.geometry.project_point(half_edge.start.point);
 
             TriangulationPoint {
                 point_surface,
