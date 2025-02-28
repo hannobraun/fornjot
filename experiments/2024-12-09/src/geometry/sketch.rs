@@ -15,7 +15,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn to_face(&self, surface: Surface) -> Face {
+    pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self
             .points
@@ -50,7 +50,7 @@ impl Sketch {
             },
         );
 
-        Face::new(Handle::new(surface), half_edges, false)
+        Face::new(surface, half_edges, false)
     }
 }
 

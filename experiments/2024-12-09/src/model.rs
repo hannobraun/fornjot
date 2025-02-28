@@ -36,7 +36,7 @@ pub fn model() -> HandleAny {
             },
         };
 
-        let face = sketch.to_face(surface);
+        let face = sketch.to_face(Handle::new(surface));
         Handle::new(face)
     };
 
