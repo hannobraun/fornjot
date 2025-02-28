@@ -13,7 +13,7 @@ impl TranslateExt for Face {
         let offset = offset.into();
 
         Face::new(
-            self.surface.translate(offset),
+            self.surface.geometry.translate(offset),
             self.half_edges
                 .iter()
                 .map(|half_edge| Handle::new(half_edge.translate(offset))),

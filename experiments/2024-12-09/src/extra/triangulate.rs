@@ -14,7 +14,7 @@ use crate::{
 };
 
 pub fn triangulate(face: &Face) -> TriMesh {
-    let points = points(&face.half_edges, &face.surface);
+    let points = points(&face.half_edges, &face.surface.geometry);
     let triangles = triangles(&points);
 
     let polygon = polygon(&points);

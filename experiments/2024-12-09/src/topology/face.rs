@@ -9,11 +9,11 @@ use crate::{
     object::{Handle, HandleAny, Object},
 };
 
-use super::{half_edge::HalfEdge, vertex::Vertex};
+use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
 
 #[derive(Debug)]
 pub struct Face {
-    pub surface: Plane,
+    pub surface: Surface,
     pub half_edges: Vec<Handle<HalfEdge>>,
     pub is_internal: bool,
 }
@@ -25,7 +25,7 @@ impl Face {
         is_internal: bool,
     ) -> Self {
         Self {
-            surface,
+            surface: Surface { geometry: surface },
             half_edges: half_edges.into_iter().collect(),
             is_internal,
         }
