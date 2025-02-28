@@ -26,15 +26,17 @@ pub fn model() -> HandleAny {
             // half-edge between last and first vertex is implicit, so we're done here
         ]);
 
-        let surface = Plane {
-            origin: Point::from([0., 0., 1.]),
-            coords: Bivector {
-                a: Vector::from([1., 0., 0.]),
-                b: Vector::from([0., 1., 0.]),
+        let surface = Surface {
+            geometry: Plane {
+                origin: Point::from([0., 0., 1.]),
+                coords: Bivector {
+                    a: Vector::from([1., 0., 0.]),
+                    b: Vector::from([0., 1., 0.]),
+                },
             },
         };
 
-        let face = sketch.to_face(Surface { geometry: surface });
+        let face = sketch.to_face(surface);
         Handle::new(face)
     };
 
