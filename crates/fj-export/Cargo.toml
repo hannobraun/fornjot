@@ -16,7 +16,7 @@ workspace = true
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
-thiserror = "2.0.11"
+thiserror = "2.0.12"
 threemf = "0.7.0"
 stl = "0.2.1"
 wavefront_rs = "=2.0.0-beta.1"
