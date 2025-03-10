@@ -19,7 +19,7 @@ fj-math.workspace = true
 itertools = "0.14.0"
 parking_lot = "0.12.3"
 robust = "1.1.0"
-spade = "2.13.0"
+spade = "2.13.1"
 thiserror = "2.0.12"
 type-map = "0.5.0"
 
