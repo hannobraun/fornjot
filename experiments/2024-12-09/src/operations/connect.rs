@@ -6,6 +6,11 @@ use crate::{
     },
 };
 
+/// # Extension trait for objects that can be connected
+///
+/// At this point, this is only implemented for faces, to connect to of them,
+/// creating a solid. It's conceivable to also implement it for half-edges, for
+/// example, to connect those into a face.
 pub trait ConnectExt {
     /// # Connect two faces by creating a side wall of faces from their vertices
     ///

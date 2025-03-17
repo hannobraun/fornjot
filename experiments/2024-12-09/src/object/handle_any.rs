@@ -4,6 +4,12 @@ use crate::geometry::TriMesh;
 
 use super::Object;
 
+/// # An untyped handle that can be used to abstract over objects
+///
+/// Can be used wherever you need to iterate over objects of various types.
+///
+/// See documentation of `Handle` for more context on handles and object
+/// storage.
 #[derive(Clone)]
 pub struct HandleAny {
     pub(super) inner: Rc<dyn Object>,

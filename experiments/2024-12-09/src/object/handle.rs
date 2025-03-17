@@ -2,11 +2,30 @@ use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
 use super::{HandleAny, Object};
 
+/// # A typed handle to an object
+///
+/// Handles provide a layer of identity to objects, enabling the same object to
+/// be shared from multiple locations in the object graph.
+///
+/// Right now, this doesn't make much of a difference, but eventually it's going
+/// to be important for various validation checks. (See the validation stuff in
+/// the current mainline code for more information on that.)
+///
+/// The longer-term idea here, is to use this as a reference to an object that
+/// is stored in a way that makes this object performant to access. Right now,
+/// we just allocate all objects within [`Rc`] though, as a placeholder.
 pub struct Handle<T> {
     inner: Rc<T>,
 }
 
 impl<T> Handle<T> {
+    /// # Create a new handle
+    ///
+    /// Eventually, this type probably won't have a public constructor, and
+    /// you'll create a `Handle` via some kind of collection/arena thing.
+    ///
+    /// For now, objects just live on the heap, in reference-counted ([`Rc`])
+    /// allocations.
     pub fn new(inner: T) -> Self {
         Self {
             inner: Rc::new(inner),
@@ -18,10 +37,12 @@ impl<T> Handle<T>
 where
     T: Object + 'static,
 {
+    /// # Create an untyped handle that refers to the same object
     pub fn to_any(&self) -> HandleAny {
         self.clone().into_any()
     }
 
+    /// # Convert this handle into an untyped one that refers to the same object
     pub fn into_any(self) -> HandleAny {
         HandleAny { inner: self.inner }
     }

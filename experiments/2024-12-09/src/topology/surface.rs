@@ -2,6 +2,13 @@ use std::fmt;
 
 use crate::geometry::SurfaceGeometry;
 
+/// # A surface
+///
+/// Surfaces are infinite 2D objects in 3D space. They are what defines faces,
+/// which are bounded sections on a surface.
+///
+/// Surfaces own a reference to an implementation of `SurfaceGeometry`, which is
+/// what defines them. So far, only planes are supported though.
 pub struct Surface {
     pub geometry: Box<dyn SurfaceGeometry>,
 }

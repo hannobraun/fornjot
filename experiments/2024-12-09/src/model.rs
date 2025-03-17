@@ -6,6 +6,10 @@ use crate::{
     topology::surface::Surface,
 };
 
+/// # The function that creates the current test model, a cube
+///
+/// Nothing really special about this. It's just the current test case that I'm
+/// using to develop the rest.
 pub fn model() -> HandleAny {
     let top = {
         let sketch = Sketch::from([

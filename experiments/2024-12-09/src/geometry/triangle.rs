@@ -7,12 +7,16 @@ use crate::{
 
 use super::{MeshTriangle, TriMesh};
 
+/// # A triangle
+///
+/// This should probably move to [`math`](crate::math). Not sure!
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle<const D: usize> {
     pub points: [Point<D>; 3],
 }
 
 impl<const D: usize> Triangle<D> {
+    /// # Compute the center point of the triangle
     pub fn center(&self) -> Point<D> {
         let [a, b, c] = self.points;
         let coords = (a.coords + b.coords + c.coords) / 3.;

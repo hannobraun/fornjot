@@ -10,6 +10,17 @@ use crate::{
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
 
+/// # A face
+///
+/// Faces are defined by a surface (which, so far, is always a plane) and a
+/// cycle of half-edges that bound the face on that surface.
+///
+/// Faces are the boundary of any solid. Solids can touch themselves, however,
+/// to connect their external boundary to cavities on the inside, or enclose a
+/// hole through the solid.
+///
+/// The faces in parts of the boundary where solids touch themselves are called
+/// "internal".
 #[derive(Debug)]
 pub struct Face {
     pub surface: Handle<Surface>,
@@ -18,6 +29,10 @@ pub struct Face {
 }
 
 impl Face {
+    /// # Create a new face from its component parts
+    ///
+    /// The more interesting way to create a face would be via a
+    /// [`Sketch`](crate::geometry::Sketch).
     pub fn new(
         surface: Handle<Surface>,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
@@ -30,6 +45,11 @@ impl Face {
         }
     }
 
+    /// # Iterate over the half-edges of the face
+    ///
+    /// In addition to the [`HalfEdge`] itself, which contains the vertex where
+    /// it starts, the vertex where the half-edge ends (the start vertex of the
+    /// next half-edge) is also provided.
     pub fn half_edges_with_end_vertex(
         &self,
     ) -> impl Iterator<Item = (&Handle<HalfEdge>, &Handle<Vertex>)> {

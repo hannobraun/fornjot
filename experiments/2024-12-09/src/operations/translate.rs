@@ -6,6 +6,12 @@ use crate::{
     },
 };
 
+/// # Extension trait for things that can be translated
+///
+/// This is the most versatile operation right now, as it's implemented for many
+/// different types of objects.
+///
+/// I expect this to morph into a more general "transform" operation over time.
 pub trait TranslateExt {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self;
 }

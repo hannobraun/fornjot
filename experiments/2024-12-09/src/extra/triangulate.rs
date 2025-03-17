@@ -1,3 +1,7 @@
+//! # Converting faces into triangle meshes
+//!
+//! See [triangulate].
+
 use std::{
     collections::{BTreeSet, VecDeque},
     mem,
@@ -12,6 +16,16 @@ use crate::{
     topology::face::Face,
 };
 
+/// # Convert a face into a triangle mesh
+///
+/// So far, this is pretty limited, since all faces are assumed to be flat, and
+/// the half-edges that bound them are all straight. But it does support concave
+/// faces (and this ability is also used to support holes).
+///
+/// Once surfaces learn to generate a bunch of points to approximate their
+/// geometry, it shouldn't be too hard to expand the code here to adapt that,
+/// which would add support for curved surfaces. This is already using Delaunay
+/// under the hood, so it wouldn't be a big step.
 pub fn triangulate(face: &Face) -> TriMesh {
     let points = points(face);
     let triangles = triangles(&points);

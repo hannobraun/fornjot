@@ -7,12 +7,19 @@ use crate::{
 
 use super::face::Face;
 
+/// # A solid
+///
+/// Solids are 3D objects that are bounded by faces.
 #[derive(Clone)]
 pub struct Solid {
     faces: Vec<Handle<Face>>,
 }
 
 impl Solid {
+    /// # Create a solid from its component parts
+    ///
+    /// Check out [`operations`](crate::operations) for more interesting ways to
+    /// create solids.
     pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
         Self {
             faces: faces.into_iter().collect(),

@@ -6,6 +6,7 @@ use crate::{
     object::{HandleAny, Object},
 };
 
+/// # A vertex
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
     pub point: Point<3>,

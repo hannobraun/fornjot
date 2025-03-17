@@ -5,6 +5,10 @@ use crate::{
     object::{HandleAny, Object},
 };
 
+/// # This is just some connecting tissue between CAD objects and the renderer
+///
+/// This is part of the code that didn't work out as I hoped. I expect to remove
+/// it in future experiments.
 #[derive(Clone)]
 pub struct OperationView {
     operation: HandleAny,

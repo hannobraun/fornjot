@@ -10,11 +10,28 @@ use crate::{
     },
 };
 
+/// # A 2D sketch, which one way to create faces
+///
+/// So far, sketches are pretty limited: They are just a bunch of ordered
+/// points. Those points can be converted into the straight half-edges that
+/// bound a face.
+///
+/// You could create this struct manually, but there's also a [`From`]
+/// implementation that can create an instance of this struct from any iterator
+/// that yields points.
+///
+/// The next step here, would be to add support for curved edges. But this would
+/// need to be supported on the topology side first.
 pub struct Sketch {
     pub points: Vec<Point<2>>,
 }
 
 impl Sketch {
+    /// # Convert the sketch into a face
+    ///
+    /// The `surface` parameter defines the plane which is then used to convert
+    /// the 2D sketch into a 3D face. In the future, more surfaces than just
+    /// planes would be supported, but we're not there yet.
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self

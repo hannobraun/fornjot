@@ -1,3 +1,8 @@
+//! # Various geometry tools
+//! 
+//! These are distinct from the core b-rep representation, for which this module
+//! is a dependency.
+
 mod sketch;
 mod surface;
 mod tri_mesh;
