@@ -9,6 +9,7 @@ use winit::{
 };
 
 use crate::{
+    geometry::TriMesh,
     object::{HandleAny, Object},
     render::Renderer,
     view::OperationView,
@@ -20,7 +21,7 @@ pub fn run(shape: HandleAny) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        view,
+        tri_mesh: view.tri_mesh(),
         window: None,
         renderer: None,
     };
@@ -30,7 +31,7 @@ pub fn run(shape: HandleAny) -> anyhow::Result<()> {
 }
 
 struct App {
-    view: OperationView,
+    tri_mesh: TriMesh,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
 }
@@ -75,7 +76,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                if let Err(err) = renderer.render(&self.view.tri_mesh()) {
+                if let Err(err) = renderer.render(&self.tri_mesh) {
                     eprintln!("Render error: {err}");
                 }
             }
