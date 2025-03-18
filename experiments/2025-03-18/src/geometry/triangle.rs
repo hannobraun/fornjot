@@ -1,7 +1,5 @@
 use crate::math::Point;
 
-use super::{MeshTriangle, ToTriMesh, TriMesh};
-
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle<const D: usize> {
     pub points: [Point<D>; 3],
@@ -22,17 +20,6 @@ where
     fn from(points: [P; 3]) -> Self {
         Self {
             points: points.map(Into::into),
-        }
-    }
-}
-
-impl ToTriMesh for Triangle<3> {
-    fn to_tri_mesh(&self) -> TriMesh {
-        TriMesh {
-            triangles: vec![MeshTriangle {
-                inner: *self,
-                is_internal: false,
-            }],
         }
     }
 }
