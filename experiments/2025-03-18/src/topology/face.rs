@@ -3,7 +3,7 @@ use itertools::Itertools;
 use crate::{
     extra::triangulate::triangulate,
     geometry::TriMesh,
-    object::{Handle, HandleAny, Object},
+    object::{Handle, Object},
 };
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
@@ -41,12 +41,5 @@ impl Face {
 impl Object for Face {
     fn tri_mesh(&self) -> TriMesh {
         triangulate(self)
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        self.half_edges
-            .iter()
-            .map(|vertex| vertex.to_any())
-            .collect()
     }
 }

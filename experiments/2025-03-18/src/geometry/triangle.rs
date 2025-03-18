@@ -1,7 +1,4 @@
-use crate::{
-    math::Point,
-    object::{HandleAny, Object},
-};
+use crate::{math::Point, object::Object};
 
 use super::{MeshTriangle, TriMesh};
 
@@ -37,9 +34,5 @@ impl Object for Triangle<3> {
                 is_internal: false,
             }],
         }
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        Vec::new()
     }
 }

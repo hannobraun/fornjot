@@ -19,8 +19,4 @@ impl Object for HandleAny {
     fn tri_mesh(&self) -> TriMesh {
         self.inner.tri_mesh()
     }
-
-    fn children(&self) -> Vec<HandleAny> {
-        self.inner.children()
-    }
 }

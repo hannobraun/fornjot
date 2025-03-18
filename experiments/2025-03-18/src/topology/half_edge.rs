@@ -1,6 +1,6 @@
 use crate::{
     geometry::TriMesh,
-    object::{Handle, HandleAny, Object},
+    object::{Handle, Object},
 };
 
 use super::vertex::Vertex;
@@ -13,9 +13,5 @@ pub struct HalfEdge {
 impl Object for HalfEdge {
     fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        vec![self.start.to_any()]
     }
 }

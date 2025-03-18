@@ -1,6 +1,6 @@
 use crate::{
     geometry::TriMesh,
-    object::{Handle, HandleAny, Object},
+    object::{Handle, Object},
 };
 
 use super::face::Face;
@@ -27,9 +27,5 @@ impl Object for Solid {
         }
 
         tri_mesh
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        self.faces.iter().map(|face| face.to_any()).collect()
     }
 }

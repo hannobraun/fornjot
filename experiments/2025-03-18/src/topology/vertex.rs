@@ -1,8 +1,4 @@
-use crate::{
-    geometry::TriMesh,
-    math::Point,
-    object::{HandleAny, Object},
-};
+use crate::{geometry::TriMesh, math::Point, object::Object};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
@@ -19,9 +15,5 @@ impl Vertex {
 impl Object for Vertex {
     fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
-    }
-
-    fn children(&self) -> Vec<HandleAny> {
-        Vec::new()
     }
 }
