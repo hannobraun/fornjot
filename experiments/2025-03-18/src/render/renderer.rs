@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::anyhow;
 use winit::window::Window;
 
-use crate::{object::Object, view::OperationView};
+use crate::geometry::TriMesh;
 
 use super::{geometry::Geometry, pipeline::Pipeline};
 
@@ -76,11 +76,8 @@ impl Renderer {
         })
     }
 
-    pub fn render(&mut self, operations: &OperationView) -> anyhow::Result<()> {
-        let selected_operation = operations.selected();
-
-        let geometry =
-            Geometry::new(&self.device, &selected_operation.tri_mesh());
+    pub fn render(&mut self, tri_mesh: &TriMesh) -> anyhow::Result<()> {
+        let geometry = Geometry::new(&self.device, tri_mesh);
 
         let mut encoder = self
             .device

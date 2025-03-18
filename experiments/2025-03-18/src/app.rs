@@ -8,7 +8,11 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{object::HandleAny, render::Renderer, view::OperationView};
+use crate::{
+    object::{HandleAny, Object},
+    render::Renderer,
+    view::OperationView,
+};
 
 pub fn run(shape: HandleAny) -> anyhow::Result<()> {
     let view = OperationView::new(shape);
@@ -71,7 +75,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                if let Err(err) = renderer.render(&self.view) {
+                if let Err(err) = renderer.render(&self.view.tri_mesh()) {
                     eprintln!("Render error: {err}");
                 }
             }
