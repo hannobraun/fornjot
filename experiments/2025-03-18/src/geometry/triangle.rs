@@ -27,7 +27,7 @@ where
 }
 
 impl Object for Triangle<3> {
-    fn tri_mesh(&self) -> TriMesh {
+    fn to_tri_mesh(&self) -> TriMesh {
         TriMesh {
             triangles: vec![MeshTriangle {
                 inner: *self,

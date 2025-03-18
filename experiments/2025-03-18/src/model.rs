@@ -42,5 +42,5 @@ pub fn model() -> TriMesh {
 
     let solid = top.sweep([0., 0., -2.]);
 
-    solid.tri_mesh()
+    solid.to_tri_mesh()
 }

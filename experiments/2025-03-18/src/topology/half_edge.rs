@@ -11,7 +11,7 @@ pub struct HalfEdge {
 }
 
 impl Object for HalfEdge {
-    fn tri_mesh(&self) -> TriMesh {
+    fn to_tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }
 }

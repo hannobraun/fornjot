@@ -39,7 +39,7 @@ impl Face {
 }
 
 impl Object for Face {
-    fn tri_mesh(&self) -> TriMesh {
+    fn to_tri_mesh(&self) -> TriMesh {
         triangulate(self)
     }
 }

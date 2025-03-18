@@ -13,7 +13,7 @@ impl Vertex {
 }
 
 impl Object for Vertex {
-    fn tri_mesh(&self) -> TriMesh {
+    fn to_tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }
 }

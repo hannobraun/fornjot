@@ -1,5 +1,5 @@
 use crate::geometry::TriMesh;
 
 pub trait Object {
-    fn tri_mesh(&self) -> TriMesh;
+    fn to_tri_mesh(&self) -> TriMesh;
 }
