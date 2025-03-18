@@ -3,7 +3,7 @@ use itertools::Itertools;
 use crate::{
     extra::triangulate::triangulate,
     geometry::{ToTriMesh, TriMesh},
-    object::Handle,
+    handle::Handle,
 };
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};

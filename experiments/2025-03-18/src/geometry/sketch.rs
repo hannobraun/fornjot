@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use crate::{
     math::Point,
-    object::Handle,
+    handle::Handle,
     topology::{
         face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
     },

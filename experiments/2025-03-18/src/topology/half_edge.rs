@@ -1,4 +1,4 @@
-use crate::object::Handle;
+use crate::handle::Handle;
 
 use super::vertex::Vertex;
 

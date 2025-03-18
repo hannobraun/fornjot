@@ -1,5 +1,5 @@
 use crate::{
-    object::Handle,
+    handle::Handle,
     topology::{face::Face, surface::Surface},
 };
 
