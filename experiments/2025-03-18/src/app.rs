@@ -52,7 +52,7 @@ impl ApplicationHandler for App {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let (Some(window), Some(renderer)) =
+        let (Some(_), Some(renderer)) =
             (self.window.as_ref(), self.renderer.as_mut())
         else {
             return;
@@ -71,28 +71,6 @@ impl ApplicationHandler for App {
                 ..
             } => {
                 event_loop.exit();
-            }
-            WindowEvent::KeyboardInput {
-                event: KeyEvent { logical_key, .. },
-                ..
-            } => {
-                match logical_key {
-                    Key::Named(NamedKey::ArrowRight) => {
-                        self.view.selected_mut().select_last();
-                    }
-                    Key::Named(NamedKey::ArrowLeft) => {
-                        self.view.parent_of_selected_mut().select_none();
-                    }
-                    Key::Named(NamedKey::ArrowDown) => {
-                        self.view.parent_of_selected_mut().select_next();
-                    }
-                    Key::Named(NamedKey::ArrowUp) => {
-                        self.view.parent_of_selected_mut().select_previous();
-                    }
-                    _ => {}
-                }
-
-                window.request_redraw();
             }
             WindowEvent::RedrawRequested => {
                 if let Err(err) = renderer.render(&self.view) {
