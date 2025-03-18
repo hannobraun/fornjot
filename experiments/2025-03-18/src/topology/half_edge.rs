@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     geometry::TriMesh,
     object::{Handle, HandleAny, Object},
@@ -13,10 +11,6 @@ pub struct HalfEdge {
 }
 
 impl Object for HalfEdge {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "HalfEdge")
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }

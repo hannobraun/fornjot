@@ -1,4 +1,4 @@
-use std::{fmt, rc::Rc};
+use std::rc::Rc;
 
 use crate::geometry::TriMesh;
 
@@ -16,13 +16,6 @@ impl HandleAny {
 }
 
 impl Object for HandleAny {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.inner.display(f)?;
-        write!(f, " ({:?})", Rc::as_ptr(&self.inner))?;
-
-        Ok(())
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         self.inner.tri_mesh()
     }

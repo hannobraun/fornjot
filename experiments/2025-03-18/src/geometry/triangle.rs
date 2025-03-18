@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     math::Point,
     object::{HandleAny, Object},
@@ -32,10 +30,6 @@ where
 }
 
 impl Object for Triangle<3> {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Triangle")
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         TriMesh {
             triangles: vec![MeshTriangle {

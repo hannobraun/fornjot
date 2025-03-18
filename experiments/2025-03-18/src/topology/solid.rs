@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     geometry::TriMesh,
     object::{Handle, HandleAny, Object},
@@ -21,10 +19,6 @@ impl Solid {
 }
 
 impl Object for Solid {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Solid")
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         let mut tri_mesh = TriMesh::new();
 

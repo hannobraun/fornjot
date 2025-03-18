@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     geometry::TriMesh,
     object::{HandleAny, Object},
@@ -99,10 +97,6 @@ impl OperationView {
 }
 
 impl Object for OperationView {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.operation.display(f)
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         self.operation.tri_mesh()
     }

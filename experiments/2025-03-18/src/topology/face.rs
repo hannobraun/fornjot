@@ -1,5 +1,3 @@
-use std::fmt;
-
 use itertools::Itertools;
 
 use crate::{
@@ -41,10 +39,6 @@ impl Face {
 }
 
 impl Object for Face {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Face")
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         triangulate(self)
     }

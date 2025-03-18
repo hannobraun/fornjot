@@ -1,5 +1,3 @@
-use std::fmt;
-
 use crate::{
     geometry::TriMesh,
     math::Point,
@@ -19,10 +17,6 @@ impl Vertex {
 }
 
 impl Object for Vertex {
-    fn display(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Vertex")
-    }
-
     fn tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }
