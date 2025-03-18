@@ -12,16 +12,13 @@ use crate::{
     geometry::TriMesh,
     object::{HandleAny, Object},
     render::Renderer,
-    view::OperationView,
 };
 
 pub fn run(shape: HandleAny) -> anyhow::Result<()> {
-    let view = OperationView::new(shape);
-
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        tri_mesh: view.tri_mesh(),
+        tri_mesh: shape.tri_mesh(),
         window: None,
         renderer: None,
     };

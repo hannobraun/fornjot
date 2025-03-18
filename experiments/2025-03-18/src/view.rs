@@ -8,12 +8,6 @@ pub struct OperationView {
     operation: HandleAny,
 }
 
-impl OperationView {
-    pub fn new(operation: HandleAny) -> Self {
-        Self { operation }
-    }
-}
-
 impl Object for OperationView {
     fn tri_mesh(&self) -> TriMesh {
         self.operation.tri_mesh()
