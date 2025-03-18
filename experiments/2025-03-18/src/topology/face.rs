@@ -2,8 +2,8 @@ use itertools::Itertools;
 
 use crate::{
     extra::triangulate::triangulate,
-    geometry::TriMesh,
-    object::{Handle, ToTriMesh},
+    geometry::{ToTriMesh, TriMesh},
+    object::Handle,
 };
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};

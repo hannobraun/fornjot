@@ -1,6 +1,6 @@
 use crate::{
-    geometry::TriMesh,
-    object::{Handle, ToTriMesh},
+    geometry::{ToTriMesh, TriMesh},
+    object::Handle,
 };
 
 use super::face::Face;

@@ -33,3 +33,7 @@ pub struct MeshTriangle {
     pub inner: Triangle<3>,
     pub is_internal: bool,
 }
+
+pub trait ToTriMesh {
+    fn to_tri_mesh(&self) -> TriMesh;
+}

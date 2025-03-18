@@ -1,6 +1,6 @@
-use crate::{math::Point, object::ToTriMesh};
+use crate::math::Point;
 
-use super::{MeshTriangle, TriMesh};
+use super::{MeshTriangle, ToTriMesh, TriMesh};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle<const D: usize> {

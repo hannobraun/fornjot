@@ -1,4 +1,7 @@
-use crate::{geometry::TriMesh, math::Point, object::ToTriMesh};
+use crate::{
+    geometry::{ToTriMesh, TriMesh},
+    math::Point,
+};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
