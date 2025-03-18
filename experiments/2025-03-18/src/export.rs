@@ -1,10 +1,8 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::object::Object;
+use crate::geometry::TriMesh;
 
-pub fn export(op: &dyn Object) -> anyhow::Result<()> {
-    let tri_mesh = op.tri_mesh();
-
+pub fn export(tri_mesh: &TriMesh) -> anyhow::Result<()> {
     let mut indices_by_vertex = BTreeMap::new();
 
     let mut points = Vec::new();

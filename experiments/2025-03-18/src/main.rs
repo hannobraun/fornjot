@@ -16,7 +16,7 @@ mod topology;
 fn main() -> anyhow::Result<()> {
     let model = model::model();
 
-    export::export(&model)?;
+    export::export(&model.tri_mesh())?;
     app::run(model.tri_mesh())?;
 
     Ok(())
