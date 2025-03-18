@@ -1,0 +1,28 @@
+[workspace]
+
+[package]
+name = "fj"
+edition = "2024"
+
+[dependencies]
+anyhow = "*"
+glyphon = "*"
+iter_fixed = "*"
+itertools = "*"
+pollster = "*"
+spade = "*"
+threemf = "*"
+wgpu = "*"
+winit = "*"
+
+[dependencies.bytemuck]
+version = "*"
+features = ["derive"]
+
+[dependencies.geo]
+version = "*"
+default-features = false
+
+[dependencies.glam]
+version = "*"
+features = ["bytemuck"]
