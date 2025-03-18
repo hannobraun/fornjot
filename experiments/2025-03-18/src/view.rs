@@ -1,4 +1,4 @@
-use std::{fmt, iter};
+use std::fmt;
 
 use crate::{
     geometry::TriMesh,
@@ -21,29 +21,6 @@ impl OperationView {
             operation,
             children,
             selected: None,
-        }
-    }
-
-    pub fn operations(&self) -> impl Iterator<Item = (&Self, bool, usize)> {
-        self.operations_inner(true, 0)
-    }
-
-    fn operations_inner(
-        &self,
-        selected: bool,
-        indent_level: usize,
-    ) -> Box<dyn Iterator<Item = (&Self, bool, usize)> + '_> {
-        let self_ = iter::once((self, selected, indent_level));
-
-        if self.selected.is_some() {
-            Box::new(self_.chain(self.children.iter().enumerate().flat_map(
-                move |(i, view)| {
-                    let selected = Some(i) == self.selected;
-                    view.operations_inner(selected, indent_level + 1)
-                },
-            )))
-        } else {
-            Box::new(self_)
         }
     }
 

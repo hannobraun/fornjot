@@ -8,13 +8,6 @@ pub trait Object {
     fn display(&self, f: &mut fmt::Formatter) -> fmt::Result;
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<HandleAny>;
-
-    fn label(&self) -> OperationDisplay
-    where
-        Self: Sized,
-    {
-        OperationDisplay { op: self as &_ }
-    }
 }
 
 pub struct OperationDisplay<'r> {

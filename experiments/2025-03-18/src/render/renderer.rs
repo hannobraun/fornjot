@@ -5,16 +5,14 @@ use winit::window::Window;
 
 use crate::view::OperationView;
 
-use super::{geometry::Geometry, pipeline::Pipeline, text::TextRenderer};
+use super::{geometry::Geometry, pipeline::Pipeline};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
-    pub surface_config: wgpu::SurfaceConfiguration,
     pub pipeline: Pipeline,
     pub depth_view: wgpu::TextureView,
-    pub text_renderer: TextRenderer,
 }
 
 impl Renderer {
@@ -69,21 +67,12 @@ impl Renderer {
             depth_texture.create_view(&wgpu::TextureViewDescriptor::default())
         };
 
-        let text_renderer = TextRenderer::new(
-            &device,
-            &queue,
-            &surface_config,
-            window.scale_factor() as f32,
-        );
-
         Ok(Self {
             surface,
             device,
             queue,
-            surface_config,
             pipeline,
             depth_view,
-            text_renderer,
         })
     }
 
@@ -129,13 +118,6 @@ impl Renderer {
                 });
 
             self.pipeline.draw(&mut render_pass, &geometry);
-            self.text_renderer.render(
-                operations,
-                &self.device,
-                &self.queue,
-                &self.surface_config,
-                &mut render_pass,
-            )?;
         }
 
         self.queue.submit(Some(encoder.finish()));
