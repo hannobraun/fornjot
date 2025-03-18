@@ -1,7 +1,7 @@
 use crate::{
     geometry::{Sketch, TriMesh},
     math::{Bivector, Plane, Point, Vector},
-    object::{Handle, Object},
+    object::{Handle, ToTriMesh},
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };

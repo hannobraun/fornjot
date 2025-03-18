@@ -1,4 +1,4 @@
-use crate::{geometry::TriMesh, math::Point, object::Object};
+use crate::{geometry::TriMesh, math::Point, object::ToTriMesh};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
@@ -12,7 +12,7 @@ impl Vertex {
     }
 }
 
-impl Object for Vertex {
+impl ToTriMesh for Vertex {
     fn to_tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }

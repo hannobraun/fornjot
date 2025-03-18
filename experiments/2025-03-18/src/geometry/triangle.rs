@@ -1,4 +1,4 @@
-use crate::{math::Point, object::Object};
+use crate::{math::Point, object::ToTriMesh};
 
 use super::{MeshTriangle, TriMesh};
 
@@ -26,7 +26,7 @@ where
     }
 }
 
-impl Object for Triangle<3> {
+impl ToTriMesh for Triangle<3> {
     fn to_tri_mesh(&self) -> TriMesh {
         TriMesh {
             triangles: vec![MeshTriangle {

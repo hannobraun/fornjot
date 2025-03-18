@@ -1,6 +1,6 @@
 use crate::{
     geometry::TriMesh,
-    object::{Handle, Object},
+    object::{Handle, ToTriMesh},
 };
 
 use super::face::Face;
@@ -18,7 +18,7 @@ impl Solid {
     }
 }
 
-impl Object for Solid {
+impl ToTriMesh for Solid {
     fn to_tri_mesh(&self) -> TriMesh {
         let mut tri_mesh = TriMesh::new();
 

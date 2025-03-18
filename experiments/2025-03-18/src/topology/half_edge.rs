@@ -1,6 +1,6 @@
 use crate::{
     geometry::TriMesh,
-    object::{Handle, Object},
+    object::{Handle, ToTriMesh},
 };
 
 use super::vertex::Vertex;
@@ -10,7 +10,7 @@ pub struct HalfEdge {
     pub is_internal: bool,
 }
 
-impl Object for HalfEdge {
+impl ToTriMesh for HalfEdge {
     fn to_tri_mesh(&self) -> TriMesh {
         TriMesh::new()
     }

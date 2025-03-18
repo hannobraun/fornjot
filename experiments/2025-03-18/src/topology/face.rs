@@ -3,7 +3,7 @@ use itertools::Itertools;
 use crate::{
     extra::triangulate::triangulate,
     geometry::TriMesh,
-    object::{Handle, Object},
+    object::{Handle, ToTriMesh},
 };
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
@@ -38,7 +38,7 @@ impl Face {
     }
 }
 
-impl Object for Face {
+impl ToTriMesh for Face {
     fn to_tri_mesh(&self) -> TriMesh {
         triangulate(self)
     }
