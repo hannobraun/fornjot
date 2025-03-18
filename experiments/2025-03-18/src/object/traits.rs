@@ -9,13 +9,3 @@ pub trait Object {
     fn tri_mesh(&self) -> TriMesh;
     fn children(&self) -> Vec<HandleAny>;
 }
-
-pub struct OperationDisplay<'r> {
-    pub op: &'r dyn Object,
-}
-
-impl fmt::Display for OperationDisplay<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.op.display(f)
-    }
-}
