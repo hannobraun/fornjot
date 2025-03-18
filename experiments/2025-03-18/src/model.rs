@@ -1,12 +1,12 @@
 use crate::{
-    geometry::Sketch,
+    geometry::{Sketch, TriMesh},
     math::{Bivector, Plane, Point, Vector},
-    object::{Handle, HandleAny},
+    object::{Handle, HandleAny, Object},
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };
 
-pub fn model() -> HandleAny {
+pub fn model() -> TriMesh {
     let top = {
         let sketch = Sketch::from([
             // outer boundary
@@ -42,5 +42,5 @@ pub fn model() -> HandleAny {
 
     let solid = top.sweep([0., 0., -2.]);
 
-    HandleAny::new(solid)
+    HandleAny::new(solid).tri_mesh()
 }

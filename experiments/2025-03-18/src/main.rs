@@ -1,7 +1,5 @@
 #![allow(clippy::module_inception)]
 
-use object::Object;
-
 mod app;
 mod export;
 mod extra;
@@ -14,8 +12,7 @@ mod render;
 mod topology;
 
 fn main() -> anyhow::Result<()> {
-    let model = model::model();
-    let tri_mesh = model.tri_mesh();
+    let tri_mesh = model::model();
 
     export::export(&tri_mesh)?;
     app::run(tri_mesh)?;
