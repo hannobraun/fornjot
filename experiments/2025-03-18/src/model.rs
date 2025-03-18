@@ -1,7 +1,7 @@
 use crate::{
     geometry::{Sketch, TriMesh},
     math::{Bivector, Plane, Point, Vector},
-    object::{Handle, HandleAny, Object},
+    object::{Handle, Object},
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };
@@ -42,5 +42,5 @@ pub fn model() -> TriMesh {
 
     let solid = top.sweep([0., 0., -2.]);
 
-    HandleAny::new(solid).tri_mesh()
+    solid.tri_mesh()
 }
