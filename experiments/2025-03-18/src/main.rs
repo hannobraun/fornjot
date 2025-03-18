@@ -10,7 +10,6 @@ mod object;
 mod operations;
 mod render;
 mod topology;
-mod view;
 
 fn main() -> anyhow::Result<()> {
     let model = model::model();
