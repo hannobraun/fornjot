@@ -8,17 +8,13 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{
-    geometry::TriMesh,
-    object::{HandleAny, Object},
-    render::Renderer,
-};
+use crate::{geometry::TriMesh, render::Renderer};
 
-pub fn run(shape: HandleAny) -> anyhow::Result<()> {
+pub fn run(tri_mesh: TriMesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        tri_mesh: shape.tri_mesh(),
+        tri_mesh,
         window: None,
         renderer: None,
     };
