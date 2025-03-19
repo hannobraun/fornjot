@@ -69,8 +69,8 @@ impl ApplicationHandler for DisplayState {
             .viewer
             .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
 
-        if let Some(model) = self.mesh.take() {
-            viewer.handle_model_update(model);
+        if let Some(mesh) = self.mesh.take() {
+            viewer.handle_model_update(mesh);
         }
     }
 
