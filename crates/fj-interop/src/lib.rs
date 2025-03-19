@@ -11,12 +11,10 @@
 
 mod color;
 mod mesh;
-mod model;
 
 pub mod ext;
 
 pub use self::{
     color::Color,
     mesh::{Index, Mesh, Triangle},
-    model::Model,
 };
