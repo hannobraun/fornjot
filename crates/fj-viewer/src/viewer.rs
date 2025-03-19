@@ -170,7 +170,7 @@ impl Viewer {
         let aabb = self
             .model
             .as_ref()
-            .map(|(model, _)| model.mesh.aabb())
+            .map(|(_, aabb)| *aabb)
             .unwrap_or_default();
 
         self.camera.update_planes(&aabb);
