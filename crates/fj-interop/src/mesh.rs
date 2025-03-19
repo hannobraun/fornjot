@@ -20,6 +20,24 @@ impl Mesh<Point<3>> {
         Self::default()
     }
 
+    /// Add a triangle to the mesh
+    pub fn push_triangle(
+        &mut self,
+        triangle: impl Into<fj_math::Triangle<3>>,
+        color: Color,
+    ) {
+        let triangle = triangle.into();
+
+        for point in triangle.points {
+            self.push_vertex(point);
+        }
+
+        self.triangles.push(Triangle {
+            inner: triangle,
+            color,
+        });
+    }
+
     /// Add a vertex to the mesh
     pub fn push_vertex(&mut self, vertex: Point<3>) {
         let index =
@@ -70,24 +88,6 @@ impl Mesh<Point<3>> {
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
         Aabb::<3>::from_points(self.vertices.iter().copied())
-    }
-
-    /// Add a triangle to the mesh
-    pub fn push_triangle(
-        &mut self,
-        triangle: impl Into<fj_math::Triangle<3>>,
-        color: Color,
-    ) {
-        let triangle = triangle.into();
-
-        for point in triangle.points {
-            self.push_vertex(point);
-        }
-
-        self.triangles.push(Triangle {
-            inner: triangle,
-            color,
-        });
     }
 }
 
