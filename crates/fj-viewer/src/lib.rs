@@ -19,10 +19,9 @@ mod window;
 
 pub use self::{
     display::{Error, display},
-    graphics::{DeviceError, RendererInitError},
+    graphics::RendererInitError,
     input::InputEvent,
     input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     viewer::Viewer,
-    window::WindowError,
 };
