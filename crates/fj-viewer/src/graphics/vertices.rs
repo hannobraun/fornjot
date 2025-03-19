@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use bytemuck::{Pod, Zeroable};
 use fj_interop::{Color, Index, Mesh};
 use fj_math::{Point, Vector};
@@ -27,7 +29,9 @@ impl Vertices {
 
 impl From<&Mesh<fj_math::Point<3>>> for Vertices {
     fn from(mesh: &Mesh<fj_math::Point<3>>) -> Self {
-        let mut m = Mesh::new();
+        let mut vertices = Vec::new();
+        let mut indices = Vec::new();
+        let mut indices_by_vertex = BTreeMap::new();
 
         for triangle in mesh.triangles() {
             let [a, b, c] = triangle.inner.points;
@@ -35,21 +39,34 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;
 
-            push_vertex(&mut m, (a, normal, color));
-            push_vertex(&mut m, (b, normal, color));
-            push_vertex(&mut m, (c, normal, color));
+            push_vertex(
+                &mut vertices,
+                &mut indices,
+                &mut indices_by_vertex,
+                (a, normal, color),
+            );
+            push_vertex(
+                &mut vertices,
+                &mut indices,
+                &mut indices_by_vertex,
+                (b, normal, color),
+            );
+            push_vertex(
+                &mut vertices,
+                &mut indices,
+                &mut indices_by_vertex,
+                (c, normal, color),
+            );
         }
 
-        let vertices = m
-            .vertices()
+        let vertices = vertices
+            .into_iter()
             .map(|(vertex, normal, color)| Vertex {
                 position: vertex.into(),
                 normal: normal.into(),
                 color: color.0.map(|v| f32::from(v) / 255.0),
             })
             .collect();
-
-        let indices = m.indices().collect();
 
         Self { vertices, indices }
     }
@@ -64,8 +81,16 @@ pub struct Vertex {
 }
 
 fn push_vertex(
-    m: &mut Mesh<(Point<3>, Vector<3>, Color)>,
+    vertices: &mut Vec<(Point<3>, Vector<3>, Color)>,
+    indices: &mut Vec<Index>,
+    indices_by_vertex: &mut BTreeMap<(Point<3>, Vector<3>, Color), Index>,
     vertex: (Point<3>, Vector<3>, Color),
 ) {
-    m.push_vertex(vertex);
+    let index = *indices_by_vertex.entry(vertex).or_insert_with(|| {
+        let index = vertices.len();
+        vertices.push(vertex);
+        index as u32
+    });
+
+    indices.push(index);
 }
