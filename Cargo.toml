@@ -80,7 +80,3 @@ path = "crates/fj-math"
 [workspace.dependencies.fj-viewer]
 version = "0.49.0"
 path = "crates/fj-viewer"
-
-[workspace.dependencies.fj-window]
-version = "0.49.0"
-path = "crates/fj-window"
