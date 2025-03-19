@@ -2,11 +2,13 @@ use fj_interop::Model;
 use tracing::warn;
 
 use crate::{
-    MouseButton, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize,
+    NormalizedScreenPosition, RendererInitError, Screen, ScreenSize,
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
+    input::{
+        CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
+        MouseButton,
+    },
 };
 
 /// The Fornjot model viewer

@@ -123,8 +123,10 @@ impl ApplicationHandler for DisplayState {
             }
             WindowEvent::MouseInput { state, button, .. } => {
                 let button = match button {
-                    MouseButton::Left => Some(crate::MouseButton::Left),
-                    MouseButton::Right => Some(crate::MouseButton::Right),
+                    MouseButton::Left => Some(crate::input::MouseButton::Left),
+                    MouseButton::Right => {
+                        Some(crate::input::MouseButton::Right)
+                    }
                     _ => None,
                 };
 

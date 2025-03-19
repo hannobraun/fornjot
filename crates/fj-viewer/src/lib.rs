@@ -20,6 +20,5 @@ mod window;
 pub use self::{
     display::{Error, display},
     graphics::RendererInitError,
-    input::MouseButton,
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
 };
