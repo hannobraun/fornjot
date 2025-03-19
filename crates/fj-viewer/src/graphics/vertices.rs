@@ -39,24 +39,14 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;
 
-            push_vertex(
-                &mut vertices,
-                &mut indices,
-                &mut indices_by_vertex,
-                (a, normal, color),
-            );
-            push_vertex(
-                &mut vertices,
-                &mut indices,
-                &mut indices_by_vertex,
-                (b, normal, color),
-            );
-            push_vertex(
-                &mut vertices,
-                &mut indices,
-                &mut indices_by_vertex,
-                (c, normal, color),
-            );
+            for point in [a, b, c] {
+                push_vertex(
+                    &mut vertices,
+                    &mut indices,
+                    &mut indices_by_vertex,
+                    (point, normal, color),
+                );
+            }
         }
 
         let vertices = vertices
