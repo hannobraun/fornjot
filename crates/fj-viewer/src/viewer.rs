@@ -141,10 +141,10 @@ impl Viewer {
 
     /// Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Some((model, _)) = &self.model {
+        if let Some((model, aabb)) = &self.model {
             if self.focus_point.is_none() {
                 self.focus_point =
-                    Some(self.camera.focus_point(self.cursor, model));
+                    Some(self.camera.focus_point(self.cursor, model, aabb));
             }
         }
     }
