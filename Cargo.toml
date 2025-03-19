@@ -31,7 +31,6 @@ default-members = [
     "crates/fj-interop",
     "crates/fj-math",
     "crates/fj-viewer",
-    "crates/fj-window",
 ]
 
 
