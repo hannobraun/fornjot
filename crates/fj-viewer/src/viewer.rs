@@ -1,4 +1,4 @@
-use fj_interop::{Mesh, Model};
+use fj_interop::Mesh;
 use fj_math::Aabb;
 use tracing::warn;
 
@@ -57,12 +57,11 @@ impl Viewer {
     }
 
     /// Handle the model being updated
-    pub fn handle_model_update(&mut self, model: Model) {
-        self.renderer
-            .update_geometry(Vertices::from_mesh(&model.mesh));
+    pub fn handle_model_update(&mut self, mesh: Mesh) {
+        self.renderer.update_geometry(Vertices::from_mesh(&mesh));
 
-        let aabb = model.mesh.aabb();
-        if self.model.replace((model.mesh, aabb)).is_none() {
+        let aabb = mesh.aabb();
+        if self.model.replace((mesh, aabb)).is_none() {
             self.camera.init_planes(&aabb);
         }
     }
