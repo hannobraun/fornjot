@@ -144,8 +144,11 @@ impl Viewer {
     pub fn add_focus_point(&mut self) {
         if let Some((model, aabb)) = &self.model {
             if self.focus_point.is_none() {
-                self.focus_point =
-                    Some(self.camera.focus_point(self.cursor, model, aabb));
+                self.focus_point = Some(self.camera.focus_point(
+                    self.cursor,
+                    &model.mesh,
+                    aabb,
+                ));
             }
         }
     }
