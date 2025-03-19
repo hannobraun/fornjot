@@ -980,14 +980,6 @@ dependencies = [
 [[package]]
 name = "fj-window"
 version = "0.49.0"
-dependencies = [
- "fj-interop",
- "fj-math",
- "fj-viewer",
- "futures",
- "thiserror 2.0.12",
- "winit",
-]
 
 [[package]]
 name = "flate2"
