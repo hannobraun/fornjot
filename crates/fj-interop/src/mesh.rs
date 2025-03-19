@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
 
 use fj_math::{Aabb, Point};
 
@@ -14,17 +14,14 @@ pub struct Mesh<V> {
     triangles: Vec<Triangle>,
 }
 
-impl<V> Mesh<V>
-where
-    V: Copy + Eq + Hash,
-{
+impl Mesh<Point<3>> {
     /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
         Self::default()
     }
 
     /// Add a vertex to the mesh
-    pub fn push_vertex(&mut self, vertex: V) {
+    pub fn push_vertex(&mut self, vertex: Point<3>) {
         let index =
             *self.indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = self.vertices.len();
@@ -56,7 +53,7 @@ where
     }
 
     /// Access the vertices of the mesh
-    pub fn vertices(&self) -> impl Iterator<Item = V> + '_ {
+    pub fn vertices(&self) -> impl Iterator<Item = Point<3>> + '_ {
         self.vertices.iter().copied()
     }
 
