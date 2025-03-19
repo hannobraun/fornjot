@@ -1,5 +1,6 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::{Index, Mesh};
+use fj_interop::{Color, Index, Mesh};
+use fj_math::{Point, Vector};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -34,9 +35,9 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;
 
-            m.push_vertex((a, normal, color));
-            m.push_vertex((b, normal, color));
-            m.push_vertex((c, normal, color));
+            push_vertex(&mut m, (a, normal, color));
+            push_vertex(&mut m, (b, normal, color));
+            push_vertex(&mut m, (c, normal, color));
         }
 
         let vertices = m
@@ -60,4 +61,11 @@ pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
     pub color: [f32; 4],
+}
+
+fn push_vertex(
+    m: &mut Mesh<(Point<3>, Vector<3>, Color)>,
+    vertex: (Point<3>, Vector<3>, Color),
+) {
+    m.push_vertex(vertex);
 }
