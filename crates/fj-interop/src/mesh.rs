@@ -1,6 +1,6 @@
 use std::{collections::HashMap, hash::Hash};
 
-use fj_math::Point;
+use fj_math::{Aabb, Point};
 
 use crate::Color;
 
@@ -72,6 +72,11 @@ where
 }
 
 impl Mesh<Point<3>> {
+    /// # Compute the axis-aligned bounding box of this mesh
+    pub fn aabb(&self) -> Aabb<3> {
+        Aabb::<3>::from_points(self.vertices.iter().copied())
+    }
+
     /// Add a triangle to the mesh
     pub fn push_triangle(
         &mut self,
