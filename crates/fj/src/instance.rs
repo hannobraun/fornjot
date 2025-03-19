@@ -6,7 +6,6 @@ use fj_core::{
     geometry::{InvalidTolerance, Tolerance},
     validation::{ValidationConfig, ValidationErrors},
 };
-use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -88,9 +87,7 @@ impl Instance {
             return Ok(());
         }
 
-        let model = Model { mesh };
-
-        crate::viewer::display(model.mesh, false)?;
+        crate::viewer::display(mesh, false)?;
 
         Ok(())
     }
