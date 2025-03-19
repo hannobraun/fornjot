@@ -44,7 +44,11 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
                         .entry((point, normal, color))
                         .or_insert_with(|| {
                             let index = vertices.len();
-                            vertices.push((point, normal, color));
+                            vertices.push(Vertex {
+                                position: point.into(),
+                                normal: normal.into(),
+                                color: color.0.map(|v| f32::from(v) / 255.0),
+                            });
                             index as u32
                         });
 
@@ -52,15 +56,6 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
                 };
             }
         }
-
-        let vertices = vertices
-            .into_iter()
-            .map(|(vertex, normal, color)| Vertex {
-                position: vertex.into(),
-                normal: normal.into(),
-                color: color.0.map(|v| f32::from(v) / 255.0),
-            })
-            .collect();
 
         Self { vertices, indices }
     }
