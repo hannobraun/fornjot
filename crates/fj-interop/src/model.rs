@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Point};
+use fj_math::Point;
 
 use crate::mesh::Mesh;
 
@@ -7,7 +7,4 @@ use crate::mesh::Mesh;
 pub struct Model {
     /// The triangle mesh that approximates the model
     pub mesh: Mesh<Point<3>>,
-
-    /// The axis-aligned bounding box of the model
-    pub aabb: Aabb<3>,
 }

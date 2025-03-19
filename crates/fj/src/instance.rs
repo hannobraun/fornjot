@@ -88,7 +88,7 @@ impl Instance {
             return Ok(());
         }
 
-        let model = Model { mesh, aabb };
+        let model = Model { mesh };
 
         crate::viewer::display(model, false)?;
 
