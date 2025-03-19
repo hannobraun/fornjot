@@ -90,7 +90,7 @@ impl Instance {
 
         let model = Model { mesh, aabb };
 
-        crate::window::display(model, false)?;
+        crate::viewer::display(model, false)?;
 
         Ok(())
     }
@@ -108,7 +108,7 @@ pub enum Error {
 
     /// Error displaying model
     #[error("Error displaying model")]
-    Display(#[from] crate::window::Error),
+    Display(#[from] crate::viewer::Error),
 
     /// Error exporting model
     #[error("Error exporting model")]

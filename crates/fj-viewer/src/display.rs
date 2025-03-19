@@ -1,8 +1,4 @@
 use fj_interop::Model;
-use fj_viewer::{
-    DEFAULT_CAMERA_TUNING_CONFIG, InputEvent, RendererInitError, Screen,
-    ScreenSize, Viewer,
-};
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -16,7 +12,11 @@ use winit::{
     window::WindowId,
 };
 
-use crate::window::{self, Window};
+use crate::{
+    DEFAULT_CAMERA_TUNING_CONFIG, InputEvent, RendererInitError, Screen,
+    ScreenSize, Viewer,
+    window::{self, Window},
+};
 
 /// Display the provided mesh in a window that processes input
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
@@ -122,8 +122,8 @@ impl ApplicationHandler for DisplayState {
             }
             WindowEvent::MouseInput { state, button, .. } => {
                 let button = match button {
-                    MouseButton::Left => Some(fj_viewer::MouseButton::Left),
-                    MouseButton::Right => Some(fj_viewer::MouseButton::Right),
+                    MouseButton::Left => Some(crate::MouseButton::Left),
+                    MouseButton::Right => Some(crate::MouseButton::Right),
                     _ => None,
                 };
 

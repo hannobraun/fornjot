@@ -4,14 +4,8 @@
 //! split into multiple libraries that can be used semi-independently, and this
 //! is one of those.
 //!
-//! This library provides a window abstraction based on Winit.
+//! This library has been deprecated. Its contents have moved into
+//! [`fj-viewer`].
 //!
 //! [Fornjot]: https://www.fornjot.app/
-
-mod display;
-mod window;
-
-pub use self::{
-    display::{Error, display},
-    window::WindowError,
-};
+//! [`fj-viewer`]: https://crates.io/crates/fj-viewer

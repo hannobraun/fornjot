@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
-use fj_viewer::{Screen, ScreenSize};
 use winit::event_loop::ActiveEventLoop;
+
+use crate::{Screen, ScreenSize};
 
 /// A window that can be used with `fj-viewer`
 pub struct Window {

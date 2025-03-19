@@ -22,4 +22,3 @@ pub use fj_export as export;
 pub use fj_interop as interop;
 pub use fj_math as math;
 pub use fj_viewer as viewer;
-pub use fj_window as window;

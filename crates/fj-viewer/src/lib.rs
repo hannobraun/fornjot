@@ -10,15 +10,19 @@
 
 mod assets;
 mod camera;
+mod display;
 mod graphics;
 mod input;
 mod screen;
 mod viewer;
+mod window;
 
 pub use self::{
+    display::{Error, display},
     graphics::{DeviceError, RendererInitError},
     input::InputEvent,
     input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     viewer::Viewer,
+    window::WindowError,
 };

@@ -905,7 +905,6 @@ dependencies = [
  "fj-interop",
  "fj-math",
  "fj-viewer",
- "fj-window",
  "thiserror 2.0.12",
  "tracing",
  "tracing-subscriber",
@@ -966,6 +965,7 @@ dependencies = [
  "bytemuck",
  "fj-interop",
  "fj-math",
+ "futures",
  "getrandom 0.2.15",
  "image",
  "nalgebra",
@@ -974,6 +974,7 @@ dependencies = [
  "tobj",
  "tracing",
  "wgpu",
+ "winit",
 ]
 
 [[package]]

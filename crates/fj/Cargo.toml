@@ -20,7 +20,6 @@ fj-export.workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
-fj-window.workspace = true
 thiserror = "2.0.12"
 tracing = "0.1.41"
 
