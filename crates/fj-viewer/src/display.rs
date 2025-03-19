@@ -1,4 +1,4 @@
-use fj_interop::Model;
+use fj_interop::{Mesh, Model};
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -25,7 +25,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
-        model: Some(model),
+        mesh: Some(model.mesh),
         invert_zoom,
         window: None,
         viewer: None,
@@ -53,7 +53,7 @@ pub enum Error {
 }
 
 struct DisplayState {
-    model: Option<Model>,
+    mesh: Option<Mesh>,
     invert_zoom: bool,
     window: Option<Window>,
     viewer: Option<Viewer>,
@@ -69,8 +69,8 @@ impl ApplicationHandler for DisplayState {
             .viewer
             .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
 
-        if let Some(model) = self.model.take() {
-            viewer.handle_model_update(model.mesh);
+        if let Some(model) = self.mesh.take() {
+            viewer.handle_model_update(model);
         }
     }
 
