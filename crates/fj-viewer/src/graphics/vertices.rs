@@ -1,8 +1,7 @@
 use std::collections::BTreeMap;
 
 use bytemuck::{Pod, Zeroable};
-use fj_interop::{Color, Index, Mesh};
-use fj_math::{Point, Vector};
+use fj_interop::{Index, Mesh};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -40,12 +39,17 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
             let color = triangle.color;
 
             for point in [a, b, c] {
-                push_vertex(
-                    &mut vertices,
-                    &mut indices,
-                    &mut indices_by_vertex,
-                    (point, normal, color),
-                );
+                {
+                    let index = *indices_by_vertex
+                        .entry((point, normal, color))
+                        .or_insert_with(|| {
+                            let index = vertices.len();
+                            vertices.push((point, normal, color));
+                            index as u32
+                        });
+
+                    indices.push(index);
+                };
             }
         }
 
@@ -68,19 +72,4 @@ pub struct Vertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
     pub color: [f32; 4],
-}
-
-fn push_vertex(
-    vertices: &mut Vec<(Point<3>, Vector<3>, Color)>,
-    indices: &mut Vec<Index>,
-    indices_by_vertex: &mut BTreeMap<(Point<3>, Vector<3>, Color), Index>,
-    vertex: (Point<3>, Vector<3>, Color),
-) {
-    let index = *indices_by_vertex.entry(vertex).or_insert_with(|| {
-        let index = vertices.len();
-        vertices.push(vertex);
-        index as u32
-    });
-
-    indices.push(index);
 }
