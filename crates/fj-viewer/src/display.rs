@@ -1,4 +1,4 @@
-use fj_interop::{Mesh, Model};
+use fj_interop::Mesh;
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -21,11 +21,11 @@ use crate::{
 };
 
 /// Display the provided mesh in a window that processes input
-pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(mesh: Mesh, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
-        mesh: Some(model.mesh),
+        mesh: Some(mesh),
         invert_zoom,
         window: None,
         viewer: None,

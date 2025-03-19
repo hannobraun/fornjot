@@ -90,7 +90,7 @@ impl Instance {
 
         let model = Model { mesh };
 
-        crate::viewer::display(model, false)?;
+        crate::viewer::display(model.mesh, false)?;
 
         Ok(())
     }
