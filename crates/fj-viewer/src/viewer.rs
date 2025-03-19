@@ -59,7 +59,7 @@ impl Viewer {
     pub fn handle_model_update(&mut self, model: Model) {
         self.renderer.update_geometry((&model.mesh).into());
 
-        let aabb = model.aabb;
+        let aabb = model.mesh.aabb();
         if self.model.replace(model).is_none() {
             self.camera.init_planes(&aabb);
         }
