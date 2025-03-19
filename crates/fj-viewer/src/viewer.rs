@@ -1,4 +1,5 @@
 use fj_interop::Model;
+use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
@@ -23,7 +24,7 @@ pub struct Viewer {
     draw_config: DrawConfig,
     focus_point: Option<FocusPoint>,
     renderer: Renderer,
-    model: Option<Model>,
+    model: Option<(Model, Aabb<3>)>,
 }
 
 impl Viewer {
@@ -60,7 +61,7 @@ impl Viewer {
         self.renderer.update_geometry((&model.mesh).into());
 
         let aabb = model.mesh.aabb();
-        if self.model.replace(model).is_none() {
+        if self.model.replace((model, aabb)).is_none() {
             self.camera.init_planes(&aabb);
         }
     }
@@ -140,7 +141,7 @@ impl Viewer {
 
     /// Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Some(model) = &self.model {
+        if let Some((model, _)) = &self.model {
             if self.focus_point.is_none() {
                 self.focus_point =
                     Some(self.camera.focus_point(self.cursor, model));
@@ -169,7 +170,7 @@ impl Viewer {
         let aabb = self
             .model
             .as_ref()
-            .map(|model| model.mesh.aabb())
+            .map(|(model, _)| model.mesh.aabb())
             .unwrap_or_default();
 
         self.camera.update_planes(&aabb);
