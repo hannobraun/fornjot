@@ -169,7 +169,7 @@ impl Viewer {
         let aabb = self
             .model
             .as_ref()
-            .map(|shape| shape.aabb)
+            .map(|model| model.aabb)
             .unwrap_or_default();
 
         self.camera.update_planes(&aabb);
