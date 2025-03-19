@@ -5,16 +5,16 @@ use fj_math::{Aabb, Point};
 use crate::Color;
 
 /// A triangle mesh
-#[derive(Clone, Debug)]
-pub struct Mesh<V> {
-    vertices: Vec<V>,
+#[derive(Clone, Debug, Default)]
+pub struct Mesh {
+    vertices: Vec<Point<3>>,
     indices: Vec<Index>,
 
-    indices_by_vertex: HashMap<V, Index>,
+    indices_by_vertex: HashMap<Point<3>, Index>,
     triangles: Vec<Triangle>,
 }
 
-impl Mesh<Point<3>> {
+impl Mesh {
     /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
         Self::default()
@@ -88,19 +88,6 @@ impl Mesh<Point<3>> {
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
         Aabb::<3>::from_points(self.vertices.iter().copied())
-    }
-}
-
-// This needs to be a manual implementation. Deriving `Default` would require
-// `V` to be `Default` as well, even though that is not necessary.
-impl<V> Default for Mesh<V> {
-    fn default() -> Self {
-        Self {
-            vertices: Vec::default(),
-            indices: Vec::default(),
-            indices_by_vertex: HashMap::default(),
-            triangles: Vec::default(),
-        }
     }
 }
 

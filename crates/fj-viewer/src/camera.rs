@@ -92,7 +92,7 @@ impl Camera {
     fn calculate_focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
-        mesh: &Mesh<Point<3>>,
+        mesh: &Mesh,
     ) -> Option<FocusPoint> {
         // Transform camera and cursor positions to model space.
         let origin = self.position();

@@ -17,7 +17,7 @@ impl Vertices {
         }
     }
 
-    pub fn from_mesh(mesh: &Mesh<fj_math::Point<3>>) -> Self {
+    pub fn from_mesh(mesh: &Mesh) -> Self {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut indices_by_vertex = BTreeMap::new();
