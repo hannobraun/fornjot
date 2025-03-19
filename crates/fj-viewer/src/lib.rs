@@ -20,6 +20,6 @@ mod window;
 pub use self::{
     display::{Error, display},
     graphics::RendererInitError,
-    input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+    input::MouseButton,
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
 };
