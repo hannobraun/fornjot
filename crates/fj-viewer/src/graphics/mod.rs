@@ -18,6 +18,7 @@ pub use self::{
     device::DeviceError,
     draw_config::DrawConfig,
     renderer::{Renderer, RendererInitError},
+    vertices::Vertices,
 };
 
 pub const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;

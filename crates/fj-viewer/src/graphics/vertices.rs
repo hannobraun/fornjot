@@ -17,17 +17,7 @@ impl Vertices {
         }
     }
 
-    pub fn vertices(&self) -> &[Vertex] {
-        self.vertices.as_slice()
-    }
-
-    pub fn indices(&self) -> &[Index] {
-        self.indices.as_slice()
-    }
-}
-
-impl From<&Mesh<fj_math::Point<3>>> for Vertices {
-    fn from(mesh: &Mesh<fj_math::Point<3>>) -> Self {
+    pub fn from_mesh(mesh: &Mesh<fj_math::Point<3>>) -> Self {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut indices_by_vertex = BTreeMap::new();
@@ -58,6 +48,14 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
         }
 
         Self { vertices, indices }
+    }
+
+    pub fn vertices(&self) -> &[Vertex] {
+        self.vertices.as_slice()
+    }
+
+    pub fn indices(&self) -> &[Index] {
+        self.indices.as_slice()
     }
 }
 

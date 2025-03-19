@@ -5,7 +5,7 @@ use tracing::warn;
 use crate::{
     RendererInitError,
     camera::{Camera, FocusPoint},
-    graphics::{DrawConfig, Renderer},
+    graphics::{DrawConfig, Renderer, Vertices},
     input::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
@@ -58,7 +58,8 @@ impl Viewer {
 
     /// Handle the model being updated
     pub fn handle_model_update(&mut self, model: Model) {
-        self.renderer.update_geometry((&model.mesh).into());
+        self.renderer
+            .update_geometry(Vertices::from_mesh(&model.mesh));
 
         let aabb = model.mesh.aabb();
         if self.model.replace((model, aabb)).is_none() {
