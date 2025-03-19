@@ -66,9 +66,7 @@ impl Mesh<Point<3>> {
     pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
         self.triangles.iter().copied()
     }
-}
 
-impl Mesh<Point<3>> {
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
         Aabb::<3>::from_points(self.vertices.iter().copied())
