@@ -23,5 +23,4 @@ pub use self::{
     input::InputEvent,
     input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
-    viewer::Viewer,
 };
