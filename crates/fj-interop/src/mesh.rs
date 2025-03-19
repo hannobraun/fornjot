@@ -29,25 +29,20 @@ impl Mesh {
         let triangle = triangle.into();
 
         for point in triangle.points {
-            self.push_vertex(point);
+            let index =
+                *self.indices_by_vertex.entry(point).or_insert_with(|| {
+                    let index = self.vertices.len();
+                    self.vertices.push(point);
+                    index as u32
+                });
+
+            self.indices.push(index);
         }
 
         self.triangles.push(Triangle {
             inner: triangle,
             color,
         });
-    }
-
-    /// Add a vertex to the mesh
-    pub fn push_vertex(&mut self, vertex: Point<3>) {
-        let index =
-            *self.indices_by_vertex.entry(vertex).or_insert_with(|| {
-                let index = self.vertices.len();
-                self.vertices.push(vertex);
-                index as u32
-            });
-
-        self.indices.push(index);
     }
 
     /// Determine whether the mesh contains the provided triangle
