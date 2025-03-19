@@ -20,5 +20,4 @@ mod window;
 pub use self::{
     display::{Error, display},
     graphics::RendererInitError,
-    screen::ScreenSize,
 };
