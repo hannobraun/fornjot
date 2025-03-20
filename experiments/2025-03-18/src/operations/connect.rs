@@ -1,6 +1,6 @@
 use crate::{
-    math::Plane,
     handle::Handle,
+    math::Plane,
     topology::{
         face::Face, half_edge::HalfEdge, solid::Solid, surface::Surface,
     },

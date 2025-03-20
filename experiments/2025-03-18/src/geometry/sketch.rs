@@ -3,8 +3,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use itertools::Itertools;
 
 use crate::{
-    math::Point,
     handle::Handle,
+    math::Point,
     topology::{
         face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
     },
