@@ -342,8 +342,8 @@ where
 {
     type Output = Self;
 
-    fn sub(self, rhs: V) -> Self::Output {
-        self.to_na().sub(rhs.into().to_na()).into()
+    fn sub(self, other: V) -> Self::Output {
+        self.to_na().sub(other.into().to_na()).into()
     }
 }
 
