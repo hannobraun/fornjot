@@ -343,7 +343,16 @@ where
     type Output = Self;
 
     fn sub(self, other: V) -> Self::Output {
-        self.to_na().sub(other.into().to_na()).into()
+        let other = other.into();
+
+        let components = self
+            .components
+            .into_iter_fixed()
+            .zip(other.components)
+            .map(|(a, b)| a - b)
+            .collect();
+
+        Self { components }
     }
 }
 
