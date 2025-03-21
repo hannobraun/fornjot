@@ -19,6 +19,9 @@ winit = "*"
 version = "*"
 features = ["derive"]
 
+[dependencies.fj-math]
+path = "../../crates/fj-math"
+
 [dependencies.geo]
 version = "*"
 default-features = false
