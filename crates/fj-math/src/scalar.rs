@@ -43,7 +43,7 @@ impl Scalar {
     ///
     /// ## Panics
     ///
-    /// Panics, if `scalar` is NaN.
+    /// Panics, if the value provided is NaN.
     pub fn from_f64(value: f64) -> Self {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
