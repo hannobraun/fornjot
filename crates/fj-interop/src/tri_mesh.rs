@@ -46,11 +46,6 @@ impl TriMesh {
         false
     }
 
-    /// Access the triangles of the mesh
-    pub fn triangles(&self) -> impl Iterator<Item = MeshTriangle> + '_ {
-        self.triangles.iter().copied()
-    }
-
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
         Aabb::<3>::from_points(
