@@ -26,19 +26,19 @@ use fj_math::Triangle;
 ///
 /// Currently 3MF & STL file types are supported. The case insensitive file
 /// extension of the provided path is used to switch between supported types.
-pub fn export(mesh: &TriMesh, path: &Path) -> Result<(), Error> {
+pub fn export(tri_mesh: &TriMesh, path: &Path) -> Result<(), Error> {
     match path.extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
-            export_3mf(mesh, &mut file)
+            export_3mf(tri_mesh, &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("STL") => {
             let mut file = File::create(path)?;
-            export_stl(mesh, &mut file)
+            export_stl(tri_mesh, &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("OBJ") => {
             let mut file = File::create(path)?;
-            export_obj(mesh, &mut file)
+            export_obj(tri_mesh, &mut file)
         }
         Some(extension) => Err(Error::InvalidExtension(
             extension.to_string_lossy().into_owned(),
