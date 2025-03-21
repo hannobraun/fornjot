@@ -1,3 +1,4 @@
+use fj_interop::Color;
 use fj_math::Triangle;
 
 #[derive(Debug)]
@@ -32,6 +33,8 @@ impl TriMesh {
 pub struct MeshTriangle {
     pub inner: Triangle<3>,
     pub is_internal: bool,
+    #[allow(unused)]
+    pub color: Color,
 }
 
 pub trait ToTriMesh {

@@ -3,6 +3,7 @@ use std::{
     mem,
 };
 
+use fj_interop::Color;
 use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
@@ -32,6 +33,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
             MeshTriangle {
                 inner: Triangle { points },
                 is_internal: face.is_internal,
+                color: Color::default(),
             }
         });
 
