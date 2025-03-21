@@ -101,7 +101,12 @@ impl<const D: usize> Vector<D> {
 
     /// # Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> Scalar {
-        self.to_na().dot(&other.to_na()).into()
+        self.components
+            .into_iter()
+            .zip(other.components)
+            .map(|(a, b)| a * b)
+            .reduce(|a, b| a + b)
+            .unwrap_or(Scalar::ZERO)
     }
 
     /// # Compute the outer product with another vector
