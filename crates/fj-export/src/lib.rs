@@ -19,12 +19,13 @@ use thiserror::Error;
 use fj_interop::TriMesh;
 use fj_math::Triangle;
 
-/// Export the provided mesh to the file at the given path.
+/// # Export the provided mesh to the file at the given path
 ///
-/// This function will create a file if it does not exist, and will truncate it if it does.
+/// This function will create a file if it does not exist, and will truncate it
+/// if it does.
 ///
-/// Currently 3MF & STL file types are supported. The case insensitive file extension of
-/// the provided path is used to switch between supported types.
+/// Currently 3MF & STL file types are supported. The case insensitive file
+/// extension of the provided path is used to switch between supported types.
 pub fn export(mesh: &TriMesh, path: &Path) -> Result<(), Error> {
     match path.extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
