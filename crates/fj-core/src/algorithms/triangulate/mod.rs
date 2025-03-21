@@ -3,7 +3,7 @@
 mod delaunay;
 mod polygon;
 
-use fj_interop::TriMesh;
+use fj_interop::{MeshTriangle, TriMesh};
 
 use crate::{Core, geometry::Tolerance, operations::presentation::GetColor};
 
@@ -68,7 +68,10 @@ impl Triangulate for FaceApprox {
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
-            mesh.push_triangle(points, color);
+            mesh.triangles.push(MeshTriangle {
+                inner: points.into(),
+                color,
+            });
         }
     }
 }

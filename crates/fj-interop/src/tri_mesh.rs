@@ -17,18 +17,6 @@ impl TriMesh {
         Self::default()
     }
 
-    /// Add a triangle to the mesh
-    pub fn push_triangle(
-        &mut self,
-        triangle: impl Into<Triangle<3>>,
-        color: Color,
-    ) {
-        self.triangles.push(MeshTriangle {
-            inner: triangle.into(),
-            color,
-        });
-    }
-
     /// Determine whether the mesh contains the provided triangle
     ///
     /// Returns true, if a triangle with any combination of the provided points
