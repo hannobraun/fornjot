@@ -266,7 +266,10 @@ impl<const D: usize> Default for Vector<D> {
     }
 }
 
-impl<S: Into<Scalar>, const D: usize> From<[S; D]> for Vector<D> {
+impl<S, const D: usize> From<[S; D]> for Vector<D>
+where
+    S: Into<Scalar>,
+{
     fn from(components: [S; D]) -> Self {
         Self {
             components: components.map(Into::into),
