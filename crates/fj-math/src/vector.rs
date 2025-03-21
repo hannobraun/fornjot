@@ -7,38 +7,38 @@ use super::{
     coordinates::{T, Uv, Xyz},
 };
 
-/// An n-dimensional vector
+/// # An n-dimensional vector
 ///
 /// The dimensionality of the vector is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Vector<const D: usize> {
-    /// The vector components
+    /// # The components of the vector
     pub components: [Scalar; D],
 }
 
 impl<const D: usize> Vector<D> {
-    /// Create a vector whose components are all equal
+    /// # Construct a vector whose components are all equal
     pub fn from_component(scalar: impl Into<Scalar>) -> Self {
         Self {
             components: [scalar.into(); D],
         }
     }
 
-    /// Convert the vector into an nalgebra vector
+    /// # Convert the vector into an nalgebra vector
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.components.map(Scalar::into_f64).into()
     }
 
-    /// Convert to a 1-dimensional vector
+    /// # Convert the vector to a 1-dimensional vector
     pub fn to_t(self) -> Vector<1> {
         Vector {
             components: [self.components[0]],
         }
     }
 
-    /// Convert the vector into a 2-dimensional vector
+    /// # Convert the vector into a 2-dimensional vector
     ///
     /// If the vector is 0-, or 1-dimensional, the missing components will be
     /// initialized to zero.
@@ -57,7 +57,7 @@ impl<const D: usize> Vector<D> {
         Vector { components }
     }
 
-    /// Convert the vector into a 3-dimensional vector
+    /// # Convert the vector into a 3-dimensional vector
     ///
     /// If the vector is 0-, 1-, or 2-dimensional, the missing components will
     /// be initialized to zero.
@@ -77,17 +77,17 @@ impl<const D: usize> Vector<D> {
         Vector { components }
     }
 
-    /// Compute the magnitude of the vector
+    /// # Compute the magnitude of the vector
     pub fn magnitude(&self) -> Scalar {
         self.to_na().magnitude().into()
     }
 
-    /// Compute a normalized version of the vector
+    /// # Compute a normalized version of the vector
     pub fn normalize(&self) -> Self {
         self.to_na().normalize().into()
     }
 
-    /// Compute the angle between this vector and another
+    /// # Compute the angle between this vector and another
     ///
     /// Returns a zero angle, if the magnitude of `self` or `other` is zero.
     pub fn angle_to(&self, other: &Self) -> Scalar {
@@ -99,12 +99,12 @@ impl<const D: usize> Vector<D> {
         }
     }
 
-    /// Compute the dot product with another vector
+    /// # Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
     }
 
-    /// Compute the outer with another vector
+    /// # Compute the outer product with another vector
     pub fn outer(&self, other: &Self) -> Bivector<D> {
         Bivector {
             a: *self,
@@ -112,7 +112,7 @@ impl<const D: usize> Vector<D> {
         }
     }
 
-    /// Compute the scalar projection of this vector onto another
+    /// # Compute the scalar projection of this vector onto another
     pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
         if other.magnitude() == Scalar::ZERO {
             return Scalar::ZERO;
@@ -123,29 +123,29 @@ impl<const D: usize> Vector<D> {
 }
 
 impl Vector<1> {
-    /// Construct a `Vector` that represents the t-axis
+    /// # Construct a `Vector` that represents the t-axis
     pub fn unit_t() -> Self {
         Self::from([1.])
     }
 }
 
 impl Vector<2> {
-    /// Construct a `Vector` that represents the u-axis
+    /// # Construct a `Vector` that represents the u-axis
     pub fn unit_u() -> Self {
         Self::from([1., 0.])
     }
 
-    /// Construct a `Vector` that represents the v-axis
+    /// # Construct a `Vector` that represents the v-axis
     pub fn unit_v() -> Self {
         Self::from([0., 1.])
     }
 
-    /// Compute the 2D cross product with another vector
+    /// # Compute the 2D cross product with another vector
     pub fn cross2d(&self, other: &Self) -> Scalar {
         (self.u * other.v) - (self.v * other.u)
     }
 
-    /// Determine whether this vector is between two other vectors
+    /// # Determine whether this vector is between two other vectors
     pub fn is_between(&self, others: [impl Into<Self>; 2]) -> bool {
         let [a, b] = others.map(Into::into);
         a.cross2d(self) * b.cross2d(self) < Scalar::ZERO
@@ -153,27 +153,27 @@ impl Vector<2> {
 }
 
 impl Vector<3> {
-    /// Construct a `Vector` that represents the x-axis
+    /// # Construct a `Vector` that represents the x-axis
     pub fn unit_x() -> Self {
         Self::from([1., 0., 0.])
     }
 
-    /// Construct a `Vector` that represents the y-axis
+    /// # Construct a `Vector` that represents the y-axis
     pub fn unit_y() -> Self {
         Self::from([0., 1., 0.])
     }
 
-    /// Construct a `Vector` that represents the z-axis
+    /// # Construct a `Vector` that represents the z-axis
     pub fn unit_z() -> Self {
         Self::from([0., 0., 1.])
     }
 
-    /// Compute the cross product with another vector
+    /// # Compute the cross product with another vector
     pub fn cross(&self, other: &Self) -> Self {
         self.to_na().cross(&other.to_na()).into()
     }
 
-    /// Construct a new vector from this vector's x and y components
+    /// # Construct a new vector from this vector's x and y components
     pub fn xy(&self) -> Vector<2> {
         Vector::from([self.x, self.y])
     }
