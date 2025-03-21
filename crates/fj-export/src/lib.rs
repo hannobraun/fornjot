@@ -54,7 +54,8 @@ pub fn export_3mf(
 ) -> Result<(), Error> {
     let (vertices, indices) = vertices_to_indexed_vertices(
         tri_mesh
-            .triangles()
+            .triangles
+            .iter()
             .flat_map(|triangle| triangle.inner.points),
         |point| threemf::model::Vertex {
             x: point.x.into_f64(),
@@ -90,7 +91,8 @@ pub fn export_stl(
     mut write: impl Write,
 ) -> Result<(), Error> {
     let points = tri_mesh
-        .triangles()
+        .triangles
+        .iter()
         .map(|triangle| triangle.inner.points)
         .collect::<Vec<_>>();
 
@@ -136,7 +138,7 @@ pub fn export_obj(
     tri_mesh: &TriMesh,
     mut write: impl Write,
 ) -> Result<(), Error> {
-    for (cnt, t) in tri_mesh.triangles().enumerate() {
+    for (cnt, t) in tri_mesh.triangles.iter().enumerate() {
         // write each point of the triangle
         for v in t.inner.points {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
