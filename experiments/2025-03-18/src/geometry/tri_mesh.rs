@@ -1,5 +1,4 @@
-pub use fj_interop::MeshTriangle;
-
+use fj_interop::MeshTriangle;
 use fj_math::Triangle;
 
 #[derive(Debug)]
