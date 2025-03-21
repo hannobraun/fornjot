@@ -86,9 +86,6 @@ impl TriMesh {
     }
 }
 
-/// An index that refers to a vertex in a mesh
-pub type Index = u32;
-
 /// A triangle
 ///
 /// Extension of [`fj_math::Triangle`] that also includes a color.
@@ -144,3 +141,6 @@ where
 
     (vertices, indices)
 }
+
+/// An index that refers to a vertex in a mesh
+pub type Index = u32;
