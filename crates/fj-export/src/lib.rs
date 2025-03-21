@@ -84,8 +84,11 @@ pub fn export_3mf(
 }
 
 /// # Export the provided mesh to the provided writer in the STL format
-pub fn export_stl(mesh: &TriMesh, mut write: impl Write) -> Result<(), Error> {
-    let points = mesh
+pub fn export_stl(
+    tri_mesh: &TriMesh,
+    mut write: impl Write,
+) -> Result<(), Error> {
+    let points = tri_mesh
         .triangles()
         .map(|triangle| triangle.inner.points)
         .collect::<Vec<_>>();
