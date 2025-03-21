@@ -16,26 +16,28 @@ use decorum::R64;
 /// be used as keys in various types of sets and maps.
 #[derive(Clone, Copy, Default)]
 #[repr(C)]
-pub struct Scalar(f64);
+pub struct Scalar {
+    value: f64,
+}
 
 impl Scalar {
     /// # The `Scalar` instance that represents zero
-    pub const ZERO: Self = Self(0.);
+    pub const ZERO: Self = Self { value: 0. };
 
     /// # The `Scalar` instance that represents one
-    pub const ONE: Self = Self(1.);
+    pub const ONE: Self = Self { value: 1. };
 
     /// # The `Scalar` instance that represents two
-    pub const TWO: Self = Self(2.);
+    pub const TWO: Self = Self { value: 2. };
 
     /// # The largest `Scalar` value
-    pub const MAX: Self = Self(f64::MAX);
+    pub const MAX: Self = Self { value: f64::MAX };
 
     /// # The `Scalar` instance that represents pi
-    pub const PI: Self = Self(PI);
+    pub const PI: Self = Self { value: PI };
 
     /// # The `Scalar` instance that represents tau
-    pub const TAU: Self = Self(TAU);
+    pub const TAU: Self = Self { value: TAU };
 
     /// # Construct a `Scalar` from an `f64`
     ///
@@ -47,7 +49,7 @@ impl Scalar {
             panic!("`Scalar` value must not be NaN");
         }
 
-        Self(scalar)
+        Self { value: scalar }
     }
 
     /// # Construct a `Scalar` from a `u64`
@@ -57,17 +59,17 @@ impl Scalar {
 
     /// # Convert the scalar value into an `f32`
     pub fn into_f32(self) -> f32 {
-        self.0 as f32
+        self.value as f32
     }
 
     /// # Convert the scalar value into an `f64`
     pub fn into_f64(self) -> f64 {
-        self.0
+        self.value
     }
 
     /// # Convert the scalar value into a `u64`
     pub fn into_u64(self) -> u64 {
-        self.0 as u64
+        self.value as u64
     }
 
     /// # Indicate whether the scalar value is negative
@@ -102,59 +104,59 @@ impl Scalar {
 
     /// # Compute the absolute scalar value
     pub fn abs(self) -> Self {
-        self.0.abs().into()
+        self.value.abs().into()
     }
 
     /// # Compute the maximum of this and another scalar value
     pub fn max(self, other: impl Into<Self>) -> Self {
-        self.0.max(other.into().0).into()
+        self.value.max(other.into().value).into()
     }
 
     /// # Compute the largest integer smaller than or equal to the scalar value
     pub fn floor(self) -> Self {
-        self.0.floor().into()
+        self.value.floor().into()
     }
 
     /// # Compute the smallest integer larger than or equal to the scalar value
     pub fn ceil(self) -> Self {
-        self.0.ceil().into()
+        self.value.ceil().into()
     }
 
     /// # Round the scalar value
     pub fn round(self) -> Self {
-        self.0.round().into()
+        self.value.round().into()
     }
 
     /// # Compute the sine of the scalar value
     pub fn sin(self) -> Self {
-        self.0.sin().into()
+        self.value.sin().into()
     }
 
     /// # Compute the cosine of the scalar value
     pub fn cos(self) -> Self {
-        self.0.cos().into()
+        self.value.cos().into()
     }
 
     /// # Compute sine and cosine of the scalar value
     pub fn sin_cos(self) -> (Self, Self) {
-        let (sin, cos) = self.0.sin_cos();
+        let (sin, cos) = self.value.sin_cos();
         (sin.into(), cos.into())
     }
 
     /// # Compute the arccosine of the scalar value
     pub fn acos(self) -> Self {
-        self.0.acos().into()
+        self.value.acos().into()
     }
 
     /// # Compute the four-quadrant arctangent of the scalar value
     pub fn atan2(self, other: Self) -> Self {
-        self.0.atan2(other.0).into()
+        self.value.atan2(other.value).into()
     }
 }
 
 impl PartialEq for Scalar {
     fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
+        self.value == other.value
     }
 }
 
@@ -168,7 +170,7 @@ impl PartialOrd for Scalar {
 
 impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
-        let Some(ordering) = self.0.partial_cmp(&other.0) else {
+        let Some(ordering) = self.value.partial_cmp(&other.value) else {
             unreachable!(
                 "`Scalar` is not valid, but this has been checked by the \
                 constructor."
@@ -183,7 +185,7 @@ impl Hash for Scalar {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         // To the best of my knowledge, this matches the `PartialEq`
         // implementation.
-        R64::from_inner(self.0).hash(state);
+        R64::from_inner(self.value).hash(state);
     }
 }
 
@@ -209,7 +211,7 @@ impl ops::Neg for Scalar {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        self.0.neg().into()
+        self.value.neg().into()
     }
 }
 
@@ -217,7 +219,7 @@ impl<T: Into<Self>> ops::Add<T> for Scalar {
     type Output = Self;
 
     fn add(self, rhs: T) -> Self::Output {
-        self.0.add(rhs.into().0).into()
+        self.value.add(rhs.into().value).into()
     }
 }
 
@@ -225,7 +227,7 @@ impl<T: Into<Self>> ops::Sub<T> for Scalar {
     type Output = Self;
 
     fn sub(self, rhs: T) -> Self::Output {
-        self.0.sub(rhs.into().0).into()
+        self.value.sub(rhs.into().value).into()
     }
 }
 
@@ -233,7 +235,7 @@ impl<T: Into<Self>> ops::Mul<T> for Scalar {
     type Output = Self;
 
     fn mul(self, rhs: T) -> Self::Output {
-        self.0.mul(rhs.into().0).into()
+        self.value.mul(rhs.into().value).into()
     }
 }
 
@@ -241,7 +243,7 @@ impl<T: Into<Self>> ops::Div<T> for Scalar {
     type Output = Self;
 
     fn div(self, rhs: T) -> Self::Output {
-        self.0.div(rhs.into().0).into()
+        self.value.div(rhs.into().value).into()
     }
 }
 
@@ -249,42 +251,42 @@ impl<T: Into<Self>> ops::Rem<T> for Scalar {
     type Output = Self;
 
     fn rem(self, rhs: T) -> Self::Output {
-        self.0.rem(rhs.into().0).into()
+        self.value.rem(rhs.into().value).into()
     }
 }
 
 impl<T: Into<Self>> ops::AddAssign<T> for Scalar {
     fn add_assign(&mut self, rhs: T) {
-        self.0.add_assign(rhs.into().0);
-        *self = self.0.into();
+        self.value.add_assign(rhs.into().value);
+        *self = self.value.into();
     }
 }
 
 impl<T: Into<Self>> ops::SubAssign<T> for Scalar {
     fn sub_assign(&mut self, rhs: T) {
-        self.0.sub_assign(rhs.into().0);
-        *self = self.0.into();
+        self.value.sub_assign(rhs.into().value);
+        *self = self.value.into();
     }
 }
 
 impl<T: Into<Self>> ops::MulAssign<T> for Scalar {
     fn mul_assign(&mut self, rhs: T) {
-        self.0.mul_assign(rhs.into().0);
-        *self = self.0.into();
+        self.value.mul_assign(rhs.into().value);
+        *self = self.value.into();
     }
 }
 
 impl<T: Into<Self>> ops::DivAssign<T> for Scalar {
     fn div_assign(&mut self, rhs: T) {
-        self.0.div_assign(rhs.into().0);
-        *self = self.0.into();
+        self.value.div_assign(rhs.into().value);
+        *self = self.value.into();
     }
 }
 
 impl<T: Into<Self>> ops::RemAssign<T> for Scalar {
     fn rem_assign(&mut self, rhs: T) {
-        self.0.rem_assign(rhs.into().0);
-        *self = self.0.into();
+        self.value.rem_assign(rhs.into().value);
+        *self = self.value.into();
     }
 }
 
@@ -294,7 +296,7 @@ impl num_traits::Zero for Scalar {
     }
 
     fn is_zero(&self) -> bool {
-        self.0.is_zero()
+        self.value.is_zero()
     }
 }
 
@@ -323,33 +325,33 @@ impl num_traits::NumCast for Scalar {
 
 impl num_traits::Signed for Scalar {
     fn abs(&self) -> Self {
-        self.0.abs().into()
+        self.value.abs().into()
     }
 
     fn abs_sub(&self, other: &Self) -> Self {
-        <f64 as num_traits::Signed>::abs_sub(&self.0, &other.0).into()
+        <f64 as num_traits::Signed>::abs_sub(&self.value, &other.value).into()
     }
 
     fn signum(&self) -> Self {
-        <f64 as num_traits::Signed>::signum(&self.0).into()
+        <f64 as num_traits::Signed>::signum(&self.value).into()
     }
 
     fn is_positive(&self) -> bool {
-        <f64 as num_traits::Signed>::is_positive(&self.0)
+        <f64 as num_traits::Signed>::is_positive(&self.value)
     }
 
     fn is_negative(&self) -> bool {
-        <f64 as num_traits::Signed>::is_negative(&self.0)
+        <f64 as num_traits::Signed>::is_negative(&self.value)
     }
 }
 
 impl num_traits::ToPrimitive for Scalar {
     fn to_i64(&self) -> Option<i64> {
-        self.0.to_i64()
+        self.value.to_i64()
     }
 
     fn to_u64(&self) -> Option<u64> {
-        self.0.to_u64()
+        self.value.to_u64()
     }
 }
 
@@ -383,111 +385,111 @@ impl num_traits::Float for Scalar {
     }
 
     fn is_nan(self) -> bool {
-        self.0.is_nan()
+        self.value.is_nan()
     }
 
     fn is_infinite(self) -> bool {
-        self.0.is_infinite()
+        self.value.is_infinite()
     }
 
     fn is_finite(self) -> bool {
-        self.0.is_finite()
+        self.value.is_finite()
     }
 
     fn is_normal(self) -> bool {
-        self.0.is_normal()
+        self.value.is_normal()
     }
 
     fn classify(self) -> std::num::FpCategory {
-        self.0.classify()
+        self.value.classify()
     }
 
     fn floor(self) -> Self {
-        Self::from_f64(self.0.floor())
+        Self::from_f64(self.value.floor())
     }
 
     fn ceil(self) -> Self {
-        Self::from_f64(self.0.ceil())
+        Self::from_f64(self.value.ceil())
     }
 
     fn round(self) -> Self {
-        Self::from_f64(self.0.round())
+        Self::from_f64(self.value.round())
     }
 
     fn trunc(self) -> Self {
-        Self::from_f64(self.0.trunc())
+        Self::from_f64(self.value.trunc())
     }
 
     fn fract(self) -> Self {
-        Self::from_f64(self.0.fract())
+        Self::from_f64(self.value.fract())
     }
 
     fn abs(self) -> Self {
-        Self::from_f64(self.0.abs())
+        Self::from_f64(self.value.abs())
     }
 
     fn signum(self) -> Self {
-        Self::from_f64(self.0.signum())
+        Self::from_f64(self.value.signum())
     }
 
     fn is_sign_positive(self) -> bool {
-        self.0.is_sign_positive()
+        self.value.is_sign_positive()
     }
 
     fn is_sign_negative(self) -> bool {
-        self.0.is_sign_negative()
+        self.value.is_sign_negative()
     }
 
     fn mul_add(self, a: Self, b: Self) -> Self {
-        Self::from_f64(self.0.mul_add(a.0, b.0))
+        Self::from_f64(self.value.mul_add(a.value, b.value))
     }
 
     fn recip(self) -> Self {
-        Self::from_f64(self.0.recip())
+        Self::from_f64(self.value.recip())
     }
 
     fn powi(self, n: i32) -> Self {
-        Self::from_f64(self.0.powi(n))
+        Self::from_f64(self.value.powi(n))
     }
 
     fn powf(self, n: Self) -> Self {
-        Self::from_f64(self.0.powf(n.0))
+        Self::from_f64(self.value.powf(n.value))
     }
 
     fn sqrt(self) -> Self {
-        Self::from_f64(self.0.sqrt())
+        Self::from_f64(self.value.sqrt())
     }
 
     fn exp(self) -> Self {
-        Self::from_f64(self.0.exp())
+        Self::from_f64(self.value.exp())
     }
 
     fn exp2(self) -> Self {
-        Self::from_f64(self.0.exp2())
+        Self::from_f64(self.value.exp2())
     }
 
     fn ln(self) -> Self {
-        Self::from_f64(self.0.ln())
+        Self::from_f64(self.value.ln())
     }
 
     fn log(self, base: Self) -> Self {
-        Self::from_f64(self.0.log(base.0))
+        Self::from_f64(self.value.log(base.value))
     }
 
     fn log2(self) -> Self {
-        Self::from_f64(self.0.log2())
+        Self::from_f64(self.value.log2())
     }
 
     fn log10(self) -> Self {
-        Self::from_f64(self.0.log10())
+        Self::from_f64(self.value.log10())
     }
 
     fn max(self, other: Self) -> Self {
-        Self::from_f64(self.0.max(other.0))
+        Self::from_f64(self.value.max(other.value))
     }
 
     fn min(self, other: Self) -> Self {
-        Self::from_f64(self.0.min(other.0))
+        Self::from_f64(self.value.min(other.value))
     }
 
     fn abs_sub(self, other: Self) -> Self {
@@ -495,92 +497,92 @@ impl num_traits::Float for Scalar {
     }
 
     fn cbrt(self) -> Self {
-        Self::from_f64(self.0.cbrt())
+        Self::from_f64(self.value.cbrt())
     }
 
     fn hypot(self, other: Self) -> Self {
-        Self::from_f64(self.0.hypot(other.0))
+        Self::from_f64(self.value.hypot(other.value))
     }
 
     fn sin(self) -> Self {
-        Self::from_f64(self.0.sin())
+        Self::from_f64(self.value.sin())
     }
 
     fn cos(self) -> Self {
-        Self::from_f64(self.0.cos())
+        Self::from_f64(self.value.cos())
     }
 
     fn tan(self) -> Self {
-        Self::from_f64(self.0.tan())
+        Self::from_f64(self.value.tan())
     }
 
     fn asin(self) -> Self {
-        Self::from_f64(self.0.asin())
+        Self::from_f64(self.value.asin())
     }
 
     fn acos(self) -> Self {
-        Self::from_f64(self.0.acos())
+        Self::from_f64(self.value.acos())
     }
 
     fn atan(self) -> Self {
-        Self::from_f64(self.0.atan())
+        Self::from_f64(self.value.atan())
     }
 
     fn atan2(self, other: Self) -> Self {
-        Self::from_f64(self.0.atan2(other.0))
+        Self::from_f64(self.value.atan2(other.value))
     }
 
     fn sin_cos(self) -> (Self, Self) {
-        let (sin, cos) = self.0.sin_cos();
+        let (sin, cos) = self.value.sin_cos();
         (Self::from_f64(sin), Self::from_f64(cos))
     }
 
     fn exp_m1(self) -> Self {
-        Self::from_f64(self.0.exp_m1())
+        Self::from_f64(self.value.exp_m1())
     }
 
     fn ln_1p(self) -> Self {
-        Self::from_f64(self.0.ln_1p())
+        Self::from_f64(self.value.ln_1p())
     }
 
     fn sinh(self) -> Self {
-        Self::from_f64(self.0.sinh())
+        Self::from_f64(self.value.sinh())
     }
 
     fn cosh(self) -> Self {
-        Self::from_f64(self.0.cosh())
+        Self::from_f64(self.value.cosh())
     }
 
     fn tanh(self) -> Self {
-        Self::from_f64(self.0.tanh())
+        Self::from_f64(self.value.tanh())
     }
 
     fn asinh(self) -> Self {
-        Self::from_f64(self.0.asinh())
+        Self::from_f64(self.value.asinh())
     }
 
     fn acosh(self) -> Self {
-        Self::from_f64(self.0.acosh())
+        Self::from_f64(self.value.acosh())
     }
 
     fn atanh(self) -> Self {
-        Self::from_f64(self.0.atanh())
+        Self::from_f64(self.value.atanh())
     }
 
     fn integer_decode(self) -> (u64, i16, i8) {
-        self.0.integer_decode()
+        self.value.integer_decode()
     }
 }
 
 impl fmt::Debug for Scalar {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.fmt(f)
+        self.value.fmt(f)
     }
 }
 
 impl fmt::Display for Scalar {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.fmt(f)
+        self.value.fmt(f)
     }
 }
 
@@ -592,7 +594,7 @@ impl approx::AbsDiffEq for Scalar {
     }
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.0.abs_diff_eq(&other.0, epsilon.0)
+        self.value.abs_diff_eq(&other.value, epsilon.value)
     }
 }
 
