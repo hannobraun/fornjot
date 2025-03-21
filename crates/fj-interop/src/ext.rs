@@ -11,7 +11,8 @@ pub trait ArrayExt<T, const N: usize> {
 
     /// Stable replacement for `zip`
     ///
-    /// <https://doc.rust-lang.org/std/primitive.array.html#method.zip>
+    /// There used to be an unstable version of this, but it was removed:
+    /// <https://github.com/rust-lang/rust/pull/112096>
     fn zip_ext<U>(self, rhs: [U; N]) -> [(T, U); N];
 }
 
