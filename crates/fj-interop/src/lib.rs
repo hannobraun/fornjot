@@ -16,5 +16,5 @@ pub mod ext;
 
 pub use self::{
     color::Color,
-    tri_mesh::{Index, TriMesh, Triangle, vertices_to_indexed_vertices},
+    tri_mesh::{Index, MeshTriangle, TriMesh, vertices_to_indexed_vertices},
 };

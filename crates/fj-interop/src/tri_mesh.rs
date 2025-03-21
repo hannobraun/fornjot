@@ -11,7 +11,7 @@ pub struct TriMesh {
     indices: Vec<Index>,
 
     indices_by_vertex: HashMap<Point<3>, Index>,
-    triangles: Vec<Triangle>,
+    triangles: Vec<MeshTriangle>,
 }
 
 impl TriMesh {
@@ -39,7 +39,7 @@ impl TriMesh {
             self.indices.push(index);
         }
 
-        self.triangles.push(Triangle {
+        self.triangles.push(MeshTriangle {
             inner: triangle,
             color,
         });
@@ -76,7 +76,7 @@ impl TriMesh {
     }
 
     /// Access the triangles of the mesh
-    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+    pub fn triangles(&self) -> impl Iterator<Item = MeshTriangle> + '_ {
         self.triangles.iter().copied()
     }
 
@@ -90,7 +90,7 @@ impl TriMesh {
 ///
 /// Extension of [`fj_math::Triangle`] that also includes a color.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Triangle {
+pub struct MeshTriangle {
     /// The points of the triangle
     pub inner: fj_math::Triangle<3>,
 
