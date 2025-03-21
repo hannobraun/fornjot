@@ -5,45 +5,45 @@ use super::{
     coordinates::{T, Uv, Xyz},
 };
 
-/// An n-dimensional point
+/// # An n-dimensional point
 ///
 /// The dimensionality of the point is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Point<const D: usize> {
-    /// The coordinates of the point
+    /// # The coordinates of the point
     pub coords: Vector<D>,
 }
 
 impl<const D: usize> Point<D> {
-    /// Construct a `Point` at the origin of the coordinate system
+    /// # Construct a `Point` at the origin of the coordinate system
     pub fn origin() -> Self {
         nalgebra::Point::<_, D>::origin().into()
     }
 
-    /// Construct a `Point` from an array
+    /// # Construct a `Point` from an array
     pub fn from_array(array: [f64; D]) -> Self {
         Self {
             coords: array.map(Scalar::from_f64).into(),
         }
     }
 
-    /// Construct a `Point` from an nalgebra vector
+    /// # Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
         Self {
             coords: point.coords.into(),
         }
     }
 
-    /// Convert the point into an nalgebra point
+    /// # Convert the point into an nalgebra point
     pub fn to_na(self) -> nalgebra::Point<f64, D> {
         nalgebra::Point {
             coords: self.coords.into(),
         }
     }
 
-    /// Convert to a 3-dimensional point
+    /// Convert the point to a 3-dimensional point
     ///
     /// See [`Vector::to_xyz`] for details. This method follows the same rules.
     pub fn to_xyz(self) -> Point<3> {
@@ -52,7 +52,7 @@ impl<const D: usize> Point<D> {
         }
     }
 
-    /// Gives the distance between two points.
+    /// # Compute the distance between two points
     pub fn distance_to(&self, other: &Self) -> Scalar {
         (self.coords - other.coords).magnitude()
     }
