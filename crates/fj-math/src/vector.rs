@@ -1,5 +1,7 @@
 use std::{fmt, ops};
 
+use iter_fixed::IntoIteratorFixed;
+
 use crate::Bivector;
 
 use super::{
@@ -323,7 +325,14 @@ where
     type Output = Self;
 
     fn add(self, rhs: V) -> Self::Output {
-        self.to_na().add(rhs.into().to_na()).into()
+        let components = self
+            .components
+            .into_iter_fixed()
+            .zip(rhs.into().components)
+            .map(|(a, b)| a + b)
+            .collect();
+
+        Self { components }
     }
 }
 
