@@ -26,6 +26,11 @@ impl TriMesh {
         self
     }
 
+    /// # Iterate over all triangles in this mesh
+    pub fn all_triangles(&self) -> impl Iterator<Item = Triangle<3>> {
+        self.triangles.iter().map(|triangle| triangle.inner)
+    }
+
     /// Determine whether the mesh contains the provided triangle
     ///
     /// Returns true, if a triangle with any combination of the provided points
