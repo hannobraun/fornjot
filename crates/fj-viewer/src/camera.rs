@@ -92,7 +92,7 @@ impl Camera {
     fn calculate_focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
-        mesh: &TriMesh,
+        tri_mesh: &TriMesh,
     ) -> Option<FocusPoint> {
         // Transform camera and cursor positions to model space.
         let origin = self.position();
@@ -101,7 +101,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in mesh.triangles() {
+        for triangle in tri_mesh.triangles() {
             let t =
                 triangle
                     .inner
