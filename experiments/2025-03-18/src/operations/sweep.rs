@@ -1,6 +1,7 @@
+use fj_math::Vector;
+
 use crate::{
     handle::Handle,
-    math::Vector,
     topology::{face::Face, solid::Solid},
 };
 

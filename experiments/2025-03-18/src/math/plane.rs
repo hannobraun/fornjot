@@ -1,4 +1,6 @@
-use super::{Bivector, Point, Vector};
+use fj_math::Vector;
+
+use super::{Bivector, Point};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Plane {
@@ -61,7 +63,9 @@ impl Plane {
 
 #[cfg(test)]
 mod tests {
-    use crate::math::{Bivector, Point, Vector};
+    use fj_math::Vector;
+
+    use crate::math::{Bivector, Point};
 
     use super::Plane;
 

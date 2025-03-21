@@ -1,6 +1,6 @@
 use std::ops;
 
-use super::Vector;
+use fj_math::Vector;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point<const D: usize> {
