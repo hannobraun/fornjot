@@ -19,10 +19,6 @@ impl Scalar {
         Self { value }
     }
 
-    pub fn zero() -> Self {
-        Self::ZERO
-    }
-
     pub fn value(&self) -> f64 {
         self.value
     }

@@ -24,7 +24,7 @@ impl<const D: usize> Vector<D> {
             .zip(other.components)
             .map(|(a, b)| a * b)
             .reduce(|a, b| a + b)
-            .unwrap_or(Scalar::zero())
+            .unwrap_or(Scalar::ZERO)
     }
 }
 
