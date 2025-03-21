@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, HashMap};
 
-use fj_math::{Aabb, Point};
+use fj_math::{Aabb, Point, Triangle};
 
 use crate::Color;
 
@@ -23,7 +23,7 @@ impl TriMesh {
     /// Add a triangle to the mesh
     pub fn push_triangle(
         &mut self,
-        triangle: impl Into<fj_math::Triangle<3>>,
+        triangle: impl Into<Triangle<3>>,
         color: Color,
     ) {
         let triangle = triangle.into();
@@ -49,10 +49,7 @@ impl TriMesh {
     ///
     /// Returns true, if a triangle with any combination of the provided points
     /// is part of the mesh.
-    pub fn contains_triangle(
-        &self,
-        triangle: impl Into<fj_math::Triangle<3>>,
-    ) -> bool {
+    pub fn contains_triangle(&self, triangle: impl Into<Triangle<3>>) -> bool {
         let triangle = triangle.into().normalize();
 
         for t in &self.triangles {
@@ -92,7 +89,7 @@ impl TriMesh {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct MeshTriangle {
     /// The points of the triangle
-    pub inner: fj_math::Triangle<3>,
+    pub inner: Triangle<3>,
 
     /// The color of the triangle
     pub color: Color,
