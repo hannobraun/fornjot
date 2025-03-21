@@ -19,6 +19,9 @@ winit = "*"
 version = "*"
 features = ["derive"]
 
+[dependencies.fj-interop]
+path = "../../crates/fj-interop"
+
 [dependencies.fj-math]
 path = "../../crates/fj-math"
 
