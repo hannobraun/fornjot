@@ -69,7 +69,7 @@ impl<const D: usize> Triangle<D> {
 
 impl Triangle<2> {
     /// # Compute the winding of the triangle
-    pub fn winding(&self) -> Winding {
+    pub fn winding(&self) -> Option<Winding> {
         let [pa, pb, pc] = self.points.map(|point| robust::Coord {
             x: point.u,
             y: point.v,
@@ -77,16 +77,13 @@ impl Triangle<2> {
         let orient2d = robust::orient2d(pa, pb, pc);
 
         if orient2d < 0. {
-            return Winding::Cw;
+            return Some(Winding::Cw);
         }
         if orient2d > 0. {
-            return Winding::Ccw;
+            return Some(Winding::Ccw);
         }
 
-        unreachable!(
-            "Points don't form a triangle, but this was verified in the \
-            constructor."
-        )
+        None
     }
 }
 

@@ -61,7 +61,12 @@ pub fn triangulate(
             Handedness::LeftHanded => Winding::Cw,
             Handedness::RightHanded => Winding::Ccw,
         };
-        let actual_winding = triangle.winding();
+        let Some(actual_winding) = triangle.winding() else {
+            unreachable!(
+                "Just asserted that the triangle is valid. Therefore it must \
+                have a winding."
+            );
+        };
 
         let triangle = if actual_winding == required_winding {
             [v0, v1, v2]
