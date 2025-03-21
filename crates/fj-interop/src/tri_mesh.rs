@@ -7,7 +7,8 @@ use crate::Color;
 /// # A triangle mesh
 #[derive(Clone, Debug, Default)]
 pub struct TriMesh {
-    triangles: Vec<MeshTriangle>,
+    /// # The triangles in the mesh
+    pub triangles: Vec<MeshTriangle>,
 }
 
 impl TriMesh {
