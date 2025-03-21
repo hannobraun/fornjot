@@ -22,10 +22,8 @@ impl TriMesh {
         triangle: impl Into<Triangle<3>>,
         color: Color,
     ) {
-        let triangle = triangle.into();
-
         self.triangles.push(MeshTriangle {
-            inner: triangle,
+            inner: triangle.into(),
             color,
         });
     }
