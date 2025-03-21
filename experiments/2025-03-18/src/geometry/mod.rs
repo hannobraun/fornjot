@@ -7,5 +7,3 @@ pub use self::{
     surface::SurfaceGeometry,
     tri_mesh::{ToTriMesh, TriMesh},
 };
-
-pub use fj_interop::MeshTriangle;

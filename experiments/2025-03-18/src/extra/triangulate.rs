@@ -3,15 +3,12 @@ use std::{
     mem,
 };
 
-use fj_interop::Color;
+use fj_interop::{Color, MeshTriangle};
 use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::{
-    geometry::{MeshTriangle, TriMesh},
-    topology::face::Face,
-};
+use crate::{geometry::TriMesh, topology::face::Face};
 
 pub fn triangulate(face: &Face) -> TriMesh {
     let points = points(face);
