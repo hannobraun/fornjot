@@ -78,7 +78,7 @@ impl Camera {
         self.camera_to_model().inverse_transform_point(&cursor)
     }
 
-    /// Compute the point on the model, that the cursor currently points to.
+    /// # Compute the point on the model that the cursor currently points to
     pub fn focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
