@@ -224,6 +224,12 @@ dependencies = [
 
 [[package]]
 name = "byteorder"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "96c8b41881888cc08af32d47ac4edd52bc7fa27fef774be47a92443756451304"
+
+[[package]]
+name = "byteorder"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
@@ -547,6 +553,7 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "bytemuck",
+ "fj-export",
  "fj-interop",
  "fj-math",
  "geo",
@@ -559,6 +566,18 @@ dependencies = [
  "threemf",
  "wgpu",
  "winit",
+]
+
+[[package]]
+name = "fj-export"
+version = "0.49.0"
+dependencies = [
+ "fj-interop",
+ "fj-math",
+ "stl",
+ "thiserror 2.0.12",
+ "threemf",
+ "wavefront_rs",
 ]
 
 [[package]]
@@ -832,7 +851,7 @@ version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "47d60b12902ba28e2730cd37e95b8c9223af2808df9e902d4df49588d1470606"
 dependencies = [
- "byteorder",
+ "byteorder 1.5.0",
 ]
 
 [[package]]
@@ -2078,6 +2097,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
+name = "stl"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "466e72b3a9258f51f0562a01f2aea3717fb71d9997f4050c65c251a623926e12"
+dependencies = [
+ "byteorder 0.4.2",
+]
+
+[[package]]
 name = "strict-num"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2452,6 +2480,12 @@ checksum = "1a05d73b933a847d6cccdda8f838a22ff101ad9bf93e33684f39c1f5f0eece3d"
 dependencies = [
  "unicode-ident",
 ]
+
+[[package]]
+name = "wavefront_rs"
+version = "2.0.0-beta.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2f237e2271c3f9ccc633ee16918789514fd5a823bf62ddce21f8a730a1d9930"
 
 [[package]]
 name = "wayland-backend"
