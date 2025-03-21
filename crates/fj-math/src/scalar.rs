@@ -53,8 +53,8 @@ impl Scalar {
     }
 
     /// # Construct a `Scalar` from a `u64`
-    pub fn from_u64(scalar: u64) -> Self {
-        Self::from_f64(scalar as f64)
+    pub fn from_u64(value: u64) -> Self {
+        Self::from_f64(value as f64)
     }
 
     /// # Convert the scalar value into an `f32`
