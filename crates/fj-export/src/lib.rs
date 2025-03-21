@@ -49,10 +49,10 @@ pub fn export(tri_mesh: &TriMesh, path: &Path) -> Result<(), Error> {
 
 /// # Export the provided mesh to the provided writer in the 3MF format
 pub fn export_3mf(
-    mesh: &TriMesh,
+    tri_mesh: &TriMesh,
     write: impl Write + Seek,
 ) -> Result<(), Error> {
-    let vertices = mesh
+    let vertices = tri_mesh
         .vertices()
         .map(|point| threemf::model::Vertex {
             x: point.x.into_f64(),
@@ -61,7 +61,7 @@ pub fn export_3mf(
         })
         .collect();
 
-    let indices: Vec<_> = mesh.indices().collect();
+    let indices: Vec<_> = tri_mesh.indices().collect();
     let triangles = indices
         .chunks(3)
         .map(|triangle| threemf::model::Triangle {
