@@ -354,7 +354,9 @@ where
     type Output = Self;
 
     fn mul(self, scalar: S) -> Self::Output {
-        self.to_na().mul(scalar.into().into_f64()).into()
+        let scalar = scalar.into();
+        let components = self.components.map(|v| v * scalar);
+        Self { components }
     }
 }
 
