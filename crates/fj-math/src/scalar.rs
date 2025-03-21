@@ -218,7 +218,10 @@ impl ops::Neg for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::Add<T> for Scalar {
+impl<T> ops::Add<T> for Scalar
+where
+    T: Into<Self>,
+{
     type Output = Self;
 
     fn add(self, rhs: T) -> Self::Output {
@@ -226,7 +229,10 @@ impl<T: Into<Self>> ops::Add<T> for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::Sub<T> for Scalar {
+impl<T> ops::Sub<T> for Scalar
+where
+    T: Into<Self>,
+{
     type Output = Self;
 
     fn sub(self, rhs: T) -> Self::Output {
@@ -234,7 +240,10 @@ impl<T: Into<Self>> ops::Sub<T> for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::Mul<T> for Scalar {
+impl<T> ops::Mul<T> for Scalar
+where
+    T: Into<Self>,
+{
     type Output = Self;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -242,7 +251,10 @@ impl<T: Into<Self>> ops::Mul<T> for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::Div<T> for Scalar {
+impl<T> ops::Div<T> for Scalar
+where
+    T: Into<Self>,
+{
     type Output = Self;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -250,7 +262,10 @@ impl<T: Into<Self>> ops::Div<T> for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::Rem<T> for Scalar {
+impl<T> ops::Rem<T> for Scalar
+where
+    T: Into<Self>,
+{
     type Output = Self;
 
     fn rem(self, rhs: T) -> Self::Output {
@@ -258,35 +273,50 @@ impl<T: Into<Self>> ops::Rem<T> for Scalar {
     }
 }
 
-impl<T: Into<Self>> ops::AddAssign<T> for Scalar {
+impl<T> ops::AddAssign<T> for Scalar
+where
+    T: Into<Self>,
+{
     fn add_assign(&mut self, rhs: T) {
         self.value.add_assign(rhs.into().value);
         *self = self.value.into();
     }
 }
 
-impl<T: Into<Self>> ops::SubAssign<T> for Scalar {
+impl<T> ops::SubAssign<T> for Scalar
+where
+    T: Into<Self>,
+{
     fn sub_assign(&mut self, rhs: T) {
         self.value.sub_assign(rhs.into().value);
         *self = self.value.into();
     }
 }
 
-impl<T: Into<Self>> ops::MulAssign<T> for Scalar {
+impl<T> ops::MulAssign<T> for Scalar
+where
+    T: Into<Self>,
+{
     fn mul_assign(&mut self, rhs: T) {
         self.value.mul_assign(rhs.into().value);
         *self = self.value.into();
     }
 }
 
-impl<T: Into<Self>> ops::DivAssign<T> for Scalar {
+impl<T> ops::DivAssign<T> for Scalar
+where
+    T: Into<Self>,
+{
     fn div_assign(&mut self, rhs: T) {
         self.value.div_assign(rhs.into().value);
         *self = self.value.into();
     }
 }
 
-impl<T: Into<Self>> ops::RemAssign<T> for Scalar {
+impl<T> ops::RemAssign<T> for Scalar
+where
+    T: Into<Self>,
+{
     fn rem_assign(&mut self, rhs: T) {
         self.value.rem_assign(rhs.into().value);
         *self = self.value.into();
