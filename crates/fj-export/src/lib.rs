@@ -16,7 +16,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_interop::TriMesh;
+use fj_interop::{TriMesh, vertices_to_indexed_vertices};
 use fj_math::Triangle;
 
 /// # Export the provided mesh to the file at the given path
@@ -52,18 +52,18 @@ pub fn export_3mf(
     tri_mesh: &TriMesh,
     write: impl Write + Seek,
 ) -> Result<(), Error> {
-    let vertices = tri_mesh
-        .vertices()
-        .map(|point| threemf::model::Vertex {
+    let (vertices, indices) = vertices_to_indexed_vertices(
+        tri_mesh
+            .triangles()
+            .flat_map(|triangle| triangle.inner.points),
+        |point| threemf::model::Vertex {
             x: point.x.into_f64(),
             y: point.y.into_f64(),
             z: point.z.into_f64(),
-        })
-        .collect();
+        },
+    );
 
-    let triangles = tri_mesh
-        .indices()
-        .collect::<Vec<_>>()
+    let triangles = indices
         .chunks(3)
         .map(|triangle| threemf::model::Triangle {
             v1: triangle[0] as usize,
