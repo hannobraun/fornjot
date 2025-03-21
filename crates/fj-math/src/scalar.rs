@@ -44,12 +44,12 @@ impl Scalar {
     /// ## Panics
     ///
     /// Panics, if `scalar` is NaN.
-    pub fn from_f64(scalar: f64) -> Self {
-        if scalar.is_nan() {
+    pub fn from_f64(value: f64) -> Self {
+        if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
         }
 
-        Self { value: scalar }
+        Self { value }
     }
 
     /// # Construct a `Scalar` from a `u64`
