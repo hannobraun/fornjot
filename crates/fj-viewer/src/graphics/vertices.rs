@@ -29,21 +29,19 @@ impl Vertices {
             let color = triangle.color;
 
             for point in [a, b, c] {
-                {
-                    let index = *indices_by_vertex
-                        .entry((point, normal, color))
-                        .or_insert_with(|| {
-                            let index = vertices.len();
-                            vertices.push(Vertex {
-                                position: point.into(),
-                                normal: normal.into(),
-                                color: color.0.map(|v| f32::from(v) / 255.0),
-                            });
-                            index as u32
+                let index = *indices_by_vertex
+                    .entry((point, normal, color))
+                    .or_insert_with(|| {
+                        let index = vertices.len();
+                        vertices.push(Vertex {
+                            position: point.into(),
+                            normal: normal.into(),
+                            color: color.0.map(|v| f32::from(v) / 255.0),
                         });
+                        index as u32
+                    });
 
-                    indices.push(index);
-                };
+                indices.push(index);
             }
         }
 
