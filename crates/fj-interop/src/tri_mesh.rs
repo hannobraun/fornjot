@@ -17,6 +17,15 @@ impl TriMesh {
         Self::default()
     }
 
+    /// # Add all the triangles from another `TriMesh` to this one
+    ///
+    /// This is literally all this method does. There's nothing fancy going on,
+    /// no de-duplication, no validation. Make sure this is what you want!
+    pub fn merge(mut self, other: Self) -> Self {
+        self.triangles.extend(other.triangles);
+        self
+    }
+
     /// Determine whether the mesh contains the provided triangle
     ///
     /// Returns true, if a triangle with any combination of the provided points
