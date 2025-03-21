@@ -1,7 +1,6 @@
 #![allow(clippy::module_inception)]
 
 mod app;
-mod export;
 mod extra;
 mod geometry;
 mod handle;
@@ -14,7 +13,7 @@ mod topology;
 fn main() -> anyhow::Result<()> {
     let tri_mesh = model::model();
 
-    export::export(&tri_mesh, "output.3mf")?;
+    fj_export::export(&tri_mesh, "output.3mf")?;
     app::run(tri_mesh)?;
 
     Ok(())
