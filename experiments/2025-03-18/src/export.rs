@@ -24,7 +24,9 @@ pub fn export(tri_mesh: &TriMesh) -> anyhow::Result<()> {
         vertices: threemf::model::Vertices {
             vertex: points
                 .into_iter()
-                .map(|point| point.coords.components.map(|coord| coord.value()))
+                .map(|point| {
+                    point.coords.components.map(|coord| coord.into_f64())
+                })
                 .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
                 .collect(),
         },

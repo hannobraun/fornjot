@@ -23,7 +23,8 @@ pub fn triangulate(face: &Face) -> TriMesh {
             let points = triangle.map(|point| point.point_surface);
             let triangle = Triangle { points };
 
-            let [x, y] = triangle.center().coords.components.map(|s| s.value());
+            let [x, y] =
+                triangle.center().coords.components.map(|s| s.into_f64());
             polygon.contains(&Coord { x, y })
         })
         .map(|triangle| {
@@ -101,7 +102,8 @@ fn polygon(points: &[TriangulationPoint]) -> Polygon {
             continue;
         }
 
-        let [x, y] = point.point_surface.coords.components.map(|s| s.value());
+        let [x, y] =
+            point.point_surface.coords.components.map(|s| s.into_f64());
         current_line_string.push(Coord { x, y });
         visited_points.insert(point);
     }
@@ -140,7 +142,7 @@ impl spade::HasPosition for TriangulationPoint {
     type Scalar = f64;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
-        let [x, y] = self.point_surface.coords.components.map(|s| s.value());
+        let [x, y] = self.point_surface.coords.components.map(|s| s.into_f64());
         spade::Point2 { x, y }
     }
 }

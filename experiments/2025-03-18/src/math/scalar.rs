@@ -19,12 +19,12 @@ impl Scalar {
         Self { value }
     }
 
-    pub fn value(self) -> f64 {
+    pub fn into_f64(self) -> f64 {
         self.value
     }
 
     pub fn sqrt(self) -> Self {
-        let value = self.value().sqrt();
+        let value = self.into_f64().sqrt();
         Self::from_f64(value)
     }
 }
@@ -63,7 +63,7 @@ where
     type Output = Self;
 
     fn add(self, other: S) -> Self::Output {
-        let value = self.value() + other.into().value();
+        let value = self.into_f64() + other.into().into_f64();
         Self::from_f64(value)
     }
 }
@@ -75,7 +75,7 @@ where
     type Output = Self;
 
     fn div(self, other: S) -> Self::Output {
-        let value = self.value() / other.into().value();
+        let value = self.into_f64() / other.into().into_f64();
         Self::from_f64(value)
     }
 }
@@ -87,7 +87,7 @@ where
     type Output = Self;
 
     fn mul(self, other: S) -> Self::Output {
-        let value = self.value() * other.into().value();
+        let value = self.into_f64() * other.into().into_f64();
         Self::from_f64(value)
     }
 }
@@ -96,7 +96,7 @@ impl ops::Neg for Scalar {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        let value = -self.value();
+        let value = -self.into_f64();
         Self::from_f64(value)
     }
 }
@@ -108,7 +108,7 @@ where
     type Output = Self;
 
     fn sub(self, other: S) -> Self::Output {
-        let value = self.value() - other.into().value();
+        let value = self.into_f64() - other.into().into_f64();
         Self::from_f64(value)
     }
 }
