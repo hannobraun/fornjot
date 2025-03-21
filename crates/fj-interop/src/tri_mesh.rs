@@ -79,7 +79,9 @@ impl TriMesh {
 
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
-        Aabb::<3>::from_points(self.vertices.iter().copied())
+        Aabb::<3>::from_points(
+            self.triangles().flat_map(|triangle| triangle.inner.points),
+        )
     }
 }
 
