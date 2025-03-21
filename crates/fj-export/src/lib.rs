@@ -131,7 +131,7 @@ pub fn export_stl(
     Ok(())
 }
 
-/// Export the provided mesh to the provided writer in the OBJ format.
+/// # Export the provided mesh to the provided writer in the OBJ format
 pub fn export_obj(
     tri_mesh: &TriMesh,
     mut write: impl Write,
