@@ -43,6 +43,13 @@ impl<const D: usize> Triangle<D> {
         area > Scalar::default_epsilon()
     }
 
+    /// # Compute the center point of the triangle
+    pub fn center(&self) -> Point<D> {
+        let [a, b, c] = self.points;
+        let coords = (a.coords + b.coords + c.coords) / 3.;
+        Point { coords }
+    }
+
     /// # Convert a set of barycentric coordinates on the triangle into a point
     pub fn point_from_barycentric_coords(
         &self,
