@@ -1,16 +1,12 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
-use fj_math::{Aabb, Point, Triangle};
+use fj_math::{Aabb, Triangle};
 
 use crate::Color;
 
 /// A triangle mesh
 #[derive(Clone, Debug, Default)]
 pub struct TriMesh {
-    vertices: Vec<Point<3>>,
-    indices: Vec<Index>,
-
-    indices_by_vertex: HashMap<Point<3>, Index>,
     triangles: Vec<MeshTriangle>,
 }
 
@@ -27,17 +23,6 @@ impl TriMesh {
         color: Color,
     ) {
         let triangle = triangle.into();
-
-        for point in triangle.points {
-            let index =
-                *self.indices_by_vertex.entry(point).or_insert_with(|| {
-                    let index = self.vertices.len();
-                    self.vertices.push(point);
-                    index as u32
-                });
-
-            self.indices.push(index);
-        }
 
         self.triangles.push(MeshTriangle {
             inner: triangle,
