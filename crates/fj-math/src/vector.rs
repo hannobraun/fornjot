@@ -374,7 +374,9 @@ where
     type Output = Self;
 
     fn div(self, scalar: S) -> Self::Output {
-        self.to_na().div(scalar.into().into_f64()).into()
+        let scalar = scalar.into();
+        let components = self.components.map(|component| component / scalar);
+        Self { components }
     }
 }
 
