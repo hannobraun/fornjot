@@ -61,8 +61,9 @@ pub fn triangulate(
             Handedness::LeftHanded => Winding::Cw,
             Handedness::RightHanded => Winding::Ccw,
         };
+        let actual_winding = triangle.winding();
 
-        let triangle = if triangle.winding() == required_winding {
+        let triangle = if actual_winding == required_winding {
             [v0, v1, v2]
         } else {
             [v0, v2, v1]
