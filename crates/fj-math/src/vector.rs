@@ -353,8 +353,8 @@ where
 {
     type Output = Self;
 
-    fn mul(self, rhs: S) -> Self::Output {
-        self.to_na().mul(rhs.into().into_f64()).into()
+    fn mul(self, scalar: S) -> Self::Output {
+        self.to_na().mul(scalar.into().into_f64()).into()
     }
 }
 
