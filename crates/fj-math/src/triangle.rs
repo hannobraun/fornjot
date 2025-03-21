@@ -5,19 +5,19 @@ use crate::Vector;
 
 use super::{Point, Scalar};
 
-/// A triangle
+/// # A triangle
 ///
 /// The dimensionality of the triangle is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Triangle<const D: usize> {
-    /// The points that make up the triangle
+    /// # The points that make up the triangle
     pub points: [Point<D>; 3],
 }
 
 impl<const D: usize> Triangle<D> {
-    /// Construct a triangle from three points
+    /// # Construct a triangle from three points
     pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
         let points = points.map(Into::into);
         Self { points }
@@ -26,8 +26,8 @@ impl<const D: usize> Triangle<D> {
     /// # Determine whether the triangle is valid
     ///
     /// A triangle is valid, if it is not degenerate. In a degenerate triangle,
-    /// the three points do not form an actual triangle, but a line or even a
-    /// single point.
+    /// the three points do not form an actual triangle, but are collapsed into
+    /// a line or even a single point.
     ///
     /// ## Implementation Note
     ///
@@ -43,7 +43,7 @@ impl<const D: usize> Triangle<D> {
         area > Scalar::default_epsilon()
     }
 
-    /// Convert barycentric coordinates to a point
+    /// # Convert a set of barycentric coordinates on the triangle into a point
     pub fn point_from_barycentric_coords(
         &self,
         [wa, wb, wc]: [Scalar; 3],
@@ -53,13 +53,13 @@ impl<const D: usize> Triangle<D> {
         Point { coords }
     }
 
-    /// Normalize the triangle
+    /// # Normalize the triangle
     ///
     /// Returns a new `Triangle` instance with the same points, but the points
     /// ordered such that they are ordered according to their `Ord`/`PartialOrd`
     /// implementation.
     ///
-    /// This is useful for comparing triangles, where the order of points is not
+    /// This is useful for comparing triangles when the order of points is not
     /// important.
     pub fn normalize(mut self) -> Self {
         self.points.sort();
@@ -68,7 +68,7 @@ impl<const D: usize> Triangle<D> {
 }
 
 impl Triangle<2> {
-    /// Returns the direction of the line through the points of the triangle.
+    /// # Compute the winding of the triangle
     pub fn winding(&self) -> Winding {
         let [pa, pb, pc] = self.points.map(|point| robust::Coord {
             x: point.u,
@@ -91,12 +91,12 @@ impl Triangle<2> {
 }
 
 impl Triangle<3> {
-    /// Convert the triangle to a Parry triangle
+    /// # Convert the triangle to a Parry triangle
     pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
         self.points.map(|vertex| vertex.to_na()).into()
     }
 
-    /// Cast a ray against the Triangle
+    /// # Cast a ray against the Triangle
     pub fn cast_local_ray(
         &self,
         origin: Point<3>,
@@ -114,7 +114,7 @@ impl Triangle<3> {
             .map(Into::into)
     }
 
-    /// Compute the triangle's normal
+    /// # Compute the triangle's normal
     pub fn normal(&self) -> Vector<3> {
         self.to_parry()
             .normal()
