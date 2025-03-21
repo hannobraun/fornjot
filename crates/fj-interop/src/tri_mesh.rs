@@ -31,6 +31,16 @@ impl TriMesh {
         self.triangles.iter().map(|triangle| triangle.inner)
     }
 
+    /// # Iterate over only the external triangles in this mesh
+    ///
+    /// See documentation of [`MeshTriangle`] for an explanation of internal and
+    /// external triangles.
+    pub fn external_triangles(&self) -> impl Iterator<Item = Triangle<3>> {
+        self.triangles.iter().filter_map(|triangle| {
+            (!triangle.is_internal).then_some(triangle.inner)
+        })
+    }
+
     /// Determine whether the mesh contains the provided triangle
     ///
     /// Returns true, if a triangle with any combination of the provided points
