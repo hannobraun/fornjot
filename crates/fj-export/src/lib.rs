@@ -26,8 +26,8 @@ use fj_math::Triangle;
 ///
 /// Currently 3MF & STL file types are supported. The case insensitive file
 /// extension of the provided path is used to switch between supported types.
-pub fn export(tri_mesh: &TriMesh, path: &Path) -> Result<(), Error> {
-    match path.extension() {
+pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
+    match path.as_ref().extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
             export_3mf(tri_mesh, &mut file)
