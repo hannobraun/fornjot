@@ -83,7 +83,7 @@ pub fn export_3mf(
     Ok(())
 }
 
-/// Export the provided mesh to the provided writer in the STL format.
+/// # Export the provided mesh to the provided writer in the STL format
 pub fn export_stl(mesh: &TriMesh, mut write: impl Write) -> Result<(), Error> {
     let points = mesh
         .triangles()
