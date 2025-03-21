@@ -314,7 +314,7 @@ impl<const D: usize> ops::Neg for Vector<D> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        self.to_na().neg().into()
+        self * -1.
     }
 }
 
