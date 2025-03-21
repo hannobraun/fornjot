@@ -175,7 +175,16 @@ impl Vector<3> {
 
     /// # Compute the cross product with another vector
     pub fn cross(&self, other: &Self) -> Self {
-        self.to_na().cross(&other.to_na()).into()
+        let [ax, ay, az] = self.components;
+        let [bx, by, bz] = other.components;
+
+        Self {
+            components: [
+                ay * bz - az * by,
+                az * bx - ax * bz,
+                ax * by - ay * bx,
+            ],
+        }
     }
 
     /// # Construct a new vector from this vector's x and y components
