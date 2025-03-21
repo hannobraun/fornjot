@@ -62,16 +62,6 @@ impl TriMesh {
         false
     }
 
-    /// Access the vertices of the mesh
-    pub fn vertices(&self) -> impl Iterator<Item = Point<3>> + '_ {
-        self.vertices.iter().copied()
-    }
-
-    /// Access the indices of the mesh
-    pub fn indices(&self) -> impl Iterator<Item = Index> + '_ {
-        self.indices.iter().copied()
-    }
-
     /// Access the triangles of the mesh
     pub fn triangles(&self) -> impl Iterator<Item = MeshTriangle> + '_ {
         self.triangles.iter().copied()
