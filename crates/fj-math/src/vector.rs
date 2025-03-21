@@ -373,8 +373,8 @@ where
 {
     type Output = Self;
 
-    fn div(self, rhs: S) -> Self::Output {
-        self.to_na().div(rhs.into().into_f64()).into()
+    fn div(self, scalar: S) -> Self::Output {
+        self.to_na().div(scalar.into().into_f64()).into()
     }
 }
 
