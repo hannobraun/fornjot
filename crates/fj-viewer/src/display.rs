@@ -25,7 +25,7 @@ pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
-        mesh: Some(tri_mesh),
+        tri_mesh: Some(tri_mesh),
         invert_zoom,
         window: None,
         viewer: None,
@@ -53,7 +53,7 @@ pub enum Error {
 }
 
 struct DisplayState {
-    mesh: Option<TriMesh>,
+    tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
     window: Option<Window>,
     viewer: Option<Viewer>,
@@ -69,7 +69,7 @@ impl ApplicationHandler for DisplayState {
             .viewer
             .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
 
-        if let Some(mesh) = self.mesh.take() {
+        if let Some(mesh) = self.tri_mesh.take() {
             viewer.handle_model_update(mesh);
         }
     }
