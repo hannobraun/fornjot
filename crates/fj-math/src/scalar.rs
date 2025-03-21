@@ -52,11 +52,6 @@ impl Scalar {
         Self { value }
     }
 
-    /// # Construct a `Scalar` from a `u64`
-    pub fn from_u64(value: u64) -> Self {
-        Self::from_f64(value as f64)
-    }
-
     /// # Convert the scalar value into an `f32`
     pub fn into_f32(self) -> f32 {
         self.value as f32
