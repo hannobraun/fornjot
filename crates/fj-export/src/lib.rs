@@ -132,8 +132,11 @@ pub fn export_stl(
 }
 
 /// Export the provided mesh to the provided writer in the OBJ format.
-pub fn export_obj(mesh: &TriMesh, mut write: impl Write) -> Result<(), Error> {
-    for (cnt, t) in mesh.triangles().enumerate() {
+pub fn export_obj(
+    tri_mesh: &TriMesh,
+    mut write: impl Write,
+) -> Result<(), Error> {
+    for (cnt, t) in tri_mesh.triangles().enumerate() {
         // write each point of the triangle
         for v in t.inner.points {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
