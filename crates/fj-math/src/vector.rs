@@ -79,7 +79,7 @@ impl<const D: usize> Vector<D> {
 
     /// # Compute the magnitude of the vector
     pub fn magnitude(&self) -> Scalar {
-        self.to_na().magnitude().into()
+        self.dot(self).sqrt()
     }
 
     /// # Compute a normalized version of the vector
