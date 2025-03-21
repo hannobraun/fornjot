@@ -168,9 +168,14 @@ impl PartialOrd for Scalar {
 
 impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
-        // Should never panic, as `from_f64` checks that the wrapped value is
-        // finite.
-        self.0.partial_cmp(&other.0).expect("Invalid `Scalar`")
+        let Some(ordering) = self.0.partial_cmp(&other.0) else {
+            unreachable!(
+                "`Scalar` is not valid, but this has been checked by the \
+                constructor."
+            );
+        };
+
+        ordering
     }
 }
 
