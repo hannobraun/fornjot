@@ -14,7 +14,7 @@ mod topology;
 fn main() -> anyhow::Result<()> {
     let tri_mesh = model::model();
 
-    export::export(&tri_mesh)?;
+    export::export(&tri_mesh, "output.3mf")?;
     app::run(tri_mesh)?;
 
     Ok(())

@@ -1,8 +1,11 @@
-use std::{collections::BTreeMap, fs::File};
+use std::{collections::BTreeMap, fs::File, path::Path};
 
 use fj_interop::TriMesh;
 
-pub fn export(tri_mesh: &TriMesh) -> anyhow::Result<()> {
+pub fn export(
+    tri_mesh: &TriMesh,
+    path: impl AsRef<Path>,
+) -> anyhow::Result<()> {
     let mut indices_by_vertex = BTreeMap::new();
 
     let mut points = Vec::new();
@@ -38,7 +41,7 @@ pub fn export(tri_mesh: &TriMesh) -> anyhow::Result<()> {
         },
     };
 
-    let output = File::create("output.3mf")?;
+    let output = File::create(path)?;
     threemf::write(output, mesh)?;
 
     Ok(())
