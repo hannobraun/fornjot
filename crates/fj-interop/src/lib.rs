@@ -10,11 +10,11 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 mod color;
-mod mesh;
+mod tri_mesh;
 
 pub mod ext;
 
 pub use self::{
     color::Color,
-    mesh::{Index, TriMesh, Triangle},
+    tri_mesh::{Index, TriMesh, Triangle},
 };
