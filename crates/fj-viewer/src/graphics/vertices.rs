@@ -17,12 +17,12 @@ impl Vertices {
         }
     }
 
-    pub fn from_mesh(mesh: &TriMesh) -> Self {
+    pub fn from_mesh(tri_mesh: &TriMesh) -> Self {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut indices_by_vertex = BTreeMap::new();
 
-        for triangle in mesh.triangles() {
+        for triangle in tri_mesh.triangles() {
             let [a, b, c] = triangle.inner.points;
 
             let normal = (b - a).cross(&(c - a)).normalize();
