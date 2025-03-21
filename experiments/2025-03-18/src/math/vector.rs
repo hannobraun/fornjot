@@ -1,8 +1,7 @@
 use std::ops;
 
+use fj_math::Scalar;
 use iter_fixed::IntoIteratorFixed;
-
-use super::Scalar;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vector<const D: usize> {

@@ -6,5 +6,3 @@ mod vector;
 pub use self::{
     bivector::Bivector, plane::Plane, point::Point, vector::Vector,
 };
-
-use fj_math::Scalar;
