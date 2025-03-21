@@ -28,7 +28,7 @@ impl<const D: usize> Vector<D> {
 }
 
 impl Vector<3> {
-    pub fn cross(self, other: Self) -> Self {
+    pub fn cross(self, other: &Self) -> Self {
         let [ax, ay, az] = self.components;
         let [bx, by, bz] = other.components;
 

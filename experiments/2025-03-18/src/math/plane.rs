@@ -23,7 +23,7 @@ impl Plane {
     }
 
     pub fn normal(&self) -> Vector<3> {
-        self.u().cross(self.v()).normalize()
+        self.u().cross(&self.v()).normalize()
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
