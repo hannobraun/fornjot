@@ -1,8 +1,7 @@
 mod bivector;
 mod plane;
 mod point;
-mod vector;
 
-pub use self::{
-    bivector::Bivector, plane::Plane, point::Point, vector::Vector,
-};
+pub use self::{bivector::Bivector, plane::Plane, point::Point};
+
+pub use fj_math::Vector;
