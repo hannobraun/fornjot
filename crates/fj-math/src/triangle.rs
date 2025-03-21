@@ -133,23 +133,23 @@ where
     }
 }
 
-/// Winding direction of a triangle.
+/// # Winding direction of a triangle.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Winding {
-    /// Counter-clockwise
+    /// # Counter-clockwise winding
     Ccw,
 
-    /// Clockwise
+    /// # Clockwise winding
     Cw,
 }
 
 impl Winding {
-    /// Indicate whether the winding is counter-clockwise
+    /// # Indicate whether the winding is counter-clockwise
     pub fn is_ccw(&self) -> bool {
         matches!(self, Self::Ccw)
     }
 
-    /// Indicate whether the winding is clockwise
+    /// # Indicate whether the winding is clockwise
     pub fn is_cw(&self) -> bool {
         matches!(self, Self::Cw)
     }
