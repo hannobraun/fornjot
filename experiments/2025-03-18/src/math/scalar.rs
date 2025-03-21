@@ -6,6 +6,8 @@ pub struct Scalar {
 }
 
 impl Scalar {
+    pub const ZERO: Self = Self { value: 0. };
+
     pub fn from_f64(value: f64) -> Self {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
@@ -18,7 +20,7 @@ impl Scalar {
     }
 
     pub fn zero() -> Self {
-        Self::from_f64(0.)
+        Self::ZERO
     }
 
     pub fn value(&self) -> f64 {
