@@ -1,10 +1,10 @@
 mod bivector;
 mod plane;
 mod point;
-mod scalar;
 mod vector;
 
 pub use self::{
-    bivector::Bivector, plane::Plane, point::Point, scalar::Scalar,
-    vector::Vector,
+    bivector::Bivector, plane::Plane, point::Point, vector::Vector,
 };
+
+use fj_math::Scalar;
