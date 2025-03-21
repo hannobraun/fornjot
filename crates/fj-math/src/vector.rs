@@ -84,7 +84,7 @@ impl<const D: usize> Vector<D> {
 
     /// # Compute a normalized version of the vector
     pub fn normalize(&self) -> Self {
-        self.to_na().normalize().into()
+        *self / self.magnitude()
     }
 
     /// # Compute the angle between this vector and another
