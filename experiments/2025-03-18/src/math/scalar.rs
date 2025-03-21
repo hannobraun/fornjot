@@ -19,7 +19,7 @@ impl Scalar {
         Self { value }
     }
 
-    pub fn value(&self) -> f64 {
+    pub fn value(self) -> f64 {
         self.value
     }
 
