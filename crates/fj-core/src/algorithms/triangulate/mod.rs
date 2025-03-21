@@ -70,6 +70,7 @@ impl Triangulate for FaceApprox {
             let points = triangle.map(|point| point.point_global);
             mesh.triangles.push(MeshTriangle {
                 inner: points.into(),
+                is_internal: false,
                 color,
             });
         }

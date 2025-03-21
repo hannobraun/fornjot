@@ -50,6 +50,16 @@ pub struct MeshTriangle {
     /// # The triangle
     pub inner: Triangle<3>,
 
+    /// # Track whether this is an internal triangle
+    ///
+    /// Internal triangles are triangles that are inside of the solid body that
+    /// the triangle mesh is a boundary for.
+    ///
+    /// If the triangle mesh is well-formed, then internal triangles are still
+    /// part of a single contiguous outer shell. But this shell might touch
+    /// itself, making the triangles where that is the case internal.
+    pub is_internal: bool,
+
     /// # The color of the triangle
     pub color: Color,
 }
