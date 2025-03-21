@@ -1,6 +1,5 @@
 use std::{array, borrow::Borrow};
 
-use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -61,7 +60,7 @@ pub trait BuildFace {
             array
         };
         let vertices = half_edges
-            .each_ref_ext()
+            .each_ref()
             .map(|edge: &Handle<HalfEdge>| edge.start_vertex().clone());
 
         Polygon {

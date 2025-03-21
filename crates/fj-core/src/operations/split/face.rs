@@ -1,4 +1,3 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 use itertools::Itertools;
 
@@ -63,7 +62,7 @@ impl SplitFace for Shell {
         //
         // Something to think about though!
         {
-            let [(a, _), (b, _)] = line.each_ref_ext();
+            let [(a, _), (b, _)] = line.each_ref();
 
             let exterior = face.region().exterior();
 

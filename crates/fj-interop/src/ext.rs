@@ -2,11 +2,6 @@
 
 /// Extension trait for arrays
 pub trait ArrayExt<T, const N: usize> {
-    /// Stable replacement for `each_ref`
-    ///
-    /// <https://doc.rust-lang.org/std/primitive.array.html#method.each_ref>
-    fn each_ref_ext(&self) -> [&T; N];
-
     /// Stable replacement for `each_mut`
     ///
     /// <https://doc.rust-lang.org/std/primitive.array.html#method.each_mut>
@@ -26,11 +21,6 @@ pub trait ArrayExt<T, const N: usize> {
 }
 
 impl<T> ArrayExt<T, 2> for [T; 2] {
-    fn each_ref_ext(&self) -> [&T; 2] {
-        let [a, b] = self;
-        [a, b]
-    }
-
     fn each_mut_ext(&mut self) -> [&mut T; 2] {
         let [a, b] = self;
         [a, b]
@@ -52,11 +42,6 @@ impl<T> ArrayExt<T, 2> for [T; 2] {
 }
 
 impl<T> ArrayExt<T, 3> for [T; 3] {
-    fn each_ref_ext(&self) -> [&T; 3] {
-        let [a, b, c] = self;
-        [a, b, c]
-    }
-
     fn each_mut_ext(&mut self) -> [&mut T; 3] {
         let [a, b, c] = self;
         [a, b, c]
@@ -78,11 +63,6 @@ impl<T> ArrayExt<T, 3> for [T; 3] {
 }
 
 impl<T> ArrayExt<T, 4> for [T; 4] {
-    fn each_ref_ext(&self) -> [&T; 4] {
-        let [a, b, c, d] = self;
-        [a, b, c, d]
-    }
-
     fn each_mut_ext(&mut self) -> [&mut T; 4] {
         let [a, b, c, d] = self;
         [a, b, c, d]
