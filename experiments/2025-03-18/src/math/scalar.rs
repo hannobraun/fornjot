@@ -6,7 +6,7 @@ pub struct Scalar {
 }
 
 impl Scalar {
-    pub fn new(value: f64) -> Self {
+    pub fn from_f64(value: f64) -> Self {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
         }
@@ -18,7 +18,7 @@ impl Scalar {
     }
 
     pub fn zero() -> Self {
-        Self::new(0.)
+        Self::from_f64(0.)
     }
 
     pub fn value(&self) -> f64 {
@@ -27,7 +27,7 @@ impl Scalar {
 
     pub fn sqrt(self) -> Self {
         let value = self.value().sqrt();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -54,7 +54,7 @@ impl PartialOrd for Scalar {
 
 impl From<f64> for Scalar {
     fn from(value: f64) -> Self {
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -66,7 +66,7 @@ where
 
     fn add(self, other: S) -> Self::Output {
         let value = self.value() + other.into().value();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -78,7 +78,7 @@ where
 
     fn div(self, other: S) -> Self::Output {
         let value = self.value() / other.into().value();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -90,7 +90,7 @@ where
 
     fn mul(self, other: S) -> Self::Output {
         let value = self.value() * other.into().value();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -99,7 +99,7 @@ impl ops::Neg for Scalar {
 
     fn neg(self) -> Self::Output {
         let value = -self.value();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
 
@@ -111,6 +111,6 @@ where
 
     fn sub(self, other: S) -> Self::Output {
         let value = self.value() - other.into().value();
-        Self::new(value)
+        Self::from_f64(value)
     }
 }
