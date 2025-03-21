@@ -591,23 +591,26 @@ impl approx::AbsDiffEq for Scalar {
     }
 }
 
-/// The sign of a [`Scalar`]
+/// # The sign of a [`Scalar`]
 ///
 /// See [`Scalar::sign`]
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Sign {
-    /// The scalar is negative
+    /// # The scalar value is negative
     Negative,
 
-    /// The scalar is positive
+    /// # The scalar value is positive
     Positive,
 
-    /// The scalar is zero
+    /// # The scalar value is zero
     Zero,
 }
 
 impl Sign {
-    /// Convert this sign back to a scalar
+    /// # Convert this sign back to a scalar
+    ///
+    /// Returns `-Scalar::ONE`, if the sign is negative; `Scalar::ONE`, if it is
+    /// positive; or `Scalar::ZERO`, if the value is zero.
     pub fn to_scalar(self) -> Scalar {
         match self {
             Self::Negative => -Scalar::ONE,
