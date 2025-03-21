@@ -1,4 +1,4 @@
-use super::Triangle;
+use fj_math::Triangle;
 
 #[derive(Debug)]
 pub struct TriMesh {

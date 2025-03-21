@@ -3,12 +3,12 @@ use std::{
     mem,
 };
 
-use fj_math::Point;
+use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 use crate::{
-    geometry::{MeshTriangle, TriMesh, Triangle},
+    geometry::{MeshTriangle, TriMesh},
     topology::face::Face,
 };
 
