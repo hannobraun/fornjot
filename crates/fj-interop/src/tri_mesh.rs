@@ -83,15 +83,13 @@ impl TriMesh {
     }
 }
 
-/// A triangle
-///
-/// Extension of [`Triangle`] that also includes a color.
+/// # A triangle in a [`TriMesh`]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct MeshTriangle {
-    /// The points of the triangle
+    /// # The triangle
     pub inner: Triangle<3>,
 
-    /// The color of the triangle
+    /// # The color of the triangle
     pub color: Color,
 }
 
