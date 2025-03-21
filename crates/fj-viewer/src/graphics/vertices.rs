@@ -17,7 +17,7 @@ impl Vertices {
 
     pub fn from_tri_mesh(tri_mesh: &TriMesh) -> Self {
         let (vertices, indices) = vertices_to_indexed_vertices(
-            tri_mesh.triangles().flat_map(|triangle| {
+            tri_mesh.triangles.iter().flat_map(|triangle| {
                 let [a, b, c] = triangle.inner.points;
 
                 let normal = (b - a).cross(&(c - a)).normalize();
