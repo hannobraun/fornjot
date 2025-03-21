@@ -125,6 +125,11 @@ impl Scalar {
         self.value.round().into()
     }
 
+    /// # Compute the square root of the scalar value
+    pub fn sqrt(self) -> Self {
+        self.value.sqrt().into()
+    }
+
     /// # Compute the sine of the scalar value
     pub fn sin(self) -> Self {
         self.value.sin().into()
