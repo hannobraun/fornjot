@@ -61,8 +61,9 @@ pub fn export_3mf(
         })
         .collect();
 
-    let indices = tri_mesh.indices().collect::<Vec<_>>();
-    let triangles = indices
+    let triangles = tri_mesh
+        .indices()
+        .collect::<Vec<_>>()
         .chunks(3)
         .map(|triangle| threemf::model::Triangle {
             v1: triangle[0] as usize,
