@@ -17,7 +17,7 @@ impl Vertices {
         }
     }
 
-    pub fn from_mesh(tri_mesh: &TriMesh) -> Self {
+    pub fn from_tri_mesh(tri_mesh: &TriMesh) -> Self {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut indices_by_vertex = BTreeMap::new();

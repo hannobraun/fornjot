@@ -58,7 +58,8 @@ impl Viewer {
 
     /// Handle the model being updated
     pub fn handle_model_update(&mut self, mesh: TriMesh) {
-        self.renderer.update_geometry(Vertices::from_mesh(&mesh));
+        self.renderer
+            .update_geometry(Vertices::from_tri_mesh(&mesh));
 
         let aabb = mesh.aabb();
         if self.model.replace((mesh, aabb)).is_none() {
