@@ -1,9 +1,8 @@
 use std::sync::Arc;
 
 use anyhow::anyhow;
+use fj_interop::TriMesh;
 use winit::window::Window;
-
-use crate::geometry::TriMesh;
 
 use super::{geometry::Geometry, pipeline::Pipeline};
 

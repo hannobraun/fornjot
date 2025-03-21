@@ -1,7 +1,6 @@
+use fj_interop::TriMesh;
 use glam::Vec3;
 use wgpu::util::DeviceExt;
-
-use crate::geometry::TriMesh;
 
 use super::vertex::Vertex;
 
@@ -19,7 +18,10 @@ impl Geometry {
         for triangle in tri_mesh.all_triangles() {
             let triangle = triangle.points.each_ref().map(|point| {
                 Vec3::from(
-                    point.coords.components.map(|coord| coord.into_f64() as f32),
+                    point
+                        .coords
+                        .components
+                        .map(|coord| coord.into_f64() as f32),
                 )
             });
             let normal = {

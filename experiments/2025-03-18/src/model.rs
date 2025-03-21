@@ -1,7 +1,8 @@
+use fj_interop::TriMesh;
 use fj_math::{Point, Vector};
 
 use crate::{
-    geometry::{Sketch, ToTriMesh, TriMesh},
+    geometry::{Sketch, ToTriMesh},
     handle::Handle,
     math::{Bivector, Plane},
     operations::sweep::SweepExt,

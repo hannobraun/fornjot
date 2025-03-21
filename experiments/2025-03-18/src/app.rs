@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use fj_interop::TriMesh;
 use winit::{
     application::ApplicationHandler,
     event::{KeyEvent, WindowEvent},
@@ -8,7 +9,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{geometry::TriMesh, render::Renderer};
+use crate::render::Renderer;
 
 pub fn run(tri_mesh: TriMesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;

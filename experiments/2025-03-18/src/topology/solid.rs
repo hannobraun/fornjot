@@ -1,7 +1,6 @@
-use crate::{
-    geometry::{ToTriMesh, TriMesh},
-    handle::Handle,
-};
+use fj_interop::TriMesh;
+
+use crate::{geometry::ToTriMesh, handle::Handle};
 
 use super::face::Face;
 

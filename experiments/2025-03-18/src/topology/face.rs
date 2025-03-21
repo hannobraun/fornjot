@@ -1,9 +1,8 @@
+use fj_interop::TriMesh;
 use itertools::Itertools;
 
 use crate::{
-    extra::triangulate::triangulate,
-    geometry::{ToTriMesh, TriMesh},
-    handle::Handle,
+    extra::triangulate::triangulate, geometry::ToTriMesh, handle::Handle,
 };
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};

@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::geometry::TriMesh;
+use fj_interop::TriMesh;
 
 pub fn export(tri_mesh: &TriMesh) -> anyhow::Result<()> {
     let mut indices_by_vertex = BTreeMap::new();
