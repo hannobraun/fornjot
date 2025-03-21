@@ -47,7 +47,7 @@ pub fn export(tri_mesh: &TriMesh, path: &Path) -> Result<(), Error> {
     }
 }
 
-/// Export the provided mesh to the provided writer in the 3MF format.
+/// # Export the provided mesh to the provided writer in the 3MF format
 pub fn export_3mf(
     mesh: &TriMesh,
     write: impl Write + Seek,
