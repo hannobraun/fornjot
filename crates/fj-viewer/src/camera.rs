@@ -101,7 +101,7 @@ impl Camera {
 
         let mut min_t = None;
 
-        for triangle in tri_mesh.triangles() {
+        for triangle in tri_mesh.triangles.iter() {
             let t =
                 triangle
                     .inner
