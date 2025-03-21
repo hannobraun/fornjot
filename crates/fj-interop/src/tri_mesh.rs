@@ -85,7 +85,7 @@ impl TriMesh {
 
 /// A triangle
 ///
-/// Extension of [`fj_math::Triangle`] that also includes a color.
+/// Extension of [`Triangle`] that also includes a color.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct MeshTriangle {
     /// The points of the triangle
