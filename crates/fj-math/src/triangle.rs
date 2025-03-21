@@ -69,6 +69,9 @@ impl<const D: usize> Triangle<D> {
 
 impl Triangle<2> {
     /// # Compute the winding of the triangle
+    ///
+    /// A winding can only be computed, if the triangle is valid. Returns
+    /// `None`, if it isn't.
     pub fn winding(&self) -> Option<Winding> {
         let [pa, pb, pc] = self.points.map(|point| robust::Coord {
             x: point.u,
