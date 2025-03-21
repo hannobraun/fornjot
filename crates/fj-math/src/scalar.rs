@@ -45,9 +45,9 @@ impl Scalar {
     pub fn from_f64(scalar: f64) -> Self {
         if scalar.is_nan() {
             panic!("Invalid scalar value: {scalar}");
-        } else {
-            Self(scalar)
         }
+
+        Self(scalar)
     }
 
     /// # Construct a `Scalar` from a `u64`
