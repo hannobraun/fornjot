@@ -57,12 +57,12 @@ impl Viewer {
     }
 
     /// Handle the model being updated
-    pub fn handle_model_update(&mut self, mesh: TriMesh) {
+    pub fn handle_model_update(&mut self, tri_mesh: TriMesh) {
         self.renderer
-            .update_geometry(Vertices::from_tri_mesh(&mesh));
+            .update_geometry(Vertices::from_tri_mesh(&tri_mesh));
 
-        let aabb = mesh.aabb();
-        if self.model.replace((mesh, aabb)).is_none() {
+        let aabb = tri_mesh.aabb();
+        if self.model.replace((tri_mesh, aabb)).is_none() {
             self.camera.init_planes(&aabb);
         }
     }
