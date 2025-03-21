@@ -1,10 +1,10 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
     handle::Handle,
-    math::Point,
     topology::{
         face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
     },

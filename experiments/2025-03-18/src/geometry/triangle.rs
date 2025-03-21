@@ -1,4 +1,4 @@
-use crate::math::Point;
+use fj_math::Point;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Triangle<const D: usize> {

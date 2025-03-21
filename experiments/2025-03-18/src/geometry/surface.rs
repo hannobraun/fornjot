@@ -1,6 +1,6 @@
-use fj_math::Vector;
+use fj_math::{Point, Vector};
 
-use crate::math::{Plane, Point};
+use crate::math::Plane;
 
 pub trait SurfaceGeometry {
     fn point_from_local(&self, point: Point<2>) -> Point<3>;

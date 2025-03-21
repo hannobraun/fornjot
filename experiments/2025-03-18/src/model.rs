@@ -1,9 +1,9 @@
-use fj_math::Vector;
+use fj_math::{Point, Vector};
 
 use crate::{
     geometry::{Sketch, ToTriMesh, TriMesh},
     handle::Handle,
-    math::{Bivector, Plane, Point},
+    math::{Bivector, Plane},
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };
