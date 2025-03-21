@@ -21,11 +21,11 @@ use crate::{
 };
 
 /// Display the provided mesh in a window that processes input
-pub fn display(mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
-        mesh: Some(mesh),
+        mesh: Some(tri_mesh),
         invert_zoom,
         window: None,
         viewer: None,
