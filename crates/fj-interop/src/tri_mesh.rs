@@ -4,7 +4,7 @@ use fj_math::{Aabb, Triangle};
 
 use crate::Color;
 
-/// A triangle mesh
+/// # A triangle mesh
 #[derive(Clone, Debug, Default)]
 pub struct TriMesh {
     triangles: Vec<MeshTriangle>,
