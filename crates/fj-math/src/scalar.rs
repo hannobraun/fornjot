@@ -8,38 +8,38 @@ use std::{
 
 use decorum::R64;
 
-/// A rational, finite scalar value
+/// # A rational, finite scalar value
 ///
 /// This is a wrapper around `f64`. On construction, it checks that the `f64`
 /// value is not NaN. This allows `Scalar` to provide implementations of [`Eq`],
-/// [`Ord`], and [`Hash`], enabling `Scalar` (and types built on top of it), to
-/// be used as keys in hash maps, hash sets, and similar types.
+/// [`Ord`], and [`Hash`]; enabling `Scalar` (and types built on top of it), to
+/// be used as keys in various types of sets and maps.
 #[derive(Clone, Copy, Default)]
 #[repr(C)]
 pub struct Scalar(f64);
 
 impl Scalar {
-    /// The `Scalar` instance that represents zero
+    /// # The `Scalar` instance that represents zero
     pub const ZERO: Self = Self(0.);
 
-    /// The `Scalar` instance that represents one
+    /// # The `Scalar` instance that represents one
     pub const ONE: Self = Self(1.);
 
-    /// The `Scalar` instance that represents two
+    /// # The `Scalar` instance that represents two
     pub const TWO: Self = Self(2.);
 
-    /// The largest `Scalar` value
+    /// # The largest `Scalar` value
     pub const MAX: Self = Self(f64::MAX);
 
-    /// The `Scalar` instance that represents pi
+    /// # The `Scalar` instance that represents pi
     pub const PI: Self = Self(PI);
 
-    /// The `Scalar` instance that represents tau
+    /// # The `Scalar` instance that represents tau
     pub const TAU: Self = Self(TAU);
 
-    /// Construct a `Scalar` from an `f64`
+    /// # Construct a `Scalar` from an `f64`
     ///
-    /// # Panics
+    /// ## Panics
     ///
     /// Panics, if `scalar` is NaN.
     pub fn from_f64(scalar: f64) -> Self {
@@ -50,45 +50,42 @@ impl Scalar {
         }
     }
 
-    /// Construct a `Scalar` from a `u64`
+    /// # Construct a `Scalar` from a `u64`
     pub fn from_u64(scalar: u64) -> Self {
         Self::from_f64(scalar as f64)
     }
 
-    /// Convert the scalar into an `f32`
+    /// # Convert the scalar value into an `f32`
     pub fn into_f32(self) -> f32 {
         self.0 as f32
     }
 
-    /// Convert the scalar into an `f64`
+    /// # Convert the scalar value into an `f64`
     pub fn into_f64(self) -> f64 {
         self.0
     }
 
-    /// Convert the scalar into a `u64`
+    /// # Convert the scalar value into a `u64`
     pub fn into_u64(self) -> u64 {
         self.0 as u64
     }
 
-    /// Indicate whether the scalar is negative
+    /// # Indicate whether the scalar value is negative
     pub fn is_negative(self) -> bool {
         self < Self::ZERO
     }
 
-    /// Indicate whether the scalar is positive
+    /// # Indicate whether the scalar value is positive
     pub fn is_positive(self) -> bool {
         self > Self::ZERO
     }
 
-    /// Indicate whether the scalar is zero
+    /// # Indicate whether the scalar value is zero
     pub fn is_zero(self) -> bool {
         self == Self::ZERO
     }
 
-    /// The sign of the scalar
-    ///
-    /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
-    /// positive, `-Scalar::ONE`, if it is negative.
+    /// # Compute the sign of the scalar
     pub fn sign(self) -> Sign {
         if self.is_negative() {
             return Sign::Negative;
@@ -103,53 +100,53 @@ impl Scalar {
         unreachable!("Sign is neither negative, nor positive, nor zero.")
     }
 
-    /// Compute the absolute value of the scalar
+    /// # Compute the absolute scalar value
     pub fn abs(self) -> Self {
         self.0.abs().into()
     }
 
-    /// Compute the maximum of this and another scalar
+    /// # Compute the maximum of this and another scalar value
     pub fn max(self, other: impl Into<Self>) -> Self {
         self.0.max(other.into().0).into()
     }
 
-    /// Compute the largest integer smaller than or equal to this scalar
+    /// # Compute the largest integer smaller than or equal to the scalar value
     pub fn floor(self) -> Self {
         self.0.floor().into()
     }
 
-    /// Compute the smallest integer larger than or equal to this scalar
+    /// # Compute the smallest integer larger than or equal to the scalar value
     pub fn ceil(self) -> Self {
         self.0.ceil().into()
     }
 
-    /// Round the scalar
+    /// # Round the scalar value
     pub fn round(self) -> Self {
         self.0.round().into()
     }
 
-    /// Compute the sine
+    /// # Compute the sine of the scalar value
     pub fn sin(self) -> Self {
         self.0.sin().into()
     }
 
-    /// Compute the cosine
+    /// # Compute the cosine of the scalar value
     pub fn cos(self) -> Self {
         self.0.cos().into()
     }
 
-    /// Compute sine and cosine
+    /// # Compute sine and cosine of the scalar value
     pub fn sin_cos(self) -> (Self, Self) {
         let (sin, cos) = self.0.sin_cos();
         (sin.into(), cos.into())
     }
 
-    /// Compute the arccosine
+    /// # Compute the arccosine of the scalar value
     pub fn acos(self) -> Self {
         self.0.acos().into()
     }
 
-    /// Compute the four-quadrant arctangent
+    /// # Compute the four-quadrant arctangent of the scalar value
     pub fn atan2(self, other: Self) -> Self {
         self.0.atan2(other.0).into()
     }
