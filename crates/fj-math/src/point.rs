@@ -43,13 +43,6 @@ impl<const D: usize> Point<D> {
         }
     }
 
-    /// Convert to a 1-dimensional point
-    pub fn to_t(self) -> Point<1> {
-        Point {
-            coords: self.coords.to_t(),
-        }
-    }
-
     /// Convert to a 3-dimensional point
     ///
     /// See [`Vector::to_xyz`] for details. This method follows the same rules.
