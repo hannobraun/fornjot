@@ -1,7 +1,7 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
-use fj_interop::Mesh;
+use fj_interop::TriMesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Vector};
 
 use crate::screen::NormalizedScreenPosition;
@@ -82,7 +82,7 @@ impl Camera {
     pub fn focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
-        mesh: &Mesh,
+        mesh: &TriMesh,
         aabb: &Aabb<3>,
     ) -> FocusPoint {
         self.calculate_focus_point(cursor, mesh)
@@ -92,7 +92,7 @@ impl Camera {
     fn calculate_focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
-        mesh: &Mesh,
+        mesh: &TriMesh,
     ) -> Option<FocusPoint> {
         // Transform camera and cursor positions to model space.
         let origin = self.position();

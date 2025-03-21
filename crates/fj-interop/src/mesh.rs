@@ -6,7 +6,7 @@ use crate::Color;
 
 /// A triangle mesh
 #[derive(Clone, Debug, Default)]
-pub struct Mesh {
+pub struct TriMesh {
     vertices: Vec<Point<3>>,
     indices: Vec<Index>,
 
@@ -14,7 +14,7 @@ pub struct Mesh {
     triangles: Vec<Triangle>,
 }
 
-impl Mesh {
+impl TriMesh {
     /// Construct a new instance of `Mesh`
     pub fn new() -> Self {
         Self::default()

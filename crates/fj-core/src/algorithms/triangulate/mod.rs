@@ -3,7 +3,7 @@
 mod delaunay;
 mod polygon;
 
-use fj_interop::Mesh;
+use fj_interop::TriMesh;
 
 use crate::{Core, geometry::Tolerance, operations::presentation::GetColor};
 
@@ -14,8 +14,8 @@ use super::approx::{Approx, face::FaceApprox};
 /// Triangulate a shape
 pub trait Triangulate: Sized {
     /// Triangulate the shape
-    fn triangulate(self, core: &mut Core) -> Mesh {
-        let mut mesh = Mesh::new();
+    fn triangulate(self, core: &mut Core) -> TriMesh {
+        let mut mesh = TriMesh::new();
         self.triangulate_into_mesh(&mut mesh, core);
         mesh
     }
@@ -24,7 +24,7 @@ pub trait Triangulate: Sized {
     ///
     /// This is a low-level method, intended for implementation of
     /// `Triangulate`. Most callers should prefer [`Triangulate::triangulate`].
-    fn triangulate_into_mesh(self, mesh: &mut Mesh, core: &mut Core);
+    fn triangulate_into_mesh(self, mesh: &mut TriMesh, core: &mut Core);
 }
 
 impl<T> Triangulate for (T, Tolerance)
@@ -32,7 +32,7 @@ where
     T: Approx,
     T::Approximation: IntoIterator<Item = FaceApprox>,
 {
-    fn triangulate_into_mesh(self, mesh: &mut Mesh, core: &mut Core) {
+    fn triangulate_into_mesh(self, mesh: &mut TriMesh, core: &mut Core) {
         let (approx, tolerance) = self;
 
         let approx = approx.approx(tolerance, &core.layers.geometry);
@@ -44,7 +44,7 @@ where
 }
 
 impl Triangulate for FaceApprox {
-    fn triangulate_into_mesh(self, mesh: &mut Mesh, core: &mut Core) {
+    fn triangulate_into_mesh(self, mesh: &mut TriMesh, core: &mut Core) {
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
@@ -75,7 +75,7 @@ impl Triangulate for FaceApprox {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::Mesh;
+    use fj_interop::TriMesh;
     use fj_math::{Point, Scalar};
 
     use crate::{
@@ -280,7 +280,7 @@ mod tests {
     fn triangulate(
         face: Handle<Face>,
         core: &mut Core,
-    ) -> anyhow::Result<Mesh> {
+    ) -> anyhow::Result<TriMesh> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
         Ok(approx_face(
             face,

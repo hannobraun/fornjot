@@ -16,5 +16,5 @@ pub mod ext;
 
 pub use self::{
     color::Color,
-    mesh::{Index, Mesh, Triangle},
+    mesh::{Index, TriMesh, Triangle},
 };

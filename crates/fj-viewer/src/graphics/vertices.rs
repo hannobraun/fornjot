@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use bytemuck::{Pod, Zeroable};
-use fj_interop::{Index, Mesh};
+use fj_interop::{Index, TriMesh};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -17,7 +17,7 @@ impl Vertices {
         }
     }
 
-    pub fn from_mesh(mesh: &Mesh) -> Self {
+    pub fn from_mesh(mesh: &TriMesh) -> Self {
         let mut vertices = Vec::new();
         let mut indices = Vec::new();
         let mut indices_by_vertex = BTreeMap::new();

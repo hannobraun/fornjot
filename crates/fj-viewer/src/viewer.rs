@@ -1,4 +1,4 @@
-use fj_interop::Mesh;
+use fj_interop::TriMesh;
 use fj_math::Aabb;
 use tracing::warn;
 
@@ -24,7 +24,7 @@ pub struct Viewer {
     draw_config: DrawConfig,
     focus_point: Option<FocusPoint>,
     renderer: Renderer,
-    model: Option<(Mesh, Aabb<3>)>,
+    model: Option<(TriMesh, Aabb<3>)>,
 }
 
 impl Viewer {
@@ -57,7 +57,7 @@ impl Viewer {
     }
 
     /// Handle the model being updated
-    pub fn handle_model_update(&mut self, mesh: Mesh) {
+    pub fn handle_model_update(&mut self, mesh: TriMesh) {
         self.renderer.update_geometry(Vertices::from_mesh(&mesh));
 
         let aabb = mesh.aabb();

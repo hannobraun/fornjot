@@ -16,7 +16,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_interop::Mesh;
+use fj_interop::TriMesh;
 use fj_math::Triangle;
 
 /// Export the provided mesh to the file at the given path.
@@ -25,7 +25,7 @@ use fj_math::Triangle;
 ///
 /// Currently 3MF & STL file types are supported. The case insensitive file extension of
 /// the provided path is used to switch between supported types.
-pub fn export(mesh: &Mesh, path: &Path) -> Result<(), Error> {
+pub fn export(mesh: &TriMesh, path: &Path) -> Result<(), Error> {
     match path.extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
@@ -47,7 +47,10 @@ pub fn export(mesh: &Mesh, path: &Path) -> Result<(), Error> {
 }
 
 /// Export the provided mesh to the provided writer in the 3MF format.
-pub fn export_3mf(mesh: &Mesh, write: impl Write + Seek) -> Result<(), Error> {
+pub fn export_3mf(
+    mesh: &TriMesh,
+    write: impl Write + Seek,
+) -> Result<(), Error> {
     let vertices = mesh
         .vertices()
         .map(|point| threemf::model::Vertex {
@@ -80,7 +83,7 @@ pub fn export_3mf(mesh: &Mesh, write: impl Write + Seek) -> Result<(), Error> {
 }
 
 /// Export the provided mesh to the provided writer in the STL format.
-pub fn export_stl(mesh: &Mesh, mut write: impl Write) -> Result<(), Error> {
+pub fn export_stl(mesh: &TriMesh, mut write: impl Write) -> Result<(), Error> {
     let points = mesh
         .triangles()
         .map(|triangle| triangle.inner.points)
@@ -124,7 +127,7 @@ pub fn export_stl(mesh: &Mesh, mut write: impl Write) -> Result<(), Error> {
 }
 
 /// Export the provided mesh to the provided writer in the OBJ format.
-pub fn export_obj(mesh: &Mesh, mut write: impl Write) -> Result<(), Error> {
+pub fn export_obj(mesh: &TriMesh, mut write: impl Write) -> Result<(), Error> {
     for (cnt, t) in mesh.triangles().enumerate() {
         // write each point of the triangle
         for v in t.inner.points {

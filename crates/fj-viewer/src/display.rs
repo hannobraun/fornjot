@@ -1,4 +1,4 @@
-use fj_interop::Mesh;
+use fj_interop::TriMesh;
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -21,7 +21,7 @@ use crate::{
 };
 
 /// Display the provided mesh in a window that processes input
-pub fn display(mesh: Mesh, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
@@ -53,7 +53,7 @@ pub enum Error {
 }
 
 struct DisplayState {
-    mesh: Option<Mesh>,
+    mesh: Option<TriMesh>,
     invert_zoom: bool,
     window: Option<Window>,
     viewer: Option<Viewer>,
