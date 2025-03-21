@@ -566,6 +566,7 @@ version = "0.49.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
+ "iter_fixed",
  "nalgebra",
  "num-traits",
  "parry2d-f64",
