@@ -6,7 +6,7 @@ use std::{
     ops,
 };
 
-use decorum::R64;
+use decorum::{R64, divergence::OrPanic};
 
 /// # A rational, finite scalar value
 ///
@@ -161,7 +161,7 @@ impl PartialEq for Scalar {
     fn eq(&self, other: &Self) -> bool {
         // Using `R64` here to make sure that this matches the `Eq`/`PartialEq`
         // implementation, as required by `Hash`.
-        R64::from_inner(self.value).eq(&R64::from_inner(other.value))
+        R64::<OrPanic>::new(self.value).eq(&R64::<OrPanic>::new(other.value))
     }
 }
 
@@ -190,7 +190,7 @@ impl Hash for Scalar {
     fn hash<H: Hasher>(&self, state: &mut H) {
         // The `Eq`/`PartialEq` implementation is also using `R64`. So these
         // implementations match, as required by `Hash`.
-        R64::from_inner(self.value).hash(state);
+        R64::<OrPanic>::new(self.value).hash(state);
     }
 }
 
