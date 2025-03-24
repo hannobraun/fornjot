@@ -188,8 +188,8 @@ impl Ord for Scalar {
 
 impl Hash for Scalar {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        // To the best of my knowledge, this matches the `PartialEq`
-        // implementation.
+        // The `Eq`/`PartialEq` implementation is also using `R64`. So these
+        // implementations match, as required by `Hash`.
         R64::from_inner(self.value).hash(state);
     }
 }
