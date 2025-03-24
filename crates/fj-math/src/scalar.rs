@@ -2,7 +2,7 @@ use std::{
     cmp,
     f64::consts::{PI, TAU},
     fmt,
-    hash::Hash,
+    hash::{Hash, Hasher},
     ops,
 };
 
@@ -187,7 +187,7 @@ impl Ord for Scalar {
 }
 
 impl Hash for Scalar {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         // The `Eq`/`PartialEq` implementation is also using `R64`. So these
         // implementations match, as required by `Hash`.
         R64::from_inner(self.value).hash(state);
