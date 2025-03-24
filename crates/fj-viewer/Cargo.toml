@@ -35,7 +35,7 @@ default-features = false
 features = ["png", "jpeg"]
 
 [dependencies.wgpu]
-version = "23.0.1"
+version = "24.0.3"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
