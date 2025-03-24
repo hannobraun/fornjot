@@ -159,7 +159,9 @@ impl Scalar {
 
 impl PartialEq for Scalar {
     fn eq(&self, other: &Self) -> bool {
-        self.value == other.value
+        // Using `R64` here to make sure that this matches the `Eq`/`PartialEq`
+        // implementation, as required by `Hash`.
+        R64::from_inner(self.value).eq(&R64::from_inner(other.value))
     }
 }
 
