@@ -6,16 +6,8 @@ edition = "2024"
 
 [dependencies]
 anyhow = "*"
-iter_fixed = "*"
 itertools = "*"
 spade = "*"
-threemf = "*"
-wgpu = "*"
-winit = "*"
-
-[dependencies.bytemuck]
-version = "*"
-features = ["derive"]
 
 [dependencies.fj-export]
 path = "../../crates/fj-export"

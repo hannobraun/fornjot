@@ -488,18 +488,13 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
- "bytemuck",
  "fj-export",
  "fj-interop",
  "fj-math",
  "fj-viewer",
  "geo",
- "iter_fixed",
  "itertools",
  "spade",
- "threemf",
- "wgpu",
- "winit",
 ]
 
 [[package]]
