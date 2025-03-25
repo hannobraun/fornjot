@@ -31,7 +31,7 @@ impl ViewerWindow {
     pub async fn new(
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let window = Window::new(event_loop).unwrap();
+        let window = Window::new(event_loop)?;
         let renderer = Renderer::new(&window).await?;
 
         Ok(Self {
@@ -189,6 +189,9 @@ impl ViewerWindow {
 
 #[derive(Debug, thiserror::Error)]
 pub enum WindowError {
+    #[error("Failed to initialize window")]
+    WindowInit(#[from] winit::error::OsError),
+
     #[error(transparent)]
     RendererInit(#[from] RendererInitError),
 }
