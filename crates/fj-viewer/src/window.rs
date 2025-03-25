@@ -4,7 +4,7 @@ use winit::event_loop::ActiveEventLoop;
 
 /// A window that can be used with `fj-viewer`
 pub struct Window {
-    inner: Arc<winit::window::Window>,
+    pub inner: Arc<winit::window::Window>,
 }
 
 impl Window {
