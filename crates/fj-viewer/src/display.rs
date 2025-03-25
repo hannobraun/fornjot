@@ -16,7 +16,7 @@ use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
     screen::{Screen, ScreenSize},
-    viewer::Viewer,
+    viewer::ViewerWindow,
     window::{self, Window},
 };
 
@@ -56,7 +56,7 @@ struct DisplayState {
     tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
     window: Option<Window>,
-    viewer: Option<Viewer>,
+    viewer: Option<ViewerWindow>,
 }
 
 impl ApplicationHandler for DisplayState {
@@ -65,9 +65,9 @@ impl ApplicationHandler for DisplayState {
             .window
             .get_or_insert_with(|| Window::new(event_loop).unwrap());
 
-        let viewer = self
-            .viewer
-            .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
+        let viewer = self.viewer.get_or_insert_with(|| {
+            block_on(ViewerWindow::new(window)).unwrap()
+        });
 
         if let Some(mesh) = self.tri_mesh.take() {
             viewer.handle_model_update(mesh);

@@ -14,7 +14,7 @@ use crate::{
 };
 
 /// The Fornjot model viewer
-pub struct Viewer {
+pub struct ViewerWindow {
     current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
     most_recent_mouse_button: Option<MouseButton>,
@@ -27,7 +27,7 @@ pub struct Viewer {
     model: Option<(TriMesh, Aabb<3>)>,
 }
 
-impl Viewer {
+impl ViewerWindow {
     /// Construct a new instance of `Viewer`
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
