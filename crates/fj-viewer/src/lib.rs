@@ -14,7 +14,6 @@ mod display;
 mod graphics;
 mod input;
 mod viewer;
-mod window;
 
 pub use self::{
     display::{Error, display},
