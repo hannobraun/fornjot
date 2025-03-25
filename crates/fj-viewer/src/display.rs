@@ -75,18 +75,18 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let Some(viewer) = &mut self.window else {
+        let Some(window) = &mut self.window else {
             return;
         };
 
         let input_event = input_event(&event, self.invert_zoom);
         if let Some(input_event) = input_event {
-            viewer.handle_input_event(input_event);
+            window.handle_input_event(input_event);
         }
 
         match event {
             WindowEvent::Resized(size) => {
-                viewer.on_screen_resize(ScreenSize {
+                window.on_screen_resize(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
@@ -107,15 +107,15 @@ impl ApplicationHandler for DisplayState {
                     event_loop.exit();
                 }
                 Key::Character("1") => {
-                    viewer.toggle_draw_model();
+                    window.toggle_draw_model();
                 }
                 Key::Character("2") => {
-                    viewer.toggle_draw_mesh();
+                    window.toggle_draw_mesh();
                 }
                 _ => {}
             },
             WindowEvent::CursorMoved { position, .. } => {
-                viewer.on_cursor_movement([position.x, position.y]);
+                window.on_cursor_movement([position.x, position.y]);
             }
             WindowEvent::MouseInput { state, button, .. } => {
                 let button = match button {
@@ -129,17 +129,17 @@ impl ApplicationHandler for DisplayState {
                 if let Some(button) = button {
                     match state {
                         ElementState::Pressed => {
-                            viewer.on_mouse_button_pressed(button);
+                            window.on_mouse_button_pressed(button);
                         }
                         ElementState::Released => {
-                            viewer.on_mouse_button_released(button)
+                            window.on_mouse_button_released(button)
                         }
                     }
                 }
             }
-            WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
+            WindowEvent::MouseWheel { .. } => window.add_focus_point(),
             WindowEvent::RedrawRequested => {
-                viewer.draw();
+                window.draw();
             }
             _ => {}
         }
