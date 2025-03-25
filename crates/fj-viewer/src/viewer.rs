@@ -3,7 +3,7 @@ use std::sync::Arc;
 use fj_interop::TriMesh;
 use fj_math::Aabb;
 use tracing::warn;
-use winit::event_loop::ActiveEventLoop;
+use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
 use crate::{
     RendererInitError,
@@ -13,11 +13,11 @@ use crate::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
     },
-    window::{NormalizedScreenPosition, Window, WindowSize},
+    window::{NormalizedScreenPosition, Window},
 };
 
 pub struct ViewerWindow {
-    new_screen_size: Option<WindowSize>,
+    new_screen_size: Option<PhysicalSize<u32>>,
     most_recent_mouse_button: Option<MouseButton>,
     camera_tuning_config: CameraTuningConfig,
     camera: Camera,
@@ -156,7 +156,7 @@ impl ViewerWindow {
     }
 
     /// Handle the screen being resized
-    pub fn on_screen_resize(&mut self, new_size: WindowSize) {
+    pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
         self.new_screen_size = Some(new_size);
     }
 

@@ -3,8 +3,9 @@ use std::{io, mem::size_of, sync::Arc, vec};
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
+use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, window::WindowSize};
+use crate::camera::Camera;
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -210,7 +211,7 @@ impl Renderer {
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: WindowSize) {
+    pub fn handle_resize(&mut self, size: PhysicalSize<u32>) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 

@@ -16,7 +16,6 @@ use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
     viewer::ViewerWindow,
-    window::WindowSize,
 };
 
 /// # Display the provided mesh in a window that processes input
@@ -80,10 +79,7 @@ impl ApplicationHandler for DisplayState {
 
         match event {
             WindowEvent::Resized(size) => {
-                window.on_screen_resize(WindowSize {
-                    width: size.width,
-                    height: size.height,
-                });
+                window.on_screen_resize(size);
             }
             WindowEvent::CloseRequested => {
                 event_loop.exit();

@@ -17,13 +17,3 @@ pub struct NormalizedScreenPosition {
     /// The y coordinate of the position [-1, 1]
     pub y: f64,
 }
-
-/// The size of the screen
-#[derive(Clone, Copy, Debug)]
-pub struct WindowSize {
-    /// The width of the screen
-    pub width: u32,
-
-    /// The height of the screen
-    pub height: u32,
-}
