@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use fj_interop::TriMesh;
 use fj_math::Aabb;
 use tracing::warn;
@@ -31,7 +33,17 @@ impl ViewerWindow {
     pub async fn new(
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let window = Window::new(event_loop)?;
+        let window = Window {
+            inner: Arc::new(
+                event_loop.create_window(
+                    winit::window::Window::default_attributes()
+                        .with_title("Fornjot")
+                        .with_maximized(true)
+                        .with_decorations(true)
+                        .with_transparent(false),
+                )?,
+            ),
+        };
         let renderer = Renderer::new(&window).await?;
 
         Ok(Self {

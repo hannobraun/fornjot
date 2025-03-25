@@ -1,30 +1,11 @@
 use std::sync::Arc;
 
-use winit::event_loop::ActiveEventLoop;
-
 /// A window that can be used with `fj-viewer`
 pub struct Window {
     pub inner: Arc<winit::window::Window>,
 }
 
 impl Window {
-    /// Create an instance of `Window` from the given `EventLoop`
-    pub fn new(
-        event_loop: &ActiveEventLoop,
-    ) -> Result<Self, winit::error::OsError> {
-        let window = event_loop.create_window(
-            winit::window::Window::default_attributes()
-                .with_title("Fornjot")
-                .with_maximized(true)
-                .with_decorations(true)
-                .with_transparent(false),
-        )?;
-
-        Ok(Self {
-            inner: Arc::new(window),
-        })
-    }
-
     pub fn size(&self) -> WindowSize {
         let size = self.inner.inner_size();
 
