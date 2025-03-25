@@ -30,7 +30,7 @@ pub struct ViewerWindow {
 impl ViewerWindow {
     pub async fn new(
         event_loop: &ActiveEventLoop,
-    ) -> Result<Self, RendererInitError> {
+    ) -> Result<Self, WindowError> {
         let window = Window::new(event_loop).unwrap();
         let renderer = Renderer::new(&window).await?;
 
@@ -185,4 +185,10 @@ impl ViewerWindow {
             warn!("Draw error: {}", err);
         }
     }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum WindowError {
+    #[error(transparent)]
+    RendererInit(#[from] RendererInitError),
 }
