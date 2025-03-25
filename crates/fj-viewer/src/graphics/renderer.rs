@@ -37,12 +37,12 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(screen: &Window) -> Result<Self, RendererInitError> {
+    pub async fn new(window: &Window) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
-        let surface = instance.create_surface(screen.inner.clone())?;
+        let surface = instance.create_surface(window.inner.clone())?;
 
         #[cfg(not(target_arch = "wasm32"))]
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
@@ -98,7 +98,7 @@ impl Renderer {
                 .expect("No color formats supported")
         };
 
-        let WindowSize { width, height } = screen.size();
+        let WindowSize { width, height } = window.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
