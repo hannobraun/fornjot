@@ -9,7 +9,9 @@ pub struct Window {
 
 impl Window {
     /// Create an instance of `Window` from the given `EventLoop`
-    pub fn new(event_loop: &ActiveEventLoop) -> Result<Self, WindowError> {
+    pub fn new(
+        event_loop: &ActiveEventLoop,
+    ) -> Result<Self, winit::error::OsError> {
         let window = event_loop.create_window(
             winit::window::Window::default_attributes()
                 .with_title("Fornjot")
@@ -36,11 +38,6 @@ impl Window {
         self.inner.clone()
     }
 }
-
-/// Error initializing window
-#[derive(Debug, thiserror::Error)]
-#[error("Error initializing window")]
-pub struct WindowError(#[from] pub winit::error::OsError);
 
 /// Cursor position in normalized coordinates (-1 to +1)
 ///
