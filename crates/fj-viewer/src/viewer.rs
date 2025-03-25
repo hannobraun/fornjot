@@ -23,13 +23,14 @@ pub struct ViewerWindow {
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
     focus_point: Option<FocusPoint>,
+    window: Window,
     renderer: Renderer,
     model: Option<(TriMesh, Aabb<3>)>,
 }
 
 impl ViewerWindow {
-    pub async fn new(window: &Window) -> Result<Self, RendererInitError> {
-        let renderer = Renderer::new(window).await?;
+    pub async fn new(window: Window) -> Result<Self, RendererInitError> {
+        let renderer = Renderer::new(&window).await?;
 
         Ok(Self {
             current_screen_size: window.size(),
@@ -40,9 +41,14 @@ impl ViewerWindow {
             cursor: None,
             draw_config: DrawConfig::default(),
             focus_point: None,
+            window,
             renderer,
             model: None,
         })
+    }
+
+    pub fn window(&self) -> &Window {
+        &self.window
     }
 
     /// Toggle the "draw model" setting

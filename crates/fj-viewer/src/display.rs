@@ -27,7 +27,6 @@ pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
     let mut display_state = DisplayState {
         tri_mesh: Some(tri_mesh),
         invert_zoom,
-        window: None,
         viewer: None,
     };
 
@@ -55,17 +54,13 @@ pub enum Error {
 struct DisplayState {
     tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
-    window: Option<Window>,
     viewer: Option<ViewerWindow>,
 }
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = self
-            .window
-            .get_or_insert_with(|| Window::new(event_loop).unwrap());
-
         let viewer = self.viewer.get_or_insert_with(|| {
+            let window = Window::new(event_loop).unwrap();
             block_on(ViewerWindow::new(window)).unwrap()
         });
 
@@ -151,8 +146,8 @@ impl ApplicationHandler for DisplayState {
     }
 
     fn about_to_wait(&mut self, _: &ActiveEventLoop) {
-        let Some(window) = &self.window else { return };
-        window.winit_window().request_redraw();
+        let Some(window) = &self.viewer else { return };
+        window.window().winit_window().request_redraw();
     }
 }
 
