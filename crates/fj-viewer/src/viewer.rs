@@ -101,7 +101,7 @@ impl ViewerWindow {
     /// # Handle a cursor movement
     pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
         let [width, height]: [f64; 2] = {
-            let size = self.window.size();
+            let size = self.window.inner.inner_size();
             [size.width, size.height].map(Into::into)
         };
         let aspect_ratio = width / height;
