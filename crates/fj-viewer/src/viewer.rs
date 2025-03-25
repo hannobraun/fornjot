@@ -15,7 +15,6 @@ use crate::{
 };
 
 pub struct ViewerWindow {
-    current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
     most_recent_mouse_button: Option<MouseButton>,
     camera_tuning_config: CameraTuningConfig,
@@ -33,7 +32,6 @@ impl ViewerWindow {
         let renderer = Renderer::new(&window).await?;
 
         Ok(Self {
-            current_screen_size: window.size(),
             new_screen_size: None,
             most_recent_mouse_button: None,
             camera_tuning_config: DEFAULT_CAMERA_TUNING_CONFIG,
@@ -87,7 +85,7 @@ impl ViewerWindow {
 
     /// # Handle a cursor movement
     pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
-        let [width, height] = self.current_screen_size.as_f64();
+        let [width, height] = self.window.size().as_f64();
         let aspect_ratio = width / height;
 
         // Cursor position in normalized coordinates (-1 to +1) with aspect
@@ -141,7 +139,6 @@ impl ViewerWindow {
 
     /// Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
-        self.current_screen_size = new_size;
         self.new_screen_size = Some(new_size);
     }
 
@@ -162,7 +159,7 @@ impl ViewerWindow {
 
     /// Draw the graphics
     pub fn draw(&mut self) {
-        if !self.current_screen_size.is_valid() {
+        if !self.window.size().is_valid() {
             return;
         }
 
