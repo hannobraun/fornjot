@@ -38,13 +38,3 @@ pub struct WindowSize {
     /// The height of the screen
     pub height: u32,
 }
-
-impl WindowSize {
-    /// # Indicate whether the screen size is valid
-    ///
-    /// A screen size is valid, if neither of its dimensions is zero. But it can
-    /// be reported as zero by spurious screen resize events.
-    pub fn is_valid(&self) -> bool {
-        self.width > 0 && self.height > 0
-    }
-}
