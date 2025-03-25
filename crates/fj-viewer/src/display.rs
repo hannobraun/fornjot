@@ -15,7 +15,7 @@ use winit::{
 use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
-    screen::{Screen, ScreenSize},
+    screen::ScreenSize,
     viewer::ViewerWindow,
     window::{self, Window},
 };

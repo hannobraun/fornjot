@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use winit::event_loop::ActiveEventLoop;
 
-use crate::screen::{Screen, ScreenSize};
+use crate::screen::ScreenSize;
 
 /// A window that can be used with `fj-viewer`
 pub struct Window {
@@ -53,12 +53,8 @@ impl Window {
             height: size.height,
         }
     }
-}
 
-impl Screen for Window {
-    type Window = winit::window::Window;
-
-    fn window(&self) -> Arc<Self::Window> {
+    pub fn window(&self) -> Arc<winit::window::Window> {
         self.inner.clone()
     }
 }

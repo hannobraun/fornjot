@@ -1,18 +1,5 @@
 //! Types that describe aspects of the screen
 
-use std::sync::Arc;
-
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-
-/// Needs to be implemented by types that can serve as a screen to render to
-pub trait Screen {
-    /// The window
-    type Window: HasDisplayHandle + HasWindowHandle + Send + Sync + 'static;
-
-    /// Access the window
-    fn window(&self) -> Arc<Self::Window>;
-}
-
 /// Cursor position in normalized coordinates (-1 to +1)
 ///
 /// The center of the screen is at (0, 0). The aspect ratio is taken into
