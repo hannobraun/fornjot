@@ -98,7 +98,7 @@ impl Renderer {
                 .expect("No color formats supported")
         };
 
-        let window_size = window.size();
+        let window_size = window.inner.inner_size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
