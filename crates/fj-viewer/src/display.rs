@@ -16,7 +16,7 @@ use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
     viewer::ViewerWindow,
-    window::{self, Window, WindowSize},
+    window::{self, WindowSize},
 };
 
 /// # Display the provided mesh in a window that processes input
@@ -59,8 +59,7 @@ struct DisplayState {
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = self.window.get_or_insert_with(|| {
-            let window = Window::new(event_loop).unwrap();
-            block_on(ViewerWindow::new(window)).unwrap()
+            block_on(ViewerWindow::new(event_loop)).unwrap()
         });
 
         if let Some(mesh) = self.tri_mesh.take() {

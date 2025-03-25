@@ -1,6 +1,7 @@
 use fj_interop::TriMesh;
 use fj_math::Aabb;
 use tracing::warn;
+use winit::event_loop::ActiveEventLoop;
 
 use crate::{
     RendererInitError,
@@ -27,7 +28,10 @@ pub struct ViewerWindow {
 }
 
 impl ViewerWindow {
-    pub async fn new(window: Window) -> Result<Self, RendererInitError> {
+    pub async fn new(
+        event_loop: &ActiveEventLoop,
+    ) -> Result<Self, RendererInitError> {
+        let window = Window::new(event_loop).unwrap();
         let renderer = Renderer::new(&window).await?;
 
         Ok(Self {
