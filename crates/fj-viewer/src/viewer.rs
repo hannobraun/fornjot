@@ -28,11 +28,11 @@ pub struct ViewerWindow {
 }
 
 impl ViewerWindow {
-    pub async fn new(screen: &Window) -> Result<Self, RendererInitError> {
-        let renderer = Renderer::new(screen).await?;
+    pub async fn new(window: &Window) -> Result<Self, RendererInitError> {
+        let renderer = Renderer::new(window).await?;
 
         Ok(Self {
-            current_screen_size: screen.size(),
+            current_screen_size: window.size(),
             new_screen_size: None,
             most_recent_mouse_button: None,
             camera_tuning_config: DEFAULT_CAMERA_TUNING_CONFIG,
