@@ -16,7 +16,7 @@ use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
     viewer::ViewerWindow,
-    window::{self, WindowSize},
+    window::WindowSize,
 };
 
 /// # Display the provided mesh in a window that processes input
@@ -40,10 +40,6 @@ pub enum Error {
     /// Error initializing event loop
     #[error("Error initializing event loop")]
     EventLoop(#[from] EventLoopError),
-
-    /// Error initializing window
-    #[error("Error initializing window")]
-    Window(#[from] window::WindowError),
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
