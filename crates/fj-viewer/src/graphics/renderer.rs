@@ -1,13 +1,10 @@
-use std::{io, mem::size_of, vec};
+use std::{io, mem::size_of, sync::Arc, vec};
 
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 
-use crate::{
-    camera::Camera,
-    window::{Window, WindowSize},
-};
+use crate::{camera::Camera, window::WindowSize};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -37,14 +34,16 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(window: &Window) -> Result<Self, RendererInitError> {
-        let window_size = window.inner.inner_size();
+    pub async fn new(
+        window: Arc<winit::window::Window>,
+    ) -> Result<Self, RendererInitError> {
+        let window_size = window.inner_size();
 
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
-        let surface = instance.create_surface(window.inner.clone())?;
+        let surface = instance.create_surface(window)?;
 
         #[cfg(not(target_arch = "wasm32"))]
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {

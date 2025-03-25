@@ -44,7 +44,7 @@ impl ViewerWindow {
                 )?,
             ),
         };
-        let renderer = Renderer::new(&window).await?;
+        let renderer = Renderer::new(window.inner.clone()).await?;
 
         Ok(Self {
             new_screen_size: None,
