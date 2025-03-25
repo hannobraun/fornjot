@@ -13,7 +13,7 @@ use crate::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
     },
-    window::{NormalizedScreenPosition, Window},
+    window::NormalizedScreenPosition,
 };
 
 pub struct ViewerWindow {
@@ -24,7 +24,7 @@ pub struct ViewerWindow {
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
     focus_point: Option<FocusPoint>,
-    window: Window,
+    window: Arc<winit::window::Window>,
     renderer: Renderer,
     model: Option<(TriMesh, Aabb<3>)>,
 }
@@ -33,18 +33,16 @@ impl ViewerWindow {
     pub async fn new(
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let window = Window {
-            inner: Arc::new(
-                event_loop.create_window(
-                    winit::window::Window::default_attributes()
-                        .with_title("Fornjot")
-                        .with_maximized(true)
-                        .with_decorations(true)
-                        .with_transparent(false),
-                )?,
-            ),
-        };
-        let renderer = Renderer::new(window.inner.clone()).await?;
+        let window = Arc::new(
+            event_loop.create_window(
+                winit::window::Window::default_attributes()
+                    .with_title("Fornjot")
+                    .with_maximized(true)
+                    .with_decorations(true)
+                    .with_transparent(false),
+            )?,
+        );
+        let renderer = Renderer::new(window.clone()).await?;
 
         Ok(Self {
             new_screen_size: None,
@@ -61,7 +59,7 @@ impl ViewerWindow {
     }
 
     pub fn window(&self) -> &winit::window::Window {
-        &self.window.inner
+        &self.window
     }
 
     /// Toggle the "draw model" setting
@@ -101,7 +99,7 @@ impl ViewerWindow {
     /// # Handle a cursor movement
     pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
         let [width, height]: [f64; 2] = {
-            let size = self.window.inner.inner_size();
+            let size = self.window.inner_size();
             [size.width, size.height].map(Into::into)
         };
         let aspect_ratio = width / height;
@@ -178,7 +176,7 @@ impl ViewerWindow {
     /// Draw the graphics
     pub fn draw(&mut self) {
         let size_is_invalid = {
-            let size = self.window.inner.inner_size();
+            let size = self.window.inner_size();
             size.width == 0 || size.height == 0
         };
         if size_is_invalid {

@@ -1,10 +1,3 @@
-use std::sync::Arc;
-
-/// A window that can be used with `fj-viewer`
-pub struct Window {
-    pub inner: Arc<winit::window::Window>,
-}
-
 /// Cursor position in normalized coordinates (-1 to +1)
 ///
 /// The center of the screen is at (0, 0). The aspect ratio is taken into
