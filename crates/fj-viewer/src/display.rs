@@ -59,13 +59,13 @@ struct DisplayState {
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let viewer = self.window.get_or_insert_with(|| {
+        let window = self.window.get_or_insert_with(|| {
             let window = Window::new(event_loop).unwrap();
             block_on(ViewerWindow::new(window)).unwrap()
         });
 
         if let Some(mesh) = self.tri_mesh.take() {
-            viewer.handle_model_update(mesh);
+            window.handle_model_update(mesh);
         }
     }
 
