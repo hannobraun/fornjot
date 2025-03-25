@@ -177,7 +177,8 @@ impl ViewerWindow {
 
     /// Draw the graphics
     pub fn draw(&mut self) {
-        if !self.window.size().is_valid() {
+        let size_is_valid = self.window.size().is_valid();
+        if !size_is_valid {
             return;
         }
 
