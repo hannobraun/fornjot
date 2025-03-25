@@ -14,10 +14,6 @@ impl Window {
             height: size.height,
         }
     }
-
-    pub fn winit_window(&self) -> Arc<winit::window::Window> {
-        self.inner.clone()
-    }
 }
 
 /// Cursor position in normalized coordinates (-1 to +1)

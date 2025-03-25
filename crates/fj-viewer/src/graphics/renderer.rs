@@ -42,7 +42,7 @@ impl Renderer {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
-        let surface = instance.create_surface(screen.winit_window())?;
+        let surface = instance.create_surface(screen.inner.clone())?;
 
         #[cfg(not(target_arch = "wasm32"))]
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
