@@ -38,6 +38,8 @@ pub struct Renderer {
 impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(window: &Window) -> Result<Self, RendererInitError> {
+        let window_size = window.inner.inner_size();
+
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
@@ -98,7 +100,6 @@ impl Renderer {
                 .expect("No color formats supported")
         };
 
-        let window_size = window.inner.inner_size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
