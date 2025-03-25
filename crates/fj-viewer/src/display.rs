@@ -15,7 +15,7 @@ use winit::{
 use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
-    viewer::Window,
+    window::Window,
 };
 
 /// # Display the provided mesh in a window that processes input
