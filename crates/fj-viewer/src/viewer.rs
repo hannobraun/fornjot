@@ -10,8 +10,7 @@ use crate::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
     },
-    screen::{NormalizedScreenPosition, ScreenSize},
-    window::Window,
+    window::{NormalizedScreenPosition, ScreenSize, Window},
 };
 
 pub struct ViewerWindow {

@@ -4,7 +4,10 @@ use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 
-use crate::{camera::Camera, screen::ScreenSize, window::Window};
+use crate::{
+    camera::Camera,
+    window::{ScreenSize, Window},
+};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,

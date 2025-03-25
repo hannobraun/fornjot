@@ -13,7 +13,6 @@ mod camera;
 mod display;
 mod graphics;
 mod input;
-mod screen;
 mod viewer;
 mod window;
 
