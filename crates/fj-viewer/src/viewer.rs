@@ -11,6 +11,7 @@ use crate::{
         MouseButton,
     },
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
+    window::Window,
 };
 
 /// The Fornjot model viewer
@@ -29,7 +30,7 @@ pub struct ViewerWindow {
 
 impl ViewerWindow {
     /// Construct a new instance of `Viewer`
-    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
+    pub async fn new(screen: &Window) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
 
         Ok(Self {
