@@ -112,7 +112,7 @@ impl Renderer {
             // render pipelines.
             //
             // For that reason, I tried to set this to `PreMultiplied`, but that
-            // failed on Linux/Wayland (with in integrated AMD GPU). Setting it
+            // failed on Linux/Wayland (with an integrated AMD GPU). Setting it
             // to `Auto` seems to just work.
             //
             // @hannobraun
