@@ -47,9 +47,4 @@ impl WindowSize {
     pub fn is_valid(&self) -> bool {
         self.width > 0 && self.height > 0
     }
-
-    /// Convert size to `f64`
-    pub fn as_f64(&self) -> [f64; 2] {
-        [self.width, self.height].map(Into::into)
-    }
 }
