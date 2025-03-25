@@ -60,8 +60,8 @@ impl ViewerWindow {
         })
     }
 
-    pub fn window(&self) -> &Window {
-        &self.window
+    pub fn window(&self) -> &winit::window::Window {
+        &self.window.inner
     }
 
     /// Toggle the "draw model" setting
