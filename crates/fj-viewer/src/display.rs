@@ -15,7 +15,7 @@ use winit::{
 use crate::{
     RendererInitError,
     input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
-    viewer::ViewerWindow,
+    viewer::Window,
 };
 
 /// # Display the provided mesh in a window that processes input
@@ -48,14 +48,14 @@ pub enum Error {
 struct DisplayState {
     tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
-    window: Option<ViewerWindow>,
+    window: Option<Window>,
 }
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = self.window.get_or_insert_with(|| {
-            block_on(ViewerWindow::new(event_loop)).unwrap()
-        });
+        let window = self
+            .window
+            .get_or_insert_with(|| block_on(Window::new(event_loop)).unwrap());
 
         if let Some(mesh) = self.tri_mesh.take() {
             window.handle_model_update(mesh);
