@@ -98,12 +98,12 @@ impl Renderer {
                 .expect("No color formats supported")
         };
 
-        let WindowSize { width, height } = window.size();
+        let window_size = window.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
-            width,
-            height,
+            width: window_size.width,
+            height: window_size.height,
             present_mode: wgpu::PresentMode::AutoVsync,
             desired_maximum_frame_latency: 2,
             // I don't understand what this option does. It was introduced with
