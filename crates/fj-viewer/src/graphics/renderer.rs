@@ -7,6 +7,7 @@ use wgpu::util::DeviceExt as _;
 use crate::{
     camera::Camera,
     screen::{Screen, ScreenSize},
+    window::Window,
 };
 
 use super::{
@@ -37,7 +38,7 @@ pub struct Renderer {
 
 impl Renderer {
     /// Returns a new `Renderer`.
-    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
+    pub async fn new(screen: &Window) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
             ..Default::default()
