@@ -43,10 +43,10 @@ impl Window {
         })
     }
 
-    pub fn size(&self) -> ScreenSize {
+    pub fn size(&self) -> WindowSize {
         let size = self.inner.inner_size();
 
-        ScreenSize {
+        WindowSize {
             width: size.width,
             height: size.height,
         }
@@ -77,7 +77,7 @@ pub struct NormalizedScreenPosition {
 
 /// The size of the screen
 #[derive(Clone, Copy, Debug)]
-pub struct ScreenSize {
+pub struct WindowSize {
     /// The width of the screen
     pub width: u32,
 
@@ -85,7 +85,7 @@ pub struct ScreenSize {
     pub height: u32,
 }
 
-impl ScreenSize {
+impl WindowSize {
     /// # Indicate whether the screen size is valid
     ///
     /// A screen size is valid, if neither of its dimensions is zero. But it can

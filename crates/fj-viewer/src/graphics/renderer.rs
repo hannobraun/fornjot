@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt as _;
 
 use crate::{
     camera::Camera,
-    window::{ScreenSize, Window},
+    window::{Window, WindowSize},
 };
 
 use super::{
@@ -98,7 +98,7 @@ impl Renderer {
                 .expect("No color formats supported")
         };
 
-        let ScreenSize { width, height } = screen.size();
+        let WindowSize { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: color_format,
@@ -210,7 +210,7 @@ impl Renderer {
     ///
     /// # Arguments
     /// - `size`: The target size for the render surface.
-    pub fn handle_resize(&mut self, size: ScreenSize) {
+    pub fn handle_resize(&mut self, size: WindowSize) {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 

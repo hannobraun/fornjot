@@ -10,11 +10,11 @@ use crate::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
     },
-    window::{NormalizedScreenPosition, ScreenSize, Window},
+    window::{NormalizedScreenPosition, Window, WindowSize},
 };
 
 pub struct ViewerWindow {
-    new_screen_size: Option<ScreenSize>,
+    new_screen_size: Option<WindowSize>,
     most_recent_mouse_button: Option<MouseButton>,
     camera_tuning_config: CameraTuningConfig,
     camera: Camera,
@@ -137,7 +137,7 @@ impl ViewerWindow {
     }
 
     /// Handle the screen being resized
-    pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
+    pub fn on_screen_resize(&mut self, new_size: WindowSize) {
         self.new_screen_size = Some(new_size);
     }
 
