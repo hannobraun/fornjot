@@ -54,7 +54,7 @@ impl Window {
         }
     }
 
-    pub fn window(&self) -> Arc<winit::window::Window> {
+    pub fn winit_window(&self) -> Arc<winit::window::Window> {
         self.inner.clone()
     }
 }
