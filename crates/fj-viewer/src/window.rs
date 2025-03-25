@@ -5,17 +5,6 @@ pub struct Window {
     pub inner: Arc<winit::window::Window>,
 }
 
-impl Window {
-    pub fn size(&self) -> WindowSize {
-        let size = self.inner.inner_size();
-
-        WindowSize {
-            width: size.width,
-            height: size.height,
-        }
-    }
-}
-
 /// Cursor position in normalized coordinates (-1 to +1)
 ///
 /// The center of the screen is at (0, 0). The aspect ratio is taken into
