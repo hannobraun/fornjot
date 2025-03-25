@@ -9,9 +9,6 @@ pub trait Screen {
     /// The window
     type Window: HasDisplayHandle + HasWindowHandle + Send + Sync + 'static;
 
-    /// Access the size of the screen
-    fn size(&self) -> ScreenSize;
-
     /// Access the window
     fn window(&self) -> Arc<Self::Window>;
 }

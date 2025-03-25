@@ -44,12 +44,8 @@ impl Window {
             inner: Arc::new(window),
         })
     }
-}
 
-impl Screen for Window {
-    type Window = winit::window::Window;
-
-    fn size(&self) -> ScreenSize {
+    pub fn size(&self) -> ScreenSize {
         let size = self.inner.inner_size();
 
         ScreenSize {
@@ -57,6 +53,10 @@ impl Screen for Window {
             height: size.height,
         }
     }
+}
+
+impl Screen for Window {
+    type Window = winit::window::Window;
 
     fn window(&self) -> Arc<Self::Window> {
         self.inner.clone()

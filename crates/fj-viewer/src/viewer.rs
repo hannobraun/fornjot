@@ -10,7 +10,7 @@ use crate::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
     },
-    screen::{NormalizedScreenPosition, Screen, ScreenSize},
+    screen::{NormalizedScreenPosition, ScreenSize},
     window::Window,
 };
 
