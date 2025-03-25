@@ -14,7 +14,6 @@ use crate::{
     window::Window,
 };
 
-/// The Fornjot model viewer
 pub struct ViewerWindow {
     current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
@@ -29,7 +28,6 @@ pub struct ViewerWindow {
 }
 
 impl ViewerWindow {
-    /// Construct a new instance of `Viewer`
     pub async fn new(screen: &Window) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
 
