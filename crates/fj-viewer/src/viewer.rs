@@ -33,14 +33,12 @@ use crate::{
 /// This function should be called from the application's main thread, or
 /// displaying models might end up not working correctly.
 pub fn make_viewer_and_spawn_thread(
-    invert_zoom: bool,
     f: impl FnOnce(Viewer) + Send + 'static,
 ) -> Result<(), Error> {
     let mut builder = EventLoop::with_user_event();
     let event_loop = builder.build()?;
 
     let mut display_state = DisplayState {
-        invert_zoom,
         windows: BTreeMap::new(),
     };
 
@@ -83,7 +81,6 @@ pub enum Error {
 }
 
 struct DisplayState {
-    invert_zoom: bool,
     windows: BTreeMap<WindowId, Window>,
 }
 
@@ -100,7 +97,7 @@ impl ApplicationHandler<TriMesh> for DisplayState {
             return;
         };
 
-        let input_event = input_event(&event, self.invert_zoom);
+        let input_event = input_event(&event);
         if let Some(input_event) = input_event {
             window.handle_input_event(input_event);
         }
@@ -176,7 +173,7 @@ impl ApplicationHandler<TriMesh> for DisplayState {
     }
 }
 
-fn input_event(event: &WindowEvent, invert_zoom: bool) -> Option<InputEvent> {
+fn input_event(event: &WindowEvent) -> Option<InputEvent> {
     match event {
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
@@ -188,8 +185,6 @@ fn input_event(event: &WindowEvent, invert_zoom: bool) -> Option<InputEvent> {
                     y, ..
                 }) => y * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_pixel,
             };
-
-            let delta = if invert_zoom { -delta } else { delta };
 
             Some(InputEvent::Zoom(delta))
         }
