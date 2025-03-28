@@ -42,12 +42,13 @@ impl Window {
             )?,
         );
         let renderer = Renderer::new(window.clone()).await?;
+        let camera = Camera::default();
 
         Ok(Self {
             new_screen_size: None,
             most_recent_mouse_button: None,
             camera_tuning_config: DEFAULT_CAMERA_TUNING_CONFIG,
-            camera: Camera::default(),
+            camera,
             cursor: None,
             draw_config: DrawConfig::default(),
             focus_point: None,
