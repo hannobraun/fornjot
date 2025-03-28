@@ -39,7 +39,6 @@ impl Window {
             event_loop.create_window(
                 winit::window::Window::default_attributes()
                     .with_title("Fornjot")
-                    .with_maximized(true)
                     .with_decorations(true)
                     .with_transparent(false),
             )?,
