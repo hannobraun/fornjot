@@ -65,7 +65,9 @@ impl ApplicationHandler for DisplayState {
             window.get_mut()
         } else {
             let window = block_on(Window::new(event_loop)).unwrap();
-            self.windows.entry(window.window().id()).or_insert(window)
+            self.windows
+                .entry(window.winit_window().id())
+                .or_insert(window)
         };
 
         if let Some(mesh) = self.tri_mesh.take() {
@@ -149,7 +151,7 @@ impl ApplicationHandler for DisplayState {
         }
 
         if !drawn {
-            window.window().request_redraw();
+            window.winit_window().request_redraw();
         }
     }
 }
