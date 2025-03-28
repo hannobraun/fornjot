@@ -70,8 +70,8 @@ impl ApplicationHandler for DisplayState {
                 .or_insert(window)
         };
 
-        if let Some(mesh) = self.tri_mesh.take() {
-            window.handle_model_update(mesh);
+        if let Some(tri_mesh) = self.tri_mesh.take() {
+            window.handle_model_update(tri_mesh);
         }
     }
 
