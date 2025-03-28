@@ -83,15 +83,15 @@ impl Instance {
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
-        let mesh = (model, tolerance).triangulate(&mut self.core);
+        let tri_mesh = (model, tolerance).triangulate(&mut self.core);
 
         if let Some(path) = args.export {
-            export::export(&mesh, &path)?;
+            export::export(&tri_mesh, &path)?;
             return Ok(());
         }
 
         let (tri_mesh_tx, tri_mesh_rx) = sync_channel(1);
-        let Ok(()) = tri_mesh_tx.send(mesh) else {
+        let Ok(()) = tri_mesh_tx.send(tri_mesh) else {
             unreachable!(
                 "Receiver has not been dropped, so it's not possible for the \
                 send to fail."
