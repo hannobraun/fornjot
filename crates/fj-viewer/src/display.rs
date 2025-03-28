@@ -22,7 +22,7 @@ use crate::{
 pub struct Viewer {}
 
 /// # Display the provided mesh in a window that processes input
-pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<Viewer, Error> {
     let event_loop = EventLoop::new()?;
 
     let mut display_state = DisplayState {
@@ -33,7 +33,7 @@ pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
 
     event_loop.run_app(&mut display_state)?;
 
-    Ok(())
+    Ok(Viewer {})
 }
 
 /// Main loop initialization error
