@@ -9,7 +9,7 @@ use winit::{
     event::{
         ElementState, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent,
     },
-    event_loop::{ActiveEventLoop, EventLoop, EventLoopClosed, EventLoopProxy},
+    event_loop::{ActiveEventLoop, EventLoop, EventLoopProxy},
     keyboard::{Key, NamedKey},
     window::WindowId,
 };
@@ -60,11 +60,11 @@ impl Viewer {
     ///
     /// This can fail, if the viewer thread is no longer running. Returns the
     /// triangle mesh, wrapped in an error, if that is the case.
-    pub fn display(
-        &self,
-        tri_mesh: TriMesh,
-    ) -> Result<(), EventLoopClosed<TriMesh>> {
-        self.event_loop.send_event(tri_mesh)
+    pub fn display(&self, tri_mesh: TriMesh) {
+        // If there's an error, that means the display thread has closed down
+        // and we're on our way to shutting down as well. I don't think there's
+        // much we can do about that.
+        let _ = self.event_loop.send_event(tri_mesh);
     }
 }
 

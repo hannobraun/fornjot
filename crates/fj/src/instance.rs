@@ -89,7 +89,7 @@ impl Instance {
         }
 
         make_viewer_and_spawn_thread(|viewer| {
-            let _ = viewer.display(tri_mesh);
+            viewer.display(tri_mesh);
         })?;
 
         Ok(())
