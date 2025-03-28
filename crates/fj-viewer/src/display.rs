@@ -155,9 +155,7 @@ impl ApplicationHandler for DisplayState {
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
         while let Ok(tri_mesh) = self.next_tri_mesh.try_recv() {
-            let mut window = block_on(Window::new(event_loop)).unwrap();
-            window.handle_model_update(tri_mesh);
-
+            let window = block_on(Window::new(tri_mesh, event_loop)).unwrap();
             self.windows.insert(window.winit_window().id(), window);
         }
     }

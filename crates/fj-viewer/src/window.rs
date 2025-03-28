@@ -30,6 +30,7 @@ pub struct Window {
 
 impl Window {
     pub async fn new(
+        tri_mesh: TriMesh,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
         let window = Arc::new(
@@ -41,8 +42,12 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let renderer = Renderer::new(window.clone()).await?;
-        let camera = Camera::default();
+        let mut renderer = Renderer::new(window.clone()).await?;
+        let mut camera = Camera::default();
+
+        renderer.update_geometry(Vertices::from_tri_mesh(&tri_mesh));
+        let aabb = tri_mesh.aabb();
+        camera.init_planes(&aabb);
 
         Ok(Self {
             new_screen_size: None,
@@ -54,7 +59,7 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            model: None,
+            model: Some((tri_mesh, aabb)),
         })
     }
 
@@ -70,17 +75,6 @@ impl Window {
     /// Toggle the "draw mesh" setting
     pub fn toggle_draw_mesh(&mut self) {
         self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
-    }
-
-    /// Handle the model being updated
-    pub fn handle_model_update(&mut self, tri_mesh: TriMesh) {
-        self.renderer
-            .update_geometry(Vertices::from_tri_mesh(&tri_mesh));
-
-        let aabb = tri_mesh.aabb();
-        if self.model.replace((tri_mesh, aabb)).is_none() {
-            self.camera.init_planes(&aabb);
-        }
     }
 
     /// Handle an input event
