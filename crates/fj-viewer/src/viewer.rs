@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, thread};
+use std::{collections::BTreeMap, panic, thread};
 
 use fj_interop::TriMesh;
 use futures::executor::block_on;
@@ -32,9 +32,12 @@ use crate::{
 ///
 /// This function should be called from the application's main thread, or
 /// displaying models might end up not working correctly.
-pub fn make_viewer_and_spawn_thread(
-    f: impl FnOnce(Viewer) + Send + 'static,
-) -> Result<(), Error> {
+pub fn make_viewer_and_spawn_thread<R>(
+    f: impl FnOnce(Viewer) -> R + Send + 'static,
+) -> Result<R, Error>
+where
+    R: Send + 'static,
+{
     let mut builder = EventLoop::with_user_event();
     let event_loop = builder.build()?;
 
@@ -43,11 +46,16 @@ pub fn make_viewer_and_spawn_thread(
     };
 
     let proxy = event_loop.create_proxy();
-    thread::spawn(|| f(Viewer { event_loop: proxy }));
+    let handle = thread::spawn(|| f(Viewer { event_loop: proxy }));
 
     event_loop.run_app(&mut display_state)?;
 
-    Ok(())
+    let result = match handle.join() {
+        Ok(result) => result,
+        Err(payload) => panic::resume_unwind(payload),
+    };
+
+    Ok(result)
 }
 
 /// # Fornjot model viewer
