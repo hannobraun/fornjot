@@ -31,7 +31,7 @@ impl Viewer {
         let mut display_state = DisplayState {
             tri_mesh: Some(tri_mesh),
             invert_zoom,
-            window: BTreeMap::new(),
+            windows: BTreeMap::new(),
         };
 
         event_loop.run_app(&mut display_state)?;
@@ -55,17 +55,17 @@ pub enum Error {
 struct DisplayState {
     tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
-    window: BTreeMap<WindowId, Window>,
+    windows: BTreeMap<WindowId, Window>,
 }
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let mut entry = self.window.first_entry();
+        let mut entry = self.windows.first_entry();
         let window = if let Some(window) = &mut entry {
             window.get_mut()
         } else {
             let window = block_on(Window::new(event_loop)).unwrap();
-            self.window.entry(window.window().id()).or_insert(window)
+            self.windows.entry(window.window().id()).or_insert(window)
         };
 
         if let Some(mesh) = self.tri_mesh.take() {
@@ -79,7 +79,7 @@ impl ApplicationHandler for DisplayState {
         window_id: WindowId,
         event: WindowEvent,
     ) {
-        let Some(window) = self.window.get_mut(&window_id) else {
+        let Some(window) = self.windows.get_mut(&window_id) else {
             return;
         };
 
