@@ -12,7 +12,9 @@ fn main() -> anyhow::Result<()> {
     let tri_mesh = model::model();
 
     fj_export::export(&tri_mesh, "output.3mf")?;
-    fj_viewer::display(tri_mesh, false)?;
+    fj_viewer::make_viewer_and_spawn_thread(|viewer| {
+        viewer.display(tri_mesh);
+    })?;
 
     Ok(())
 }
