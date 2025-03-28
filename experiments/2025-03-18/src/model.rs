@@ -44,6 +44,8 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         Handle::new(face)
     };
 
+    viewer.display(top.to_tri_mesh());
+
     let solid = top.sweep([0., 0., -2.]);
     viewer.display(solid.to_tri_mesh());
 
