@@ -146,8 +146,6 @@ impl ApplicationHandler for DisplayState {
             window.window().request_redraw();
         }
     }
-
-    fn about_to_wait(&mut self, _: &ActiveEventLoop) {}
 }
 
 fn input_event(event: &WindowEvent, invert_zoom: bool) -> Option<InputEvent> {
