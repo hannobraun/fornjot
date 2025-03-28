@@ -59,21 +59,7 @@ struct DisplayState {
 }
 
 impl ApplicationHandler for DisplayState {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let mut entry = self.windows.first_entry();
-        let window = if let Some(window) = &mut entry {
-            window.get_mut()
-        } else {
-            let window = block_on(Window::new(event_loop)).unwrap();
-            self.windows
-                .entry(window.winit_window().id())
-                .or_insert(window)
-        };
-
-        if let Some(tri_mesh) = self.tri_mesh.take() {
-            window.handle_model_update(tri_mesh);
-        }
-    }
+    fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
         &mut self,
@@ -152,6 +138,15 @@ impl ApplicationHandler for DisplayState {
 
         if !drawn {
             window.winit_window().request_redraw();
+        }
+    }
+
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        if let Some(tri_mesh) = self.tri_mesh.take() {
+            let mut window = block_on(Window::new(event_loop)).unwrap();
+            window.handle_model_update(tri_mesh);
+
+            self.windows.insert(window.winit_window().id(), window);
         }
     }
 }
