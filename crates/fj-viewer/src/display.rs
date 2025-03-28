@@ -34,7 +34,7 @@ impl Viewer {
         let (tri_mesh_tx, tri_mesh_rx) = sync_channel(1);
 
         let mut display_state = DisplayState {
-            tri_mesh: tri_mesh_rx,
+            next_tri_mesh: tri_mesh_rx,
             invert_zoom,
             windows: BTreeMap::new(),
         };
@@ -65,7 +65,7 @@ pub enum Error {
 }
 
 struct DisplayState {
-    tri_mesh: Receiver<TriMesh>,
+    next_tri_mesh: Receiver<TriMesh>,
     invert_zoom: bool,
     windows: BTreeMap<WindowId, Window>,
 }
@@ -154,7 +154,7 @@ impl ApplicationHandler for DisplayState {
     }
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
-        while let Ok(tri_mesh) = self.tri_mesh.try_recv() {
+        while let Ok(tri_mesh) = self.next_tri_mesh.try_recv() {
             let mut window = block_on(Window::new(event_loop)).unwrap();
             window.handle_model_update(tri_mesh);
 
