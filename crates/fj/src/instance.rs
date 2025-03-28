@@ -9,7 +9,7 @@ use fj_core::{
 use fj_math::{Aabb, Point, Scalar};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{Args, export};
+use crate::{Args, export, viewer};
 
 /// An instance of Fornjot
 ///
@@ -87,7 +87,7 @@ impl Instance {
             return Ok(());
         }
 
-        crate::viewer::display(mesh, false)?;
+        viewer::display(mesh, false)?;
 
         Ok(())
     }
@@ -105,7 +105,7 @@ pub enum Error {
 
     /// Error displaying model
     #[error("Error displaying model")]
-    Display(#[from] crate::viewer::Error),
+    Display(#[from] viewer::Error),
 
     /// Error exporting model
     #[error("Error exporting model")]
