@@ -18,6 +18,9 @@ use crate::{
     window::Window,
 };
 
+/// # Fornjot model viewer
+pub struct Viewer {}
+
 /// # Display the provided mesh in a window that processes input
 pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
