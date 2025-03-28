@@ -144,6 +144,7 @@ impl ApplicationHandler for DisplayState {
         let Some(window) = &self.window else {
             return;
         };
+
         window.window().request_redraw();
     }
 }
