@@ -9,7 +9,7 @@ use fj_core::{
 use fj_math::{Aabb, Point, Scalar};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::Args;
+use crate::{Args, export};
 
 /// An instance of Fornjot
 ///
@@ -83,7 +83,7 @@ impl Instance {
         let mesh = (model, tolerance).triangulate(&mut self.core);
 
         if let Some(path) = args.export {
-            crate::export::export(&mesh, &path)?;
+            export::export(&mesh, &path)?;
             return Ok(());
         }
 
@@ -109,7 +109,7 @@ pub enum Error {
 
     /// Error exporting model
     #[error("Error exporting model")]
-    Export(#[from] crate::export::Error),
+    Export(#[from] export::Error),
 
     /// Invalid tolerance
     #[error(transparent)]
