@@ -9,7 +9,10 @@ use fj_core::{
 use fj_math::{Aabb, Point, Scalar};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{Args, export, viewer};
+use crate::{
+    Args, export,
+    viewer::{self, Viewer},
+};
 
 /// An instance of Fornjot
 ///
@@ -87,7 +90,7 @@ impl Instance {
             return Ok(());
         }
 
-        viewer::display(mesh, false)?;
+        Viewer::display(mesh, false)?;
 
         Ok(())
     }

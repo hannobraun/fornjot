@@ -16,6 +16,6 @@ mod input;
 mod window;
 
 pub use self::{
-    display::{Error, Viewer, display},
+    display::{Error, Viewer},
     graphics::RendererInitError,
 };

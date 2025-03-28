@@ -21,19 +21,24 @@ use crate::{
 /// # Fornjot model viewer
 pub struct Viewer {}
 
-/// # Display the provided mesh in a window that processes input
-pub fn display(tri_mesh: TriMesh, invert_zoom: bool) -> Result<Viewer, Error> {
-    let event_loop = EventLoop::new()?;
+impl Viewer {
+    /// # Display the provided mesh in a window that processes input
+    pub fn display(
+        tri_mesh: TriMesh,
+        invert_zoom: bool,
+    ) -> Result<Viewer, Error> {
+        let event_loop = EventLoop::new()?;
 
-    let mut display_state = DisplayState {
-        tri_mesh: Some(tri_mesh),
-        invert_zoom,
-        window: None,
-    };
+        let mut display_state = DisplayState {
+            tri_mesh: Some(tri_mesh),
+            invert_zoom,
+            window: None,
+        };
 
-    event_loop.run_app(&mut display_state)?;
+        event_loop.run_app(&mut display_state)?;
 
-    Ok(Viewer {})
+        Ok(Viewer {})
+    }
 }
 
 /// Main loop initialization error
