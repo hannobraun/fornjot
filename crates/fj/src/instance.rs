@@ -90,7 +90,7 @@ impl Instance {
             return Ok(());
         }
 
-        Viewer::display(mesh, false)?;
+        Viewer::new(mesh, false)?;
 
         Ok(())
     }

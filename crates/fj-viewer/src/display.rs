@@ -23,10 +23,7 @@ pub struct Viewer {}
 
 impl Viewer {
     /// # Display the provided mesh in a window that processes input
-    pub fn display(
-        tri_mesh: TriMesh,
-        invert_zoom: bool,
-    ) -> Result<Viewer, Error> {
+    pub fn new(tri_mesh: TriMesh, invert_zoom: bool) -> Result<Viewer, Error> {
         let event_loop = EventLoop::new()?;
 
         let mut display_state = DisplayState {
