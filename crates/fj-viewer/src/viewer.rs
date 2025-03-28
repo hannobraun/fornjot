@@ -57,9 +57,6 @@ pub struct Viewer {
 
 impl Viewer {
     /// # Display a triangle mesh in a new window
-    ///
-    /// This can fail, if the viewer thread is no longer running. Returns the
-    /// triangle mesh, wrapped in an error, if that is the case.
     pub fn display(&self, tri_mesh: TriMesh) {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
