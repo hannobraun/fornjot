@@ -8,13 +8,6 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn empty() -> Self {
-        Self {
-            vertices: Vec::new(),
-            indices: Vec::new(),
-        }
-    }
-
     pub fn from_tri_mesh(tri_mesh: &TriMesh) -> Self {
         let (vertices, indices) = vertices_to_indexed_vertices(
             tri_mesh.triangles.iter().flat_map(|triangle| {

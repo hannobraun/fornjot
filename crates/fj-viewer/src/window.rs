@@ -42,10 +42,11 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let mut renderer = Renderer::new(window.clone()).await?;
+        let renderer =
+            Renderer::new(window.clone(), Vertices::from_tri_mesh(&tri_mesh))
+                .await?;
         let mut camera = Camera::default();
 
-        renderer.update_geometry(Vertices::from_tri_mesh(&tri_mesh));
         let aabb = tri_mesh.aabb();
         camera.init_planes(&aabb);
 
