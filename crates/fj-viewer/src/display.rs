@@ -26,13 +26,13 @@ pub struct Viewer {}
 impl Viewer {
     /// # Construct a new model viewer
     pub fn new(
-        tri_mesh: Receiver<TriMesh>,
+        next_tri_mesh: Receiver<TriMesh>,
         invert_zoom: bool,
     ) -> Result<Viewer, Error> {
         let event_loop = EventLoop::new()?;
 
         let mut display_state = DisplayState {
-            next_tri_mesh: tri_mesh,
+            next_tri_mesh,
             invert_zoom,
             windows: BTreeMap::new(),
         };
