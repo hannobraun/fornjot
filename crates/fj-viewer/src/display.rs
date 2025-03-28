@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use fj_interop::TriMesh;
 use futures::executor::block_on;
 use winit::{
@@ -29,7 +31,7 @@ impl Viewer {
         let mut display_state = DisplayState {
             tri_mesh: Some(tri_mesh),
             invert_zoom,
-            window: None,
+            window: BTreeMap::new(),
         };
 
         event_loop.run_app(&mut display_state)?;
@@ -53,14 +55,18 @@ pub enum Error {
 struct DisplayState {
     tri_mesh: Option<TriMesh>,
     invert_zoom: bool,
-    window: Option<Window>,
+    window: BTreeMap<WindowId, Window>,
 }
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = self
-            .window
-            .get_or_insert_with(|| block_on(Window::new(event_loop)).unwrap());
+        let mut entry = self.window.first_entry();
+        let window = if let Some(window) = &mut entry {
+            window.get_mut()
+        } else {
+            let window = block_on(Window::new(event_loop)).unwrap();
+            self.window.entry(window.window().id()).or_insert(window)
+        };
 
         if let Some(mesh) = self.tri_mesh.take() {
             window.handle_model_update(mesh);
@@ -70,10 +76,10 @@ impl ApplicationHandler for DisplayState {
     fn window_event(
         &mut self,
         event_loop: &ActiveEventLoop,
-        _: WindowId,
+        window_id: WindowId,
         event: WindowEvent,
     ) {
-        let Some(window) = &mut self.window else {
+        let Some(window) = self.window.get_mut(&window_id) else {
             return;
         };
 
