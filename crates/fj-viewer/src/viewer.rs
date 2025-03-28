@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, sync::mpsc::Receiver};
+use std::{collections::BTreeMap, thread};
 
 use fj_interop::TriMesh;
 use futures::executor::block_on;
@@ -9,7 +9,7 @@ use winit::{
     event::{
         ElementState, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent,
     },
-    event_loop::{ActiveEventLoop, EventLoop},
+    event_loop::{ActiveEventLoop, EventLoop, EventLoopClosed, EventLoopProxy},
     keyboard::{Key, NamedKey},
     window::WindowId,
 };
@@ -20,30 +20,53 @@ use crate::{
     window::Window,
 };
 
+/// # Create a model viewer and spawn a new thread where to use it
+///
+/// Create a model viewer that runs on the main thread, blocking the thread that
+/// calls this function. Makes a handle to the viewer available to the provided
+/// closure, allowing it to display models.
+///
+/// This API is a bit weird, due to the realities of native graphics on various
+/// platforms. Those tend to insist on running on the main thread, so this
+/// function spawns a new thread for the caller.
+///
+/// This function should be called from the application's main thread, or
+/// displaying models might end up not working correctly.
+pub fn make_viewer_and_spawn_thread(
+    invert_zoom: bool,
+    f: impl FnOnce(Viewer) + Send + 'static,
+) -> Result<(), Error> {
+    let mut builder = EventLoop::with_user_event();
+    let event_loop = builder.build()?;
+
+    let mut display_state = DisplayState {
+        invert_zoom,
+        windows: BTreeMap::new(),
+    };
+
+    let proxy = event_loop.create_proxy();
+    thread::spawn(|| f(Viewer { event_loop: proxy }));
+
+    event_loop.run_app(&mut display_state)?;
+
+    Ok(())
+}
+
 /// # Fornjot model viewer
-pub struct Viewer {}
+pub struct Viewer {
+    event_loop: EventLoopProxy<TriMesh>,
+}
 
 impl Viewer {
-    /// # Construct a new model viewer
+    /// # Display a triangle mesh in a new window
     ///
-    /// A viewer can display multiple models, by opening multiple windows. Send
-    /// any model you want to display to the receiver that this constructor
-    /// accepts.
-    pub fn new(
-        next_tri_mesh: Receiver<TriMesh>,
-        invert_zoom: bool,
-    ) -> Result<Viewer, Error> {
-        let event_loop = EventLoop::new()?;
-
-        let mut display_state = DisplayState {
-            next_tri_mesh,
-            invert_zoom,
-            windows: BTreeMap::new(),
-        };
-
-        event_loop.run_app(&mut display_state)?;
-
-        Ok(Viewer {})
+    /// This can fail, if the viewer thread is no longer running. Returns the
+    /// triangle mesh, wrapped in an error, if that is the case.
+    pub fn display(
+        &self,
+        tri_mesh: TriMesh,
+    ) -> Result<(), EventLoopClosed<TriMesh>> {
+        self.event_loop.send_event(tri_mesh)
     }
 }
 
@@ -60,12 +83,11 @@ pub enum Error {
 }
 
 struct DisplayState {
-    next_tri_mesh: Receiver<TriMesh>,
     invert_zoom: bool,
     windows: BTreeMap<WindowId, Window>,
 }
 
-impl ApplicationHandler for DisplayState {
+impl ApplicationHandler<TriMesh> for DisplayState {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
@@ -148,11 +170,9 @@ impl ApplicationHandler for DisplayState {
         }
     }
 
-    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
-        while let Ok(tri_mesh) = self.next_tri_mesh.try_recv() {
-            let window = block_on(Window::new(tri_mesh, event_loop)).unwrap();
-            self.windows.insert(window.winit_window().id(), window);
-        }
+    fn user_event(&mut self, event_loop: &ActiveEventLoop, tri_mesh: TriMesh) {
+        let window = block_on(Window::new(tri_mesh, event_loop)).unwrap();
+        self.windows.insert(window.winit_window().id(), window);
     }
 }
 

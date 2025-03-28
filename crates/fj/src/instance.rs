@@ -1,4 +1,4 @@
-use std::{error::Error as _, fmt, sync::mpsc::sync_channel};
+use std::{error::Error as _, fmt};
 
 use fj_core::{
     Core,
@@ -7,12 +7,10 @@ use fj_core::{
     validation::{ValidationConfig, ValidationErrors},
 };
 use fj_math::{Aabb, Point, Scalar};
+use fj_viewer::make_viewer_and_spawn_thread;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{
-    Args, export,
-    viewer::{self, Viewer},
-};
+use crate::{Args, export, viewer};
 
 /// An instance of Fornjot
 ///
@@ -90,15 +88,9 @@ impl Instance {
             return Ok(());
         }
 
-        let (tri_mesh_tx, tri_mesh_rx) = sync_channel(1);
-        let Ok(()) = tri_mesh_tx.send(tri_mesh) else {
-            unreachable!(
-                "Receiver has not been dropped, so it's not possible for the \
-                send to fail."
-            );
-        };
-
-        Viewer::new(tri_mesh_rx, false)?;
+        make_viewer_and_spawn_thread(false, |viewer| {
+            let _ = viewer.display(tri_mesh);
+        })?;
 
         Ok(())
     }
