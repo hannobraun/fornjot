@@ -1,5 +1,6 @@
 use fj_interop::TriMesh;
 use fj_math::{Point, Vector};
+use fj_viewer::Viewer;
 
 use crate::{
     geometry::{Sketch, ToTriMesh},
@@ -9,7 +10,7 @@ use crate::{
     topology::surface::Surface,
 };
 
-pub fn model() -> TriMesh {
+pub fn model(viewer: &Viewer) -> TriMesh {
     let top = {
         let sketch = Sketch::from([
             // outer boundary
@@ -44,6 +45,7 @@ pub fn model() -> TriMesh {
     };
 
     let solid = top.sweep([0., 0., -2.]);
+    viewer.display(solid.to_tri_mesh());
 
     solid.to_tri_mesh()
 }
