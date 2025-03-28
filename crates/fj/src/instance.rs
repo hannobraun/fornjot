@@ -1,4 +1,4 @@
-use std::{error::Error as _, fmt};
+use std::{error::Error as _, fmt, sync::mpsc::sync_channel};
 
 use fj_core::{
     Core,
@@ -90,7 +90,15 @@ impl Instance {
             return Ok(());
         }
 
-        Viewer::new(mesh, false)?;
+        let (tri_mesh_tx, tri_mesh_rx) = sync_channel(1);
+        let Ok(()) = tri_mesh_tx.send(mesh) else {
+            unreachable!(
+                "Receiver has not been dropped, so it's not possible for the \
+                send to fail."
+            );
+        };
+
+        Viewer::new(tri_mesh_rx, false)?;
 
         Ok(())
     }

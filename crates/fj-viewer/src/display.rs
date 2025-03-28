@@ -1,7 +1,4 @@
-use std::{
-    collections::BTreeMap,
-    sync::mpsc::{Receiver, sync_channel},
-};
+use std::{collections::BTreeMap, sync::mpsc::Receiver};
 
 use fj_interop::TriMesh;
 use futures::executor::block_on;
@@ -28,22 +25,16 @@ pub struct Viewer {}
 
 impl Viewer {
     /// # Construct a new model viewer
-    pub fn new(tri_mesh: TriMesh, invert_zoom: bool) -> Result<Viewer, Error> {
+    pub fn new(
+        tri_mesh: Receiver<TriMesh>,
+        invert_zoom: bool,
+    ) -> Result<Viewer, Error> {
         let event_loop = EventLoop::new()?;
 
-        let (tri_mesh_tx, tri_mesh_rx) = sync_channel(1);
-
         let mut display_state = DisplayState {
-            next_tri_mesh: tri_mesh_rx,
+            next_tri_mesh: tri_mesh,
             invert_zoom,
             windows: BTreeMap::new(),
-        };
-
-        let Ok(()) = tri_mesh_tx.send(tri_mesh) else {
-            unreachable!(
-                "Receiver has not been dropped, so it's not possible for the \
-                send to fail."
-            );
         };
 
         event_loop.run_app(&mut display_state)?;
