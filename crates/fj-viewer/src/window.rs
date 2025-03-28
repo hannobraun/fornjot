@@ -47,9 +47,7 @@ impl Window {
         let renderer =
             Renderer::new(window.clone(), Vertices::from_tri_mesh(&tri_mesh))
                 .await?;
-        let mut camera = Camera::new();
-
-        camera.init_planes(&aabb);
+        let camera = Camera::new(&aabb);
 
         Ok(Self {
             new_screen_size: None,
