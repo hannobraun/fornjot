@@ -33,6 +33,8 @@ impl Window {
         tri_mesh: TriMesh,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
+        let aabb = tri_mesh.aabb();
+
         let window = Arc::new(
             event_loop.create_window(
                 winit::window::Window::default_attributes()
@@ -47,7 +49,6 @@ impl Window {
                 .await?;
         let mut camera = Camera::new();
 
-        let aabb = tri_mesh.aabb();
         camera.init_planes(&aabb);
 
         Ok(Self {
