@@ -203,8 +203,8 @@ impl Renderer {
     }
 
     /// Updates the geometry of the model being rendered.
-    pub fn update_geometry(&mut self, mesh: Vertices) {
-        self.geometries = Geometries::new(&self.device.device, &mesh);
+    pub fn update_geometry(&mut self, vertices: Vertices) {
+        self.geometries = Geometries::new(&self.device.device, &vertices);
     }
 
     /// Resizes the render surface.
