@@ -27,7 +27,7 @@ use crate::{
 pub struct Viewer {}
 
 impl Viewer {
-    /// # Display the provided mesh in a window that processes input
+    /// # Construct a new model viewer
     pub fn new(tri_mesh: TriMesh, invert_zoom: bool) -> Result<Viewer, Error> {
         let event_loop = EventLoop::new()?;
 
