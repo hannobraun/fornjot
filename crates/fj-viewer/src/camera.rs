@@ -277,12 +277,6 @@ impl Camera {
     }
 }
 
-impl Default for Camera {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 /// The point around which camera movement happens.
 ///
 /// This will be the point on the model that the cursor is currently pointing at if such a point exists,
