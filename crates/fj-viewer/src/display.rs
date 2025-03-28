@@ -82,6 +82,8 @@ impl ApplicationHandler for DisplayState {
             window.handle_input_event(input_event);
         }
 
+        let mut drawn = false;
+
         match event {
             WindowEvent::Resized(size) => {
                 window.on_screen_resize(size);
@@ -135,18 +137,17 @@ impl ApplicationHandler for DisplayState {
             WindowEvent::MouseWheel { .. } => window.add_focus_point(),
             WindowEvent::RedrawRequested => {
                 window.draw();
+                drawn = true;
             }
             _ => {}
         }
+
+        if !drawn {
+            window.window().request_redraw();
+        }
     }
 
-    fn about_to_wait(&mut self, _: &ActiveEventLoop) {
-        let Some(window) = &self.window else {
-            return;
-        };
-
-        window.window().request_redraw();
-    }
+    fn about_to_wait(&mut self, _: &ActiveEventLoop) {}
 }
 
 fn input_event(event: &WindowEvent, invert_zoom: bool) -> Option<InputEvent> {
