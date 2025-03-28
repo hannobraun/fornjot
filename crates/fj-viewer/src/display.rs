@@ -25,6 +25,10 @@ pub struct Viewer {}
 
 impl Viewer {
     /// # Construct a new model viewer
+    ///
+    /// A viewer can display multiple models, by opening multiple windows. Send
+    /// any model you want to display to the receiver that this constructor
+    /// accepts.
     pub fn new(
         next_tri_mesh: Receiver<TriMesh>,
         invert_zoom: bool,
