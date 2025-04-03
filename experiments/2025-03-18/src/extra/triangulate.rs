@@ -26,7 +26,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
             polygon.contains(&Coord { x, y })
         })
         .map(|triangle| {
-            let points = triangle.map(|point| point.point_vertex);
+            let points = triangle.map(|point| point.point_global);
             MeshTriangle {
                 inner: Triangle { points },
                 is_internal: face.is_internal,
@@ -63,7 +63,7 @@ fn points(face: &Face) -> Vec<TriangulationPoint> {
 
         TriangulationPoint {
             point_surface,
-            point_vertex: half_edge.start.point,
+            point_global: half_edge.start.point,
         }
     });
 
@@ -132,7 +132,7 @@ fn polygon(points: &[TriangulationPoint]) -> Polygon {
 #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 struct TriangulationPoint {
     point_surface: Point<2>,
-    point_vertex: Point<3>,
+    point_global: Point<3>,
 }
 
 impl spade::HasPosition for TriangulationPoint {
