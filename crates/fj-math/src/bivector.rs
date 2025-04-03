@@ -18,7 +18,7 @@ use crate::{Scalar, Vector};
 /// I've decided that two vectors is good enough, and anything else not worth
 /// the trouble. But we might want to reconsider, once `generic_const_exprs` is
 /// stable.
-#[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Bivector<const D: usize> {
     /// The first of the vectors whose outer product defines this bivector
