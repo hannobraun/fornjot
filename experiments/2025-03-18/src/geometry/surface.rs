@@ -1,4 +1,5 @@
 use fj_math::{Point, Vector};
+use geo::Polygon;
 
 use crate::math::Plane;
 
@@ -7,6 +8,19 @@ pub trait SurfaceGeometry {
     fn project_point(&self, point: Point<3>) -> Point<2>;
     fn flip(&self) -> Box<dyn SurfaceGeometry>;
     fn translate(&self, offset: Vector<3>) -> Box<dyn SurfaceGeometry>;
+
+    /// # Approximate the surface
+    ///
+    /// Returns a set of points, in surface coordinates, that approximate the
+    /// surface. The points returns must be within the provided boundary. Not
+    /// outside of it, and not on it.
+    ///
+    /// ## Implementation Note
+    ///
+    /// This method should take a tolerance parameter, to define how far the
+    /// approximation is allowed to deviate from the actual surface. So far,
+    /// this has not been necessary.
+    fn approximate(&self, boundary: &Polygon) -> Vec<Point<2>>;
 }
 
 impl SurfaceGeometry for Plane {
@@ -24,5 +38,9 @@ impl SurfaceGeometry for Plane {
 
     fn translate(&self, offset: Vector<3>) -> Box<dyn SurfaceGeometry> {
         Box::new((*self).translate(offset))
+    }
+
+    fn approximate(&self, _: &Polygon) -> Vec<Point<2>> {
+        vec![]
     }
 }

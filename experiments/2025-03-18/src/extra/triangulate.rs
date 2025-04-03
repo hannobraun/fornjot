@@ -8,7 +8,7 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::topology::face::Face;
+use crate::topology::{face::Face, surface::Surface};
 
 pub fn triangulate(face: &Face) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
@@ -17,7 +17,12 @@ pub fn triangulate(face: &Face) -> TriMesh {
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let all_points = points_from_half_edges;
+    let mut all_points = points_from_half_edges;
+    points_from_surface(
+        &face.surface,
+        &polygon_from_half_edges,
+        &mut all_points,
+    );
 
     let triangles_in_face = triangles(&all_points)
         .into_iter()
@@ -117,6 +122,23 @@ fn polygon_from_half_edges(
     };
 
     Polygon::new(exterior, interiors)
+}
+
+fn points_from_surface(
+    surface: &Surface,
+    boundary: &Polygon,
+    target: &mut Vec<TriangulationPoint>,
+) {
+    target.extend(surface.geometry.approximate(boundary).into_iter().map(
+        |point_surface| {
+            let point_global = surface.geometry.point_from_local(point_surface);
+
+            TriangulationPoint {
+                point_surface,
+                point_global,
+            }
+        },
+    ))
 }
 
 fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
