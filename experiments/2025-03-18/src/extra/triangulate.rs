@@ -12,7 +12,7 @@ use crate::topology::face::Face;
 
 pub fn triangulate(face: &Face) -> TriMesh {
     let points_from_half_edges = points_from_half_edges(face);
-    let polygon = polygon(&points_from_half_edges);
+    let polygon_from_half_edges = polygon(&points_from_half_edges);
 
     let triangles_in_face = triangles(&points_from_half_edges)
         .into_iter()
@@ -22,7 +22,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
 
             let [x, y] =
                 triangle.center().coords.components.map(|s| s.into_f64());
-            polygon.contains(&Coord { x, y })
+            polygon_from_half_edges.contains(&Coord { x, y })
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_global);
