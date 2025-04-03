@@ -87,7 +87,7 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
         .collect()
 }
 
-fn polygon(points: &[TriangulationPoint]) -> Polygon {
+fn polygon(points_from_half_edges: &[TriangulationPoint]) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.
 
@@ -95,7 +95,7 @@ fn polygon(points: &[TriangulationPoint]) -> Polygon {
     let mut current_line_string = Vec::new();
     let mut visited_points = BTreeSet::new();
 
-    for point in points {
+    for point in points_from_half_edges {
         if visited_points.contains(point) {
             line_strings.push_back(mem::take(&mut current_line_string));
             continue;
