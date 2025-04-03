@@ -72,21 +72,6 @@ fn points_from_half_edges(face: &Face) -> Vec<TriangulationPoint> {
         .collect()
 }
 
-fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
-    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
-
-    // We're passing duplicate points to the triangulation here. It doesn't seem
-    // to mind though.
-    triangulation
-        .add_constraint_edges(points.iter().copied(), true)
-        .unwrap();
-
-    triangulation
-        .inner_faces()
-        .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
-        .collect()
-}
-
 fn polygon(points_from_half_edges: &[TriangulationPoint]) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.
@@ -129,6 +114,21 @@ fn polygon(points_from_half_edges: &[TriangulationPoint]) -> Polygon {
     };
 
     Polygon::new(exterior, interiors)
+}
+
+fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
+    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
+
+    // We're passing duplicate points to the triangulation here. It doesn't seem
+    // to mind though.
+    triangulation
+        .add_constraint_edges(points.iter().copied(), true)
+        .unwrap();
+
+    triangulation
+        .inner_faces()
+        .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
+        .collect()
 }
 
 #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
