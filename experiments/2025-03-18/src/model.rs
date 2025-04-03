@@ -1,11 +1,11 @@
 use fj_interop::TriMesh;
-use fj_math::{Point, Vector};
+use fj_math::{Bivector, Point, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
     geometry::{Sketch, ToTriMesh},
     handle::Handle,
-    math::{Bivector, Plane},
+    math::Plane,
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };
