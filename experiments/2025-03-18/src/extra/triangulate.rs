@@ -42,6 +42,8 @@ pub fn triangulate(face: &Face) -> TriMesh {
 
 fn points(face: &Face) -> Vec<TriangulationPoint> {
     let points_from_half_edges = face.half_edges.iter().map(|half_edge| {
+        let point_global = half_edge.start.point;
+
         // Here, we project a 3D point (from the vertex) into the face's
         // surface, creating a 2D point. Through the surface, this 2D point has
         // a position in 3D space.
@@ -58,12 +60,11 @@ fn points(face: &Face) -> Vec<TriangulationPoint> {
         // the different 3D points must connect, we use the original 3D points
         // to build those triangles. We never convert the 2D points back into
         // 3D.
-        let point_surface =
-            face.surface.geometry.project_point(half_edge.start.point);
+        let point_surface = face.surface.geometry.project_point(point_global);
 
         TriangulationPoint {
             point_surface,
-            point_global: half_edge.start.point,
+            point_global,
         }
     });
 
