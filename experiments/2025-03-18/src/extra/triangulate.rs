@@ -11,7 +11,7 @@ use spade::Triangulation;
 use crate::topology::face::Face;
 
 pub fn triangulate(face: &Face) -> TriMesh {
-    let points_from_half_edges = points_from_half_edges(face);
+    let points_from_half_edges = half_edges_to_points(face);
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
@@ -40,7 +40,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
     mesh
 }
 
-fn points_from_half_edges(face: &Face) -> Vec<TriangulationPoint> {
+fn half_edges_to_points(face: &Face) -> Vec<TriangulationPoint> {
     face.half_edges
         .iter()
         .map(|half_edge| {
