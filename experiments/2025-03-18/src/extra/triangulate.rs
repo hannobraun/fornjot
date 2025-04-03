@@ -12,7 +12,8 @@ use crate::topology::face::Face;
 
 pub fn triangulate(face: &Face) -> TriMesh {
     let points_from_half_edges = points_from_half_edges(face);
-    let polygon_from_half_edges = polygon(&points_from_half_edges);
+    let polygon_from_half_edges =
+        polygon_from_half_edges(&points_from_half_edges);
 
     let triangles_in_face = triangles(&points_from_half_edges)
         .into_iter()
@@ -72,7 +73,9 @@ fn points_from_half_edges(face: &Face) -> Vec<TriangulationPoint> {
         .collect()
 }
 
-fn polygon(points_from_half_edges: &[TriangulationPoint]) -> Polygon {
+fn polygon_from_half_edges(
+    points_from_half_edges: &[TriangulationPoint],
+) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.
 
