@@ -17,7 +17,9 @@ pub fn triangulate(face: &Face) -> TriMesh {
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let triangles_in_face = triangles(&points_from_half_edges)
+    let all_points = points_from_half_edges;
+
+    let triangles_in_face = triangles(&all_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
