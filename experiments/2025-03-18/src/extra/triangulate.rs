@@ -88,8 +88,8 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
 }
 
 fn polygon(points: &[TriangulationPoint]) -> Polygon {
-    // This is a placeholder implementation that is probably not well-tested and
-    // probably doesn't support polygons with multiple holes.
+    // This is a placeholder implementation that is not well-tested and probably
+    // doesn't support polygons with multiple holes.
 
     let mut line_strings = VecDeque::new();
     let mut current_line_string = Vec::new();
