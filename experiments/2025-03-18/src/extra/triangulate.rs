@@ -11,7 +11,9 @@ use spade::Triangulation;
 use crate::topology::face::Face;
 
 pub fn triangulate(face: &Face) -> TriMesh {
-    let points_from_half_edges = half_edges_to_points(face);
+    let mut points_from_half_edges = Vec::new();
+    half_edges_to_points(face, &mut points_from_half_edges);
+
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
@@ -40,37 +42,33 @@ pub fn triangulate(face: &Face) -> TriMesh {
     mesh
 }
 
-fn half_edges_to_points(face: &Face) -> Vec<TriangulationPoint> {
-    face.half_edges
-        .iter()
-        .map(|half_edge| {
-            let point_global = half_edge.start.point;
+fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
+    target.extend(face.half_edges.iter().map(|half_edge| {
+        let point_global = half_edge.start.point;
 
-            // Here, we project a 3D point (from the vertex) into the face's
-            // surface, creating a 2D point. Through the surface, this 2D point
-            // has a position in 3D space.
-            //
-            // But this position isn't necessarily going to be the same as the
-            // position of the original 3D point, due to numerical inaccuracy.
-            //
-            // This doesn't matter. Neither does the fact, that other faces
-            // might share the same vertices and project them into their own
-            // surfaces, creating more redundancy.
-            //
-            // The reason that it doesn't, is that we're using the projected 2D
-            // points _only_ for this local triangulation. Once that tells us
-            // how the different 3D points must connect, we use the original 3D
-            // points to build those triangles. We never convert the 2D points
-            // back into 3D.
-            let point_surface =
-                face.surface.geometry.project_point(point_global);
+        // Here, we project a 3D point (from the vertex) into the face's
+        // surface, creating a 2D point. Through the surface, this 2D point
+        // has a position in 3D space.
+        //
+        // But this position isn't necessarily going to be the same as the
+        // position of the original 3D point, due to numerical inaccuracy.
+        //
+        // This doesn't matter. Neither does the fact, that other faces
+        // might share the same vertices and project them into their own
+        // surfaces, creating more redundancy.
+        //
+        // The reason that it doesn't, is that we're using the projected 2D
+        // points _only_ for this local triangulation. Once that tells us
+        // how the different 3D points must connect, we use the original 3D
+        // points to build those triangles. We never convert the 2D points
+        // back into 3D.
+        let point_surface = face.surface.geometry.project_point(point_global);
 
-            TriangulationPoint {
-                point_surface,
-                point_global,
-            }
-        })
-        .collect()
+        TriangulationPoint {
+            point_surface,
+            point_global,
+        }
+    }))
 }
 
 fn polygon_from_half_edges(
