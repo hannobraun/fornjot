@@ -44,41 +44,45 @@ impl ConnectExt for Handle<Face> {
             "Can only connect faces that have the same number of vertices.",
         );
 
-        let side_faces = bottom
-            .half_edges_with_end_vertex()
-            .zip(top.half_edges_with_end_vertex())
-            .map(|((a, b), (d, c))| {
-                let is_internal = match [a.is_internal, d.is_internal] {
-                    [true, true] => true,
-                    [false, false] => false,
-                    _ => {
-                        panic!(
-                            "Trying to connect an internal half-edge of one \
-                            face to an external half-edge of another"
-                        );
-                    }
-                };
-
-                let surface = Handle::new(Surface {
-                    geometry: Box::new(Plane::from_points(
-                        [&a.start, b, c].map(|vertex| vertex.point),
-                    )),
-                });
-                let face = Face::new(
-                    surface,
-                    [&a.start, b, c, &d.start].map(|vertex| {
-                        Handle::new(HalfEdge {
-                            curve: Handle::new(Curve {}),
-                            start: vertex.clone(),
-                            is_internal: false,
-                        })
-                    }),
-                    is_internal,
-                );
-                Handle::new(face)
-            })
-            .collect::<Vec<_>>();
+        let side_faces = build_connecting_faces(&bottom, &top);
 
         Solid::new([bottom, top].into_iter().chain(side_faces))
     }
+}
+
+fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
+    bottom
+        .half_edges_with_end_vertex()
+        .zip(top.half_edges_with_end_vertex())
+        .map(|((a, b), (d, c))| {
+            let is_internal = match [a.is_internal, d.is_internal] {
+                [true, true] => true,
+                [false, false] => false,
+                _ => {
+                    panic!(
+                        "Trying to connect an internal half-edge of one \
+                            face to an external half-edge of another"
+                    );
+                }
+            };
+
+            let surface = Handle::new(Surface {
+                geometry: Box::new(Plane::from_points(
+                    [&a.start, b, c].map(|vertex| vertex.point),
+                )),
+            });
+            let face = Face::new(
+                surface,
+                [&a.start, b, c, &d.start].map(|vertex| {
+                    Handle::new(HalfEdge {
+                        curve: Handle::new(Curve {}),
+                        start: vertex.clone(),
+                        is_internal: false,
+                    })
+                }),
+                is_internal,
+            );
+            Handle::new(face)
+        })
+        .collect::<Vec<_>>()
 }
