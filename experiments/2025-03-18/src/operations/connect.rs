@@ -85,7 +85,12 @@ fn build_single_connecting_face(
 
     let surface = Handle::new(Surface {
         geometry: Box::new(Plane::from_points(
-            [a, b, d].map(|vertex| vertex.point),
+            [
+                &bottom.half_edge.start,
+                bottom.end_vertex,
+                &top.half_edge.start,
+            ]
+            .map(|vertex| vertex.point),
         )),
     });
     let half_edges = [a, b, c, d].map(|vertex| {
