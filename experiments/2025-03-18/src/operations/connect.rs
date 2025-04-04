@@ -76,8 +76,8 @@ fn build_single_connecting_face(
             }
         };
 
-    // Order the vertices in a way that makes sense, when building the
-    // half-edges of the connecting face.
+    // Order the vertices in a way that makes sense when building the half-edges
+    // of the connecting face.
     let a = &bottom.half_edge.start;
     let b = bottom.end_vertex;
     let c = top.end_vertex;
