@@ -68,7 +68,7 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
 
             let surface = Handle::new(Surface {
                 geometry: Box::new(Plane::from_points(
-                    [&bottom_a.start, bottom_b, top_b]
+                    [&bottom_a.start, bottom_b, &top_a.start]
                         .map(|vertex| vertex.point),
                 )),
             });
