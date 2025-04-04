@@ -32,6 +32,9 @@ pub trait ConnectExt {
 
 impl ConnectExt for Handle<Face> {
     fn connect(self, other: Self) -> Solid {
+        // Let's designate the two faces as "bottom" and "top", to make it
+        // easier to talk about them and things related to them, in the
+        // following code.
         let bottom = self;
         let top = other;
 
