@@ -27,6 +27,8 @@ impl TranslateExt for Face {
 
 impl TranslateExt for HalfEdge {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        let offset = offset.into();
+
         let curve = self.curve.clone();
         let start = self.start.translate(offset);
 
