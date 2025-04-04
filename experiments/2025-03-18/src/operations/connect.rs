@@ -71,7 +71,7 @@ fn build_single_connecting_face(
             _ => {
                 panic!(
                     "Trying to connect an internal half-edge of one face to an \
-                    external half-edge of another"
+                    external half-edge of another."
                 );
             }
         };
