@@ -54,19 +54,20 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
     bottom
         .half_edges_with_end_vertex()
         .zip(top.half_edges_with_end_vertex())
-        .map(|((bottom_a, bottom_b), (top_a, top_b))| {
-            let a = &bottom_a.start;
+        .map(|((bottom_half_edge, bottom_b), (top_a, top_b))| {
+            let a = &bottom_half_edge.start;
 
-            let is_internal = match [bottom_a.is_internal, top_a.is_internal] {
-                [true, true] => true,
-                [false, false] => false,
-                _ => {
-                    panic!(
-                        "Trying to connect an internal half-edge of one \
+            let is_internal =
+                match [bottom_half_edge.is_internal, top_a.is_internal] {
+                    [true, true] => true,
+                    [false, false] => false,
+                    _ => {
+                        panic!(
+                            "Trying to connect an internal half-edge of one \
                             face to an external half-edge of another"
-                    );
-                }
-            };
+                        );
+                    }
+                };
 
             let surface = Handle::new(Surface {
                 geometry: Box::new(Plane::from_points(
