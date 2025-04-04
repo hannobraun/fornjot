@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::{
     handle::Handle,
     math::Plane,
@@ -48,6 +50,10 @@ impl ConnectExt for Handle<Face> {
         );
 
         let connecting_faces = build_connecting_faces([&bottom, &top]);
+        check_that_bottom_and_top_curves_where_reused(
+            [&bottom, &top],
+            &connecting_faces,
+        );
 
         Solid::new([bottom, top].into_iter().chain(connecting_faces))
     }
@@ -92,11 +98,13 @@ fn build_single_connecting_face(
     // respective half-edge.
     let a = (&bottom.half_edge.start, Some(&bottom.half_edge.curve));
     let b = (bottom.end_vertex, None);
-    let c = (top.end_vertex, None);
-    let d = (&top.half_edge.start, Some(&top.half_edge.curve));
+    let c = (top.end_vertex, Some(&top.half_edge.curve));
+    let d = (&top.half_edge.start, None);
 
-    let half_edges = [a, b, c, d].map(|(vertex, _)| {
-        let curve = Handle::new(Curve {});
+    let half_edges = [a, b, c, d].map(|(vertex, maybe_curve)| {
+        let curve = maybe_curve
+            .cloned()
+            .unwrap_or_else(|| Handle::new(Curve {}));
 
         Handle::new(HalfEdge {
             curve,
@@ -107,4 +115,27 @@ fn build_single_connecting_face(
 
     let face = Face::new(surface, half_edges, is_internal);
     Handle::new(face)
+}
+
+fn check_that_bottom_and_top_curves_where_reused(
+    [bottom, top]: [&Face; 2],
+    connecting_faces: &[Handle<Face>],
+) {
+    bottom
+        .half_edges
+        .iter()
+        .zip(&top.half_edges)
+        .zip(connecting_faces)
+        .for_each(|((bottom, top), connecting)| {
+            let Some([connecting_bottom, _, connecting_top, _]) =
+                connecting.half_edges.iter().collect_array()
+            else {
+                unreachable!(
+                    "Created connecting with exactly four half-edges."
+                );
+            };
+
+            assert_eq!(bottom.curve, connecting_bottom.curve);
+            assert_eq!(top.curve, connecting_top.curve);
+        });
 }
