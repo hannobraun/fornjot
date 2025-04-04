@@ -33,16 +33,17 @@ pub trait ConnectExt {
 impl ConnectExt for Handle<Face> {
     fn connect(self, other: Self) -> Solid {
         let bottom = self;
+        let top = other;
 
         assert_eq!(
             bottom.half_edges.len(),
-            other.half_edges.len(),
+            top.half_edges.len(),
             "Can only connect faces that have the same number of vertices.",
         );
 
         let side_faces = bottom
             .half_edges_with_end_vertex()
-            .zip(other.half_edges_with_end_vertex())
+            .zip(top.half_edges_with_end_vertex())
             .map(|((a, b), (d, c))| {
                 let is_internal = match [a.is_internal, d.is_internal] {
                     [true, true] => true,
@@ -75,6 +76,6 @@ impl ConnectExt for Handle<Face> {
             })
             .collect::<Vec<_>>();
 
-        Solid::new([bottom, other].into_iter().chain(side_faces))
+        Solid::new([bottom, top].into_iter().chain(side_faces))
     }
 }
