@@ -57,11 +57,11 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
         .map(
             |(
                 (bottom_half_edge, bottom_half_edge_end),
-                (top_a, top_half_edge_end),
+                (top_half_edge, top_half_edge_end),
             )| {
                 let is_internal = match [
                     bottom_half_edge.is_internal,
-                    top_a.is_internal,
+                    top_half_edge.is_internal,
                 ] {
                     [true, true] => true,
                     [false, false] => false,
@@ -76,7 +76,7 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
                 let a = &bottom_half_edge.start;
                 let b = bottom_half_edge_end;
                 let c = top_half_edge_end;
-                let d = &top_a.start;
+                let d = &top_half_edge.start;
 
                 let surface = Handle::new(Surface {
                     geometry: Box::new(Plane::from_points(
