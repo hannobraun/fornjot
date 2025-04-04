@@ -41,8 +41,8 @@ impl ConnectExt for Handle<Face> {
         let side_faces = self
             .half_edges_with_end_vertex()
             .zip(other.half_edges_with_end_vertex())
-            .map(|((q, r), (t, s))| {
-                let is_internal = match [q.is_internal, t.is_internal] {
+            .map(|((a, b), (d, c))| {
+                let is_internal = match [a.is_internal, d.is_internal] {
                     [true, true] => true,
                     [false, false] => false,
                     _ => {
@@ -55,12 +55,12 @@ impl ConnectExt for Handle<Face> {
 
                 let surface = Handle::new(Surface {
                     geometry: Box::new(Plane::from_points(
-                        [&q.start, r, s].map(|vertex| vertex.point),
+                        [&a.start, b, c].map(|vertex| vertex.point),
                     )),
                 });
                 let face = Face::new(
                     surface,
-                    [&q.start, r, s, &t.start].map(|vertex| {
+                    [&a.start, b, c, &d.start].map(|vertex| {
                         Handle::new(HalfEdge {
                             curve: Handle::new(Curve {}),
                             start: vertex.clone(),
