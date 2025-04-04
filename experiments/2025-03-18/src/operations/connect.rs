@@ -44,9 +44,9 @@ impl ConnectExt for Handle<Face> {
             "Can only connect faces that have the same number of vertices.",
         );
 
-        let side_faces = build_connecting_faces(&bottom, &top);
+        let connecting_faces = build_connecting_faces(&bottom, &top);
 
-        Solid::new([bottom, top].into_iter().chain(side_faces))
+        Solid::new([bottom, top].into_iter().chain(connecting_faces))
     }
 }
 
