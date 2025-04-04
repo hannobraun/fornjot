@@ -2,7 +2,10 @@ use crate::{
     handle::Handle,
     math::Plane,
     topology::{
-        curve::Curve, face::Face, half_edge::HalfEdge, solid::Solid,
+        curve::Curve,
+        face::{Face, HalfEdgeWithEndVertex},
+        half_edge::HalfEdge,
+        solid::Solid,
         surface::Surface,
     },
 };
@@ -56,8 +59,14 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
         .zip(top.half_edges_with_end_vertex())
         .map(
             |(
-                (bottom_half_edge, bottom_half_edge_end),
-                (top_half_edge, top_half_edge_end),
+                HalfEdgeWithEndVertex {
+                    half_edge: bottom_half_edge,
+                    end_vertex: bottom_half_edge_end,
+                },
+                HalfEdgeWithEndVertex {
+                    half_edge: top_half_edge,
+                    end_vertex: top_half_edge_end,
+                },
             )| {
                 let is_internal = match [
                     bottom_half_edge.is_internal,

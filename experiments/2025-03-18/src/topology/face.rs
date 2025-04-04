@@ -29,11 +29,14 @@ impl Face {
 
     pub fn half_edges_with_end_vertex(
         &self,
-    ) -> impl Iterator<Item = (&Handle<HalfEdge>, &Handle<Vertex>)> {
+    ) -> impl Iterator<Item = HalfEdgeWithEndVertex> {
         self.half_edges
             .iter()
             .circular_tuple_windows()
-            .map(|(a, b)| (a, &b.start))
+            .map(|(a, b)| HalfEdgeWithEndVertex {
+                half_edge: a,
+                end_vertex: &b.start,
+            })
     }
 }
 
@@ -41,4 +44,9 @@ impl ToTriMesh for Face {
     fn to_tri_mesh(&self) -> TriMesh {
         triangulate(self)
     }
+}
+
+pub struct HalfEdgeWithEndVertex<'r> {
+    pub half_edge: &'r Handle<HalfEdge>,
+    pub end_vertex: &'r Handle<Vertex>,
 }
