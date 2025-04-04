@@ -2,10 +2,7 @@ use crate::{
     handle::Handle,
     math::Plane,
     topology::{
-        curve::Curve,
-        face::{Face, HalfEdgeWithEndVertex},
-        half_edge::HalfEdge,
-        solid::Solid,
+        curve::Curve, face::Face, half_edge::HalfEdge, solid::Solid,
         surface::Surface,
     },
 };
@@ -57,18 +54,10 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
     bottom
         .half_edges_with_end_vertex()
         .zip(top.half_edges_with_end_vertex())
-        .map(
-            |(
-                bottom,
-                HalfEdgeWithEndVertex {
-                    half_edge: top_half_edge,
-                    end_vertex: top_half_edge_end,
-                },
-            )| {
-                let is_internal = match [
-                    bottom.half_edge.is_internal,
-                    top_half_edge.is_internal,
-                ] {
+        .map(|(bottom, top)| {
+            let is_internal =
+                match [bottom.half_edge.is_internal, top.half_edge.is_internal]
+                {
                     [true, true] => true,
                     [false, false] => false,
                     _ => {
@@ -79,29 +68,28 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
                     }
                 };
 
-                let a = &bottom.half_edge.start;
-                let b = bottom.end_vertex;
-                let c = top_half_edge_end;
-                let d = &top_half_edge.start;
+            let a = &bottom.half_edge.start;
+            let b = bottom.end_vertex;
+            let c = top.end_vertex;
+            let d = &top.half_edge.start;
 
-                let surface = Handle::new(Surface {
-                    geometry: Box::new(Plane::from_points(
-                        [a, b, d].map(|vertex| vertex.point),
-                    )),
-                });
-                let face = Face::new(
-                    surface,
-                    [a, b, c, d].map(|vertex| {
-                        Handle::new(HalfEdge {
-                            curve: Handle::new(Curve {}),
-                            start: vertex.clone(),
-                            is_internal: false,
-                        })
-                    }),
-                    is_internal,
-                );
-                Handle::new(face)
-            },
-        )
+            let surface = Handle::new(Surface {
+                geometry: Box::new(Plane::from_points(
+                    [a, b, d].map(|vertex| vertex.point),
+                )),
+            });
+            let face = Face::new(
+                surface,
+                [a, b, c, d].map(|vertex| {
+                    Handle::new(HalfEdge {
+                        curve: Handle::new(Curve {}),
+                        start: vertex.clone(),
+                        is_internal: false,
+                    })
+                }),
+                is_internal,
+            );
+            Handle::new(face)
+        })
         .collect::<Vec<_>>()
 }
