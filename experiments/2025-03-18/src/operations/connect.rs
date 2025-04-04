@@ -76,15 +76,16 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
                 let a = &bottom_half_edge.start;
                 let b = bottom_half_edge_end;
                 let c = top_half_edge_end;
+                let d = &top_a.start;
 
                 let surface = Handle::new(Surface {
                     geometry: Box::new(Plane::from_points(
-                        [a, b, &top_a.start].map(|vertex| vertex.point),
+                        [a, b, d].map(|vertex| vertex.point),
                     )),
                 });
                 let face = Face::new(
                     surface,
-                    [a, b, c, &top_a.start].map(|vertex| {
+                    [a, b, c, d].map(|vertex| {
                         Handle::new(HalfEdge {
                             curve: Handle::new(Curve {}),
                             start: vertex.clone(),
