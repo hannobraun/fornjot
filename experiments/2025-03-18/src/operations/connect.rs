@@ -55,9 +55,6 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
         .half_edges_with_end_vertex()
         .zip(top.half_edges_with_end_vertex())
         .map(|((bottom_half_edge, bottom_b), (top_a, top_b))| {
-            let a = &bottom_half_edge.start;
-            let b = bottom_b;
-
             let is_internal =
                 match [bottom_half_edge.is_internal, top_a.is_internal] {
                     [true, true] => true,
@@ -69,6 +66,9 @@ fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
                         );
                     }
                 };
+
+            let a = &bottom_half_edge.start;
+            let b = bottom_b;
 
             let surface = Handle::new(Surface {
                 geometry: Box::new(Plane::from_points(
