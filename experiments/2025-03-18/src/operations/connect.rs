@@ -89,12 +89,12 @@ fn build_single_connecting_face(
 
     // Order the vertices in a way that makes sense when building the half-edges
     // of the connecting face.
-    let a = &bottom.half_edge.start;
-    let b = bottom.end_vertex;
-    let c = top.end_vertex;
-    let d = &top.half_edge.start;
+    let a = (&bottom.half_edge.start, Some(&bottom.half_edge.curve));
+    let b = (bottom.end_vertex, None);
+    let c = (top.end_vertex, None);
+    let d = (&top.half_edge.start, Some(&top.half_edge.curve));
 
-    let half_edges = [a, b, c, d].map(|vertex| {
+    let half_edges = [a, b, c, d].map(|(vertex, _)| {
         Handle::new(HalfEdge {
             curve: Handle::new(Curve {}),
             start: vertex.clone(),
