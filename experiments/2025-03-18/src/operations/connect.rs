@@ -76,13 +76,6 @@ fn build_single_connecting_face(
             }
         };
 
-    // Order the vertices in a way that makes sense when building the half-edges
-    // of the connecting face.
-    let a = &bottom.half_edge.start;
-    let b = bottom.end_vertex;
-    let c = top.end_vertex;
-    let d = &top.half_edge.start;
-
     let surface = Handle::new(Surface {
         geometry: Box::new(Plane::from_points(
             [
@@ -93,6 +86,14 @@ fn build_single_connecting_face(
             .map(|vertex| vertex.point),
         )),
     });
+
+    // Order the vertices in a way that makes sense when building the half-edges
+    // of the connecting face.
+    let a = &bottom.half_edge.start;
+    let b = bottom.end_vertex;
+    let c = top.end_vertex;
+    let d = &top.half_edge.start;
+
     let half_edges = [a, b, c, d].map(|vertex| {
         Handle::new(HalfEdge {
             curve: Handle::new(Curve {}),
