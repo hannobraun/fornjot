@@ -96,8 +96,10 @@ fn build_single_connecting_face(
     let d = (&top.half_edge.start, Some(&top.half_edge.curve));
 
     let half_edges = [a, b, c, d].map(|(vertex, _)| {
+        let curve = Handle::new(Curve {});
+
         Handle::new(HalfEdge {
-            curve: Handle::new(Curve {}),
+            curve,
             start: vertex.clone(),
             is_internal: false,
         })
