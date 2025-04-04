@@ -88,16 +88,14 @@ fn build_single_connecting_face(
             [a, b, d].map(|vertex| vertex.point),
         )),
     });
-    let face = Face::new(
-        surface,
-        [a, b, c, d].map(|vertex| {
-            Handle::new(HalfEdge {
-                curve: Handle::new(Curve {}),
-                start: vertex.clone(),
-                is_internal: false,
-            })
-        }),
-        is_internal,
-    );
+    let half_edges = [a, b, c, d].map(|vertex| {
+        Handle::new(HalfEdge {
+            curve: Handle::new(Curve {}),
+            start: vertex.clone(),
+            is_internal: false,
+        })
+    });
+
+    let face = Face::new(surface, half_edges, is_internal);
     Handle::new(face)
 }
