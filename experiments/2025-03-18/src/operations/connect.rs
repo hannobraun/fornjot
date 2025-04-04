@@ -88,7 +88,8 @@ fn build_single_connecting_face(
     });
 
     // Order the vertices in a way that makes sense when building the half-edges
-    // of the connecting face.
+    // of the connecting face, and pair them with the curve required for the
+    // respective half-edge.
     let a = (&bottom.half_edge.start, Some(&bottom.half_edge.curve));
     let b = (bottom.end_vertex, None);
     let c = (top.end_vertex, None);
