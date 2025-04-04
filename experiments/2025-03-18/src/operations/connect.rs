@@ -47,13 +47,13 @@ impl ConnectExt for Handle<Face> {
             "Can only connect faces that have the same number of vertices.",
         );
 
-        let connecting_faces = build_connecting_faces(&bottom, &top);
+        let connecting_faces = build_connecting_faces([&bottom, &top]);
 
         Solid::new([bottom, top].into_iter().chain(connecting_faces))
     }
 }
 
-fn build_connecting_faces(bottom: &Face, top: &Face) -> Vec<Handle<Face>> {
+fn build_connecting_faces([bottom, top]: [&Face; 2]) -> Vec<Handle<Face>> {
     bottom
         .half_edges_with_end_vertex()
         .zip(top.half_edges_with_end_vertex())
