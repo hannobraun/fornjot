@@ -1149,9 +1149,9 @@ dependencies = [
 
 [[package]]
 name = "miniz_oxide"
-version = "0.8.5"
+version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e3e04debbb59698c15bacbb6d93584a8c0ca9cc3213cb423d31f760d8843ce5"
+checksum = "ff70ce3e48ae43fa075863cef62e8b43b71a4f2382229920e0df362592919430"
 dependencies = [
  "adler2",
  "simd-adler32",
@@ -2564,9 +2564,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu-hal"
-version = "24.0.2"
+version = "24.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4317a17171dc20e6577bf606796794580accae0716a69edbc7388c86a3ec9f23"
+checksum = "f112f464674ca69f3533248508ee30cb84c67cf06c25ff6800685f5e0294e259"
 dependencies = [
  "android_system_properties",
  "arrayvec",
@@ -3063,9 +3063,9 @@ dependencies = [
 
 [[package]]
 name = "zip"
-version = "2.5.0"
+version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27c03817464f64e23f6f37574b4fdc8cf65925b5bfd2b0f2aedf959791941f88"
+checksum = "febbe83a485467affa75a75d28dc7494acd2f819e549536c47d46b3089b56164"
 dependencies = [
  "arbitrary",
  "crc32fast",
