@@ -2,7 +2,8 @@ use crate::{
     handle::Handle,
     math::Plane,
     topology::{
-        face::Face, half_edge::HalfEdge, solid::Solid, surface::Surface,
+        curve::Curve, face::Face, half_edge::HalfEdge, solid::Solid,
+        surface::Surface,
     },
 };
 
@@ -61,6 +62,7 @@ impl ConnectExt for Handle<Face> {
                     surface,
                     [&q.start, r, s, &t.start].map(|vertex| {
                         Handle::new(HalfEdge {
+                            curve: Handle::new(Curve {}),
                             start: vertex.clone(),
                             is_internal: false,
                         })

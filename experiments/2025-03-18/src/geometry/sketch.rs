@@ -6,7 +6,8 @@ use itertools::Itertools;
 use crate::{
     handle::Handle,
     topology::{
-        face::Face, half_edge::HalfEdge, surface::Surface, vertex::Vertex,
+        curve::Curve, face::Face, half_edge::HalfEdge, surface::Surface,
+        vertex::Vertex,
     },
 };
 
@@ -46,7 +47,11 @@ impl Sketch {
                 let is_internal = coincident_vertices.contains(&start)
                     && coincident_vertices.contains(&end);
 
-                Handle::new(HalfEdge { start, is_internal })
+                Handle::new(HalfEdge {
+                    curve: Handle::new(Curve {}),
+                    start,
+                    is_internal,
+                })
             },
         );
 
