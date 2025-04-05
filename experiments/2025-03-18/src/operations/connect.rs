@@ -50,6 +50,7 @@ impl ConnectExt for Handle<Face> {
         );
 
         let connecting_faces = build_connecting_faces([&bottom, &top]);
+
         check_that_bottom_and_top_curves_are_shared(
             [&bottom, &top],
             &connecting_faces,
