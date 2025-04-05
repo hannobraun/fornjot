@@ -50,7 +50,7 @@ impl ConnectExt for Handle<Face> {
         );
 
         let connecting_faces = build_connecting_faces([&bottom, &top]);
-        check_that_bottom_and_top_curves_were_reused(
+        check_that_bottom_and_top_curves_are_shared(
             [&bottom, &top],
             &connecting_faces,
         );
@@ -117,7 +117,7 @@ fn build_single_connecting_face(
     Handle::new(face)
 }
 
-fn check_that_bottom_and_top_curves_were_reused(
+fn check_that_bottom_and_top_curves_are_shared(
     [bottom, top]: [&Face; 2],
     connecting_faces: &[Handle<Face>],
 ) {
