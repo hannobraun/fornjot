@@ -51,6 +51,20 @@ impl ConnectExt for Handle<Face> {
 
         let connecting_faces = build_connecting_faces([&bottom, &top]);
 
+        // This is doing some checks, to make sure that the faces have been
+        // connected correctly. There are other ways to do this. For now, this
+        // is probably the best one, based on the following considerations:
+        //
+        // 1. These checks could also be done in a unit test, but doing it here
+        //    provides a stronger guarantee. It makes sure that the invariants
+        //    are true for all data that comes through here, not just a simple
+        //    example that a unit test would construct.
+        // 2. The invariants that are checked here should, in a generalized
+        //    form, be true for all solids, not just the one constructed here.
+        //    But so far, there's no infrastructure for this kind of validation.
+        //
+        // Long-term, such validation infrastructure should exist, and then
+        // these we can generalize these checks and move them there.
         check_that_bottom_and_top_curves_are_shared(
             [&bottom, &top],
             &connecting_faces,
