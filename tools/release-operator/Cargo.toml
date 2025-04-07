@@ -9,7 +9,7 @@ publish = false
 anyhow = "1.0.97"
 cargo_metadata = "0.19.2"
 cmd_lib = "1.9.5"
-env_logger = "0.11.6"
+env_logger = "0.11.8"
 log = "0.4.27"
 secstr = "0.5.0"
 semver = "1.0.26"
@@ -24,7 +24,7 @@ version = "0.12.14"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.5.34"
+version = "4.5.35"
 features = ["std", "derive", "env"]
 default-features = false
 
