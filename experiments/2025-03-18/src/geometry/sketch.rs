@@ -44,11 +44,13 @@ impl Sketch {
 
         let half_edges = vertices.into_iter().circular_tuple_windows().map(
             |(start, end)| {
+                let curve = Handle::new(Curve {});
+
                 let is_internal = coincident_vertices.contains(&start)
                     && coincident_vertices.contains(&end);
 
                 Handle::new(HalfEdge {
-                    curve: Handle::new(Curve {}),
+                    curve,
                     start,
                     is_internal,
                 })
