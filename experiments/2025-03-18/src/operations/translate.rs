@@ -14,14 +14,6 @@ pub trait TranslateExt {
 
 impl TranslateExt for Curve {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
-        // Right now, `Curve` is a placeholder, and there's no need to do
-        // anything here. It's possible, that it will end up being defined
-        // locally on a surface, and then this will remain too.
-        //
-        // The other scenario is that curves end up being defined globally, in
-        // 3D space, which means we have to do the actual translation here.
-        // We'll see how it shakes out.
-
         let Curve { geometry } = self;
 
         Curve {
