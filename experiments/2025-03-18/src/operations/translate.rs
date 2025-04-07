@@ -21,6 +21,7 @@ impl TranslateExt for Curve {
         // The other scenario is that curves end up being defined globally, in
         // 3D space, which means we have to do the actual translation here.
         // We'll see how it shakes out.
+
         let Curve {} = self;
         Curve {}
     }
