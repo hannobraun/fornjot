@@ -81,7 +81,7 @@ fn build_connecting_faces([bottom, top]: [&Face; 2]) -> Vec<Handle<Face>> {
 
     let connecting_curves = bottom_vertices
         .zip(top_vertices)
-        .map(|(_, _)| Handle::new(Curve {}))
+        .map(|(a, b)| Handle::new(Curve::line_from_vertices([a, b])))
         .collect::<Vec<_>>();
 
     connecting_curves
