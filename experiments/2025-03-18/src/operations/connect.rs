@@ -132,7 +132,7 @@ fn check_that_bottom_and_top_curves_are_shared(
                 connecting.half_edges.iter().collect_array()
             else {
                 unreachable!(
-                    "Created connecting with exactly four half-edges."
+                    "Created connecting faces with exactly four half-edges."
                 );
             };
 
