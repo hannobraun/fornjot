@@ -1,5 +1,9 @@
+mod curve;
 mod sketch;
 mod surface;
 mod tri_mesh;
 
-pub use self::{sketch::Sketch, surface::SurfaceGeometry, tri_mesh::ToTriMesh};
+pub use self::{
+    curve::CurveGeometry, sketch::Sketch, surface::SurfaceGeometry,
+    tri_mesh::ToTriMesh,
+};

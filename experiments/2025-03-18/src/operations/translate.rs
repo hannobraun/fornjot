@@ -22,8 +22,12 @@ impl TranslateExt for Curve {
         // 3D space, which means we have to do the actual translation here.
         // We'll see how it shakes out.
 
-        let Curve {} = self;
-        Curve {}
+        let Curve { geometry } = self;
+        let _ = geometry;
+
+        Curve {
+            geometry: Box::new(()),
+        }
     }
 }
 
