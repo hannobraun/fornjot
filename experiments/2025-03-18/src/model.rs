@@ -36,7 +36,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
                     [0., 0., 1.],
                     [1., 0., 0.],
                 ),
-                v: Vector::from([0., 1., 0.]),
+                path: Vector::from([0., 1., 0.]),
             }),
         });
 

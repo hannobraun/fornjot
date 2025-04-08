@@ -3,13 +3,13 @@ use fj_math::{Line, Point, Transform, Vector};
 #[derive(Clone, Copy, Debug)]
 pub struct SweptCurve {
     pub curve: Line<3>,
-    pub v: Vector<3>,
+    pub path: Vector<3>,
 }
 
 impl SweptCurve {
     pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
         let (curve, _) = Line::from_points([a, b]);
-        Self { curve, v: c - a }
+        Self { curve, path: c - a }
     }
 
     pub fn origin(&self) -> Point<3> {
@@ -21,7 +21,7 @@ impl SweptCurve {
     }
 
     pub fn v(&self) -> Vector<3> {
-        self.v
+        self.path
     }
 
     pub fn normal(&self) -> Vector<3> {
@@ -49,14 +49,14 @@ impl SweptCurve {
     }
 
     pub fn flip(mut self) -> Self {
-        self.v = -self.v;
+        self.path = -self.path;
         self
     }
 
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             curve: self.curve.transform(&Transform::translation(offset)),
-            v: self.v,
+            path: self.path,
         }
     }
 }
@@ -71,7 +71,7 @@ mod tests {
     fn project_point() {
         let plane = SweptCurve {
             curve: Line::from_origin_and_direction([1., 1., 1.], [1., 0., 0.]),
-            v: Vector::from([0., 1., 0.]),
+            path: Vector::from([0., 1., 0.]),
         };
 
         assert_eq!(plane.project_point([2., 2., 2.]), Point::from([1., 1.]));
