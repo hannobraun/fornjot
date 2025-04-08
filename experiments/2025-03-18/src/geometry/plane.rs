@@ -1,25 +1,27 @@
-use fj_math::{Bivector, Point, Vector};
+use fj_math::{Point, Vector};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Plane {
     pub origin: Point<3>,
-    pub coords: Bivector<3>,
+    pub u: Vector<3>,
+    pub v: Vector<3>,
 }
 
 impl Plane {
     pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
         Self {
             origin: a,
-            coords: Bivector { a: b - a, b: c - a },
+            u: b - a,
+            v: c - a,
         }
     }
 
     pub fn u(&self) -> Vector<3> {
-        self.coords.a
+        self.u
     }
 
     pub fn v(&self) -> Vector<3> {
-        self.coords.b
+        self.v
     }
 
     pub fn normal(&self) -> Vector<3> {
@@ -47,21 +49,22 @@ impl Plane {
     }
 
     pub fn flip(mut self) -> Self {
-        self.coords.b = -self.coords.b;
+        self.v = -self.v;
         self
     }
 
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             origin: self.origin + offset,
-            coords: self.coords,
+            u: self.u,
+            v: self.v,
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Bivector, Point, Vector};
+    use fj_math::{Point, Vector};
 
     use super::Plane;
 
@@ -69,10 +72,8 @@ mod tests {
     fn project_point() {
         let plane = Plane {
             origin: Point::from([1., 1., 1.]),
-            coords: Bivector {
-                a: Vector::from([1., 0., 0.]),
-                b: Vector::from([0., 1., 0.]),
-            },
+            u: Vector::from([1., 0., 0.]),
+            v: Vector::from([0., 1., 0.]),
         };
 
         assert_eq!(plane.project_point([2., 2., 2.]), Point::from([1., 1.]));
