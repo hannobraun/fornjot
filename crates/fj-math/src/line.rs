@@ -19,9 +19,10 @@ impl<const D: usize> Line<D> {
     /// Panics, if `direction` has a length of zero.
     pub fn from_origin_and_direction(
         origin: impl Into<Point<D>>,
-        direction: Vector<D>,
+        direction: impl Into<Vector<D>>,
     ) -> Self {
         let origin = origin.into();
+        let direction = direction.into();
 
         assert!(
             direction.magnitude() != Scalar::ZERO,
