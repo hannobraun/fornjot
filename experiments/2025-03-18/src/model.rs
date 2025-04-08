@@ -1,5 +1,5 @@
 use fj_interop::TriMesh;
-use fj_math::{Point, Vector};
+use fj_math::{Line, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
@@ -32,8 +32,10 @@ pub fn model(viewer: &Viewer) -> TriMesh {
 
         let surface = Handle::new(Surface {
             geometry: Box::new(Plane {
-                origin: Point::from([0., 0., 1.]),
-                u: Vector::from([1., 0., 0.]),
+                curve: Line::from_origin_and_direction(
+                    [0., 0., 1.],
+                    [1., 0., 0.],
+                ),
                 v: Vector::from([0., 1., 0.]),
             }),
         });

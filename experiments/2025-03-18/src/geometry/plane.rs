@@ -1,27 +1,23 @@
-use fj_math::{Point, Vector};
+use fj_math::{Line, Point, Transform, Vector};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Plane {
-    pub origin: Point<3>,
-    pub u: Vector<3>,
+    pub curve: Line<3>,
     pub v: Vector<3>,
 }
 
 impl Plane {
     pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
-        Self {
-            origin: a,
-            u: b - a,
-            v: c - a,
-        }
+        let (curve, _) = Line::from_points([a, b]);
+        Self { curve, v: c - a }
     }
 
     pub fn origin(&self) -> Point<3> {
-        self.origin
+        self.curve.origin()
     }
 
     pub fn u(&self) -> Vector<3> {
-        self.u
+        self.curve.direction()
     }
 
     pub fn v(&self) -> Vector<3> {
@@ -59,8 +55,7 @@ impl Plane {
 
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
         Self {
-            origin: self.origin + offset,
-            u: self.u,
+            curve: self.curve.transform(&Transform::translation(offset)),
             v: self.v,
         }
     }
@@ -68,15 +63,14 @@ impl Plane {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Vector};
+    use fj_math::{Line, Point, Vector};
 
     use super::Plane;
 
     #[test]
     fn project_point() {
         let plane = Plane {
-            origin: Point::from([1., 1., 1.]),
-            u: Vector::from([1., 0., 0.]),
+            curve: Line::from_origin_and_direction([1., 1., 1.], [1., 0., 0.]),
             v: Vector::from([0., 1., 0.]),
         };
 
