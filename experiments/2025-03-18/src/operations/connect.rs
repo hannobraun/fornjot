@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 use crate::{
-    geometry::Plane,
+    geometry::SweptCurve,
     handle::Handle,
     topology::{
         curve::Curve,
@@ -112,7 +112,7 @@ fn build_single_connecting_face(
         };
 
     let surface = Handle::new(Surface {
-        geometry: Box::new(Plane::from_points(
+        geometry: Box::new(SweptCurve::from_points(
             [
                 &bottom.half_edge.start,
                 bottom.end_vertex,

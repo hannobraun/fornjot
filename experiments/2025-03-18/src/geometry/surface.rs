@@ -1,7 +1,7 @@
 use fj_math::{Point, Vector};
 use geo::Polygon;
 
-use crate::geometry::Plane;
+use crate::geometry::SweptCurve;
 
 pub trait SurfaceGeometry {
     fn point_from_local(&self, point: Point<2>) -> Point<3>;
@@ -23,7 +23,7 @@ pub trait SurfaceGeometry {
     fn approximate(&self, boundary: &Polygon) -> Vec<Point<2>>;
 }
 
-impl SurfaceGeometry for Plane {
+impl SurfaceGeometry for SweptCurve {
     fn point_from_local(&self, point: Point<2>) -> Point<3> {
         self.point_from_local(point)
     }

@@ -3,7 +3,7 @@ use fj_math::{Line, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
-    geometry::{Plane, Sketch, ToTriMesh},
+    geometry::{Sketch, SweptCurve, ToTriMesh},
     handle::Handle,
     operations::sweep::SweepExt,
     topology::surface::Surface,
@@ -31,7 +31,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         ]);
 
         let surface = Handle::new(Surface {
-            geometry: Box::new(Plane {
+            geometry: Box::new(SweptCurve {
                 curve: Line::from_origin_and_direction(
                     [0., 0., 1.],
                     [1., 0., 0.],

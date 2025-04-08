@@ -1,12 +1,12 @@
 use fj_math::{Line, Point, Transform, Vector};
 
 #[derive(Clone, Copy, Debug)]
-pub struct Plane {
+pub struct SweptCurve {
     pub curve: Line<3>,
     pub v: Vector<3>,
 }
 
-impl Plane {
+impl SweptCurve {
     pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
         let (curve, _) = Line::from_points([a, b]);
         Self { curve, v: c - a }
@@ -65,11 +65,11 @@ impl Plane {
 mod tests {
     use fj_math::{Line, Point, Vector};
 
-    use super::Plane;
+    use super::SweptCurve;
 
     #[test]
     fn project_point() {
-        let plane = Plane {
+        let plane = SweptCurve {
             curve: Line::from_origin_and_direction([1., 1., 1.], [1., 0., 0.]),
             v: Vector::from([0., 1., 0.]),
         };
