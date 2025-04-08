@@ -16,6 +16,10 @@ impl Plane {
         }
     }
 
+    pub fn origin(&self) -> Point<3> {
+        self.origin
+    }
+
     pub fn u(&self) -> Vector<3> {
         self.u
     }
@@ -30,17 +34,17 @@ impl Plane {
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.origin + self.u() * u + self.v() * v
+        self.origin() + self.u() * u + self.v() * v
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
         let point = point.into();
-        let origin_to_point = point - self.origin;
+        let origin_to_point = point - self.origin();
 
         let min_distance_plane_to_point = origin_to_point.dot(&self.normal());
         let point_in_plane =
             point - self.normal() * min_distance_plane_to_point;
-        let origin_to_point_in_plane = point_in_plane - self.origin;
+        let origin_to_point_in_plane = point_in_plane - self.origin();
 
         let u = origin_to_point_in_plane.dot(&self.u());
         let v = origin_to_point_in_plane.dot(&self.v());
