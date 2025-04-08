@@ -1,5 +1,7 @@
 use fj_math::{Line, Point, Transform, Vector};
 
+use super::CurveGeometry;
+
 pub struct SweptCurve {
     pub curve: Line<3>,
     pub path: Vector<3>,
@@ -29,7 +31,7 @@ impl SweptCurve {
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.curve.point_from_line_coords(Point::from([u])) + self.v() * v
+        self.curve.point_from_local(Point::from([u])) + self.v() * v
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
