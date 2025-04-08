@@ -48,9 +48,11 @@ impl SweptCurve {
         Point::from([u, v])
     }
 
-    pub fn flip(mut self) -> Self {
-        self.path = -self.path;
-        self
+    pub fn flip(&self) -> Self {
+        Self {
+            curve: self.curve,
+            path: -self.path,
+        }
     }
 
     pub fn translate(self, offset: impl Into<Vector<3>>) -> Self {
