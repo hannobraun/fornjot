@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Transform, Vector};
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub struct SweptCurve {
     pub curve: Line<3>,
     pub path: Vector<3>,
