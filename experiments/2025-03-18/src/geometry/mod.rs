@@ -1,10 +1,10 @@
 mod curve;
-mod plane;
 mod sketch;
 mod surface;
+mod swept_curve;
 mod tri_mesh;
 
 pub use self::{
-    curve::CurveGeometry, plane::SweptCurve, sketch::Sketch,
-    surface::SurfaceGeometry, tri_mesh::ToTriMesh,
+    curve::CurveGeometry, sketch::Sketch, surface::SurfaceGeometry,
+    swept_curve::SweptCurve, tri_mesh::ToTriMesh,
 };
