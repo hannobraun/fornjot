@@ -3,9 +3,8 @@ use fj_math::{Bivector, Point, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
-    geometry::{Sketch, ToTriMesh},
+    geometry::{Plane, Sketch, ToTriMesh},
     handle::Handle,
-    math::Plane,
     operations::sweep::SweepExt,
     topology::surface::Surface,
 };

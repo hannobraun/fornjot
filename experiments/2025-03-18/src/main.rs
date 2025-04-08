@@ -3,7 +3,6 @@
 mod extra;
 mod geometry;
 mod handle;
-mod math;
 mod model;
 mod operations;
 mod topology;

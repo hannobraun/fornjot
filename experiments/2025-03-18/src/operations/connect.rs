@@ -1,8 +1,8 @@
 use itertools::Itertools;
 
 use crate::{
+    geometry::Plane,
     handle::Handle,
-    math::Plane,
     topology::{
         curve::Curve,
         face::{Face, HalfEdgeWithEndVertex},

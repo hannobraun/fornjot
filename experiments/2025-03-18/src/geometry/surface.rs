@@ -1,7 +1,7 @@
 use fj_math::{Point, Vector};
 use geo::Polygon;
 
-use crate::math::Plane;
+use crate::geometry::Plane;
 
 pub trait SurfaceGeometry {
     fn point_from_local(&self, point: Point<2>) -> Point<3>;
