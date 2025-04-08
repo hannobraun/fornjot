@@ -26,7 +26,8 @@ pub fn model(viewer: &Viewer) -> TriMesh {
             [0.5, -0.5],
             // connection to outer boundary
             [-0.5, -0.5],
-            // half-edge between last and first vertex is implicit, so we're done here
+            // half-edge between last and first vertex is implicit, so we're
+            // done here
         ]);
 
         let surface = Handle::new(Surface {
