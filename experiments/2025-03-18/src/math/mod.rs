@@ -1,3 +1,1 @@
-mod plane;
-
-pub use self::plane::Plane;
+pub use crate::geometry::Plane;
