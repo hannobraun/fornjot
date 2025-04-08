@@ -112,7 +112,7 @@ fn build_single_connecting_face(
         };
 
     let surface = Handle::new(Surface {
-        geometry: Box::new(SweptCurve::from_points(
+        geometry: Box::new(SweptCurve::plane_from_points(
             [
                 &bottom.half_edge.start,
                 bottom.end_vertex,

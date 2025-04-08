@@ -6,7 +6,7 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    pub fn from_points([a, b, c]: [Point<3>; 3]) -> Self {
+    pub fn plane_from_points([a, b, c]: [Point<3>; 3]) -> Self {
         let (curve, _) = Line::from_points([a, b]);
         Self { curve, path: c - a }
     }
