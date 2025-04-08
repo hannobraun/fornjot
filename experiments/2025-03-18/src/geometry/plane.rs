@@ -28,7 +28,7 @@ impl Plane {
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.origin + self.u() * u + self.coords.b * v
+        self.origin + self.u() * u + self.v() * v
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
