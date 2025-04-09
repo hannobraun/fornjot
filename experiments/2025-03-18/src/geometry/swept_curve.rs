@@ -13,20 +13,8 @@ impl SweptCurve {
         Self { curve, path: c - a }
     }
 
-    pub fn origin(&self) -> Point<3> {
-        self.curve.origin()
-    }
-
-    pub fn u(&self) -> Vector<3> {
-        self.curve.direction()
-    }
-
     pub fn v(&self) -> Vector<3> {
         self.path
-    }
-
-    pub fn normal(&self) -> Vector<3> {
-        self.u().cross(&self.v()).normalize()
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
@@ -36,17 +24,15 @@ impl SweptCurve {
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
         let point = point.into();
-        let origin_to_point = point - self.origin();
 
-        let min_distance_plane_to_point = origin_to_point.dot(&self.normal());
-        let point_in_plane =
-            point - self.normal() * min_distance_plane_to_point;
-        let origin_to_point_in_plane = point_in_plane - self.origin();
+        let u = self.curve.point_to_line_coords(point);
+        let v = {
+            let origin = self.curve.point_from_line_coords(u);
+            let line = Line::from_origin_and_direction(origin, self.path);
+            line.point_to_line_coords(point)
+        };
 
-        let u = origin_to_point_in_plane.dot(&self.u());
-        let v = origin_to_point_in_plane.dot(&self.v());
-
-        Point::from([u, v])
+        Point::from([u.t, v.t])
     }
 
     pub fn flip(&self) -> Self {
