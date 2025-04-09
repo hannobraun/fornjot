@@ -12,7 +12,7 @@ pub trait SurfaceGeometry {
     /// # Approximate the surface
     ///
     /// Returns a set of points, in surface coordinates, that approximate the
-    /// surface. The points returns must be within the provided boundary. Not
+    /// surface. The points returned must be within the provided boundary. Not
     /// outside of it, and not on it.
     ///
     /// ## Implementation Note
