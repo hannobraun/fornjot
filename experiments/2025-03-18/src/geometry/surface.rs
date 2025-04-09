@@ -77,6 +77,12 @@ impl SurfaceGeometry for SweptCurve {
     }
 
     fn approximate(&self, _: &Polygon) -> Vec<Point<2>> {
+        // In a swept curve, the curve sweeps along a straight path. So the
+        // surface is only curved along one dimension.
+        //
+        // As a result, all points that could possibly be needed to approximate
+        // the surface, are already on the provided boundary. As per the
+        // contract of this method, we must not return those.
         vec![]
     }
 }
