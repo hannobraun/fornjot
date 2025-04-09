@@ -32,10 +32,10 @@ pub fn model(viewer: &Viewer) -> TriMesh {
 
         let surface = Handle::new(Surface {
             geometry: Box::new(SweptCurve {
-                curve: Line::from_origin_and_direction(
+                curve: Box::new(Line::from_origin_and_direction(
                     [0., 0., 1.],
                     [1., 0., 0.],
-                ),
+                )),
                 path: Vector::from([0., 1., 0.]),
             }),
         });
