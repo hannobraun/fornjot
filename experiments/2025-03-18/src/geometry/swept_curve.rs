@@ -25,7 +25,7 @@ impl SweptCurve {
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
         let point = point.into();
 
-        let u = self.curve.point_to_line_coords(point);
+        let u = self.curve.project_point(point);
         let v = {
             let origin = self.curve.point_from_line_coords(u);
             let line = Line::from_origin_and_direction(origin, self.path);
