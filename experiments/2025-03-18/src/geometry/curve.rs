@@ -5,6 +5,18 @@ pub trait CurveGeometry {
     fn point_from_local(&self, point: Point<1>) -> Point<3>;
     fn project_point(&self, point: Point<3>) -> Point<1>;
     fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry>;
+
+    /// # Approximate the curve
+    ///
+    /// Returns a list of points, in curve coordinates, that approximate the
+    /// curve. The points must be within the provided boundary. Not outside of
+    /// it, and not on it.
+    ///
+    /// ## Implementation Notes
+    ///
+    /// This method should take a tolerance parameter, to define how far the
+    /// approximation is allowed to deviate from the actual curve. So far, this
+    /// has not been necessary.
     fn approximate(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>>;
 }
 
