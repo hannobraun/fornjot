@@ -73,6 +73,7 @@ where
             .map(Into::into)
             .map(|point| SketchSegment::Line { start: point })
             .collect();
+
         Self { segments: points }
     }
 }
