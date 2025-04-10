@@ -12,7 +12,7 @@ use crate::{
 };
 
 pub struct Sketch {
-    pub points: Vec<Point<2>>,
+    points: Vec<Point<2>>,
 }
 
 impl Sketch {
