@@ -74,22 +74,6 @@ impl Sketch {
     }
 }
 
-impl<I, P> From<I> for Sketch
-where
-    I: IntoIterator<Item = P>,
-    P: Into<Point<2>>,
-{
-    fn from(points: I) -> Self {
-        let segments = points
-            .into_iter()
-            .map(Into::into)
-            .map(|point| SketchSegment::Line { start: point })
-            .collect();
-
-        Self { segments }
-    }
-}
-
 #[derive(Clone, Copy)]
 enum SketchSegment {
     Line { start: Point<2> },
