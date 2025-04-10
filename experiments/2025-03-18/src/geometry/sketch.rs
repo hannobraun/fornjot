@@ -12,7 +12,7 @@ use crate::{
 };
 
 pub struct Sketch {
-    points: Vec<Point<2>>,
+    points: Vec<SketchSegment>,
 }
 
 impl Sketch {
@@ -22,7 +22,7 @@ impl Sketch {
             .points
             .iter()
             .copied()
-            .map(|point| {
+            .map(|SketchSegment::Line { start: point }| {
                 let point = surface.geometry.point_from_local(point);
                 let vertex = Handle::new(Vertex::new(point));
 
@@ -68,7 +68,16 @@ where
     P: Into<Point<2>>,
 {
     fn from(points: I) -> Self {
-        let points = points.into_iter().map(Into::into).collect();
+        let points = points
+            .into_iter()
+            .map(Into::into)
+            .map(|point| SketchSegment::Line { start: point })
+            .collect();
         Self { points }
     }
+}
+
+#[derive(Clone, Copy)]
+enum SketchSegment {
+    Line { start: Point<2> },
 }
