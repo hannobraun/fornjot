@@ -57,19 +57,17 @@ impl SweptCurve {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Line, Point, Vector};
+    use fj_math::Point;
 
     use super::SweptCurve;
 
     #[test]
     fn project_point() {
-        let plane = SweptCurve {
-            curve: Box::new(Line::from_origin_and_direction(
-                [1., 1., 1.],
-                [1., 0., 0.],
-            )),
-            path: Vector::from([0., 1., 0.]),
-        };
+        let plane = SweptCurve::plane_from_points([
+            [1., 1., 1.],
+            [2., 1., 1.],
+            [1., 2., 1.],
+        ]);
 
         assert_eq!(plane.project_point([2., 2., 2.]), Point::from([1., 1.]));
     }
