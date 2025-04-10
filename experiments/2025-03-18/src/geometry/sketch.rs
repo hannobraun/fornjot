@@ -68,13 +68,13 @@ where
     P: Into<Point<2>>,
 {
     fn from(points: I) -> Self {
-        let points = points
+        let segments = points
             .into_iter()
             .map(Into::into)
             .map(|point| SketchSegment::Line { start: point })
             .collect();
 
-        Self { segments: points }
+        Self { segments }
     }
 }
 
