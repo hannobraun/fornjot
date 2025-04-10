@@ -8,8 +8,8 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    pub fn plane_from_points(points: [Point<3>; 3]) -> Self {
-        let [a, b, c] = points;
+    pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
+        let [a, b, c] = points.map(Into::into);
 
         let (curve, _) = Line::from_points([a, b]);
         Self {
