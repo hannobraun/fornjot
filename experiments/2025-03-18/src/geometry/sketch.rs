@@ -16,6 +16,18 @@ pub struct Sketch {
 }
 
 impl Sketch {
+    pub fn new() -> Self {
+        Self {
+            segments: Vec::new(),
+        }
+    }
+
+    pub fn line_from(mut self, start: impl Into<Point<2>>) -> Self {
+        let start = start.into();
+        self.segments.push(SketchSegment::Line { start });
+        self
+    }
+
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self

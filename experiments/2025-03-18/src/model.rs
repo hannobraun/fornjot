@@ -11,24 +11,23 @@ use crate::{
 
 pub fn model(viewer: &Viewer) -> TriMesh {
     let top = {
-        let sketch = Sketch::from([
+        let sketch = Sketch::new()
             // outer boundary
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
+            .line_from([-1., -1.])
+            .line_from([1., -1.])
+            .line_from([1., 1.])
+            .line_from([-1., 1.])
             // connection to inner boundary
-            [-1., -1.],
+            .line_from([-1., -1.])
             // inner boundary
-            [-0.5, -0.5],
-            [-0.5, 0.5],
-            [0.5, 0.5],
-            [0.5, -0.5],
+            .line_from([-0.5, -0.5])
+            .line_from([-0.5, 0.5])
+            .line_from([0.5, 0.5])
+            .line_from([0.5, -0.5])
             // connection to outer boundary
-            [-0.5, -0.5],
-            // half-edge between last and first vertex is implicit, so we're
-            // done here
-        ]);
+            .line_from([-0.5, -0.5]);
+        // half-edge between last and first vertex is implicit, so we're
+        // done here
 
         let surface = Handle::new(Surface {
             geometry: Box::new(SweptCurve {
