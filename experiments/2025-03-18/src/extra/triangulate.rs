@@ -94,9 +94,10 @@ fn approximate_half_edge(
     let [start, end] =
         [&half_edge.start, end_vertex].map(|vertex| vertex.point);
 
-    let points_local = half_edge.curve.geometry.approximate([start, end].map(
-        |point_global| half_edge.curve.geometry.project_point(point_global),
-    ));
+    let boundary_local = [start, end].map(|point_global| {
+        half_edge.curve.geometry.project_point(point_global)
+    });
+    let points_local = half_edge.curve.geometry.approximate(boundary_local);
 
     let mut points_global = vec![start];
     points_global.extend(points_local.into_iter().map(|point_local| {
