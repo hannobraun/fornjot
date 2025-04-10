@@ -26,8 +26,8 @@ pub fn model(viewer: &Viewer) -> TriMesh {
             .line_from([0.5, -0.5])
             // connection to outer boundary
             .line_from([-0.5, -0.5]);
-        // connection between last and first point is implicit, so we're done
-        // here
+        // The connection between the last and first points is implicit, so
+        // we're done here.
 
         let surface = Handle::new(Surface {
             geometry: Box::new(SweptCurve {
