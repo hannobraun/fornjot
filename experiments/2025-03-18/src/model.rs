@@ -1,5 +1,4 @@
 use fj_interop::TriMesh;
-use fj_math::{Line, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
@@ -30,13 +29,11 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         // we're done here.
 
         let surface = Handle::new(Surface {
-            geometry: Box::new(SweptCurve {
-                curve: Box::new(Line::from_origin_and_direction(
-                    [0., 0., 1.],
-                    [1., 0., 0.],
-                )),
-                path: Vector::from([0., 1., 0.]),
-            }),
+            geometry: Box::new(SweptCurve::plane_from_points([
+                [0., 0., 1.],
+                [1., 0., 1.],
+                [0., 1., 1.],
+            ])),
         });
 
         let face = sketch.to_face(surface);
