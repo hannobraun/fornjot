@@ -26,11 +26,7 @@ impl SweptCurve {
     pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
         let [a, b, c] = points.map(Into::into);
 
-        let (curve, _) = Line::from_points([a, b]);
-        Self {
-            curve: Box::new(curve),
-            path: c - a,
-        }
+        Self::plane_from_coord_system(a, [b - a, c - a])
     }
 
     pub fn v(&self) -> Vector<3> {
