@@ -12,14 +12,14 @@ use crate::{
 };
 
 pub struct Sketch {
-    points: Vec<SketchSegment>,
+    segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let vertices = self
-            .points
+            .segments
             .iter()
             .copied()
             .map(|SketchSegment::Line { start: point }| {
@@ -73,7 +73,7 @@ where
             .map(Into::into)
             .map(|point| SketchSegment::Line { start: point })
             .collect();
-        Self { points }
+        Self { segments: points }
     }
 }
 
