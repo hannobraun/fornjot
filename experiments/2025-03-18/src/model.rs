@@ -29,11 +29,10 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         // we're done here.
 
         let surface = Handle::new(Surface {
-            geometry: Box::new(SweptCurve::plane_from_points([
+            geometry: Box::new(SweptCurve::plane_from_coord_system(
                 [0., 0., 1.],
-                [1., 0., 1.],
-                [0., 1., 1.],
-            ])),
+                [[1., 0., 0.], [0., 1., 0.]],
+            )),
         });
 
         let face = sketch.to_face(surface);

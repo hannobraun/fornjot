@@ -8,6 +8,21 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
+    pub fn plane_from_coord_system(
+        origin: impl Into<Point<3>>,
+        axes: [impl Into<Vector<3>>; 2],
+    ) -> Self {
+        let origin = origin.into();
+        let [u, v] = axes.map(Into::into);
+
+        let line = Line::from_origin_and_direction(origin, u);
+
+        Self {
+            curve: Box::new(line),
+            path: v,
+        }
+    }
+
     pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
         let [a, b, c] = points.map(Into::into);
 
@@ -63,11 +78,10 @@ mod tests {
 
     #[test]
     fn project_point() {
-        let plane = SweptCurve::plane_from_points([
+        let plane = SweptCurve::plane_from_coord_system(
             [1., 1., 1.],
-            [2., 1., 1.],
-            [1., 2., 1.],
-        ]);
+            [[1., 0., 0.], [0., 1., 0.]],
+        );
 
         assert_eq!(plane.project_point([2., 2., 2.]), Point::from([1., 1.]));
     }
