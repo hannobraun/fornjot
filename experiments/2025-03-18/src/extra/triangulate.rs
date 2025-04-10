@@ -91,8 +91,18 @@ fn approximate_half_edge(
         end_vertex: end,
     }: HalfEdgeWithEndVertex,
 ) -> Vec<Point<3>> {
-    let [start, _] = [&half_edge.start, end].map(|vertex| vertex.point);
-    vec![start]
+    let [start, end] = [&half_edge.start, end].map(|vertex| vertex.point);
+
+    let points_local = half_edge.curve.geometry.approximate([start, end].map(
+        |point_global| half_edge.curve.geometry.project_point(point_global),
+    ));
+
+    let mut points_global = vec![start];
+    points_global.extend(points_local.into_iter().map(|point_local| {
+        half_edge.curve.geometry.point_from_local(point_local)
+    }));
+
+    points_global
 }
 
 fn polygon_from_half_edges(

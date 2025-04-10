@@ -5,6 +5,7 @@ pub trait CurveGeometry {
     fn point_from_local(&self, point: Point<1>) -> Point<3>;
     fn project_point(&self, point: Point<3>) -> Point<1>;
     fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry>;
+    fn approximate(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>>;
 }
 
 impl CurveGeometry for Line<3> {
@@ -23,5 +24,9 @@ impl CurveGeometry for Line<3> {
     fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry> {
         let translated = self.transform(&Transform::translation(offset));
         Box::new(translated)
+    }
+
+    fn approximate(&self, _: [Point<1>; 2]) -> Vec<Point<1>> {
+        vec![]
     }
 }
