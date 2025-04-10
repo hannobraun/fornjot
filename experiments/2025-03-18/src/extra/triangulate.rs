@@ -88,10 +88,10 @@ fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
 fn approximate_half_edge(
     HalfEdgeWithEndVertex {
         half_edge,
-        end_vertex: _,
+        end_vertex: end,
     }: HalfEdgeWithEndVertex,
 ) -> Vec<Point<3>> {
-    let start = &half_edge.start;
+    let [start, _] = [&half_edge.start, end];
     vec![start.point]
 }
 
