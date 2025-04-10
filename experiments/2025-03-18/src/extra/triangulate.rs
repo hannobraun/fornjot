@@ -91,8 +91,8 @@ fn approximate_half_edge(
         end_vertex: end,
     }: HalfEdgeWithEndVertex,
 ) -> Vec<Point<3>> {
-    let [start, _] = [&half_edge.start, end];
-    vec![start.point]
+    let [start, _] = [&half_edge.start, end].map(|vertex| vertex.point);
+    vec![start]
 }
 
 fn polygon_from_half_edges(
