@@ -8,7 +8,10 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::topology::{face::Face, surface::Surface};
+use crate::topology::{
+    face::{Face, HalfEdgeWithEndVertex},
+    surface::Surface,
+};
 
 pub fn triangulate(face: &Face) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
@@ -51,9 +54,13 @@ pub fn triangulate(face: &Face) -> TriMesh {
 
 fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
     target.extend(
-        face.half_edges
-            .iter()
-            .map(|half_edge| half_edge.start.point)
+        face.half_edges_with_end_vertex()
+            .map(
+                |HalfEdgeWithEndVertex {
+                     half_edge,
+                     end_vertex: _,
+                 }| half_edge.start.point,
+            )
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
