@@ -59,7 +59,10 @@ fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
                 |HalfEdgeWithEndVertex {
                      half_edge,
                      end_vertex: _,
-                 }| half_edge.start.point,
+                 }| {
+                    let start = &half_edge.start;
+                    start.point
+                },
             )
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
