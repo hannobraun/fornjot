@@ -55,15 +55,7 @@ pub fn triangulate(face: &Face) -> TriMesh {
 fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
     target.extend(
         face.half_edges_with_end_vertex()
-            .map(
-                |HalfEdgeWithEndVertex {
-                     half_edge,
-                     end_vertex: _,
-                 }| {
-                    let start = &half_edge.start;
-                    start.point
-                },
-            )
+            .map(approximate_half_edge)
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
@@ -91,6 +83,16 @@ fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
                 }
             }),
     )
+}
+
+fn approximate_half_edge(
+    HalfEdgeWithEndVertex {
+        half_edge,
+        end_vertex: _,
+    }: HalfEdgeWithEndVertex,
+) -> Point<3> {
+    let start = &half_edge.start;
+    start.point
 }
 
 fn polygon_from_half_edges(
