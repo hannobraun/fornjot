@@ -12,7 +12,7 @@ fn main() -> anyhow::Result<()> {
         model::model(&viewer)
     })?;
 
-    fj_export::export(&tri_mesh, "output.3mf")?;
+    fj_export::export(tri_mesh.triangles.iter(), "output.3mf")?;
 
     Ok(())
 }
