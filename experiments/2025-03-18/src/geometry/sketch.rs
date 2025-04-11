@@ -36,7 +36,7 @@ impl Sketch {
             .copied()
             .map(|segment| {
                 let point_local = match segment {
-                    SketchSegment::Line { start: point_local } => point_local,
+                    SketchSegment::Line { start } => start,
                 };
 
                 let point_global =
