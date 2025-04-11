@@ -16,7 +16,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_interop::{MeshTriangle, vertices_to_indexed_vertices};
+use fj_interop::vertices_to_indexed_vertices;
 use fj_math::Triangle;
 
 /// # Export the provided mesh to the file at the given path
@@ -26,8 +26,8 @@ use fj_math::Triangle;
 ///
 /// Currently 3MF & STL file types are supported. The case insensitive file
 /// extension of the provided path is used to switch between supported types.
-pub fn export<'r>(
-    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
+pub fn export(
+    triangles: impl IntoIterator<Item = Triangle<3>>,
     path: impl AsRef<Path>,
 ) -> Result<(), Error> {
     match path.as_ref().extension() {
@@ -51,14 +51,12 @@ pub fn export<'r>(
 }
 
 /// # Export the provided mesh to the provided writer in the 3MF format
-pub fn export_3mf<'r>(
-    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
+pub fn export_3mf(
+    triangles: impl IntoIterator<Item = Triangle<3>>,
     write: impl Write + Seek,
 ) -> Result<(), Error> {
     let (vertices, indices) = vertices_to_indexed_vertices(
-        triangles
-            .into_iter()
-            .flat_map(|triangle| triangle.inner.points),
+        triangles.into_iter().flat_map(|triangle| triangle.points),
         |point| threemf::model::Vertex {
             x: point.x.into_f64(),
             y: point.y.into_f64(),
@@ -88,13 +86,13 @@ pub fn export_3mf<'r>(
 }
 
 /// # Export the provided mesh to the provided writer in the STL format
-pub fn export_stl<'r>(
-    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
+pub fn export_stl(
+    triangles: impl IntoIterator<Item = Triangle<3>>,
     mut write: impl Write,
 ) -> Result<(), Error> {
     let points = triangles
         .into_iter()
-        .map(|triangle| triangle.inner.points)
+        .map(|triangle| triangle.points)
         .collect::<Vec<_>>();
 
     let vertices = points.iter().map(|points| {
@@ -135,13 +133,13 @@ pub fn export_stl<'r>(
 }
 
 /// # Export the provided mesh to the provided writer in the OBJ format
-pub fn export_obj<'r>(
-    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
+pub fn export_obj(
+    triangles: impl IntoIterator<Item = Triangle<3>>,
     mut write: impl Write,
 ) -> Result<(), Error> {
     for (cnt, t) in triangles.into_iter().enumerate() {
         // write each point of the triangle
-        for v in t.inner.points {
+        for v in t.points {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
                 .write(
                     &mut write,

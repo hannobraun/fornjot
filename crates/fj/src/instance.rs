@@ -84,7 +84,7 @@ impl Instance {
         let tri_mesh = (model, tolerance).triangulate(&mut self.core);
 
         if let Some(path) = args.export {
-            export::export(tri_mesh.triangles.iter(), &path)?;
+            export::export(tri_mesh.all_triangles(), &path)?;
             return Ok(());
         }
 
