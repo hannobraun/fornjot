@@ -62,8 +62,8 @@ impl Sketch {
                 let curve =
                     Handle::new(Curve::line_from_vertices([&start, &end]));
 
-                let start_is_coincident = coincident_vertices.contains(&start);
-                let end_is_coincident = coincident_vertices.contains(&end);
+                let [start_is_coincident, end_is_coincident] = [&start, &end]
+                    .map(|vertex| coincident_vertices.contains(vertex));
                 let is_internal = start_is_coincident && end_is_coincident;
 
                 Handle::new(HalfEdge {
