@@ -35,7 +35,9 @@ impl Sketch {
             .iter()
             .copied()
             .map(|segment| {
-                let SketchSegment::Line { start: point_local } = segment;
+                let point_local = match segment {
+                    SketchSegment::Line { start: point_local } => point_local,
+                };
 
                 let point_global =
                     surface.geometry.point_from_local(point_local);
