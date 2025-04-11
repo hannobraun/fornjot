@@ -16,7 +16,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_interop::{MeshTriangle, TriMesh, vertices_to_indexed_vertices};
+use fj_interop::{MeshTriangle, vertices_to_indexed_vertices};
 use fj_math::Triangle;
 
 /// # Export the provided mesh to the file at the given path
@@ -26,19 +26,22 @@ use fj_math::Triangle;
 ///
 /// Currently 3MF & STL file types are supported. The case insensitive file
 /// extension of the provided path is used to switch between supported types.
-pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
+pub fn export<'r>(
+    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
+    path: impl AsRef<Path>,
+) -> Result<(), Error> {
     match path.as_ref().extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
-            export_3mf(tri_mesh.triangles.iter(), &mut file)
+            export_3mf(triangles, &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("STL") => {
             let mut file = File::create(path)?;
-            export_stl(tri_mesh.triangles.iter(), &mut file)
+            export_stl(triangles, &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("OBJ") => {
             let mut file = File::create(path)?;
-            export_obj(tri_mesh.triangles.iter(), &mut file)
+            export_obj(triangles, &mut file)
         }
         Some(extension) => Err(Error::InvalidExtension(
             extension.to_string_lossy().into_owned(),
