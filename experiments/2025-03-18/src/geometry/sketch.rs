@@ -30,6 +30,7 @@ impl Sketch {
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
+
         let vertices = self
             .segments
             .iter()
