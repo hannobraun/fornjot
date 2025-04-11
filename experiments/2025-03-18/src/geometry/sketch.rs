@@ -42,7 +42,7 @@ impl Sketch {
                 let vertex = Handle::new(Vertex::new(point_global));
 
                 vertices_by_local_point
-                    .entry(point_global)
+                    .entry(point_local)
                     .or_default()
                     .push(vertex.clone());
 
