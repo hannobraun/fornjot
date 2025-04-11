@@ -34,7 +34,7 @@ pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
         }
         Some(extension) if extension.eq_ignore_ascii_case("STL") => {
             let mut file = File::create(path)?;
-            export_stl(tri_mesh, &mut file)
+            export_stl(tri_mesh.triangles.iter(), &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("OBJ") => {
             let mut file = File::create(path)?;
@@ -85,13 +85,12 @@ pub fn export_3mf<'r>(
 }
 
 /// # Export the provided mesh to the provided writer in the STL format
-pub fn export_stl(
-    tri_mesh: &TriMesh,
+pub fn export_stl<'r>(
+    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
     mut write: impl Write,
 ) -> Result<(), Error> {
-    let points = tri_mesh
-        .triangles
-        .iter()
+    let points = triangles
+        .into_iter()
         .map(|triangle| triangle.inner.points)
         .collect::<Vec<_>>();
 
