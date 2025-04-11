@@ -35,9 +35,9 @@ impl Sketch {
             .iter()
             .copied()
             .map(|segment| {
-                let SketchSegment::Line { start: point } = segment;
+                let SketchSegment::Line { start: point_local } = segment;
 
-                let point = surface.geometry.point_from_local(point);
+                let point = surface.geometry.point_from_local(point_local);
                 let vertex = Handle::new(Vertex::new(point));
 
                 vertices_by_local_point
