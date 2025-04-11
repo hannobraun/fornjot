@@ -33,12 +33,11 @@ impl Sketch {
         let vertices = self
             .segments
             .iter()
+            .map(|segment| match segment {
+                SketchSegment::Line { start } => start,
+            })
             .copied()
-            .map(|segment| {
-                let point_local = match segment {
-                    SketchSegment::Line { start } => start,
-                };
-
+            .map(|point_local| {
                 let point_global =
                     surface.geometry.point_from_local(point_local);
                 let vertex = Handle::new(Vertex::new(point_global));
