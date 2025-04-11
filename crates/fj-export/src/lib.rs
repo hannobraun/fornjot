@@ -16,7 +16,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_interop::{TriMesh, vertices_to_indexed_vertices};
+use fj_interop::{MeshTriangle, TriMesh, vertices_to_indexed_vertices};
 use fj_math::Triangle;
 
 /// # Export the provided mesh to the file at the given path
@@ -30,7 +30,7 @@ pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
     match path.as_ref().extension() {
         Some(extension) if extension.eq_ignore_ascii_case("3MF") => {
             let mut file = File::create(path)?;
-            export_3mf(tri_mesh, &mut file)
+            export_3mf(tri_mesh.triangles.iter(), &mut file)
         }
         Some(extension) if extension.eq_ignore_ascii_case("STL") => {
             let mut file = File::create(path)?;
@@ -48,14 +48,13 @@ pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
 }
 
 /// # Export the provided mesh to the provided writer in the 3MF format
-pub fn export_3mf(
-    tri_mesh: &TriMesh,
+pub fn export_3mf<'r>(
+    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
     write: impl Write + Seek,
 ) -> Result<(), Error> {
     let (vertices, indices) = vertices_to_indexed_vertices(
-        tri_mesh
-            .triangles
-            .iter()
+        triangles
+            .into_iter()
             .flat_map(|triangle| triangle.inner.points),
         |point| threemf::model::Vertex {
             x: point.x.into_f64(),
