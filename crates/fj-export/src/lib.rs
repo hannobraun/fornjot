@@ -38,7 +38,7 @@ pub fn export(tri_mesh: &TriMesh, path: impl AsRef<Path>) -> Result<(), Error> {
         }
         Some(extension) if extension.eq_ignore_ascii_case("OBJ") => {
             let mut file = File::create(path)?;
-            export_obj(tri_mesh, &mut file)
+            export_obj(tri_mesh.triangles.iter(), &mut file)
         }
         Some(extension) => Err(Error::InvalidExtension(
             extension.to_string_lossy().into_owned(),
@@ -132,11 +132,11 @@ pub fn export_stl<'r>(
 }
 
 /// # Export the provided mesh to the provided writer in the OBJ format
-pub fn export_obj(
-    tri_mesh: &TriMesh,
+pub fn export_obj<'r>(
+    triangles: impl IntoIterator<Item = &'r MeshTriangle>,
     mut write: impl Write,
 ) -> Result<(), Error> {
-    for (cnt, t) in tri_mesh.triangles.iter().enumerate() {
+    for (cnt, t) in triangles.into_iter().enumerate() {
         // write each point of the triangle
         for v in t.inner.points {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
