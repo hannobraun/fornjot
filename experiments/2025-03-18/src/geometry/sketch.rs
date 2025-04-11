@@ -33,9 +33,7 @@ impl Sketch {
         let vertices = self
             .segments
             .iter()
-            .map(|segment| match segment {
-                SketchSegment::Line { start } => start,
-            })
+            .map(SketchSegment::start)
             .copied()
             .map(|point_local| {
                 let point_global =
@@ -81,4 +79,12 @@ impl Sketch {
 #[derive(Clone, Copy)]
 enum SketchSegment {
     Line { start: Point<2> },
+}
+
+impl SketchSegment {
+    fn start(&self) -> &Point<2> {
+        match self {
+            SketchSegment::Line { start } => start,
+        }
+    }
 }
