@@ -83,6 +83,7 @@ impl VerticesFromSegments {
                 let point_local = *segment.start();
                 let point_global =
                     surface.geometry.point_from_local(point_local);
+
                 let vertex = Handle::new(Vertex::new(point_global));
 
                 vertices_by_local_point
