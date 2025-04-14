@@ -17,8 +17,7 @@ impl Device {
                 force_fallback_adapter: false,
                 compatible_surface: Some(surface),
             })
-            .await
-            .map_err(|_| DeviceError::RequestAdapter)?;
+            .await?;
 
         debug!("Using adapter: {:?}", adapter.get_info());
 
@@ -126,7 +125,7 @@ impl Device {
 pub enum DeviceError {
     /// Failed to request adapter
     #[error("Failed to request adapter")]
-    RequestAdapter,
+    RequestAdapter(#[from] wgpu::RequestAdapterError),
 
     /// Failed to request device
     #[error("Failed to request device")]
