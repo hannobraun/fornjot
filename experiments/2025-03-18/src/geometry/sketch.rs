@@ -35,33 +35,8 @@ impl Sketch {
     }
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
-        let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
-        let mut coincident_vertices = BTreeSet::new();
-
-        let vertices = self
-            .segments
-            .iter()
-            .map(SketchSegment::start)
-            .copied()
-            .map(|point_local| {
-                let point_global =
-                    surface.geometry.point_from_local(point_local);
-                let vertex = Handle::new(Vertex::new(point_global));
-
-                vertices_by_local_point
-                    .entry(point_local)
-                    .or_default()
-                    .push(vertex.clone());
-
-                vertex
-            })
-            .collect::<Vec<_>>();
-
-        for vertices in vertices_by_local_point.into_values() {
-            if vertices.len() > 1 {
-                coincident_vertices.extend(vertices);
-            }
-        }
+        let (vertices, coincident_vertices) =
+            vertices_from_segments(&self.segments, &surface);
 
         let half_edges = vertices.into_iter().circular_tuple_windows().map(
             |(start, end)| {
@@ -97,4 +72,37 @@ impl SketchSegment {
             SketchSegment::Line { start } => start,
         }
     }
+}
+
+fn vertices_from_segments(
+    segments: &[SketchSegment],
+    surface: &Handle<Surface>,
+) -> (Vec<Handle<Vertex>>, BTreeSet<Handle<Vertex>>) {
+    let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
+    let mut coincident_vertices = BTreeSet::new();
+
+    let vertices = segments
+        .iter()
+        .map(SketchSegment::start)
+        .copied()
+        .map(|point_local| {
+            let point_global = surface.geometry.point_from_local(point_local);
+            let vertex = Handle::new(Vertex::new(point_global));
+
+            vertices_by_local_point
+                .entry(point_local)
+                .or_default()
+                .push(vertex.clone());
+
+            vertex
+        })
+        .collect::<Vec<_>>();
+
+    for vertices in vertices_by_local_point.into_values() {
+        if vertices.len() > 1 {
+            coincident_vertices.extend(vertices);
+        }
+    }
+
+    (vertices, coincident_vertices)
 }
