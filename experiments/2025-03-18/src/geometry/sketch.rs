@@ -67,7 +67,7 @@ impl SketchSegment {
 }
 
 struct VerticesFromSegments {
-    vertices: Vec<(SketchSegment, Handle<Vertex>)>,
+    segments_with_start_vertex: Vec<(SketchSegment, Handle<Vertex>)>,
     coincident_vertices: BTreeSet<Handle<Vertex>>,
 }
 
@@ -102,20 +102,22 @@ impl VerticesFromSegments {
         }
 
         VerticesFromSegments {
-            vertices,
+            segments_with_start_vertex: vertices,
             coincident_vertices,
         }
     }
 
     fn iter(&self) -> impl Iterator<Item = ([Handle<Vertex>; 2], bool)> {
-        self.vertices.iter().cloned().circular_tuple_windows().map(
-            |((_, start), (_, end))| {
+        self.segments_with_start_vertex
+            .iter()
+            .cloned()
+            .circular_tuple_windows()
+            .map(|((_, start), (_, end))| {
                 let [start_is_coincident, end_is_coincident] = [&start, &end]
                     .map(|vertex| self.coincident_vertices.contains(vertex));
                 let is_internal = start_is_coincident && end_is_coincident;
 
                 ([start, end], is_internal)
-            },
-        )
+            })
     }
 }
