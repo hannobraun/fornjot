@@ -36,6 +36,7 @@ impl Sketch {
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
+        let mut coincident_vertices = BTreeSet::new();
 
         let vertices = self
             .segments
@@ -56,7 +57,6 @@ impl Sketch {
             })
             .collect::<Vec<_>>();
 
-        let mut coincident_vertices = BTreeSet::new();
         for vertices in vertices_by_local_point.into_values() {
             if vertices.len() > 1 {
                 coincident_vertices.extend(vertices);
