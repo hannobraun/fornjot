@@ -35,27 +35,27 @@ impl Sketch {
     }
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
-        let VerticesFromSegments {
-            vertices,
-            coincident_vertices,
-        } = VerticesFromSegments::new(&self.segments, &surface);
+        let vertices = VerticesFromSegments::new(&self.segments, &surface);
 
-        let half_edges = vertices.into_iter().circular_tuple_windows().map(
-            |(start, end)| {
-                let curve =
-                    Handle::new(Curve::line_from_vertices([&start, &end]));
+        let half_edges =
+            vertices.vertices.into_iter().circular_tuple_windows().map(
+                |(start, end)| {
+                    let curve =
+                        Handle::new(Curve::line_from_vertices([&start, &end]));
 
-                let [start_is_coincident, end_is_coincident] = [&start, &end]
-                    .map(|vertex| coincident_vertices.contains(vertex));
-                let is_internal = start_is_coincident && end_is_coincident;
+                    let [start_is_coincident, end_is_coincident] =
+                        [&start, &end].map(|vertex| {
+                            vertices.coincident_vertices.contains(vertex)
+                        });
+                    let is_internal = start_is_coincident && end_is_coincident;
 
-                Handle::new(HalfEdge {
-                    curve,
-                    start,
-                    is_internal,
-                })
-            },
-        );
+                    Handle::new(HalfEdge {
+                        curve,
+                        start,
+                        is_internal,
+                    })
+                },
+            );
 
         Face::new(surface, half_edges, false)
     }
