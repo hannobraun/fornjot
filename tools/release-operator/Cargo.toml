@@ -6,7 +6,7 @@ publish = false
 
 
 [dependencies]
-anyhow = "1.0.97"
+anyhow = "1.0.98"
 cargo_metadata = "0.19.2"
 cmd_lib = "1.9.5"
 env_logger = "0.11.8"
@@ -24,7 +24,7 @@ version = "0.12.14"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.5.35"
+version = "4.5.36"
 features = ["std", "derive", "env"]
 default-features = false
 
