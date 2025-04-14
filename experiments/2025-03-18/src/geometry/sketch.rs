@@ -24,9 +24,7 @@ impl Sketch {
 
     pub fn arc_from(mut self, start: impl Into<Point<2>>) -> Self {
         let start = start.into();
-        // Temporarily, while arcs are still being implemented, we are actually
-        // creating a line.
-        self.segments.push(SketchSegment::Line { start });
+        self.segments.push(SketchSegment::Arc { start });
         self
     }
 
@@ -88,12 +86,14 @@ impl Sketch {
 
 #[derive(Clone, Copy)]
 enum SketchSegment {
+    Arc { start: Point<2> },
     Line { start: Point<2> },
 }
 
 impl SketchSegment {
     fn start(&self) -> &Point<2> {
         match self {
+            SketchSegment::Arc { start } => start,
             SketchSegment::Line { start } => start,
         }
     }
