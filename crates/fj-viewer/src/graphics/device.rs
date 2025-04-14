@@ -110,7 +110,8 @@ impl Device {
                     required_features,
                     required_limits,
                     // Here we give a memory hint to preserve memory usage.
-                    // This should allow us to run in as much devices as possible.
+                    // This should allow us to run in as much devices as
+                    // possible.
                     memory_hints: wgpu::MemoryHints::MemoryUsage,
                 },
                 None,
