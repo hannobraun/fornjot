@@ -35,8 +35,10 @@ impl Sketch {
     }
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
-        let (vertices, coincident_vertices) =
-            vertices_from_segments(&self.segments, &surface);
+        let VerticesFromSegments {
+            vertices,
+            coincident_vertices,
+        } = vertices_from_segments(&self.segments, &surface);
 
         let half_edges = vertices.into_iter().circular_tuple_windows().map(
             |(start, end)| {
@@ -74,10 +76,15 @@ impl SketchSegment {
     }
 }
 
+struct VerticesFromSegments {
+    vertices: Vec<Handle<Vertex>>,
+    coincident_vertices: BTreeSet<Handle<Vertex>>,
+}
+
 fn vertices_from_segments(
     segments: &[SketchSegment],
     surface: &Handle<Surface>,
-) -> (Vec<Handle<Vertex>>, BTreeSet<Handle<Vertex>>) {
+) -> VerticesFromSegments {
     let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
     let mut coincident_vertices = BTreeSet::new();
 
@@ -104,5 +111,8 @@ fn vertices_from_segments(
         }
     }
 
-    (vertices, coincident_vertices)
+    VerticesFromSegments {
+        vertices,
+        coincident_vertices,
+    }
 }
