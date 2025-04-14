@@ -76,7 +76,7 @@ impl VerticesFromSegments {
         let mut vertices_by_local_point: BTreeMap<_, Vec<_>> = BTreeMap::new();
         let mut coincident_vertices = BTreeSet::new();
 
-        let vertices = segments
+        let segments_with_start_vertex = segments
             .iter()
             .copied()
             .map(|segment| {
@@ -102,7 +102,7 @@ impl VerticesFromSegments {
         }
 
         VerticesFromSegments {
-            segments_with_start_vertex: vertices,
+            segments_with_start_vertex,
             coincident_vertices,
         }
     }
