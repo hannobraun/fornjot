@@ -18,7 +18,7 @@ impl Device {
                 compatible_surface: Some(surface),
             })
             .await
-            .ok_or(DeviceError::RequestAdapter)?;
+            .map_err(|_| DeviceError::RequestAdapter)?;
 
         debug!("Using adapter: {:?}", adapter.get_info());
 
@@ -104,19 +104,18 @@ impl Device {
         };
 
         let (device, queue) = adapter
-            .request_device(
-                &wgpu::DeviceDescriptor {
-                    label: None,
-                    required_features,
-                    required_limits,
+            .request_device(&wgpu::DeviceDescriptor {
+                label: None,
+                required_features,
+                required_limits,
 
-                    // Here we give a memory hint to preserve memory usage.
-                    // This should allow us to run in as much devices as
-                    // possible.
-                    memory_hints: wgpu::MemoryHints::MemoryUsage,
-                },
-                None,
-            )
+                // Here we give a memory hint to preserve memory usage.
+                // This should allow us to run in as much devices as
+                // possible.
+                memory_hints: wgpu::MemoryHints::MemoryUsage,
+
+                trace: wgpu::Trace::Off,
+            })
             .await?;
 
         Ok((Device { device, queue }, required_features))
