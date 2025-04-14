@@ -78,9 +78,9 @@ impl VerticesFromSegments {
 
         let vertices = segments
             .iter()
-            .map(SketchSegment::start)
             .copied()
-            .map(|point_local| {
+            .map(|segment| {
+                let point_local = *segment.start();
                 let point_global =
                     surface.geometry.point_from_local(point_local);
                 let vertex = Handle::new(Vertex::new(point_global));
