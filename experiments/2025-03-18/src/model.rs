@@ -19,10 +19,10 @@ pub fn model(viewer: &Viewer) -> TriMesh {
             // connection to inner boundary
             .line_from([-1., -1.])
             // inner boundary
-            .line_from([-0.5, -0.5])
-            .line_from([-0.5, 0.5])
-            .line_from([0.5, 0.5])
-            .line_from([0.5, -0.5])
+            .arc_from([-0.5, -0.5])
+            .arc_from([-0.5, 0.5])
+            .arc_from([0.5, 0.5])
+            .arc_from([0.5, -0.5])
             // connection to outer boundary
             .line_from([-0.5, -0.5]);
         // The connection between the last and first points is implicit, so

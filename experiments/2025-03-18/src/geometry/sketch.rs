@@ -22,6 +22,14 @@ impl Sketch {
         }
     }
 
+    pub fn arc_from(mut self, start: impl Into<Point<2>>) -> Self {
+        let start = start.into();
+        // Temporarily, while arcs are still being implemented, we are actually
+        // creating a line.
+        self.segments.push(SketchSegment::Line { start });
+        self
+    }
+
     pub fn line_from(mut self, start: impl Into<Point<2>>) -> Self {
         let start = start.into();
         self.segments.push(SketchSegment::Line { start });
