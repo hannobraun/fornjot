@@ -60,14 +60,14 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
     }
 }
 
-/// Path approximation parameters for a circle
+/// # Approximation parameters for a circle
 #[derive(Debug)]
 struct CircleApproxParams {
     increment: Scalar,
 }
 
 impl CircleApproxParams {
-    /// Compute path approximation parameters for the given circle and tolerance
+    /// # Compute the approximation parameters for a given circle and tolerance
     pub fn new<const D: usize>(
         circle: &Circle<D>,
         tolerance: impl Into<Tolerance>,
@@ -86,12 +86,12 @@ impl CircleApproxParams {
         Self { increment }
     }
 
-    /// Return the increment
+    /// # Access the increment at which the circle will be approximated
     pub fn increment(&self) -> Scalar {
         self.increment
     }
 
-    /// Generate points to approximate the circle within the boundary
+    /// # Generate points to approximate the circle within a given boundary
     pub fn approx_circle(
         &self,
         boundary: impl Into<CurveBoundary<Point<1>>>,
