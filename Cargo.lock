@@ -946,6 +946,7 @@ name = "fj-interop"
 version = "0.49.0"
 dependencies = [
  "fj-math",
+ "thiserror 2.0.12",
 ]
 
 [[package]]
