@@ -1,8 +1,9 @@
 //! # Geometry code specific to lines
 
+use fj_interop::Tolerance;
 use fj_math::{Line, LineSegment, Point};
 
-use crate::geometry::{CurveBoundary, Tolerance, traits::GenPolyline};
+use crate::geometry::{CurveBoundary, traits::GenPolyline};
 
 impl<const D: usize> GenPolyline<D> for Line<D> {
     fn origin(&self) -> Point<D> {

@@ -1,6 +1,5 @@
+use fj_interop::Tolerance;
 use fj_math::Scalar;
-
-use crate::geometry::Tolerance;
 
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]

@@ -1,7 +1,8 @@
+use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Scalar, Triangle, Vector};
 
 use crate::geometry::{
-    Geometry, Path, Tolerance,
+    Geometry, Path,
     traits::{GenPolyline, GenTriMesh},
 };
 

@@ -1,10 +1,11 @@
 use std::collections::BTreeMap;
 
+use fj_interop::Tolerance;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
     geometry::{
-        CurveBoundary, Geometry, Path, Tolerance,
+        CurveBoundary, Geometry, Path,
         repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
     },
     storage::Handle,

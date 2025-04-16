@@ -1,10 +1,11 @@
 use std::ops::Deref;
 
+use fj_interop::Tolerance;
 use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{
-        Geometry, Tolerance, repr::tri_mesh::convert_point_surface_to_global,
+        Geometry, repr::tri_mesh::convert_point_surface_to_global,
         traits::GenTriMesh,
     },
     topology::Face,

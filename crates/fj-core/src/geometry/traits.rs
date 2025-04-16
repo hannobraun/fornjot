@@ -19,9 +19,10 @@
 
 use std::ops::Deref;
 
+use fj_interop::Tolerance;
 use fj_math::{Aabb, LineSegment, Point, Scalar, Triangle};
 
-use super::{CurveBoundary, Geometry, Path, Tolerance};
+use super::{CurveBoundary, Geometry, Path};
 
 /// # Generate polylines, the uniform representation of curve geometry
 ///

@@ -1,10 +1,11 @@
 use std::fmt;
 
+use fj_interop::Tolerance;
 use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{
-        CurveBoundary, Geometry, Tolerance,
+        CurveBoundary, Geometry,
         repr::tri_mesh::convert_point_surface_to_global,
     },
     queries::{

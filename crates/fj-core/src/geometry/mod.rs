@@ -16,5 +16,3 @@ pub use self::{
     path::Path,
     vertex::{LocalVertexGeom, VertexGeom},
 };
-
-pub use fj_interop::{InvalidTolerance, Tolerance};

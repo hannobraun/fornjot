@@ -2,9 +2,9 @@
 //!
 //! See [`Core`].
 
-use crate::{
-    geometry::Tolerance, layers::Layers, validation::ValidationConfig,
-};
+use fj_interop::Tolerance;
+
+use crate::{layers::Layers, validation::ValidationConfig};
 
 /// An instance of the Fornjot core
 ///

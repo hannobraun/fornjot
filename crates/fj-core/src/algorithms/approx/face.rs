@@ -4,8 +4,10 @@
 
 use std::{collections::BTreeSet, ops::Deref};
 
+use fj_interop::Tolerance;
+
 use crate::{
-    geometry::{Geometry, Tolerance},
+    geometry::Geometry,
     storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
