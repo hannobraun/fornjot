@@ -55,11 +55,15 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
 fn half_edges_to_points(
     face: &Face,
     target: &mut Vec<TriangulationPoint>,
-    _: impl Into<Tolerance>,
+    tolerance: impl Into<Tolerance>,
 ) {
+    let tolerance = tolerance.into();
+
     target.extend(
         face.half_edges_with_end_vertex()
-            .flat_map(approximate_half_edge)
+            .flat_map(|half_edge_with_end_vertex| {
+                approximate_half_edge(half_edge_with_end_vertex, tolerance)
+            })
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
@@ -103,6 +107,7 @@ fn approximate_half_edge(
         half_edge,
         end_vertex,
     }: HalfEdgeWithEndVertex,
+    _: impl Into<Tolerance>,
 ) -> Vec<Point<3>> {
     let [start, end] =
         [&half_edge.start, end_vertex].map(|vertex| vertex.point);
