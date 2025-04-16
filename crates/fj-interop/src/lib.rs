@@ -10,11 +10,13 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 mod color;
+mod tolerance;
 mod tri_mesh;
 
 pub mod ext;
 
 pub use self::{
     color::Color,
+    tolerance::{InvalidTolerance, Tolerance},
     tri_mesh::{Index, MeshTriangle, TriMesh, vertices_to_indexed_vertices},
 };

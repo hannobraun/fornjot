@@ -8,13 +8,13 @@ pub mod traits;
 mod boundary;
 mod geometry;
 mod path;
-mod tolerance;
 mod vertex;
 
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
     geometry::{CurveGeom, CurveGeom2, Geometry, LocalCurveGeom, SurfaceGeom},
     path::Path,
-    tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},
 };
+
+pub use fj_interop::{InvalidTolerance, Tolerance};
