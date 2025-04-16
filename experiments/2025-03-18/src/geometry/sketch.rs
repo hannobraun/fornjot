@@ -38,7 +38,7 @@ impl Sketch {
         let vertices = VerticesFromSegments::new(&self.segments, &surface);
 
         let half_edges = vertices.iter().map(
-            |([(segment, start), (_, end)], is_internal)| {
+            |([(start, segment), (end, _)], is_internal)| {
                 let curve = match segment {
                     SketchSegment::Arc { .. } => {
                         // We are creating a line here, temporarily, while
@@ -120,7 +120,7 @@ impl VerticesFromSegments {
 
     fn iter(
         &self,
-    ) -> impl Iterator<Item = ([(SketchSegment, Handle<Vertex>); 2], bool)>
+    ) -> impl Iterator<Item = ([(Handle<Vertex>, SketchSegment); 2], bool)>
     {
         self.segments_with_start_vertex
             .iter()
@@ -131,7 +131,7 @@ impl VerticesFromSegments {
                     .map(|vertex| self.coincident_vertices.contains(vertex));
                 let is_internal = start_is_coincident && end_is_coincident;
 
-                ([(segment, start), (next_segment, end)], is_internal)
+                ([(start, segment), (end, next_segment)], is_internal)
             })
     }
 }
