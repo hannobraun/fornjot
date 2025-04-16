@@ -157,6 +157,11 @@ impl Vector<2> {
         let [a, b] = others.map(Into::into);
         a.cross2d(self) * b.cross2d(self) < Scalar::ZERO
     }
+
+    /// # Compute a vector that is perpendicular to this one
+    pub fn to_perpendicular(&self) -> Self {
+        Self::from([-self.v, self.u])
+    }
 }
 
 impl Vector<3> {
