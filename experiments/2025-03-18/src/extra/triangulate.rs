@@ -3,7 +3,7 @@ use std::{
     mem,
 };
 
-use fj_interop::{Color, MeshTriangle, TriMesh};
+use fj_interop::{Color, MeshTriangle, Tolerance, TriMesh};
 use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
@@ -13,7 +13,7 @@ use crate::topology::{
     surface::Surface,
 };
 
-pub fn triangulate(face: &Face) -> TriMesh {
+pub fn triangulate(face: &Face, _: impl Into<Tolerance>) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
     half_edges_to_points(face, &mut points_from_half_edges);
 

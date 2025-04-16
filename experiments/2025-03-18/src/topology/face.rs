@@ -41,8 +41,8 @@ impl Face {
 }
 
 impl ToTriMesh for Face {
-    fn to_tri_mesh(&self, _: impl Into<Tolerance>) -> TriMesh {
-        triangulate(self)
+    fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
+        triangulate(self, tolerance)
     }
 }
 
