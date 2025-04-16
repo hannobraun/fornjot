@@ -1,4 +1,4 @@
-use fj_interop::TriMesh;
+use fj_interop::{Tolerance, TriMesh};
 use fj_viewer::Viewer;
 
 use crate::{
@@ -9,6 +9,8 @@ use crate::{
 };
 
 pub fn model(viewer: &Viewer) -> TriMesh {
+    let tolerance = Tolerance::from(0.001);
+
     let top = {
         let sketch = Sketch::new()
             // outer boundary
@@ -39,10 +41,10 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         Handle::new(face)
     };
 
-    viewer.display(top.to_tri_mesh());
+    viewer.display(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep([0., 0., -2.]);
-    viewer.display(solid.to_tri_mesh());
+    viewer.display(solid.to_tri_mesh(tolerance));
 
-    solid.to_tri_mesh()
+    solid.to_tri_mesh(tolerance)
 }

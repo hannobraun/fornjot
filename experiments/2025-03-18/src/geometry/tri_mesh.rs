@@ -1,5 +1,5 @@
-use fj_interop::TriMesh;
+use fj_interop::{Tolerance, TriMesh};
 
 pub trait ToTriMesh {
-    fn to_tri_mesh(&self) -> TriMesh;
+    fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh;
 }

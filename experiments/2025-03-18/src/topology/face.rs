@@ -1,4 +1,4 @@
-use fj_interop::TriMesh;
+use fj_interop::{Tolerance, TriMesh};
 use itertools::Itertools;
 
 use crate::{
@@ -41,7 +41,7 @@ impl Face {
 }
 
 impl ToTriMesh for Face {
-    fn to_tri_mesh(&self) -> TriMesh {
+    fn to_tri_mesh(&self, _: impl Into<Tolerance>) -> TriMesh {
         triangulate(self)
     }
 }
