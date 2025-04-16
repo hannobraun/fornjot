@@ -85,7 +85,7 @@ enum SketchSegment {
 impl SketchSegment {
     fn start(&self) -> &Point<2> {
         match self {
-            SketchSegment::Arc { start } => start,
+            SketchSegment::Arc { start, .. } => start,
             SketchSegment::Line { start } => start,
         }
     }
