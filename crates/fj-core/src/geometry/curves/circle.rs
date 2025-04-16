@@ -98,7 +98,7 @@ impl CircleApproxParams {
     ) -> impl Iterator<Item = Point<1>> + '_ {
         let boundary = boundary.into();
 
-        let [a, b] = boundary.inner.map(|point| point.t / self.increment());
+        let [a, b] = boundary.inner.map(|point| point.t / self.increment);
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 
@@ -123,7 +123,7 @@ impl CircleApproxParams {
                 return None;
             }
 
-            let t = self.increment() * i;
+            let t = self.increment * i;
             i += direction.to_scalar();
 
             Some(Point::from([t]))
