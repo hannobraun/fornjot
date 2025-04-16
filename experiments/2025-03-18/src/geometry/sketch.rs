@@ -38,20 +38,20 @@ impl Sketch {
         let vertices = VerticesFromSegments::new(&self.segments, &surface);
 
         let half_edges = vertices.iter().map(
-            |([(start_vertex, segment), (end, _)], is_internal)| {
+            |([(start_vertex, segment), (end_vertex, _)], is_internal)| {
                 let curve = match segment {
                     SketchSegment::Arc { .. } => {
                         // We are creating a line here, temporarily, while
                         // support for arcs is being implemented.
                         Handle::new(Curve::line_from_vertices([
                             &start_vertex,
-                            &end,
+                            &end_vertex,
                         ]))
                     }
                     SketchSegment::Line { .. } => {
                         Handle::new(Curve::line_from_vertices([
                             &start_vertex,
-                            &end,
+                            &end_vertex,
                         ]))
                     }
                 };
