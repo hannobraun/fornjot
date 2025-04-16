@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
@@ -22,9 +22,16 @@ impl Sketch {
         }
     }
 
-    pub fn arc_from(mut self, start: impl Into<Point<2>>) -> Self {
+    pub fn arc_from(
+        mut self,
+        start: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+    ) -> Self {
         let start = start.into();
+        let _ = radius.into();
+
         self.segments.push(SketchSegment::Arc { start });
+
         self
     }
 
