@@ -37,8 +37,8 @@ impl Sketch {
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let vertices = VerticesFromSegments::new(&self.segments, &surface);
 
-        let half_edges =
-            vertices.iter().map(|(segment, [start, end], is_internal)| {
+        let half_edges = vertices.iter().map(
+            |([(segment, start), (_, end)], is_internal)| {
                 let curve = match segment {
                     SketchSegment::Arc { .. } => {
                         // We are creating a line here, temporarily, while
@@ -55,7 +55,8 @@ impl Sketch {
                     start,
                     is_internal,
                 })
-            });
+            },
+        );
 
         Face::new(surface, half_edges, false)
     }
@@ -119,17 +120,18 @@ impl VerticesFromSegments {
 
     fn iter(
         &self,
-    ) -> impl Iterator<Item = (SketchSegment, [Handle<Vertex>; 2], bool)> {
+    ) -> impl Iterator<Item = ([(SketchSegment, Handle<Vertex>); 2], bool)>
+    {
         self.segments_with_start_vertex
             .iter()
             .cloned()
             .circular_tuple_windows()
-            .map(|((segment, start), (_, end))| {
+            .map(|((segment, start), (next_segment, end))| {
                 let [start_is_coincident, end_is_coincident] = [&start, &end]
                     .map(|vertex| self.coincident_vertices.contains(vertex));
                 let is_internal = start_is_coincident && end_is_coincident;
 
-                (segment, [start, end], is_internal)
+                ([(segment, start), (next_segment, end)], is_internal)
             })
     }
 }
