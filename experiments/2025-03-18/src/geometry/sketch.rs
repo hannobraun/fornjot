@@ -37,33 +37,33 @@ impl Sketch {
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let vertices = SegmentsWithStartVertex::new(&self.segments, &surface);
 
-        let half_edges =
-            vertices
-                .iter()
-                .map(|([segment, next_segment], is_internal)| {
-                    let curve = match segment.segment {
-                        SketchSegment::Arc { .. } => {
-                            // We are creating a line here, temporarily, while
-                            // support for arcs is being implemented.
-                            Handle::new(Curve::line_from_vertices([
-                                &segment.start,
-                                &next_segment.start,
-                            ]))
-                        }
-                        SketchSegment::Line { .. } => {
-                            Handle::new(Curve::line_from_vertices([
-                                &segment.start,
-                                &next_segment.start,
-                            ]))
-                        }
-                    };
+        let half_edges = vertices
+            .iter()
+            .map(|([segment, next_segment], is_internal)| {
+                let curve = match segment.segment {
+                    SketchSegment::Arc { .. } => {
+                        // We are creating a line here, temporarily, while
+                        // support for arcs is being implemented.
+                        Handle::new(Curve::line_from_vertices([
+                            &segment.start,
+                            &next_segment.start,
+                        ]))
+                    }
+                    SketchSegment::Line { .. } => {
+                        Handle::new(Curve::line_from_vertices([
+                            &segment.start,
+                            &next_segment.start,
+                        ]))
+                    }
+                };
 
-                    Handle::new(HalfEdge {
-                        curve,
-                        start: segment.start,
-                        is_internal,
-                    })
-                });
+                Handle::new(HalfEdge {
+                    curve,
+                    start: segment.start,
+                    is_internal,
+                })
+            })
+            .collect::<Vec<_>>();
 
         Face::new(surface, half_edges, false)
     }
