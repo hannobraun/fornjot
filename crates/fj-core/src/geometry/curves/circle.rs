@@ -96,9 +96,9 @@ impl CircleApproxParams {
         &self,
         boundary: impl Into<CurveBoundary<Point<1>>>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        let boundary = boundary.into();
+        let boundary = boundary.into().inner;
 
-        let [a, b] = boundary.inner.map(|point| point.t / self.increment);
+        let [a, b] = boundary.map(|point| point.t / self.increment);
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 
