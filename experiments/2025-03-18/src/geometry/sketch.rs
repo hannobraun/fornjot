@@ -28,9 +28,9 @@ impl Sketch {
         radius: impl Into<Scalar>,
     ) -> Self {
         let start = start.into();
-        let _ = radius.into();
+        let radius = radius.into();
 
-        self.segments.push(SketchSegment::Arc { start });
+        self.segments.push(SketchSegment::Arc { start, radius });
 
         self
     }
@@ -48,7 +48,9 @@ impl Sketch {
             .iter()
             .map(|([segment, next_segment], is_internal)| {
                 let curve = match segment.segment {
-                    SketchSegment::Arc { .. } => {
+                    SketchSegment::Arc { radius, .. } => {
+                        let _ = radius;
+
                         // We are creating a line here, temporarily, while
                         // support for arcs is being implemented.
                         Handle::new(Curve::line_from_vertices([
@@ -78,7 +80,7 @@ impl Sketch {
 
 #[derive(Clone, Copy)]
 enum SketchSegment {
-    Arc { start: Point<2> },
+    Arc { start: Point<2>, radius: Scalar },
     Line { start: Point<2> },
 }
 
