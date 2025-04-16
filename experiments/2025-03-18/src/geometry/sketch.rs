@@ -37,32 +37,33 @@ impl Sketch {
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let vertices = SegmentsWithStartVertex::new(&self.segments, &surface);
 
-        let half_edges = vertices.iter().map(
-            |([(segment, start_vertex), (_, end_vertex)], is_internal)| {
-                let curve = match segment {
-                    SketchSegment::Arc { .. } => {
-                        // We are creating a line here, temporarily, while
-                        // support for arcs is being implemented.
-                        Handle::new(Curve::line_from_vertices([
-                            &start_vertex,
-                            &end_vertex,
-                        ]))
-                    }
-                    SketchSegment::Line { .. } => {
-                        Handle::new(Curve::line_from_vertices([
-                            &start_vertex,
-                            &end_vertex,
-                        ]))
-                    }
-                };
+        let half_edges =
+            vertices
+                .iter()
+                .map(|([segment, next_segment], is_internal)| {
+                    let curve = match segment.segment {
+                        SketchSegment::Arc { .. } => {
+                            // We are creating a line here, temporarily, while
+                            // support for arcs is being implemented.
+                            Handle::new(Curve::line_from_vertices([
+                                &segment.start,
+                                &next_segment.start,
+                            ]))
+                        }
+                        SketchSegment::Line { .. } => {
+                            Handle::new(Curve::line_from_vertices([
+                                &segment.start,
+                                &next_segment.start,
+                            ]))
+                        }
+                    };
 
-                Handle::new(HalfEdge {
-                    curve,
-                    start: start_vertex,
-                    is_internal,
-                })
-            },
-        );
+                    Handle::new(HalfEdge {
+                        curve,
+                        start: segment.start,
+                        is_internal,
+                    })
+                });
 
         Face::new(surface, half_edges, false)
     }
@@ -126,8 +127,7 @@ impl SegmentsWithStartVertex {
 
     fn iter(
         &self,
-    ) -> impl Iterator<Item = ([(SketchSegment, Handle<Vertex>); 2], bool)>
-    {
+    ) -> impl Iterator<Item = ([SegmentWithStartVertex; 2], bool)> {
         self.segments_with_start_vertex
             .iter()
             .cloned()
@@ -137,7 +137,21 @@ impl SegmentsWithStartVertex {
                     .map(|vertex| self.coincident_vertices.contains(vertex));
                 let is_internal = start_is_coincident && end_is_coincident;
 
-                ([(segment, start), (next_segment, end)], is_internal)
+                (
+                    [
+                        SegmentWithStartVertex { segment, start },
+                        SegmentWithStartVertex {
+                            segment: next_segment,
+                            start: end,
+                        },
+                    ],
+                    is_internal,
+                )
             })
     }
+}
+
+struct SegmentWithStartVertex {
+    segment: SketchSegment,
+    start: Handle<Vertex>,
 }
