@@ -62,7 +62,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
 
 /// # Approximation parameters for a circle
 #[derive(Debug)]
-struct CircleApproxParams {
+pub struct CircleApproxParams {
     increment: Scalar,
 }
 
