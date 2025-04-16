@@ -13,9 +13,9 @@ use crate::topology::{
     surface::Surface,
 };
 
-pub fn triangulate(face: &Face, _: impl Into<Tolerance>) -> TriMesh {
+pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
-    half_edges_to_points(face, &mut points_from_half_edges);
+    half_edges_to_points(face, &mut points_from_half_edges, tolerance);
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
@@ -52,7 +52,11 @@ pub fn triangulate(face: &Face, _: impl Into<Tolerance>) -> TriMesh {
     mesh
 }
 
-fn half_edges_to_points(face: &Face, target: &mut Vec<TriangulationPoint>) {
+fn half_edges_to_points(
+    face: &Face,
+    target: &mut Vec<TriangulationPoint>,
+    _: impl Into<Tolerance>,
+) {
     target.extend(
         face.half_edges_with_end_vertex()
             .flat_map(approximate_half_edge)
