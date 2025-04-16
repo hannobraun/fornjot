@@ -56,7 +56,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         let params = CircleApproxParams::new(self, tolerance);
-        params.approx_circle(boundary).collect()
+        params.approx_circle(boundary.inner).collect()
     }
 }
 
@@ -94,10 +94,8 @@ impl CircleApproxParams {
     /// # Generate points to approximate the circle within a given boundary
     pub fn approx_circle(
         &self,
-        boundary: impl Into<CurveBoundary<Point<1>>>,
+        boundary: [Point<1>; 2],
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        let boundary = boundary.into().inner;
-
         let [a, b] = boundary.map(|point| point.t / self.increment);
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
@@ -202,7 +200,9 @@ mod tests {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
             let params = CircleApproxParams::new(&circle, tolerance);
 
-            let points = params.approx_circle(boundary).collect::<Vec<_>>();
+            let points = params
+                .approx_circle(boundary.into().inner)
+                .collect::<Vec<_>>();
 
             let expected_points = expected_coords
                 .into_iter()
