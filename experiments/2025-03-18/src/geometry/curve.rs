@@ -1,3 +1,4 @@
+use fj_interop::Tolerance;
 use fj_math::{Line, Point, Transform, Vector};
 
 pub trait CurveGeometry {
@@ -17,7 +18,11 @@ pub trait CurveGeometry {
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual curve. So far, this
     /// has not been necessary.
-    fn approximate(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>>;
+    fn approximate(
+        &self,
+        boundary: [Point<1>; 2],
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>>;
 }
 
 impl CurveGeometry for Line<3> {
@@ -38,7 +43,7 @@ impl CurveGeometry for Line<3> {
         Box::new(translated)
     }
 
-    fn approximate(&self, _: [Point<1>; 2]) -> Vec<Point<1>> {
+    fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> Vec<Point<1>> {
         vec![]
     }
 }

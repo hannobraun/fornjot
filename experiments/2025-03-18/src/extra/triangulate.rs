@@ -107,7 +107,7 @@ fn approximate_half_edge(
         half_edge,
         end_vertex,
     }: HalfEdgeWithEndVertex,
-    _: impl Into<Tolerance>,
+    tolerance: impl Into<Tolerance>,
 ) -> Vec<Point<3>> {
     let [start, end] =
         [&half_edge.start, end_vertex].map(|vertex| vertex.point);
@@ -115,7 +115,10 @@ fn approximate_half_edge(
     let boundary_local = [start, end].map(|point_global| {
         half_edge.curve.geometry.project_point(point_global)
     });
-    let points_local = half_edge.curve.geometry.approximate(boundary_local);
+    let points_local = half_edge
+        .curve
+        .geometry
+        .approximate(boundary_local, tolerance.into());
 
     let mut points_global = vec![start];
     points_global.extend(points_local.into_iter().map(|point_local| {
