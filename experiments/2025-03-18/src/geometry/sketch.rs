@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use fj_math::{Point, Scalar};
+use fj_math::{Circle, Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
@@ -48,15 +48,41 @@ impl Sketch {
             .iter()
             .map(|([segment, next_segment], is_internal)| {
                 let curve = match segment.segment {
-                    SketchSegment::Arc { radius, .. } => {
-                        let _ = radius;
+                    SketchSegment::Arc { start, radius } => {
+                        let end = next_segment.segment.start();
 
-                        // We are creating a line here, temporarily, while
-                        // support for arcs is being implemented.
-                        Handle::new(Curve::line_from_vertices([
-                            &segment.start,
-                            &next_segment.start,
-                        ]))
+                        let start_to_end = end - start;
+                        let midpoint = start + start_to_end * 0.5;
+
+                        let midpoint_towards_center =
+                            start_to_end.to_perpendicular().normalize()
+                                * radius.sign().to_scalar();
+
+                        let distance_from_midpoint_to_center = {
+                            let d = start_to_end.magnitude() / 2.;
+                            (radius * radius - d * d).sqrt()
+                        };
+
+                        let center = midpoint
+                            + midpoint_towards_center
+                                * distance_from_midpoint_to_center;
+
+                        // This only works if `surface` is a plane, which
+                        // checks out for now.
+                        let circle = {
+                            let a = start;
+                            let b = center + (a - center).to_perpendicular();
+
+                            let [center, a, b] = [center, a, b].map(|point| {
+                                surface.geometry.point_from_local(point)
+                            });
+
+                            Circle::new(center, a - center, b - center)
+                        };
+
+                        Handle::new(Curve {
+                            geometry: Box::new(circle),
+                        })
                     }
                     SketchSegment::Line { .. } => {
                         Handle::new(Curve::line_from_vertices([
