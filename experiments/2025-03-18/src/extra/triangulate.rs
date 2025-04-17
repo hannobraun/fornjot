@@ -206,7 +206,7 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
         .collect()
 }
 
-#[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 struct TriangulationPoint {
     point_surface: Point<2>,
     point_global: Point<3>,
