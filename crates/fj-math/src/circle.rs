@@ -125,9 +125,9 @@ impl<const D: usize> Circle<D> {
     ) -> Point<1> {
         let point = point.into();
 
-        let vector = (point - self.center).to_uv();
+        let [a, b] = (point - self.center).to_uv().components;
 
-        let atan = Scalar::atan2(vector.v, vector.u);
+        let atan = Scalar::atan2(b, a);
         let coord = if atan >= Scalar::ZERO {
             atan
         } else {
