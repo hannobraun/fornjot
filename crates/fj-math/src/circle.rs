@@ -124,12 +124,14 @@ impl<const D: usize> Circle<D> {
         point: impl Into<Point<D>>,
     ) -> Point<1> {
         let vector = (point.into() - self.center).to_uv();
+
         let atan = Scalar::atan2(vector.v, vector.u);
         let coord = if atan >= Scalar::ZERO {
             atan
         } else {
             atan + Scalar::TAU
         };
+
         Point::from([coord])
     }
 
