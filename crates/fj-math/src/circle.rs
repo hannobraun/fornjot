@@ -126,7 +126,8 @@ impl<const D: usize> Circle<D> {
         let point = point.into();
 
         let center_to_point = point - self.center;
-        let [a, b] = center_to_point.to_uv().components;
+        let [a, b] = [&self.a, &self.b]
+            .map(|v| center_to_point.scalar_projection_onto(v));
 
         let atan = Scalar::atan2(b, a);
         let coord = if atan >= Scalar::ZERO {
@@ -207,6 +208,29 @@ mod tests {
         );
         assert_eq!(
             circle.point_to_circle_coords([1., 1., 3.]),
+            Point::from([FRAC_PI_2 * 3.]),
+        );
+
+        let circle = Circle {
+            center: Point::from([1., 2., 3.]),
+            a: Vector::from([1., 0., 0.]),
+            b: Vector::from([0., 0., 1.]),
+        };
+
+        assert_eq!(
+            circle.point_to_circle_coords([2., 2., 3.]),
+            Point::from([0.]),
+        );
+        assert_eq!(
+            circle.point_to_circle_coords([1., 2., 4.]),
+            Point::from([FRAC_PI_2]),
+        );
+        assert_eq!(
+            circle.point_to_circle_coords([0., 2., 3.]),
+            Point::from([PI]),
+        );
+        assert_eq!(
+            circle.point_to_circle_coords([1., 2., 2.]),
             Point::from([FRAC_PI_2 * 3.]),
         );
     }
