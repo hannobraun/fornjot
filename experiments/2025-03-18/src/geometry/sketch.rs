@@ -66,6 +66,7 @@ impl Sketch {
                             //   distance we're looking for)
                             // - `c` (hypotenuse): `end` to circle center (which
                             //   is `radius`)
+
                             let a = start_to_end.magnitude() / 2.;
                             let c = radius;
 
