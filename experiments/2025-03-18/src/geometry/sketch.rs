@@ -67,8 +67,9 @@ impl Sketch {
                             // - `c` (hypotenuse): `end` to circle center (which
                             //   is `radius`)
                             let a = start_to_end.magnitude() / 2.;
+                            let c = radius;
 
-                            let distance_square = radius * radius - a * a;
+                            let distance_square = c * c - a * a;
                             distance_square.sqrt()
                         };
 
