@@ -59,6 +59,14 @@ impl Sketch {
                                 * radius.sign().to_scalar();
 
                         let distance_from_midpoint_to_center = {
+                            // We're computing the required distance from a
+                            // right triangle:
+                            // - `a` (leg): `midpoint` to `end`
+                            // - `b` (leg): `midpoint` to circle center (the
+                            //   distance we're looking for)
+                            // - `c` (hypotenuse): `end` to circle center (which
+                            //   is `radius`)
+
                             let d = start_to_end.magnitude() / 2.;
                             let distance_square = radius * radius - d * d;
                             distance_square.sqrt()
