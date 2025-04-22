@@ -71,6 +71,16 @@ impl Sketch {
                             let c = radius;
 
                             let b_squared = c * c - a * a;
+
+                            if b_squared < Scalar::ZERO {
+                                panic!(
+                                    "Radius of arc (`{radius}`) is too small: \
+                                    Must be at least half the distance between \
+                                    start (`{start:?}`) and end (`{end:?}`) \
+                                    points, or the arc is not possible."
+                                );
+                            }
+
                             b_squared.sqrt()
                         };
 
