@@ -60,7 +60,8 @@ impl Sketch {
 
                         let distance_from_midpoint_to_center = {
                             let d = start_to_end.magnitude() / 2.;
-                            (radius * radius - d * d).sqrt()
+                            let distance_square = radius * radius - d * d;
+                            distance_square.sqrt()
                         };
 
                         let center = midpoint
