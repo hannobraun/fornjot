@@ -5,6 +5,14 @@ pub struct AbsoluteCurveGeometry {
     pub geometry: Box<dyn CurveGeometry>,
 }
 
+impl AbsoluteCurveGeometry {
+    pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        Self {
+            geometry: self.geometry.translate(offset.into()),
+        }
+    }
+}
+
 impl Clone for AbsoluteCurveGeometry {
     fn clone(&self) -> Self {
         Self {

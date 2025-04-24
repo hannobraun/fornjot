@@ -61,9 +61,7 @@ impl SweptCurve {
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
-            curve: AbsoluteCurveGeometry {
-                geometry: self.curve.geometry.translate(offset.into()),
-            },
+            curve: self.curve.translate(offset.into()),
             path: self.path,
         }
     }
