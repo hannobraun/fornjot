@@ -1,8 +1,22 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
+/// # Curve geometry that has a fixed position (is _anchored_) in space
+///
+/// The opposite would be _floating_ curve geometry, which could be relative to
+/// any point.
+///
+/// In terms of a line, for example, the anchored version is the full line, an
+/// origin and a direction (a point and a vector). The floating version is just
+/// the direction (a vector).
 pub struct AnchoredCurveGeometry {
+    /// # The origin point of the curve, which anchors it in 3D space
+    ///
+    /// This _must always_ be the origin point of the curve's coordinate system.
+    /// Using something like the center of a circle is not valid!
     pub origin: Point<3>,
+
+    /// # The floating part of the curve geometry
     pub geometry: Box<dyn CurveGeometry>,
 }
 
