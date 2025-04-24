@@ -105,6 +105,7 @@ impl Sketch {
 
                         Handle::new(Curve {
                             geometry: AbsoluteCurveGeometry {
+                                origin: circle.center(),
                                 geometry: Box::new(circle),
                             },
                         })

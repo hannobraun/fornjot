@@ -2,6 +2,7 @@ use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
 pub struct AbsoluteCurveGeometry {
+    pub origin: Point<3>,
     pub geometry: Box<dyn CurveGeometry>,
 }
 
@@ -18,6 +19,8 @@ impl AbsoluteCurveGeometry {
         let offset = offset.into();
 
         Self {
+            origin: Transform::translation(offset)
+                .transform_point(&self.origin),
             geometry: self.geometry.translate(offset),
         }
     }
@@ -34,6 +37,7 @@ impl AbsoluteCurveGeometry {
 impl Clone for AbsoluteCurveGeometry {
     fn clone(&self) -> Self {
         Self {
+            origin: self.origin,
             geometry: self.geometry.clone_curve_geometry(),
         }
     }

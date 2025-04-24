@@ -15,6 +15,7 @@ impl Curve {
 
         Self {
             geometry: AbsoluteCurveGeometry {
+                origin: line.origin(),
                 geometry: Box::new(line),
             },
         }

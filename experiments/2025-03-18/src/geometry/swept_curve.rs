@@ -19,6 +19,7 @@ impl SweptCurve {
 
         Self {
             curve: AbsoluteCurveGeometry {
+                origin: line.origin(),
                 geometry: Box::new(line),
             },
             path: v,
