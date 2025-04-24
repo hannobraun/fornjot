@@ -118,7 +118,6 @@ fn approximate_half_edge(
     let points_local = half_edge
         .curve
         .geometry
-        .geometry
         .approximate(boundary_local, tolerance);
 
     let mut points_global = vec![start];

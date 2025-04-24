@@ -19,6 +19,14 @@ impl AbsoluteCurveGeometry {
             geometry: self.geometry.translate(offset.into()),
         }
     }
+
+    pub fn approximate(
+        &self,
+        boundary: [Point<1>; 2],
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        self.geometry.approximate(boundary, tolerance)
+    }
 }
 
 impl Clone for AbsoluteCurveGeometry {
