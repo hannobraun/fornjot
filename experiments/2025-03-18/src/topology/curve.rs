@@ -1,11 +1,11 @@
 use fj_math::Line;
 
-use crate::geometry::AbsoluteCurveGeometry;
+use crate::geometry::AnchoredCurveGeometry;
 
 use super::vertex::Vertex;
 
 pub struct Curve {
-    pub geometry: AbsoluteCurveGeometry,
+    pub geometry: AnchoredCurveGeometry,
 }
 
 impl Curve {
@@ -14,7 +14,7 @@ impl Curve {
         let (line, _) = Line::from_points(points);
 
         Self {
-            geometry: AbsoluteCurveGeometry {
+            geometry: AnchoredCurveGeometry {
                 origin: line.origin(),
                 geometry: Box::new(line),
             },

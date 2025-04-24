@@ -1,9 +1,9 @@
 use fj_math::{Line, Point, Vector};
 
-use super::AbsoluteCurveGeometry;
+use super::AnchoredCurveGeometry;
 
 pub struct SweptCurve {
-    pub curve: AbsoluteCurveGeometry,
+    pub curve: AnchoredCurveGeometry,
     pub path: Vector<3>,
 }
 
@@ -18,7 +18,7 @@ impl SweptCurve {
         let line = Line::from_origin_and_direction(origin, u);
 
         Self {
-            curve: AbsoluteCurveGeometry {
+            curve: AnchoredCurveGeometry {
                 origin: line.origin(),
                 geometry: Box::new(line),
             },

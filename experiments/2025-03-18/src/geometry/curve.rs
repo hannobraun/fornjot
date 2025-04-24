@@ -1,12 +1,12 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
-pub struct AbsoluteCurveGeometry {
+pub struct AnchoredCurveGeometry {
     pub origin: Point<3>,
     pub geometry: Box<dyn CurveGeometry>,
 }
 
-impl AbsoluteCurveGeometry {
+impl AnchoredCurveGeometry {
     pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
         self.geometry.point_from_local(point)
     }
@@ -34,7 +34,7 @@ impl AbsoluteCurveGeometry {
     }
 }
 
-impl Clone for AbsoluteCurveGeometry {
+impl Clone for AnchoredCurveGeometry {
     fn clone(&self) -> Self {
         Self {
             origin: self.origin,
