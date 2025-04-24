@@ -54,9 +54,7 @@ impl SweptCurve {
 
     pub fn flip(&self) -> Self {
         Self {
-            curve: AbsoluteCurveGeometry {
-                geometry: self.curve.geometry.clone_curve_geometry(),
-            },
+            curve: self.curve.clone(),
             path: -self.path,
         }
     }
