@@ -10,6 +10,10 @@ impl AbsoluteCurveGeometry {
         self.geometry.point_from_local(point)
     }
 
+    pub fn project_point(&self, point: Point<3>) -> Point<1> {
+        self.geometry.project_point(point)
+    }
+
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             geometry: self.geometry.translate(offset.into()),
