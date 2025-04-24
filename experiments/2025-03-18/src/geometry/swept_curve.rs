@@ -20,7 +20,7 @@ impl SweptCurve {
         Self {
             curve: AnchoredCurveGeometry {
                 origin: line.origin(),
-                geometry: Box::new(line),
+                floating: Box::new(line),
             },
             path: v,
         }

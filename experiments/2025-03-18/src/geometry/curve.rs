@@ -17,16 +17,16 @@ pub struct AnchoredCurveGeometry {
     pub origin: Point<3>,
 
     /// # The floating part of the curve geometry
-    pub geometry: FloatingCurveGeometry,
+    pub floating: FloatingCurveGeometry,
 }
 
 impl AnchoredCurveGeometry {
     pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        self.geometry.point_from_local(point)
+        self.floating.point_from_local(point)
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.geometry.project_point(point)
+        self.floating.project_point(point)
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
@@ -35,7 +35,7 @@ impl AnchoredCurveGeometry {
         Self {
             origin: Transform::translation(offset)
                 .transform_point(&self.origin),
-            geometry: self.geometry.translate(offset),
+            floating: self.floating.translate(offset),
         }
     }
 
@@ -44,7 +44,7 @@ impl AnchoredCurveGeometry {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        self.geometry.approximate(boundary, tolerance)
+        self.floating.approximate(boundary, tolerance)
     }
 }
 
@@ -52,7 +52,7 @@ impl Clone for AnchoredCurveGeometry {
     fn clone(&self) -> Self {
         Self {
             origin: self.origin,
-            geometry: self.geometry.clone_curve_geometry(),
+            floating: self.floating.clone_curve_geometry(),
         }
     }
 }

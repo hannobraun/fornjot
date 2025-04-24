@@ -16,7 +16,7 @@ impl Curve {
         Self {
             geometry: AnchoredCurveGeometry {
                 origin: line.origin(),
-                geometry: Box::new(line),
+                floating: Box::new(line),
             },
         }
     }
