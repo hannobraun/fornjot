@@ -14,7 +14,6 @@ pub trait TranslateExt {
 
 impl TranslateExt for Curve {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
-        let offset = offset.into();
         let geometry = self.geometry.translate(offset);
         Curve { geometry }
     }
