@@ -17,7 +17,7 @@ pub struct AnchoredCurveGeometry {
     pub origin: Point<3>,
 
     /// # The floating part of the curve geometry
-    pub geometry: Box<dyn CurveGeometry>,
+    pub geometry: FloatingCurveGeometry,
 }
 
 impl AnchoredCurveGeometry {
@@ -57,11 +57,13 @@ impl Clone for AnchoredCurveGeometry {
     }
 }
 
+pub type FloatingCurveGeometry = Box<dyn CurveGeometry>;
+
 pub trait CurveGeometry {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
+    fn clone_curve_geometry(&self) -> FloatingCurveGeometry;
     fn point_from_local(&self, point: Point<1>) -> Point<3>;
     fn project_point(&self, point: Point<3>) -> Point<1>;
-    fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry>;
+    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry;
 
     /// # Approximate the curve
     ///
@@ -82,7 +84,7 @@ pub trait CurveGeometry {
 }
 
 impl CurveGeometry for Circle<3> {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
+    fn clone_curve_geometry(&self) -> FloatingCurveGeometry {
         Box::new(*self)
     }
 
@@ -94,7 +96,7 @@ impl CurveGeometry for Circle<3> {
         self.point_to_circle_coords(point)
     }
 
-    fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry> {
+    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry {
         let translated = self.transform(&Transform::translation(offset));
         Box::new(translated)
     }
@@ -111,7 +113,7 @@ impl CurveGeometry for Circle<3> {
 }
 
 impl CurveGeometry for Line<3> {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
+    fn clone_curve_geometry(&self) -> FloatingCurveGeometry {
         Box::new(*self)
     }
 
@@ -123,7 +125,7 @@ impl CurveGeometry for Line<3> {
         self.point_to_line_coords(point)
     }
 
-    fn translate(&self, offset: Vector<3>) -> Box<dyn CurveGeometry> {
+    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry {
         let translated = self.transform(&Transform::translation(offset));
         Box::new(translated)
     }
