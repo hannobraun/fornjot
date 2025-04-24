@@ -15,8 +15,10 @@ impl AbsoluteCurveGeometry {
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
+        let offset = offset.into();
+
         Self {
-            geometry: self.geometry.translate(offset.into()),
+            geometry: self.geometry.translate(offset),
         }
     }
 
