@@ -61,7 +61,7 @@ impl SweptCurve {
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
-            curve: self.curve.translate(offset.into()),
+            curve: self.curve.translate(offset),
             path: self.path,
         }
     }
