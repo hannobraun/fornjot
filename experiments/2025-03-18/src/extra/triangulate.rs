@@ -127,11 +127,7 @@ fn approximate_half_edge(
 
     let mut points_global = vec![start];
     points_global.extend(points_local.into_iter().map(|point_local| {
-        half_edge
-            .curve
-            .geometry
-            .geometry
-            .point_from_local(point_local)
+        half_edge.curve.geometry.point_from_local(point_local)
     }));
 
     points_global

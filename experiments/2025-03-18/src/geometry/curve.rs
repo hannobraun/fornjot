@@ -6,6 +6,10 @@ pub struct AbsoluteCurveGeometry {
 }
 
 impl AbsoluteCurveGeometry {
+    pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
+        self.geometry.point_from_local(point)
+    }
+
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             geometry: self.geometry.translate(offset.into()),
