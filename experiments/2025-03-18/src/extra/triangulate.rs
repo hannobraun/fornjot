@@ -113,16 +113,25 @@ fn approximate_half_edge(
         [&half_edge.start, end_vertex].map(|vertex| vertex.point);
 
     let boundary_local = [start, end].map(|point_global| {
-        half_edge.curve.geometry.project_point(point_global)
+        half_edge
+            .curve
+            .geometry
+            .geometry
+            .project_point(point_global)
     });
     let points_local = half_edge
         .curve
+        .geometry
         .geometry
         .approximate(boundary_local, tolerance);
 
     let mut points_global = vec![start];
     points_global.extend(points_local.into_iter().map(|point_local| {
-        half_edge.curve.geometry.point_from_local(point_local)
+        half_edge
+            .curve
+            .geometry
+            .geometry
+            .point_from_local(point_local)
     }));
 
     points_global

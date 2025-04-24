@@ -1,6 +1,10 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Circle, Line, Point, Transform, Vector};
 
+pub struct AbsoluteCurveGeometry {
+    pub geometry: Box<dyn CurveGeometry>,
+}
+
 pub trait CurveGeometry {
     fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
     fn point_from_local(&self, point: Point<1>) -> Point<3>;

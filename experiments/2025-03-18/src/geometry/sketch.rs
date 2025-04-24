@@ -11,6 +11,8 @@ use crate::{
     },
 };
 
+use super::AbsoluteCurveGeometry;
+
 pub struct Sketch {
     segments: Vec<SketchSegment>,
 }
@@ -102,7 +104,9 @@ impl Sketch {
                         };
 
                         Handle::new(Curve {
-                            geometry: Box::new(circle),
+                            geometry: AbsoluteCurveGeometry {
+                                geometry: Box::new(circle),
+                            },
                         })
                     }
                     SketchSegment::Line { .. } => {

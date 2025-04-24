@@ -1,6 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
+    geometry::AbsoluteCurveGeometry,
     handle::Handle,
     topology::{
         curve::Curve, face::Face, half_edge::HalfEdge, surface::Surface,
@@ -15,7 +16,9 @@ pub trait TranslateExt {
 impl TranslateExt for Curve {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
-        let geometry = self.geometry.translate(offset);
+        let geometry = AbsoluteCurveGeometry {
+            geometry: self.geometry.geometry.translate(offset),
+        };
         Curve { geometry }
     }
 }

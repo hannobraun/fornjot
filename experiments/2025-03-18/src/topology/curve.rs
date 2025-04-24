@@ -1,11 +1,11 @@
 use fj_math::Line;
 
-use crate::geometry::CurveGeometry;
+use crate::geometry::AbsoluteCurveGeometry;
 
 use super::vertex::Vertex;
 
 pub struct Curve {
-    pub geometry: Box<dyn CurveGeometry>,
+    pub geometry: AbsoluteCurveGeometry,
 }
 
 impl Curve {
@@ -14,7 +14,9 @@ impl Curve {
         let (line, _) = Line::from_points(points);
 
         Self {
-            geometry: Box::new(line),
+            geometry: AbsoluteCurveGeometry {
+                geometry: Box::new(line),
+            },
         }
     }
 }
