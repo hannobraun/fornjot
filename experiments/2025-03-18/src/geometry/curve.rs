@@ -121,7 +121,11 @@ impl CurveGeometry for Line<3> {
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.point_to_line_coords(point)
+        let line = super::Line {
+            direction: self.direction(),
+        };
+
+        line.project_vector(point.coords)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {

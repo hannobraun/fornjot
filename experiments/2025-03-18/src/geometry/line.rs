@@ -12,4 +12,10 @@ impl Line {
     ) -> Vector<3> {
         self.direction * point.into().t
     }
+
+    pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Point<1> {
+        let t = vector.into().scalar_projection_onto(&self.direction)
+            / self.direction.magnitude();
+        Point::from([t])
+    }
 }
