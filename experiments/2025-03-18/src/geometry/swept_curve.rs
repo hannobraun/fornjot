@@ -46,10 +46,11 @@ impl SweptCurve {
         let u = self.curve.project_point(point);
         let v = {
             let origin = self.curve.point_from_local(u);
-            let line =
-                fj_math::Line::from_origin_and_direction(origin, self.path);
+            let line = AnchoredCurve::line_from_origin_and_direction(
+                origin, self.path,
+            );
 
-            line.point_to_line_coords(point)
+            line.project_point(point)
         };
 
         Point::from([u.t, v.t])
