@@ -22,7 +22,10 @@ pub struct AnchoredCurve {
 
 impl AnchoredCurve {
     pub fn line_from_points([a, b]: [Point<3>; 2]) -> Self {
-        let (line, _) = Line::from_points([a, b]);
+        let origin = a;
+        let direction = b - a;
+
+        let line = Line::from_origin_and_direction(origin, direction);
 
         Self {
             origin: line.origin(),
