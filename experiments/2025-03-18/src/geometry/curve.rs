@@ -9,7 +9,7 @@ use fj_math::{Circle, Line, Point, Transform, Vector};
 /// In terms of a line, for example, the anchored version is the full line, an
 /// origin and a direction (a point and a vector). The floating version is just
 /// the direction (a vector).
-pub struct AnchoredCurveGeometry {
+pub struct AnchoredCurve {
     /// # The origin point of the curve, which anchors it in 3D space
     ///
     /// This _must always_ be the origin point of the curve's coordinate system.
@@ -20,7 +20,7 @@ pub struct AnchoredCurveGeometry {
     pub floating: FloatingCurveGeometry,
 }
 
-impl AnchoredCurveGeometry {
+impl AnchoredCurve {
     pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
         self.floating.point_from_local(point)
     }
@@ -48,7 +48,7 @@ impl AnchoredCurveGeometry {
     }
 }
 
-impl Clone for AnchoredCurveGeometry {
+impl Clone for AnchoredCurve {
     fn clone(&self) -> Self {
         Self {
             origin: self.origin,

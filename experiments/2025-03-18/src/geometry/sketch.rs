@@ -11,7 +11,7 @@ use crate::{
     },
 };
 
-use super::AnchoredCurveGeometry;
+use super::AnchoredCurve;
 
 pub struct Sketch {
     segments: Vec<SketchSegment>,
@@ -104,7 +104,7 @@ impl Sketch {
                         };
 
                         Handle::new(Curve {
-                            geometry: AnchoredCurveGeometry {
+                            geometry: AnchoredCurve {
                                 origin: circle.center(),
                                 floating: Box::new(circle),
                             },
