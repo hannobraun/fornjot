@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Vector};
+use fj_math::{Point, Vector};
 
 use super::AnchoredCurve;
 
@@ -15,7 +15,7 @@ impl SweptCurve {
         let origin = origin.into();
         let [u, v] = axes.map(Into::into);
 
-        let line = Line::from_origin_and_direction(origin, u);
+        let line = fj_math::Line::from_origin_and_direction(origin, u);
 
         Self {
             curve: AnchoredCurve {
@@ -46,7 +46,8 @@ impl SweptCurve {
         let u = self.curve.project_point(point);
         let v = {
             let origin = self.curve.point_from_local(u);
-            let line = Line::from_origin_and_direction(origin, self.path);
+            let line =
+                fj_math::Line::from_origin_and_direction(origin, self.path);
             line.point_to_line_coords(point)
         };
 
