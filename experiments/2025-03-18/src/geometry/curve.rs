@@ -143,8 +143,8 @@ impl CurveGeometry for Line<3> {
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
         let line = self;
 
-        let translated = line.transform(&Transform::translation(offset));
-        Box::new(translated)
+        let line = line.transform(&Transform::translation(offset));
+        Box::new(line)
     }
 
     fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> Vec<Point<1>> {
