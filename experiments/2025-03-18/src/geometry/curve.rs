@@ -21,6 +21,15 @@ pub struct AnchoredCurve {
 }
 
 impl AnchoredCurve {
+    pub fn line_from_points(points: [Point<3>; 2]) -> Self {
+        let (line, _) = Line::from_points(points);
+
+        Self {
+            origin: line.origin(),
+            floating: Box::new(line),
+        }
+    }
+
     pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
         self.floating.point_from_local(point)
     }
