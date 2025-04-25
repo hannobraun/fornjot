@@ -28,7 +28,7 @@ impl AnchoredCurve {
         let line = Line::from_origin_and_direction(origin, direction);
 
         Self {
-            origin: line.origin(),
+            origin,
             floating: Box::new(line),
         }
     }
