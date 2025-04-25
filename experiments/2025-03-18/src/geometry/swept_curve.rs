@@ -48,6 +48,7 @@ impl SweptCurve {
             let origin = self.curve.point_from_local(u);
             let line =
                 fj_math::Line::from_origin_and_direction(origin, self.path);
+
             line.point_to_line_coords(point)
         };
 
