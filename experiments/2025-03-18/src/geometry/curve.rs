@@ -1,5 +1,7 @@
 use fj_interop::{CircleApproxParams, Tolerance};
-use fj_math::{Circle, Line, Point, Transform, Vector};
+use fj_math::{Circle, Point, Transform, Vector};
+
+use super::Line;
 
 /// # Curve geometry that has a fixed position (is _anchored_) in space
 ///
@@ -25,7 +27,7 @@ impl AnchoredCurve {
         let origin = a;
         let direction = b - a;
 
-        let line = Line::from_origin_and_direction(origin, direction);
+        let line = Line { direction };
 
         Self {
             origin,
@@ -118,7 +120,7 @@ impl CurveGeometry for Circle<3> {
     }
 }
 
-impl CurveGeometry for (Point<3>, Line<3>) {
+impl CurveGeometry for (Point<3>, Line) {
     fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
@@ -126,19 +128,11 @@ impl CurveGeometry for (Point<3>, Line<3>) {
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
         let (origin, line) = *self;
 
-        let line = super::Line {
-            direction: line.direction(),
-        };
-
         origin + line.vector_from_local_point(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
         let (_, line) = self;
-
-        let line = super::Line {
-            direction: line.direction(),
-        };
 
         line.project_vector(point.coords)
     }
@@ -147,7 +141,6 @@ impl CurveGeometry for (Point<3>, Line<3>) {
         let (origin, line) = *self;
 
         let origin = origin + offset;
-        let line = line.transform(&Transform::translation(offset));
 
         Box::new((origin, line))
     }

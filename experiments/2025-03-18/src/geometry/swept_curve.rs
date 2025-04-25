@@ -1,6 +1,6 @@
 use fj_math::{Point, Vector};
 
-use super::AnchoredCurve;
+use super::{AnchoredCurve, Line};
 
 pub struct SweptCurve {
     pub curve: AnchoredCurve,
@@ -15,7 +15,7 @@ impl SweptCurve {
         let origin = origin.into();
         let [u, v] = axes.map(Into::into);
 
-        let line = fj_math::Line::from_origin_and_direction(origin, u);
+        let line = Line { direction: u };
 
         Self {
             curve: AnchoredCurve {
