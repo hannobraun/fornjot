@@ -17,7 +17,7 @@ pub struct AnchoredCurve {
     pub origin: Point<3>,
 
     /// # The floating part of the curve geometry
-    pub floating: FloatingCurveGeometry,
+    pub floating: FloatingCurve,
 }
 
 impl AnchoredCurve {
@@ -57,13 +57,13 @@ impl Clone for AnchoredCurve {
     }
 }
 
-pub type FloatingCurveGeometry = Box<dyn CurveGeometry>;
+pub type FloatingCurve = Box<dyn CurveGeometry>;
 
 pub trait CurveGeometry {
-    fn clone_curve_geometry(&self) -> FloatingCurveGeometry;
+    fn clone_curve_geometry(&self) -> FloatingCurve;
     fn point_from_local(&self, point: Point<1>) -> Point<3>;
     fn project_point(&self, point: Point<3>) -> Point<1>;
-    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry;
+    fn translate(&self, offset: Vector<3>) -> FloatingCurve;
 
     /// # Approximate the curve
     ///
@@ -84,7 +84,7 @@ pub trait CurveGeometry {
 }
 
 impl CurveGeometry for Circle<3> {
-    fn clone_curve_geometry(&self) -> FloatingCurveGeometry {
+    fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
 
@@ -96,7 +96,7 @@ impl CurveGeometry for Circle<3> {
         self.point_to_circle_coords(point)
     }
 
-    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry {
+    fn translate(&self, offset: Vector<3>) -> FloatingCurve {
         let translated = self.transform(&Transform::translation(offset));
         Box::new(translated)
     }
@@ -113,7 +113,7 @@ impl CurveGeometry for Circle<3> {
 }
 
 impl CurveGeometry for Line<3> {
-    fn clone_curve_geometry(&self) -> FloatingCurveGeometry {
+    fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
 
@@ -125,7 +125,7 @@ impl CurveGeometry for Line<3> {
         self.point_to_line_coords(point)
     }
 
-    fn translate(&self, offset: Vector<3>) -> FloatingCurveGeometry {
+    fn translate(&self, offset: Vector<3>) -> FloatingCurve {
         let translated = self.transform(&Transform::translation(offset));
         Box::new(translated)
     }
