@@ -141,7 +141,9 @@ impl CurveGeometry for Line<3> {
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
-        let translated = self.transform(&Transform::translation(offset));
+        let line = self;
+
+        let translated = line.transform(&Transform::translation(offset));
         Box::new(translated)
     }
 
