@@ -23,16 +23,23 @@ pub struct AnchoredCurve {
 }
 
 impl AnchoredCurve {
-    pub fn line_from_points([a, b]: [Point<3>; 2]) -> Self {
-        let origin = a;
-        let direction = b - a;
-
+    pub fn line_from_origin_and_direction(
+        origin: Point<3>,
+        direction: Vector<3>,
+    ) -> Self {
         let line = Line { direction };
 
         Self {
             origin,
             floating: Box::new((origin, line)),
         }
+    }
+
+    pub fn line_from_points([a, b]: [Point<3>; 2]) -> Self {
+        let origin = a;
+        let direction = b - a;
+
+        Self::line_from_origin_and_direction(origin, direction)
     }
 
     pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
