@@ -132,7 +132,7 @@ impl CurveGeometry for (Point<3>, Line) {
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        let (_, line) = self;
+        let (_, line) = *self;
 
         line.project_vector(point.coords)
     }
