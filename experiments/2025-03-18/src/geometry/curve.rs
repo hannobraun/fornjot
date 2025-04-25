@@ -112,7 +112,12 @@ impl CurveGeometry for Line<3> {
     }
 
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        self.point_from_line_coords(point)
+        let origin = self.origin();
+        let line = super::Line {
+            direction: self.direction(),
+        };
+
+        origin + line.vector_from_local_point(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
