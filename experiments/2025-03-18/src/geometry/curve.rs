@@ -144,6 +144,7 @@ impl CurveGeometry for Line<3> {
         let line = self;
 
         let line = line.transform(&Transform::translation(offset));
+
         Box::new(line)
     }
 
