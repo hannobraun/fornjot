@@ -70,12 +70,6 @@ pub trait CurveGeometry {
     /// Returns a list of points, in curve coordinates, that approximate the
     /// curve. The points must be within the provided boundary. Not outside of
     /// it, and not on it.
-    ///
-    /// ## Implementation Notes
-    ///
-    /// This method should take a tolerance parameter, to define how far the
-    /// approximation is allowed to deviate from the actual curve. So far, this
-    /// has not been necessary.
     fn approximate(
         &self,
         boundary: [Point<1>; 2],
