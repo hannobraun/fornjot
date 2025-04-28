@@ -31,7 +31,7 @@ impl AnchoredCurve {
 
         Self {
             origin,
-            floating: Box::new((origin, line)),
+            floating: Box::new(line),
         }
     }
 
@@ -118,19 +118,19 @@ impl CurveGeometry for Circle {
     }
 }
 
-impl CurveGeometry for (Point<3>, Line) {
+impl CurveGeometry for Line {
     fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
 
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
-        let (_, line) = *self;
+        let line = *self;
 
         line.vector_from_local_point(point)
     }
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
-        let (_, line) = *self;
+        let line = *self;
 
         line.project_vector(vector)
     }
