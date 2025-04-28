@@ -1,5 +1,5 @@
 use fj_interop::{CircleApproxParams, Tolerance};
-use fj_math::{Point, Transform, Vector};
+use fj_math::{Point, Vector};
 
 use super::{Circle, Line};
 
@@ -52,8 +52,7 @@ impl AnchoredCurve {
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
-            origin: Transform::translation(offset)
-                .transform_point(&self.origin),
+            origin: self.origin + offset,
             floating: self.floating.clone_curve_geometry(),
         }
     }
