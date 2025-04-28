@@ -92,7 +92,7 @@ impl Sketch {
 
                         // This only works if `surface` is a plane, which
                         // checks out for now.
-                        let circle = {
+                        let (origin, circle) = {
                             let a = start;
                             let b = center + (a - center).to_perpendicular();
 
@@ -100,12 +100,12 @@ impl Sketch {
                                 surface.geometry.point_from_local(point)
                             });
 
-                            Circle::new(center, a - center, b - center)
+                            (a, Circle::new(center, a - center, b - center))
                         };
 
                         Handle::new(Curve {
                             geometry: AnchoredCurve {
-                                origin: circle.center(),
+                                origin,
                                 floating: Box::new(circle),
                             },
                         })
