@@ -101,11 +101,10 @@ impl Sketch {
                             });
 
                             let origin = a;
+                            let circle =
+                                Circle::new(center, a - center, b - center);
 
-                            (
-                                origin,
-                                Circle::new(center, a - center, b - center),
-                            )
+                            (origin, circle)
                         };
 
                         Handle::new(Curve {
