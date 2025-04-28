@@ -16,7 +16,7 @@ impl CircleApproxParams {
         circle: &Circle<D>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let radius = circle.a().magnitude();
+        let radius = circle.radius();
 
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
