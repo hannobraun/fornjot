@@ -1,6 +1,6 @@
 use std::iter;
 
-use fj_math::{Circle, Point, Scalar, Sign};
+use fj_math::{Point, Scalar, Sign};
 
 use crate::Tolerance;
 
@@ -12,12 +12,10 @@ pub struct CircleApproxParams {
 
 impl CircleApproxParams {
     /// # Compute the approximation parameters for a given circle and tolerance
-    pub fn new<const D: usize>(
-        circle: &Circle<D>,
+    pub fn new(
+        radius: impl Into<Scalar>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let radius = circle.radius();
-
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
                 / (Scalar::ONE - (tolerance.into().inner() / radius)).acos(),

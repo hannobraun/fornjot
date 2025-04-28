@@ -15,7 +15,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         point_curve: Point<1>,
         tolerance: Tolerance,
     ) -> LineSegment<D> {
-        let params = CircleApproxParams::new(self, tolerance);
+        let params = CircleApproxParams::new(self.radius(), tolerance);
 
         // The approximation parameters have an increment, in curve coordinates,
         // that determines the distance between points on the polyline. Let's
@@ -53,7 +53,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         boundary: CurveBoundary<Point<1>>,
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let params = CircleApproxParams::new(self, tolerance);
+        let params = CircleApproxParams::new(self.radius(), tolerance);
         params.approx_circle(boundary.inner).collect()
     }
 }
@@ -83,7 +83,7 @@ mod tests {
             expected_num_vertices: impl Into<Scalar>,
         ) {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::new(&circle, tolerance);
+            let params = CircleApproxParams::new(circle.radius(), tolerance);
 
             let expected_increment = Scalar::TAU / expected_num_vertices;
             assert_eq!(params.increment(), expected_increment);
@@ -127,7 +127,7 @@ mod tests {
             let tolerance = 0.375;
 
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::new(&circle, tolerance);
+            let params = CircleApproxParams::new(circle.radius(), tolerance);
 
             let points = params
                 .approx_circle(boundary.into().inner)
