@@ -119,6 +119,7 @@ impl CurveGeometry for Circle<3> {
         let circle = self;
 
         let circle = circle.transform(&Transform::translation(offset));
+
         Box::new(circle)
     }
 
