@@ -98,29 +98,30 @@ pub trait CurveGeometry {
     ) -> Vec<Point<1>>;
 }
 
-impl CurveGeometry for Circle<3> {
+impl CurveGeometry for (Point<3>, Circle<3>) {
     fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
 
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        let circle = self;
+        let (_, circle) = self;
 
         circle.point_from_circle_coords(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        let circle = self;
+        let (_, circle) = self;
 
         circle.point_to_circle_coords(point)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
-        let circle = *self;
+        let (origin, circle) = *self;
 
+        let origin = origin + offset;
         let circle = circle.transform(&Transform::translation(offset));
 
-        Box::new(circle)
+        Box::new((origin, circle))
     }
 
     fn approximate(
@@ -128,7 +129,7 @@ impl CurveGeometry for Circle<3> {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let circle = self;
+        let (_, circle) = self;
 
         CircleApproxParams::new(circle, tolerance)
             .approx_circle(boundary)
