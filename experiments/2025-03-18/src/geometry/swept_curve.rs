@@ -15,12 +15,12 @@ impl SweptCurve {
         let origin = origin.into();
         let [u, v] = axes.map(Into::into);
 
-        let line = Line { direction: u };
+        let u = Line { direction: u };
 
         Self {
             curve: AnchoredCurve {
                 origin,
-                floating: Box::new(line),
+                floating: Box::new(u),
             },
             path: v,
         }
