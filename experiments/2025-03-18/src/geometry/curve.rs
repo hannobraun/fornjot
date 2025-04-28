@@ -47,7 +47,7 @@ impl AnchoredCurve {
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.floating.project_point(point)
+        self.floating.project_point(point - self.origin)
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
@@ -83,7 +83,7 @@ pub type FloatingCurve = Box<dyn CurveGeometry>;
 pub trait CurveGeometry {
     fn clone_curve_geometry(&self) -> FloatingCurve;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
-    fn project_point(&self, point: Point<3>) -> Point<1>;
+    fn project_point(&self, point: Vector<3>) -> Point<1>;
     fn translate(&self, offset: Vector<3>) -> FloatingCurve;
 
     /// # Approximate the curve
@@ -109,10 +109,10 @@ impl CurveGeometry for (Point<3>, Circle) {
         circle.vector_from_local_point(point)
     }
 
-    fn project_point(&self, point: Point<3>) -> Point<1> {
-        let (origin, circle) = *self;
+    fn project_point(&self, point: Vector<3>) -> Point<1> {
+        let (_, circle) = *self;
 
-        circle.project_vector(point - origin)
+        circle.project_vector(point)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
@@ -147,10 +147,10 @@ impl CurveGeometry for (Point<3>, Line) {
         line.vector_from_local_point(point)
     }
 
-    fn project_point(&self, point: Point<3>) -> Point<1> {
-        let (origin, line) = *self;
+    fn project_point(&self, point: Vector<3>) -> Point<1> {
+        let (_, line) = *self;
 
-        line.project_vector(point - origin)
+        line.project_vector(point)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
