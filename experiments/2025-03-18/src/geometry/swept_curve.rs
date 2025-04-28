@@ -4,7 +4,7 @@ use super::{AnchoredCurve, Line};
 
 pub struct SweptCurve {
     pub u: AnchoredCurve,
-    pub path: Vector<3>,
+    pub v: Vector<3>,
 }
 
 impl SweptCurve {
@@ -22,7 +22,7 @@ impl SweptCurve {
                 origin,
                 floating: Box::new(u),
             },
-            path: v,
+            v,
         }
     }
 
@@ -32,7 +32,7 @@ impl SweptCurve {
     }
 
     pub fn v(&self) -> Vector<3> {
-        self.path
+        self.v
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
@@ -46,9 +46,8 @@ impl SweptCurve {
         let u = self.u.project_point(point);
         let v = {
             let origin = self.u.point_from_local(u);
-            let line = AnchoredCurve::line_from_origin_and_direction(
-                origin, self.path,
-            );
+            let line =
+                AnchoredCurve::line_from_origin_and_direction(origin, self.v);
 
             line.project_point(point)
         };
@@ -59,14 +58,14 @@ impl SweptCurve {
     pub fn flip(&self) -> Self {
         Self {
             u: self.u.clone(),
-            path: -self.path,
+            v: -self.v,
         }
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             u: self.u.translate(offset),
-            path: self.path,
+            v: self.v,
         }
     }
 }
