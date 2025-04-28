@@ -112,9 +112,7 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let circle = self;
-
-        CircleApproxParams::new(circle.radius(), tolerance)
+        CircleApproxParams::new(self.radius(), tolerance)
             .approx_circle(boundary)
             .collect()
     }
