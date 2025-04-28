@@ -124,9 +124,7 @@ impl CurveGeometry for Line {
     }
 
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
-        let line = self;
-
-        line.vector_from_local_point(point)
+        self.vector_from_local_point(point)
     }
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
