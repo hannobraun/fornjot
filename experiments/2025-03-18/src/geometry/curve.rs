@@ -104,15 +104,21 @@ impl CurveGeometry for Circle<3> {
     }
 
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        self.point_from_circle_coords(point)
+        let circle = self;
+
+        circle.point_from_circle_coords(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.point_to_circle_coords(point)
+        let circle = self;
+
+        circle.point_to_circle_coords(point)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
-        let translated = self.transform(&Transform::translation(offset));
+        let circle = self;
+
+        let translated = circle.transform(&Transform::translation(offset));
         Box::new(translated)
     }
 
