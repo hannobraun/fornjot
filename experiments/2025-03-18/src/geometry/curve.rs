@@ -104,7 +104,7 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     }
 
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        let (_, circle) = self;
+        let (_, circle) = *self;
 
         circle.point_from_circle_coords(point)
     }
