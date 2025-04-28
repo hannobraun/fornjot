@@ -115,9 +115,14 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        let (_, circle) = *self;
+        let (origin, circle) = *self;
 
-        circle.point_to_circle_coords(point)
+        let circle = Circle {
+            a: circle.a(),
+            b: circle.b(),
+        };
+
+        circle.project_vector(point - origin)
     }
 
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
