@@ -31,7 +31,7 @@ impl SweptCurve {
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.u.point_from_local(Point::from([u])) + self.v * v
+        self.u.point_from_local([u]) + self.v * v
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {

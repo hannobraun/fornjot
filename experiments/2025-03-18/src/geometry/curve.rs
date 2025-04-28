@@ -42,8 +42,8 @@ impl AnchoredCurve {
         Self::line_from_origin_and_direction(origin, direction)
     }
 
-    pub fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        self.origin + self.floating.vector_from_local_point(point)
+    pub fn point_from_local(&self, point: impl Into<Point<1>>) -> Point<3> {
+        self.origin + self.floating.vector_from_local_point(point.into())
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
