@@ -31,13 +31,9 @@ impl SweptCurve {
         Self::plane_from_coord_system(a, [b - a, c - a])
     }
 
-    pub fn v(&self) -> Vector<3> {
-        self.v
-    }
-
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.u.point_from_local(Point::from([u])) + self.v() * v
+        self.u.point_from_local(Point::from([u])) + self.v * v
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
