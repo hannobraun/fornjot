@@ -41,12 +41,12 @@ impl SweptCurve {
         let u = self.u.project_point(point);
         let v = {
             let origin = self.u.point_from_local(u);
-            let line = AnchoredCurve {
+            let v = AnchoredCurve {
                 origin,
                 floating: self.v.clone_curve_geometry(),
             };
 
-            line.project_point(point)
+            v.project_point(point)
         };
 
         Point::from([u.t, v.t])
