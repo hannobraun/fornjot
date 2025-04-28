@@ -128,9 +128,7 @@ impl CurveGeometry for Line {
     }
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
-        let line = self;
-
-        line.project_vector(vector)
+        self.project_vector(vector)
     }
 
     fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> Vec<Point<1>> {
