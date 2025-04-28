@@ -1,7 +1,7 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Point, Transform, Vector};
 
-use super::Line;
+use super::{Circle, Line};
 
 /// # Curve geometry that has a fixed position (is _anchored_) in space
 ///
@@ -104,9 +104,14 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     }
 
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
-        let (_, circle) = *self;
+        let (offset, circle) = *self;
 
-        circle.point_from_circle_coords(point)
+        let circle = Circle {
+            a: circle.a(),
+            b: circle.b(),
+        };
+
+        offset + circle.vector_from_local_point(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
