@@ -6,6 +6,10 @@ pub struct Circle {
 }
 
 impl Circle {
+    pub fn radius(&self) -> Scalar {
+        self.a.magnitude()
+    }
+
     pub fn vector_from_local_point(
         &self,
         point: impl Into<Point<1>>,

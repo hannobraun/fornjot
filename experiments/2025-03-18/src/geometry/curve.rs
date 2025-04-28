@@ -141,6 +141,11 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     ) -> Vec<Point<1>> {
         let (_, circle) = self;
 
+        let circle = Circle {
+            a: circle.a(),
+            b: circle.b(),
+        };
+
         CircleApproxParams::new(circle.radius(), tolerance)
             .approx_circle(boundary)
             .collect()
