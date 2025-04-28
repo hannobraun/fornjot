@@ -104,9 +104,7 @@ impl CurveGeometry for Circle {
     }
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
-        let circle = self;
-
-        circle.project_vector(vector)
+        self.project_vector(vector)
     }
 
     fn approximate(
