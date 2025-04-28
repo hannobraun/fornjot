@@ -115,7 +115,7 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
-        let (_, circle) = self;
+        let (_, circle) = *self;
 
         circle.point_to_circle_coords(point)
     }
