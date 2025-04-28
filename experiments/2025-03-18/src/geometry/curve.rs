@@ -118,8 +118,8 @@ impl CurveGeometry for Circle<3> {
     fn translate(&self, offset: Vector<3>) -> FloatingCurve {
         let circle = self;
 
-        let translated = circle.transform(&Transform::translation(offset));
-        Box::new(translated)
+        let circle = circle.transform(&Transform::translation(offset));
+        Box::new(circle)
     }
 
     fn approximate(
