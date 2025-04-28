@@ -98,7 +98,7 @@ pub trait CurveGeometry {
     ) -> Vec<Point<1>>;
 }
 
-impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
+impl CurveGeometry for (Point<3>, Circle) {
     fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
@@ -106,21 +106,11 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     fn point_from_local(&self, point: Point<1>) -> Point<3> {
         let (offset, circle) = *self;
 
-        let circle = Circle {
-            a: circle.a(),
-            b: circle.b(),
-        };
-
         offset + circle.vector_from_local_point(point)
     }
 
     fn project_point(&self, point: Point<3>) -> Point<1> {
         let (origin, circle) = *self;
-
-        let circle = Circle {
-            a: circle.a(),
-            b: circle.b(),
-        };
 
         circle.project_vector(point - origin)
     }
@@ -129,7 +119,6 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
         let (origin, circle) = *self;
 
         let origin = origin + offset;
-        let circle = circle.transform(&Transform::translation(offset));
 
         Box::new((origin, circle))
     }
@@ -140,11 +129,6 @@ impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         let (_, circle) = self;
-
-        let circle = Circle {
-            a: circle.a(),
-            b: circle.b(),
-        };
 
         CircleApproxParams::new(circle.radius(), tolerance)
             .approx_circle(boundary)

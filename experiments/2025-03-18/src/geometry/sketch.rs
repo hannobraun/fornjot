@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use fj_math::{Circle, Point, Scalar};
+use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
@@ -11,7 +11,7 @@ use crate::{
     },
 };
 
-use super::AnchoredCurve;
+use super::{AnchoredCurve, Circle};
 
 pub struct Sketch {
     segments: Vec<SketchSegment>,
@@ -101,8 +101,10 @@ impl Sketch {
                             });
 
                             let origin = a;
-                            let circle =
-                                Circle::new(center, a - center, b - center);
+                            let circle = Circle {
+                                a: a - center,
+                                b: b - center,
+                            };
 
                             (origin, circle)
                         };
