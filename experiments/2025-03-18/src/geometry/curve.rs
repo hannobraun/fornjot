@@ -100,13 +100,13 @@ impl CurveGeometry for Circle {
     }
 
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
-        let circle = *self;
+        let circle = self;
 
         circle.vector_from_local_point(point)
     }
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
-        let circle = *self;
+        let circle = self;
 
         circle.project_vector(vector)
     }
