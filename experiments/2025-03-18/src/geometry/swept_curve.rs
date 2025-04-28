@@ -13,16 +13,14 @@ impl SweptCurve {
         axes: [impl Into<Vector<3>>; 2],
     ) -> Self {
         let origin = origin.into();
-        let [u, v] = axes.map(Into::into);
-
-        let u = Line { direction: u };
+        let [u, v] = axes.map(Into::into).map(|direction| Line { direction });
 
         Self {
             u: AnchoredCurve {
                 origin,
                 floating: Box::new(u),
             },
-            v,
+            v: v.direction,
         }
     }
 
