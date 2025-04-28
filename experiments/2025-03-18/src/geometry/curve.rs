@@ -1,5 +1,5 @@
 use fj_interop::{CircleApproxParams, Tolerance};
-use fj_math::{Circle, Point, Transform, Vector};
+use fj_math::{Point, Transform, Vector};
 
 use super::Line;
 
@@ -98,7 +98,7 @@ pub trait CurveGeometry {
     ) -> Vec<Point<1>>;
 }
 
-impl CurveGeometry for (Point<3>, Circle<3>) {
+impl CurveGeometry for (Point<3>, fj_math::Circle<3>) {
     fn clone_curve_geometry(&self) -> FloatingCurve {
         Box::new(*self)
     }
