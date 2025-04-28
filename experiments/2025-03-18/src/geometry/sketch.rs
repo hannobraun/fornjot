@@ -112,7 +112,7 @@ impl Sketch {
                         Handle::new(Curve {
                             geometry: AnchoredCurve {
                                 origin,
-                                floating: Box::new((origin, circle)),
+                                floating: Box::new(circle),
                             },
                         })
                     }
