@@ -100,7 +100,12 @@ impl Sketch {
                                 surface.geometry.point_from_local(point)
                             });
 
-                            (a, Circle::new(center, a - center, b - center))
+                            let origin = a;
+
+                            (
+                                origin,
+                                Circle::new(center, a - center, b - center),
+                            )
                         };
 
                         Handle::new(Curve {
