@@ -40,9 +40,8 @@ impl SweptCurve {
 
         let u = self.u.project_point(point);
         let v = {
-            let origin = self.u.point_from_local(u);
             let v = AnchoredCurve {
-                origin,
+                origin: self.u.point_from_local(u),
                 floating: self.v.clone_curve_geometry(),
             };
 
