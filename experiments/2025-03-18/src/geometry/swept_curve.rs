@@ -1,10 +1,10 @@
 use fj_math::{Point, Vector};
 
-use super::{AnchoredCurve, Line};
+use super::{AnchoredCurve, Line, curve::FloatingCurve};
 
 pub struct SweptCurve {
     pub u: AnchoredCurve,
-    pub v: Vector<3>,
+    pub v: FloatingCurve,
 }
 
 impl SweptCurve {
@@ -20,7 +20,7 @@ impl SweptCurve {
                 origin,
                 floating: Box::new(u),
             },
-            v: v.direction,
+            v: Box::new(v),
         }
     }
 
@@ -31,7 +31,8 @@ impl SweptCurve {
 
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
-        self.u.point_from_local([u]) + self.v * v
+        self.u.point_from_local([u])
+            + self.v.vector_from_local_point(Point::from([v]))
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
@@ -40,8 +41,10 @@ impl SweptCurve {
         let u = self.u.project_point(point);
         let v = {
             let origin = self.u.point_from_local(u);
-            let line =
-                AnchoredCurve::line_from_origin_and_direction(origin, self.v);
+            let line = AnchoredCurve {
+                origin,
+                floating: self.v.clone_curve_geometry(),
+            };
 
             line.project_point(point)
         };
@@ -52,14 +55,14 @@ impl SweptCurve {
     pub fn flip(&self) -> Self {
         Self {
             u: self.u.clone(),
-            v: -self.v,
+            v: self.v.flip(),
         }
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             u: self.u.translate(offset),
-            v: self.v,
+            v: self.v.clone_curve_geometry(),
         }
     }
 }

@@ -81,6 +81,7 @@ pub trait CurveGeometry {
     fn clone_curve_geometry(&self) -> FloatingCurve;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
+    fn flip(&self) -> FloatingCurve;
 
     /// # Approximate the curve
     ///
@@ -107,6 +108,13 @@ impl CurveGeometry for Circle {
         self.project_vector(vector)
     }
 
+    fn flip(&self) -> FloatingCurve {
+        Box::new(Circle {
+            a: self.a,
+            b: -self.b,
+        })
+    }
+
     fn approximate(
         &self,
         boundary: [Point<1>; 2],
@@ -129,6 +137,12 @@ impl CurveGeometry for Line {
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
         self.project_vector(vector)
+    }
+
+    fn flip(&self) -> FloatingCurve {
+        Box::new(Line {
+            direction: -self.direction,
+        })
     }
 
     fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> Vec<Point<1>> {
