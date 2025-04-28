@@ -1,5 +1,6 @@
 use fj_math::{Point, Scalar, Vector};
 
+#[derive(Clone, Copy)]
 pub struct Circle {
     pub a: Vector<3>,
     pub b: Vector<3>,
