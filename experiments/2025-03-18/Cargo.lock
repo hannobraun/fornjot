@@ -508,6 +508,7 @@ dependencies = [
  "geo",
  "itertools",
  "spade",
+ "wayland-backend",
 ]
 
 [[package]]
