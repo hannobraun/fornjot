@@ -24,10 +24,3 @@ path = "../../crates/fj-viewer"
 [dependencies.geo]
 version = "*"
 default-features = false
-
-# Pin transitive dependency due to this bug:
-# https://github.com/Smithay/wayland-rs/issues/809
-#
-# Once that is addressed, this whole dependency can be removed.
-[dependencies.wayland-backend]
-version = "=0.3.8"
