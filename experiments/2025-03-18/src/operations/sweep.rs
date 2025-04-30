@@ -25,8 +25,8 @@ impl SweepExt for Handle<Face> {
     fn sweep(self, curve: Line) -> Solid {
         let bottom = self;
         let top = {
-            let path = curve.direction;
-            Handle::new(bottom.flip().translate(path))
+            let offset = curve.direction;
+            Handle::new(bottom.flip().translate(offset))
         };
 
         top.connect(bottom)
