@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 use crate::{
-    geometry::SweptCurve,
+    geometry::{FloatingCurveSegment, SweptCurve},
     handle::Handle,
     topology::{
         curve::Curve,
@@ -32,11 +32,11 @@ pub trait ConnectExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn connect(self, other: Self) -> Solid;
+    fn connect(self, other: Self, with: FloatingCurveSegment) -> Solid;
 }
 
 impl ConnectExt for Handle<Face> {
-    fn connect(self, other: Self) -> Solid {
+    fn connect(self, other: Self, _: FloatingCurveSegment) -> Solid {
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
         // following code.
