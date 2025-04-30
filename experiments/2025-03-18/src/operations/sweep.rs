@@ -18,14 +18,14 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, curve: Line) -> Solid;
+    fn sweep(self, along: Line) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, curve: Line) -> Solid {
+    fn sweep(self, along: Line) -> Solid {
         let bottom = self;
         let top = {
-            let offset = curve.direction;
+            let offset = along.direction;
             Handle::new(bottom.flip().translate(offset))
         };
 
