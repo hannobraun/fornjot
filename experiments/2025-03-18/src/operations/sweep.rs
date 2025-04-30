@@ -23,10 +23,11 @@ pub trait SweepExt {
 
 impl SweepExt for Handle<Face> {
     fn sweep(self, curve: Line) -> Solid {
-        let path = curve.direction;
-
         let bottom = self;
-        let top = Handle::new(bottom.flip().translate(path));
+        let top = {
+            let path = curve.direction;
+            Handle::new(bottom.flip().translate(path))
+        };
 
         top.connect(bottom)
     }
