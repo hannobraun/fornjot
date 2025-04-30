@@ -1,6 +1,5 @@
-use fj_math::Vector;
-
 use crate::{
+    geometry::Line,
     handle::Handle,
     topology::{face::Face, solid::Solid},
 };
@@ -19,11 +18,13 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, path: impl Into<Vector<3>>) -> Solid;
+    fn sweep(self, path: Line) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, path: impl Into<Vector<3>>) -> Solid {
+    fn sweep(self, path: Line) -> Solid {
+        let path = path.direction;
+
         let bottom = self;
         let top = Handle::new(bottom.flip().translate(path));
 
