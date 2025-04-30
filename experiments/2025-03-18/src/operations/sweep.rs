@@ -1,3 +1,5 @@
+use fj_math::Point;
+
 use crate::{
     geometry::Line,
     handle::Handle,
@@ -18,14 +20,17 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, along: Line) -> Solid;
+    fn sweep(self, along: Line, endpoints: [impl Into<Point<1>>; 2]) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, along: Line) -> Solid {
+    fn sweep(self, along: Line, endpoints: [impl Into<Point<1>>; 2]) -> Solid {
+        let [from, to] =
+            endpoints.map(|point| along.vector_from_local_point(point));
+
         let bottom = self;
         let top = {
-            let offset = along.direction;
+            let offset = to - from;
             Handle::new(bottom.flip().translate(offset))
         };
 
