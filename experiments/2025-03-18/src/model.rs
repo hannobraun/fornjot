@@ -45,9 +45,9 @@ pub fn model(viewer: &Viewer) -> TriMesh {
     viewer.display(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
-        Line {
+        Box::new(Line {
             direction: Vector::from([0., 0., -2.]),
-        },
+        }),
         [[0.], [1.]],
     );
     viewer.display(solid.to_tri_mesh(tolerance));

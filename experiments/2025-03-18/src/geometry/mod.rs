@@ -7,6 +7,11 @@ mod swept_curve;
 mod tri_mesh;
 
 pub use self::{
-    circle::Circle, curve::AnchoredCurve, line::Line, sketch::Sketch,
-    surface::SurfaceGeometry, swept_curve::SweptCurve, tri_mesh::ToTriMesh,
+    circle::Circle,
+    curve::{AnchoredCurve, FloatingCurve},
+    line::Line,
+    sketch::Sketch,
+    surface::SurfaceGeometry,
+    swept_curve::SweptCurve,
+    tri_mesh::ToTriMesh,
 };
