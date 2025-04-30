@@ -25,8 +25,9 @@ pub trait SweepExt {
 
 impl SweepExt for Handle<Face> {
     fn sweep(self, along: Line, endpoints: [impl Into<Point<1>>; 2]) -> Solid {
-        let [from, to] =
-            endpoints.map(|point| along.vector_from_local_point(point));
+        let [from, to] = endpoints
+            .map(Into::into)
+            .map(|point| along.vector_from_local_point(point));
 
         let bottom = self;
         let top = {
