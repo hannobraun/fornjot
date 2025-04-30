@@ -36,7 +36,7 @@ pub trait ConnectExt {
 }
 
 impl ConnectExt for Handle<Face> {
-    fn connect(self, other: Self, _: FloatingCurveSegment) -> Solid {
+    fn connect(self, other: Self, with: FloatingCurveSegment) -> Solid {
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
         // following code.
@@ -49,7 +49,7 @@ impl ConnectExt for Handle<Face> {
             "Can only connect faces that have the same number of vertices.",
         );
 
-        let connecting_faces = build_connecting_faces([&bottom, &top]);
+        let connecting_faces = build_connecting_faces([&bottom, &top], with);
 
         // This is doing some checks, to make sure that the faces have been
         // connected correctly. There are other ways to do this. For now, this
@@ -75,7 +75,10 @@ impl ConnectExt for Handle<Face> {
     }
 }
 
-fn build_connecting_faces([bottom, top]: [&Face; 2]) -> Vec<Handle<Face>> {
+fn build_connecting_faces(
+    [bottom, top]: [&Face; 2],
+    _: FloatingCurveSegment,
+) -> Vec<Handle<Face>> {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
 
