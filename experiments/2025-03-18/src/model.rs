@@ -1,5 +1,5 @@
 use fj_interop::{Tolerance, TriMesh};
-use fj_math::Vector;
+use fj_math::{Point, Vector};
 use fj_viewer::Viewer;
 
 use crate::{
@@ -48,7 +48,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         Box::new(Line {
             direction: Vector::from([0., 0., -2.]),
         }),
-        [[0.], [1.]],
+        [[0.], [1.]].map(Point::from),
     );
     viewer.display(solid.to_tri_mesh(tolerance));
 
