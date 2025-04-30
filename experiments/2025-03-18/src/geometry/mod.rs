@@ -8,7 +8,7 @@ mod tri_mesh;
 
 pub use self::{
     circle::Circle,
-    curve::{AnchoredCurve, FloatingCurveSegment},
+    curve::{AnchoredCurve, FloatingCurve, FloatingCurveSegment},
     line::Line,
     sketch::Sketch,
     surface::SurfaceGeometry,

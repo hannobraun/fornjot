@@ -34,6 +34,6 @@ impl SweepExt for Handle<Face> {
             Handle::new(bottom.flip().translate(offset))
         };
 
-        top.connect(bottom, along)
+        top.connect(bottom, along.curve)
     }
 }
