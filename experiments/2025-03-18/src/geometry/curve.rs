@@ -77,11 +77,6 @@ impl Clone for AnchoredCurve {
 
 pub type FloatingCurve = Box<dyn CurveGeometry>;
 
-pub struct FloatingCurveSegment {
-    pub curve: FloatingCurve,
-    pub endpoints: [Point<1>; 2],
-}
-
 pub trait CurveGeometry {
     fn clone_curve_geometry(&self) -> FloatingCurve;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;

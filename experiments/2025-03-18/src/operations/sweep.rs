@@ -1,5 +1,7 @@
+use fj_math::Point;
+
 use crate::{
-    geometry::FloatingCurveSegment,
+    geometry::FloatingCurve,
     handle::Handle,
     topology::{face::Face, solid::Solid},
 };
@@ -18,15 +20,14 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, along: FloatingCurveSegment) -> Solid;
+    fn sweep(self, along: FloatingCurve, to: impl Into<Point<1>>) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, along: FloatingCurveSegment) -> Solid {
-        let [from, to] = along
-            .endpoints
+    fn sweep(self, along: FloatingCurve, to: impl Into<Point<1>>) -> Solid {
+        let [from, to] = [Point::from([0.]), to.into()]
             .map(Into::into)
-            .map(|point| along.curve.vector_from_local_point(point));
+            .map(|point| along.vector_from_local_point(point));
 
         let bottom = self;
         let top = {
@@ -34,6 +35,6 @@ impl SweepExt for Handle<Face> {
             Handle::new(bottom.flip().translate(offset))
         };
 
-        top.connect(bottom, along.curve)
+        top.connect(bottom, along)
     }
 }
