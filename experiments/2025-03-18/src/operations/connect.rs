@@ -1,7 +1,7 @@
 use itertools::Itertools;
 
 use crate::{
-    geometry::{FloatingCurve, SweptCurve},
+    geometry::{AnchoredCurve, FloatingCurve, SweptCurve},
     handle::Handle,
     topology::{
         curve::Curve,
@@ -77,14 +77,26 @@ impl ConnectExt for Handle<Face> {
 
 fn build_connecting_faces(
     [bottom, top]: [&Face; 2],
-    _: FloatingCurve,
+    connecting_curve: FloatingCurve,
 ) -> Vec<Handle<Face>> {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
 
     let connecting_curves = bottom_vertices
         .zip(top_vertices)
-        .map(|(a, b)| Handle::new(Curve::line_from_vertices([a, b])))
+        .map(|(a, b)| {
+            let curve = Curve {
+                geometry: AnchoredCurve {
+                    origin: a.point,
+                    floating: connecting_curve.clone_curve_geometry(),
+                },
+            };
+
+            // We should check here that `b` is not too far from the curve.
+            let _ = b;
+
+            Handle::new(curve)
+        })
         .collect::<Vec<_>>();
 
     connecting_curves
