@@ -78,10 +78,10 @@ impl Clone for AnchoredCurve {
 pub type FloatingCurve = Box<dyn CurveGeometry>;
 
 pub trait CurveGeometry {
-    fn clone_curve_geometry(&self) -> FloatingCurve;
+    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
-    fn flip(&self) -> FloatingCurve;
+    fn flip(&self) -> Box<dyn CurveGeometry>;
 
     /// # Approximate the curve
     ///
@@ -96,7 +96,7 @@ pub trait CurveGeometry {
 }
 
 impl CurveGeometry for Circle {
-    fn clone_curve_geometry(&self) -> FloatingCurve {
+    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
         Box::new(*self)
     }
 
@@ -108,7 +108,7 @@ impl CurveGeometry for Circle {
         self.project_vector(vector)
     }
 
-    fn flip(&self) -> FloatingCurve {
+    fn flip(&self) -> Box<dyn CurveGeometry> {
         Box::new(Circle {
             a: self.a,
             b: -self.b,
@@ -127,7 +127,7 @@ impl CurveGeometry for Circle {
 }
 
 impl CurveGeometry for Line {
-    fn clone_curve_geometry(&self) -> FloatingCurve {
+    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
         Box::new(*self)
     }
 
@@ -139,7 +139,7 @@ impl CurveGeometry for Line {
         self.project_vector(vector)
     }
 
-    fn flip(&self) -> FloatingCurve {
+    fn flip(&self) -> Box<dyn CurveGeometry> {
         Box::new(Line {
             direction: -self.direction,
         })
