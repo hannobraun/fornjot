@@ -50,9 +50,7 @@ impl SweptCurve {
     pub fn flip(&self) -> Self {
         Self {
             u: self.u.clone(),
-            v: FloatingCurve {
-                inner: self.v.inner.flip(),
-            },
+            v: self.v.flip(),
         }
     }
 

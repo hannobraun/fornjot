@@ -90,6 +90,12 @@ impl FloatingCurve {
     ) -> Vector<3> {
         self.inner.vector_from_local_point(point.into())
     }
+
+    pub fn flip(&self) -> Self {
+        Self {
+            inner: self.inner.flip(),
+        }
+    }
 }
 
 impl Clone for FloatingCurve {
