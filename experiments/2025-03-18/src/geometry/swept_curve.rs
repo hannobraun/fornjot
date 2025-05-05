@@ -17,7 +17,7 @@ impl SweptCurve {
 
         Self {
             u: AnchoredCurve::from_origin_and_curve(origin, u),
-            v: FloatingCurve { inner: Box::new(v) },
+            v: FloatingCurve::new(v),
         }
     }
 

@@ -45,11 +45,9 @@ pub fn model(viewer: &Viewer) -> TriMesh {
     viewer.display(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
-        FloatingCurve {
-            inner: Box::new(Line {
-                direction: Vector::from([0., 0., -2.]),
-            }),
-        },
+        FloatingCurve::new(Line {
+            direction: Vector::from([0., 0., -2.]),
+        }),
         [1.],
     );
     viewer.display(solid.to_tri_mesh(tolerance));

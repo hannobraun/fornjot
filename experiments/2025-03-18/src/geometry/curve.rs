@@ -29,9 +29,7 @@ impl AnchoredCurve {
     ) -> Self {
         Self {
             origin,
-            floating: FloatingCurve {
-                inner: Box::new(curve),
-            },
+            floating: FloatingCurve::new(curve),
         }
     }
 
@@ -90,6 +88,13 @@ impl Clone for AnchoredCurve {
 
 pub struct FloatingCurve {
     pub inner: Box<dyn CurveGeometry>,
+}
+impl FloatingCurve {
+    pub fn new(curve: impl CurveGeometry + 'static) -> Self {
+        Self {
+            inner: Box::new(curve),
+        }
+    }
 }
 
 pub trait CurveGeometry {
