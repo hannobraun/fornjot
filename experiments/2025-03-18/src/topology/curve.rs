@@ -2,6 +2,7 @@ use crate::geometry::AnchoredCurve;
 
 use super::vertex::Vertex;
 
+#[derive(Debug)]
 pub struct Curve {
     pub geometry: AnchoredCurve,
 }

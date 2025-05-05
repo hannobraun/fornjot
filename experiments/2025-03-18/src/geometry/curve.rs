@@ -13,7 +13,7 @@ use super::{Circle, Line};
 /// In terms of a line, for example, the anchored version is the full line, an
 /// origin and a direction (a point and a vector). The floating version is just
 /// the direction (a vector).
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct AnchoredCurve {
     /// # The origin point of the curve, which anchors it in 3D space
     ///

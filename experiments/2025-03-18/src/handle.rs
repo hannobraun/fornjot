@@ -51,7 +51,10 @@ impl<T> PartialOrd for Handle<T> {
     }
 }
 
-impl<T> fmt::Debug for Handle<T> {
+impl<T> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("Handle")
             .field("inner", &Rc::as_ptr(&self.inner))
