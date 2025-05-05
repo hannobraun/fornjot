@@ -88,7 +88,9 @@ fn build_connecting_faces(
             let curve = Curve {
                 geometry: AnchoredCurve {
                     origin: a.point,
-                    floating: connecting_curve.clone_curve_geometry(),
+                    floating: FloatingCurve {
+                        inner: connecting_curve.inner.clone_curve_geometry(),
+                    },
                 },
             };
 

@@ -17,7 +17,7 @@ impl SweptCurve {
 
         Self {
             u: AnchoredCurve::from_origin_and_curve(origin, u),
-            v: Box::new(v),
+            v: FloatingCurve { inner: Box::new(v) },
         }
     }
 
@@ -29,7 +29,7 @@ impl SweptCurve {
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
         self.u.point_from_local([u])
-            + self.v.vector_from_local_point(Point::from([v]))
+            + self.v.inner.vector_from_local_point(Point::from([v]))
     }
 
     pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
@@ -39,7 +39,9 @@ impl SweptCurve {
         let v = {
             let v = AnchoredCurve {
                 origin: self.u.point_from_local(u),
-                floating: self.v.clone_curve_geometry(),
+                floating: FloatingCurve {
+                    inner: self.v.inner.clone_curve_geometry(),
+                },
             };
 
             v.project_point(point)
@@ -51,14 +53,18 @@ impl SweptCurve {
     pub fn flip(&self) -> Self {
         Self {
             u: self.u.clone(),
-            v: self.v.flip(),
+            v: FloatingCurve {
+                inner: self.v.inner.flip(),
+            },
         }
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             u: self.u.translate(offset),
-            v: self.v.clone_curve_geometry(),
+            v: FloatingCurve {
+                inner: self.v.inner.clone_curve_geometry(),
+            },
         }
     }
 }

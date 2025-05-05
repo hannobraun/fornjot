@@ -3,7 +3,7 @@ use fj_math::Vector;
 use fj_viewer::Viewer;
 
 use crate::{
-    geometry::{Line, Sketch, SweptCurve, ToTriMesh},
+    geometry::{FloatingCurve, Line, Sketch, SweptCurve, ToTriMesh},
     handle::Handle,
     operations::sweep::SweepExt,
     topology::surface::Surface,
@@ -45,9 +45,11 @@ pub fn model(viewer: &Viewer) -> TriMesh {
     viewer.display(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
-        Box::new(Line {
-            direction: Vector::from([0., 0., -2.]),
-        }),
+        FloatingCurve {
+            inner: Box::new(Line {
+                direction: Vector::from([0., 0., -2.]),
+            }),
+        },
         [1.],
     );
     viewer.display(solid.to_tri_mesh(tolerance));

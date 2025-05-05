@@ -29,7 +29,9 @@ impl AnchoredCurve {
     ) -> Self {
         Self {
             origin,
-            floating: Box::new(curve),
+            floating: FloatingCurve {
+                inner: Box::new(curve),
+            },
         }
     }
 
@@ -50,17 +52,19 @@ impl AnchoredCurve {
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<1>>) -> Point<3> {
-        self.origin + self.floating.vector_from_local_point(point.into())
+        self.origin + self.floating.inner.vector_from_local_point(point.into())
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.floating.project_vector(point - self.origin)
+        self.floating.inner.project_vector(point - self.origin)
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             origin: self.origin + offset,
-            floating: self.floating.clone_curve_geometry(),
+            floating: FloatingCurve {
+                inner: self.floating.inner.clone_curve_geometry(),
+            },
         }
     }
 
@@ -69,7 +73,7 @@ impl AnchoredCurve {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        self.floating.approximate(boundary, tolerance)
+        self.floating.inner.approximate(boundary, tolerance)
     }
 }
 
@@ -77,12 +81,16 @@ impl Clone for AnchoredCurve {
     fn clone(&self) -> Self {
         Self {
             origin: self.origin,
-            floating: self.floating.clone_curve_geometry(),
+            floating: FloatingCurve {
+                inner: self.floating.inner.clone_curve_geometry(),
+            },
         }
     }
 }
 
-pub type FloatingCurve = Box<dyn CurveGeometry>;
+pub struct FloatingCurve {
+    pub inner: Box<dyn CurveGeometry>,
+}
 
 pub trait CurveGeometry {
     fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
