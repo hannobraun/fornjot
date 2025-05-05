@@ -1,3 +1,5 @@
+use std::fmt;
+
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Point, Vector};
 
@@ -104,6 +106,14 @@ impl Clone for FloatingCurve {
         Self {
             inner: self.inner.clone_curve_geometry(),
         }
+    }
+}
+
+impl fmt::Debug for FloatingCurve {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("FloatingCurve")
+            .field("inner", &(self.inner.as_ref() as *const _))
+            .finish()
     }
 }
 
