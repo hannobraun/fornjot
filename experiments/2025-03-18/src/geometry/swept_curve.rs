@@ -39,9 +39,7 @@ impl SweptCurve {
         let v = {
             let v = AnchoredCurve {
                 origin: self.u.point_from_local(u),
-                floating: FloatingCurve {
-                    inner: self.v.inner.clone_curve_geometry(),
-                },
+                floating: self.v.clone(),
             };
 
             v.project_point(point)
@@ -62,9 +60,7 @@ impl SweptCurve {
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             u: self.u.translate(offset),
-            v: FloatingCurve {
-                inner: self.v.inner.clone_curve_geometry(),
-            },
+            v: self.v.clone(),
         }
     }
 }

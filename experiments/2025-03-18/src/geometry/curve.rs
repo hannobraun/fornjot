@@ -60,9 +60,7 @@ impl AnchoredCurve {
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             origin: self.origin + offset,
-            floating: FloatingCurve {
-                inner: self.floating.inner.clone_curve_geometry(),
-            },
+            floating: self.floating.clone(),
         }
     }
 
@@ -79,9 +77,7 @@ impl Clone for AnchoredCurve {
     fn clone(&self) -> Self {
         Self {
             origin: self.origin,
-            floating: FloatingCurve {
-                inner: self.floating.inner.clone_curve_geometry(),
-            },
+            floating: self.floating.clone(),
         }
     }
 }
@@ -93,6 +89,14 @@ impl FloatingCurve {
     pub fn new(curve: impl CurveGeometry + 'static) -> Self {
         Self {
             inner: Box::new(curve),
+        }
+    }
+}
+
+impl Clone for FloatingCurve {
+    fn clone(&self) -> Self {
+        Self {
+            inner: self.inner.clone_curve_geometry(),
         }
     }
 }
