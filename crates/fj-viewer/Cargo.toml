@@ -23,10 +23,10 @@ tobj = "4.0.3"
 raw-window-handle = "0.6.0"
 thiserror = "2.0.12"
 tracing = "0.1.41"
-winit = "0.30.9"
+winit = "0.30.10"
 
 [dependencies.bytemuck]
-version = "1.22.0"
+version = "1.23.0"
 features = ["derive"]
 
 [dependencies.image]
