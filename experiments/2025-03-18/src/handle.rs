@@ -58,6 +58,8 @@ where
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("Handle")
             .field("inner", &Rc::as_ptr(&self.inner))
-            .finish()
+            .finish()?;
+
+        Ok(())
     }
 }
