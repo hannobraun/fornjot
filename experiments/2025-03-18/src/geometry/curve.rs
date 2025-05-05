@@ -51,7 +51,7 @@ impl AnchoredCurve {
     }
 
     pub fn point_from_local(&self, point: impl Into<Point<1>>) -> Point<3> {
-        self.origin + self.floating.inner.vector_from_local_point(point.into())
+        self.origin + self.floating.vector_from_local_point(point.into())
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
@@ -82,6 +82,13 @@ impl FloatingCurve {
         Self {
             inner: Box::new(curve),
         }
+    }
+
+    pub fn vector_from_local_point(
+        &self,
+        point: impl Into<Point<1>>,
+    ) -> Vector<3> {
+        self.inner.vector_from_local_point(point.into())
     }
 }
 
