@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, fmt, ops::Deref, rc::Rc};
+use std::{any::type_name_of_val, cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
 pub struct Handle<T> {
     inner: Rc<T>,
@@ -56,10 +56,47 @@ where
     T: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.debug_struct("Handle")
-            .field("inner", &Rc::as_ptr(&self.inner))
-            .finish()?;
+        let type_name = short_type_name_of_val(self);
+        let address = Rc::as_ptr(&self.inner);
+        let object = &self.inner;
+
+        write!(f, "{type_name}: {address:?} => ")?;
+
+        if f.alternate() {
+            write!(f, "{object:#?}")?;
+        } else {
+            write!(f, "{object:?}")?;
+        }
 
         Ok(())
     }
+}
+
+fn short_type_name_of_val<T>(val: &T) -> String {
+    let full_name = type_name_of_val(val);
+
+    let [type_parameters_open, type_parameters_close] =
+        [full_name.find("<"), full_name.rfind(">")].map(|maybe_pos| {
+            let Some(pos) = maybe_pos else {
+                unreachable!(
+                    "Only using this function for `Handle`, which has a type \
+                    parameter."
+                );
+            };
+
+            pos
+        });
+
+    let raw_name = shorten_type_name(&full_name[..type_parameters_open]);
+    let type_parameter = shorten_type_name(
+        &full_name[type_parameters_open + 1..type_parameters_close],
+    );
+
+    format!("{raw_name}<{type_parameter}>")
+}
+
+fn shorten_type_name(name: &str) -> &str {
+    name.rsplit_once("::")
+        .map(|(_, short)| short)
+        .unwrap_or(name)
 }
