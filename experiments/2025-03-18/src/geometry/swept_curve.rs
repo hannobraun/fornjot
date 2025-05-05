@@ -16,10 +16,7 @@ impl SweptCurve {
         let [u, v] = axes.map(Into::into).map(|direction| Line { direction });
 
         Self {
-            u: AnchoredCurve {
-                origin,
-                floating: Box::new(u),
-            },
+            u: AnchoredCurve::from_origin_and_curve(origin, u),
             v: Box::new(v),
         }
     }

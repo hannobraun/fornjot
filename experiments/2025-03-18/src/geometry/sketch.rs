@@ -110,10 +110,9 @@ impl Sketch {
                         };
 
                         Handle::new(Curve {
-                            geometry: AnchoredCurve {
-                                origin,
-                                floating: Box::new(circle),
-                            },
+                            geometry: AnchoredCurve::from_origin_and_curve(
+                                origin, circle,
+                            ),
                         })
                     }
                     SketchSegment::Line { .. } => {
