@@ -77,6 +77,7 @@ impl AnchoredCurve {
 pub struct FloatingCurve {
     pub inner: Box<dyn CurveGeometry>,
 }
+
 impl FloatingCurve {
     pub fn new(curve: impl CurveGeometry + 'static) -> Self {
         Self {
