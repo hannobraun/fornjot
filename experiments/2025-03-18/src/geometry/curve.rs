@@ -11,6 +11,7 @@ use super::{Circle, Line};
 /// In terms of a line, for example, the anchored version is the full line, an
 /// origin and a direction (a point and a vector). The floating version is just
 /// the direction (a vector).
+#[derive(Clone)]
 pub struct AnchoredCurve {
     /// # The origin point of the curve, which anchors it in 3D space
     ///
@@ -70,15 +71,6 @@ impl AnchoredCurve {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         self.floating.inner.approximate(boundary, tolerance)
-    }
-}
-
-impl Clone for AnchoredCurve {
-    fn clone(&self) -> Self {
-        Self {
-            origin: self.origin,
-            floating: self.floating.clone(),
-        }
     }
 }
 
