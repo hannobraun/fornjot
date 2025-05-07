@@ -117,7 +117,7 @@ impl fmt::Debug for FloatingCurve {
     }
 }
 
-pub trait CurveGeometry {
+pub trait CurveGeometry: fmt::Debug {
     fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
