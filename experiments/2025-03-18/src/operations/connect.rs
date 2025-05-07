@@ -40,6 +40,9 @@ impl ConnectExt for Handle<Face> {
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
         // following code.
+        //
+        // These designations might or might not correspond to "top" and "down"
+        // in 3D space, depending on the way the connecting curve points.
         let bottom = self;
         let top = other;
 
