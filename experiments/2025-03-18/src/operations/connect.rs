@@ -87,10 +87,10 @@ fn build_connecting_faces(
 
     let connecting_curves = bottom_vertices
         .zip(top_vertices)
-        .map(|(a, b)| {
+        .map(|(bottom, b)| {
             let curve = Curve {
                 geometry: AnchoredCurve {
-                    origin: a.point,
+                    origin: bottom.point,
                     floating: connecting_curve.clone(),
                 },
             };
