@@ -138,14 +138,10 @@ fn build_single_connecting_face(
         };
 
     let surface = Handle::new(Surface {
-        geometry: Box::new(SweptCurve::plane_from_points(
-            [
-                &bottom.half_edge.start,
-                bottom.end_vertex,
-                &top.half_edge.start,
-            ]
-            .map(|vertex| vertex.point),
-        )),
+        geometry: Box::new(SweptCurve {
+            u: bottom.half_edge.curve.geometry.clone(),
+            v: curve_up.geometry.floating.flip(),
+        }),
     });
 
     // Order the vertices in a way that makes sense when building the half-edges

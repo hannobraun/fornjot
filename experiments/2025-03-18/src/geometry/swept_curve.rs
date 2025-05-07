@@ -22,11 +22,6 @@ impl SweptCurve {
         }
     }
 
-    pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
-        let [a, b, c] = points.map(Into::into);
-        Self::plane_from_coord_system(a, [b - a, c - a])
-    }
-
     pub fn point_from_local(&self, point: impl Into<Point<2>>) -> Point<3> {
         let [u, v] = point.into().coords.components;
         self.u.point_from_local([u]) + self.v.vector_from_local_point([v])
