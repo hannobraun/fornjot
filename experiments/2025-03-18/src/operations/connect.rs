@@ -87,7 +87,7 @@ fn build_connecting_faces(
 
     let connecting_curves = bottom_vertices
         .zip(top_vertices)
-        .map(|(bottom, b)| {
+        .map(|(bottom, top)| {
             let curve = Curve {
                 geometry: AnchoredCurve {
                     origin: bottom.point,
@@ -96,7 +96,7 @@ fn build_connecting_faces(
             };
 
             // We should check here that `b` is not too far from the curve.
-            let _ = b;
+            let _ = top;
 
             Handle::new(curve)
         })
