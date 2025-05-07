@@ -1,6 +1,6 @@
 use fj_math::{Point, Vector};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Line {
     pub direction: Vector<3>,
 }
