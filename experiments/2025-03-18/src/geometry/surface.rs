@@ -1,9 +1,11 @@
+use std::fmt;
+
 use fj_math::{Point, Vector};
 use geo::Polygon;
 
 use crate::geometry::SweptCurve;
 
-pub trait SurfaceGeometry {
+pub trait SurfaceGeometry: fmt::Debug {
     fn point_from_local(&self, point: Point<2>) -> Point<3>;
     fn project_point(&self, point: Point<3>) -> Point<2>;
     fn flip(&self) -> Box<dyn SurfaceGeometry>;
