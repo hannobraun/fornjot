@@ -2,6 +2,7 @@ use fj_math::{Point, Vector};
 
 use super::{AnchoredCurve, Line, curve::FloatingCurve};
 
+#[derive(Debug)]
 pub struct SweptCurve {
     pub u: AnchoredCurve,
     pub v: FloatingCurve,
