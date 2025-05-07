@@ -82,10 +82,28 @@ fn build_connecting_faces(
     [bottom, top]: [&Face; 2],
     connecting_curve: FloatingCurve,
 ) -> Vec<Handle<Face>> {
+    let connecting_curves =
+        build_connecting_curves([bottom, top], connecting_curve);
+
+    connecting_curves
+        .into_iter()
+        .circular_tuple_windows()
+        .zip(bottom.half_edges_with_end_vertex())
+        .zip(top.half_edges_with_end_vertex())
+        .map(|(((curve_down, curve_up), bottom), top)| {
+            build_single_connecting_face([bottom, top], [curve_down, curve_up])
+        })
+        .collect::<Vec<_>>()
+}
+
+fn build_connecting_curves(
+    [bottom, top]: [&Face; 2],
+    connecting_curve: FloatingCurve,
+) -> Vec<Handle<Curve>> {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
 
-    let connecting_curves = bottom_vertices
+    bottom_vertices
         .zip(top_vertices)
         .map(|(bottom, top)| {
             let curve = Curve {
@@ -99,16 +117,6 @@ fn build_connecting_faces(
             let _ = top;
 
             Handle::new(curve)
-        })
-        .collect::<Vec<_>>();
-
-    connecting_curves
-        .into_iter()
-        .circular_tuple_windows()
-        .zip(bottom.half_edges_with_end_vertex())
-        .zip(top.half_edges_with_end_vertex())
-        .map(|(((curve_down, curve_up), bottom), top)| {
-            build_single_connecting_face([bottom, top], [curve_down, curve_up])
         })
         .collect::<Vec<_>>()
 }
