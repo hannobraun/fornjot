@@ -95,7 +95,7 @@ fn build_connecting_faces(
                 },
             };
 
-            // We should check here that `b` is not too far from the curve.
+            // We should check here that `top` is not too far from the curve.
             let _ = top;
 
             Handle::new(curve)
