@@ -35,6 +35,10 @@ fn main() -> anyhow::Result<()> {
         let mut rust_flags = String::new();
         rust_flags.push_str("-D warnings");
 
+        if target.triple == "wasm32-unknown-unknown" {
+            rust_flags.push_str(" --cfg getrandom_backend=\"wasm_js\"");
+        }
+
         for crate_ in target.crates {
             let mut command = Command::new("cargo");
             command

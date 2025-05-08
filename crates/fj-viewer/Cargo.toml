@@ -41,5 +41,5 @@ features = ["webgl"]
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
 # feature when cross-compiling to WASM. Otherwise, `getrandom` will not build.
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
-version = "0.2.15"
-features = ["js"]
+version = "0.3.2"
+features = ["wasm_js"]
