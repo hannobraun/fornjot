@@ -3,6 +3,7 @@ use fj_math::Vector;
 use fj_viewer::Viewer;
 
 use crate::{
+    extra::{render_projected_face, triangulate::ProjectedFace},
     geometry::{FloatingCurve, Line, Sketch, SweptCurve, ToTriMesh},
     handle::Handle,
     operations::sweep::SweepExt,
@@ -42,6 +43,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         Handle::new(face)
     };
 
+    render_projected_face::render(&ProjectedFace::new(&top, tolerance));
     viewer.display(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
