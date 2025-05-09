@@ -5,7 +5,7 @@ use spade::Triangulation;
 
 use crate::topology::face::Face;
 
-use super::{TriangulationPoint, projected_face::ProjectedFace};
+use super::{ProjectedFace, TriangulationPoint};
 
 pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
     let face = ProjectedFace::new(face, tolerance);
