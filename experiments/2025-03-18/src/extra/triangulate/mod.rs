@@ -1,3 +1,5 @@
+pub mod projected_face;
+
 mod point;
 mod triangulate;
 
