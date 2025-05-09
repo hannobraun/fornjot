@@ -13,7 +13,7 @@ use crate::topology::{
     surface::Surface,
 };
 
-use super::point::TriangulationPoint;
+use super::{point::TriangulationPoint, projected_face::ProjectedFace};
 
 pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
@@ -29,7 +29,9 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
         &mut all_points,
     );
 
-    let triangles_in_face = triangles(&all_points)
+    let projected_face = ProjectedFace { points: all_points };
+
+    let triangles_in_face = triangles(&projected_face.points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
