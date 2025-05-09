@@ -12,7 +12,7 @@ use crate::topology::{
     surface::Surface,
 };
 
-use super::point::TriangulationPoint;
+use super::triangulate::point::TriangulationPoint;
 
 pub struct ProjectedFace {
     pub is_internal: bool,
