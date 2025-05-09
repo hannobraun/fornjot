@@ -13,6 +13,8 @@ use crate::topology::{
     surface::Surface,
 };
 
+use super::point::TriangulationPoint;
+
 pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
     let mut points_from_half_edges = Vec::new();
     half_edges_to_points(face, &mut points_from_half_edges, tolerance);
@@ -204,19 +206,4 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
         .inner_faces()
         .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
         .collect()
-}
-
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-pub struct TriangulationPoint {
-    pub point_surface: Point<2>,
-    pub point_global: Point<3>,
-}
-
-impl spade::HasPosition for TriangulationPoint {
-    type Scalar = f64;
-
-    fn position(&self) -> spade::Point2<Self::Scalar> {
-        let [x, y] = self.point_surface.coords.components.map(|s| s.into_f64());
-        spade::Point2 { x, y }
-    }
 }
