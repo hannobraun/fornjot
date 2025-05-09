@@ -29,13 +29,13 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
         &mut all_points,
     );
 
-    let projected_face = ProjectedFace {
+    let face = ProjectedFace {
         is_internal: face.is_internal,
         polygon_from_half_edges,
         points: all_points,
     };
 
-    let triangles_in_face = triangles(&projected_face.points)
+    let triangles_in_face = triangles(&face.points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -43,15 +43,13 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
 
             let [x, y] =
                 triangle.center().coords.components.map(|s| s.into_f64());
-            projected_face
-                .polygon_from_half_edges
-                .contains(&Coord { x, y })
+            face.polygon_from_half_edges.contains(&Coord { x, y })
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_global);
             MeshTriangle {
                 inner: Triangle { points },
-                is_internal: projected_face.is_internal,
+                is_internal: face.is_internal,
                 color: Color::default(),
             }
         });
