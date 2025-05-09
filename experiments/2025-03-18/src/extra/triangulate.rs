@@ -29,7 +29,10 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
         &mut all_points,
     );
 
-    let projected_face = ProjectedFace { points: all_points };
+    let projected_face = ProjectedFace {
+        polygon_from_half_edges,
+        points: all_points,
+    };
 
     let triangles_in_face = triangles(&projected_face.points)
         .into_iter()
@@ -39,7 +42,9 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
 
             let [x, y] =
                 triangle.center().coords.components.map(|s| s.into_f64());
-            polygon_from_half_edges.contains(&Coord { x, y })
+            projected_face
+                .polygon_from_half_edges
+                .contains(&Coord { x, y })
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_global);
