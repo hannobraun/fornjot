@@ -30,6 +30,7 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
     );
 
     let projected_face = ProjectedFace {
+        is_internal: face.is_internal,
         polygon_from_half_edges,
         points: all_points,
     };
@@ -50,7 +51,7 @@ pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
             let points = triangle.map(|point| point.point_global);
             MeshTriangle {
                 inner: Triangle { points },
-                is_internal: face.is_internal,
+                is_internal: projected_face.is_internal,
                 color: Color::default(),
             }
         });
