@@ -1,15 +1,11 @@
-use fj_interop::{Color, MeshTriangle, Tolerance, TriMesh};
+use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::Triangle;
 use geo::{Contains, Coord};
 use spade::Triangulation;
 
-use crate::topology::face::Face;
-
 use super::{ProjectedFace, TriangulationPoint};
 
-pub fn triangulate(face: &Face, tolerance: impl Into<Tolerance>) -> TriMesh {
-    let face = ProjectedFace::new(face, tolerance);
-
+pub fn triangulate(face: &ProjectedFace) -> TriMesh {
     let triangles_in_face = triangles(&face.points)
         .into_iter()
         .filter(|triangle| {
