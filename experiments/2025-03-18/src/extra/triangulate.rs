@@ -207,9 +207,9 @@ fn triangles(points: &[TriangulationPoint]) -> Vec<[TriangulationPoint; 3]> {
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
-struct TriangulationPoint {
-    point_surface: Point<2>,
-    point_global: Point<3>,
+pub struct TriangulationPoint {
+    pub point_surface: Point<2>,
+    pub point_global: Point<3>,
 }
 
 impl spade::HasPosition for TriangulationPoint {
