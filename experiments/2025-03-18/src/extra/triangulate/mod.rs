@@ -1,6 +1,5 @@
-pub mod projected_face;
-
 mod point;
+mod projected_face;
 mod triangulate;
 
 pub use self::{
