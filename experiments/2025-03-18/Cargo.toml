@@ -27,3 +27,4 @@ default-features = false
 
 [dependencies.plotters]
 version = "*"
+default-features = false
