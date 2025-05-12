@@ -46,5 +46,5 @@ features = ["webgl"]
 # make the selected backend available, `--cfg` flag needs to be passed to rustc.
 # We do this in `tools/cross-compiler/src/main.rs`.
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
-version = "0.3.2"
+version = "0.3.3"
 features = ["wasm_js"]
