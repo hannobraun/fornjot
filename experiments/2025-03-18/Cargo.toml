@@ -7,7 +7,6 @@ edition = "2024"
 [dependencies]
 anyhow = "*"
 itertools = "*"
-plotters = "*"
 spade = "*"
 
 [dependencies.fj-export]
@@ -25,3 +24,6 @@ path = "../../crates/fj-viewer"
 [dependencies.geo]
 version = "*"
 default-features = false
+
+[dependencies.plotters]
+version = "*"
