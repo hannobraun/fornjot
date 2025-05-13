@@ -24,7 +24,3 @@ path = "../../crates/fj-viewer"
 [dependencies.geo]
 version = "*"
 default-features = false
-
-[dependencies.plotters]
-version = "*"
-default-features = false
