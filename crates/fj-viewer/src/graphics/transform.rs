@@ -40,9 +40,9 @@ impl Transform {
 }
 
 impl From<&fj_math::Transform> for Transform {
-    fn from(other: &fj_math::Transform) -> Self {
+    fn from(transform: &fj_math::Transform) -> Self {
         let mut native = [0.0; 16];
-        native.copy_from_slice(other.data());
+        native.copy_from_slice(transform.data());
 
         Self(native.map(|val| val as f32))
     }
