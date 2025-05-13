@@ -7,21 +7,27 @@ use super::{Aabb, LineSegment, Point, Triangle, Vector};
 /// An affine transform
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Default)]
-pub struct Transform(nalgebra::Transform<f64, nalgebra::TAffine, 3>);
+pub struct Transform {
+    inner: nalgebra::Transform<f64, nalgebra::TAffine, 3>,
+}
 
 impl Transform {
     /// Construct an identity transform
     pub fn identity() -> Self {
-        Self(nalgebra::Transform::identity())
+        Self {
+            inner: nalgebra::Transform::identity(),
+        }
     }
 
     /// Construct a translation
     pub fn translation(offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
-        Self(nalgebra::Transform::from_matrix_unchecked(
-            nalgebra::OMatrix::new_translation(&offset.to_na()),
-        ))
+        Self {
+            inner: nalgebra::Transform::from_matrix_unchecked(
+                nalgebra::OMatrix::new_translation(&offset.to_na()),
+            ),
+        }
     }
 
     /// Construct a rotation
@@ -31,18 +37,22 @@ impl Transform {
     pub fn rotation(axis_angle: impl Into<Vector<3>>) -> Self {
         let axis_angle = axis_angle.into();
 
-        Self(nalgebra::Transform::from_matrix_unchecked(
-            nalgebra::OMatrix::<_, nalgebra::Const<4>, _>::new_rotation(
-                axis_angle.to_na(),
+        Self {
+            inner: nalgebra::Transform::from_matrix_unchecked(
+                nalgebra::OMatrix::<_, nalgebra::Const<4>, _>::new_rotation(
+                    axis_angle.to_na(),
+                ),
             ),
-        ))
+        }
     }
 
     /// Construct a scaling
     pub fn scale(scaling_factor: f64) -> Self {
-        Self(nalgebra::Transform::from_matrix_unchecked(
-            nalgebra::OMatrix::new_scaling(scaling_factor),
-        ))
+        Self {
+            inner: nalgebra::Transform::from_matrix_unchecked(
+                nalgebra::OMatrix::new_scaling(scaling_factor),
+            ),
+        }
     }
 
     /// # Extract the "right" vector from the rotational component
@@ -59,17 +69,17 @@ impl Transform {
 
     /// Transform the given point
     pub fn transform_point(&self, point: &Point<3>) -> Point<3> {
-        Point::from(self.0.transform_point(&point.to_na()))
+        Point::from(self.inner.transform_point(&point.to_na()))
     }
 
     /// Inverse transform given point
     pub fn inverse_transform_point(&self, point: &Point<3>) -> Point<3> {
-        Point::from(self.0.inverse_transform_point(&point.to_na()))
+        Point::from(self.inner.inverse_transform_point(&point.to_na()))
     }
 
     /// Transform the given vector
     pub fn transform_vector(&self, vector: &Vector<3>) -> Vector<3> {
-        Vector::from(self.0.transform_vector(&vector.to_na()))
+        Vector::from(self.inner.transform_vector(&vector.to_na()))
     }
 
     /// Transform the given segment
@@ -93,14 +103,18 @@ impl Transform {
 
     /// Inverse transform
     pub fn inverse(&self) -> Self {
-        Self(self.0.inverse())
+        Self {
+            inner: self.inner.inverse(),
+        }
     }
 
     /// Transpose transform
     pub fn transpose(&self) -> Self {
-        Self(nalgebra::Transform::from_matrix_unchecked(
-            self.0.to_homogeneous().transpose(),
-        ))
+        Self {
+            inner: nalgebra::Transform::from_matrix_unchecked(
+                self.inner.to_homogeneous().transpose(),
+            ),
+        }
     }
 
     /// Project transform according to camera specification, return data as an array.
@@ -116,7 +130,9 @@ impl Transform {
 
         let mut array = [0.; 16];
         array.copy_from_slice(
-            (projection.to_projective() * self.0).matrix().as_slice(),
+            (projection.to_projective() * self.inner)
+                .matrix()
+                .as_slice(),
         );
 
         array
@@ -124,7 +140,7 @@ impl Transform {
 
     /// Return a copy of the inner nalgebra transform
     pub fn get_inner(&self) -> nalgebra::Transform<f64, nalgebra::TAffine, 3> {
-        self.0
+        self.inner
     }
 
     /// Transform the given axis-aligned bounding box
@@ -137,14 +153,19 @@ impl Transform {
 
     /// Exposes the data of this Transform as a slice of f64.
     pub fn data(&self) -> &[f64] {
-        self.0.matrix().data.as_slice()
+        self.inner.matrix().data.as_slice()
     }
 
     /// Extract the rotation component of this transform
     pub fn extract_rotation(&self) -> Self {
-        Self(nalgebra::Transform::from_matrix_unchecked(
-            self.0.matrix().fixed_resize::<3, 3>(0.).to_homogeneous(),
-        ))
+        Self {
+            inner: nalgebra::Transform::from_matrix_unchecked(
+                self.inner
+                    .matrix()
+                    .fixed_resize::<3, 3>(0.)
+                    .to_homogeneous(),
+            ),
+        }
     }
 
     /// Extract the translation component of this transform
@@ -157,7 +178,9 @@ impl ops::Mul<Self> for Transform {
     type Output = Self;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        Self(self.0.mul(rhs.0))
+        Self {
+            inner: self.inner.mul(rhs.inner),
+        }
     }
 }
 
