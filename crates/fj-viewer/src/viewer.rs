@@ -38,8 +38,7 @@ pub fn make_viewer_and_spawn_thread<R>(
 where
     R: Send + 'static,
 {
-    let mut builder = EventLoop::with_user_event();
-    let event_loop = builder.build()?;
+    let event_loop = EventLoop::with_user_event().build()?;
 
     let mut display_state = DisplayState {
         windows: BTreeMap::new(),
