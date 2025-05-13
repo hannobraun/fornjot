@@ -1,7 +1,5 @@
 use std::ops;
 
-use nalgebra::Perspective3;
-
 use super::{Aabb, LineSegment, Point, Triangle, Vector};
 
 /// An affine transform
@@ -116,27 +114,6 @@ impl Transform {
                 self.inner.to_homogeneous().transpose(),
             ),
         }
-    }
-
-    /// Project transform according to camera specification, return data as an array.
-    /// Used primarily for graphics code.
-    pub fn project_to_array(
-        &self,
-        aspect_ratio: f64,
-        fovy: f64,
-        znear: f64,
-        zfar: f64,
-    ) -> [f64; 16] {
-        let projection = Perspective3::new(aspect_ratio, fovy, znear, zfar);
-
-        let mut array = [0.; 16];
-        array.copy_from_slice(
-            (projection.to_projective() * self.inner)
-                .matrix()
-                .as_slice(),
-        );
-
-        array
     }
 
     /// Transform the given axis-aligned bounding box

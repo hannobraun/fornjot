@@ -1,4 +1,5 @@
 use bytemuck::{Pod, Zeroable};
+use nalgebra::Perspective3;
 
 use crate::camera::Camera;
 
@@ -18,12 +19,23 @@ impl Transform {
         let field_of_view_in_y = 2.
             * ((camera.field_of_view_in_x() / 2.).tan() / aspect_ratio).atan();
 
-        let transform = camera.camera_to_model().project_to_array(
-            aspect_ratio,
-            field_of_view_in_y,
-            camera.near_plane(),
-            camera.far_plane(),
-        );
+        let transform = {
+            let projection = Perspective3::new(
+                aspect_ratio,
+                field_of_view_in_y,
+                camera.near_plane(),
+                camera.far_plane(),
+            );
+
+            let mut array = [0.; 16];
+            array.copy_from_slice(
+                (projection.to_projective() * camera.camera_to_model().inner)
+                    .matrix()
+                    .as_slice(),
+            );
+
+            array
+        };
 
         Self(transform.map(|scalar| scalar as f32))
     }
