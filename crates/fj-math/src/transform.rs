@@ -9,7 +9,7 @@ use super::{Aabb, LineSegment, Point, Triangle, Vector};
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Transform {
     /// # The [`nalgebra`] transform that does the actual work
-    inner: nalgebra::Transform<f64, nalgebra::TAffine, 3>,
+    pub inner: nalgebra::Transform<f64, nalgebra::TAffine, 3>,
 }
 
 impl Transform {
