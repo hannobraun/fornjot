@@ -2,8 +2,6 @@ use std::ops;
 
 use nalgebra::Perspective3;
 
-use crate::Scalar;
-
 use super::{Aabb, LineSegment, Point, Triangle, Vector};
 
 /// An affine transform
@@ -113,7 +111,7 @@ impl Transform {
         fovy: f64,
         znear: f64,
         zfar: f64,
-    ) -> [Scalar; 16] {
+    ) -> [f64; 16] {
         let projection = Perspective3::new(aspect_ratio, fovy, znear, zfar);
 
         let mut array = [0.; 16];
@@ -121,7 +119,7 @@ impl Transform {
             (projection.to_projective() * self.0).matrix().as_slice(),
         );
 
-        array.map(Scalar::from)
+        array
     }
 
     /// Return a copy of the inner nalgebra transform

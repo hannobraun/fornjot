@@ -25,7 +25,7 @@ impl Transform {
             camera.far_plane(),
         );
 
-        Self(transform.map(|scalar| scalar.into_f32()))
+        Self(transform.map(|scalar| scalar as f32))
     }
 
     /// Compute transform used for normals
