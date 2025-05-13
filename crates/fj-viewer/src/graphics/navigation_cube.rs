@@ -213,10 +213,10 @@ impl NavigationCubeRenderer {
 
         let screen_translation = Transform::translation(CUBE_TRANSLATION);
 
-        let matrix = screen_translation.get_inner().matrix()
+        let matrix = screen_translation.inner.matrix()
             * *perspective.to_projective().matrix()
             * view_matrix
-            * model_matrix.get_inner().matrix();
+            * model_matrix.inner.matrix();
 
         let mut mat = [0.; 16];
         mat.copy_from_slice(matrix.as_slice());

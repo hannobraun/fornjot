@@ -139,11 +139,6 @@ impl Transform {
         array
     }
 
-    /// Return a copy of the inner nalgebra transform
-    pub fn get_inner(&self) -> nalgebra::Transform<f64, nalgebra::TAffine, 3> {
-        self.inner
-    }
-
     /// Transform the given axis-aligned bounding box
     pub fn transform_aabb(&self, aabb: &Aabb<3>) -> Aabb<3> {
         Aabb {
