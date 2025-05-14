@@ -4,11 +4,11 @@ use super::{
     pipelines::{Pipeline, Pipelines},
 };
 
-pub struct Drawables {}
+pub struct Drawables;
 
 impl Drawables {
     pub fn new() -> Self {
-        Self {}
+        Self
     }
 
     pub fn draw<'a, 'b>(
