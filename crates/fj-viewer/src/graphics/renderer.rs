@@ -5,11 +5,11 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, graphics::drawables::Drawable};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
-    draw_config::DrawConfig, drawables::draw, geometry::Geometry,
+    draw_config::DrawConfig, geometry::Geometry,
     navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
     transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
@@ -299,7 +299,22 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            draw(&self.geometry, &self.pipelines, config, &mut render_pass);
+            let model = Drawable::new(&self.geometry, &self.pipelines.model);
+            let mesh = self
+                .pipelines
+                .mesh
+                .as_ref()
+                .map(|pipeline| Drawable::new(&self.geometry, pipeline));
+
+            if config.draw_model {
+                model.draw(&mut render_pass);
+            }
+
+            if let Some(drawable) = mesh {
+                if config.draw_mesh {
+                    drawable.draw(&mut render_pass);
+                }
+            };
         }
 
         self.navigation_cube_renderer.draw(
