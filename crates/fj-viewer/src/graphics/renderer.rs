@@ -5,7 +5,7 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, graphics::pipelines::Pipeline};
+use crate::camera::Camera;
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -300,16 +300,12 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             if config.draw_model {
-                Pipeline::draw(
-                    &self.pipelines.model,
-                    &self.geometry,
-                    &mut render_pass,
-                );
+                self.pipelines.model.draw(&self.geometry, &mut render_pass);
             }
 
             if let Some(pipeline) = self.pipelines.mesh.as_ref() {
                 if config.draw_mesh {
-                    Pipeline::draw(pipeline, &self.geometry, &mut render_pass);
+                    pipeline.draw(&self.geometry, &mut render_pass);
                 }
             };
         }
