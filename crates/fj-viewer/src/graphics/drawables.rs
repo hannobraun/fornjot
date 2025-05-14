@@ -1,10 +1,10 @@
 use super::{geometry::Geometry, pipelines::Pipeline};
 
-pub struct Drawable {}
+pub struct Drawable;
 
 impl<'a> Drawable {
     pub fn new() -> Self {
-        Self {}
+        Self
     }
 
     pub fn draw<'b>(
