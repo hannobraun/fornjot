@@ -299,15 +299,8 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            if config.draw_model {
-                self.pipelines.model.draw(&self.geometry, &mut render_pass);
-            }
-
-            if let Some(pipeline) = self.pipelines.mesh.as_ref() {
-                if config.draw_mesh {
-                    pipeline.draw(&self.geometry, &mut render_pass);
-                }
-            };
+            self.pipelines
+                .draw(config, &self.geometry, &mut render_pass);
         }
 
         self.navigation_cube_renderer.draw(

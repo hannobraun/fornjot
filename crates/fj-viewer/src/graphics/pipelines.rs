@@ -1,7 +1,7 @@
 use std::mem::size_of;
 
 use super::{
-    DEPTH_FORMAT, SAMPLE_COUNT,
+    DEPTH_FORMAT, DrawConfig, SAMPLE_COUNT,
     geometry::Geometry,
     shaders::{Shader, Shaders},
     vertices::Vertex,
@@ -55,6 +55,23 @@ impl Pipelines {
         };
 
         Self { model, mesh }
+    }
+
+    pub fn draw(
+        &self,
+        config: &DrawConfig,
+        geometry: &Geometry,
+        render_pass: &mut wgpu::RenderPass,
+    ) {
+        if config.draw_model {
+            self.model.draw(geometry, render_pass);
+        }
+
+        if let Some(pipeline) = self.mesh.as_ref() {
+            if config.draw_mesh {
+                pipeline.draw(geometry, render_pass);
+            }
+        };
     }
 }
 
