@@ -138,8 +138,8 @@ impl Pipeline {
     }
 
     pub fn draw(
-        geometry: &Geometry,
         pipeline: &Pipeline,
+        geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
         render_pass.set_pipeline(&pipeline.inner);

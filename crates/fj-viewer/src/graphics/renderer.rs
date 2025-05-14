@@ -301,15 +301,15 @@ impl Renderer {
 
             if config.draw_model {
                 Pipeline::draw(
-                    &self.geometry,
                     &self.pipelines.model,
+                    &self.geometry,
                     &mut render_pass,
                 );
             }
 
             if let Some(pipeline) = self.pipelines.mesh.as_ref() {
                 if config.draw_mesh {
-                    Pipeline::draw(&self.geometry, pipeline, &mut render_pass);
+                    Pipeline::draw(pipeline, &self.geometry, &mut render_pass);
                 }
             };
         }
