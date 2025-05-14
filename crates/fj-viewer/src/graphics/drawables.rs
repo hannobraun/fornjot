@@ -1,6 +1,6 @@
 use super::{geometry::Geometry, pipelines::Pipeline};
 
-pub fn draw(
+pub fn draw_geometry(
     geometry: &Geometry,
     pipeline: &Pipeline,
     render_pass: &mut wgpu::RenderPass,
