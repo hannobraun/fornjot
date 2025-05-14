@@ -35,7 +35,7 @@ pub struct Drawable<'a> {
 }
 
 impl<'a> Drawable<'a> {
-    fn new(geometry: &'a Geometry, pipeline: &'a Pipeline) -> Self {
+    pub fn new(geometry: &'a Geometry, pipeline: &'a Pipeline) -> Self {
         Self { geometry, pipeline }
     }
 
