@@ -58,7 +58,9 @@ impl Pipelines {
 }
 
 #[derive(Debug)]
-pub struct Pipeline(pub wgpu::RenderPipeline);
+pub struct Pipeline {
+    pub inner: wgpu::RenderPipeline,
+}
 
 impl Pipeline {
     fn new(
@@ -131,6 +133,6 @@ impl Pipeline {
                 cache: None,
             });
 
-        Self(pipeline)
+        Self { inner: pipeline }
     }
 }

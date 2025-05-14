@@ -34,7 +34,7 @@ impl<'a> Drawable<'a> {
     where
         'a: 'b,
     {
-        render_pass.set_pipeline(&self.pipeline.0);
+        render_pass.set_pipeline(&self.pipeline.inner);
         render_pass.set_vertex_buffer(0, self.geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
             self.geometry.index_buffer.slice(..),
