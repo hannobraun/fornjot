@@ -1,6 +1,8 @@
 use std::borrow::Cow;
 
-pub struct Shaders(wgpu::ShaderModule);
+pub struct Shaders {
+    module: wgpu::ShaderModule,
+}
 
 impl Shaders {
     pub fn new(device: &wgpu::Device) -> Self {
@@ -12,19 +14,19 @@ impl Shaders {
                 ))),
             });
 
-        Self(module)
+        Self { module }
     }
 
     pub fn model(&self) -> Shader {
         Shader {
-            module: &self.0,
+            module: &self.module,
             frag_entry: "frag_model",
         }
     }
 
     pub fn mesh(&self) -> Shader {
         Shader {
-            module: &self.0,
+            module: &self.module,
             frag_entry: "frag_mesh",
         }
     }
