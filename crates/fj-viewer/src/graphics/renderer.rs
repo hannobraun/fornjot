@@ -171,7 +171,7 @@ impl Renderer {
                 label: None,
             });
 
-        let geometries = Geometry::new(
+        let geometry = Geometry::new(
             &device.device,
             vertices.vertices(),
             vertices.indices(),
@@ -200,7 +200,7 @@ impl Renderer {
             uniform_buffer,
             bind_group,
 
-            geometry: geometries,
+            geometry,
             pipelines,
 
             navigation_cube_renderer,
