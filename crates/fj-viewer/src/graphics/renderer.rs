@@ -299,8 +299,6 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let mesh = self.pipelines.mesh.as_ref().map(|_| Drawable);
-
             if config.draw_model {
                 Drawable.draw(
                     &self.geometry,
@@ -309,10 +307,9 @@ impl Renderer {
                 );
             }
 
-            if let Some(drawable) = mesh {
-                let pipeline = self.pipelines.mesh.as_ref().unwrap();
+            if let Some(pipeline) = self.pipelines.mesh.as_ref() {
                 if config.draw_mesh {
-                    drawable.draw(&self.geometry, pipeline, &mut render_pass);
+                    Drawable.draw(&self.geometry, pipeline, &mut render_pass);
                 }
             };
         }
