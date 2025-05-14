@@ -3,7 +3,7 @@
 mod device;
 mod draw_config;
 mod drawables;
-mod geometries;
+mod geometry;
 mod model;
 mod navigation_cube;
 mod pipelines;

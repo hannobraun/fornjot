@@ -9,7 +9,7 @@ use crate::camera::Camera;
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
-    draw_config::DrawConfig, drawables::Drawables, geometries::Geometry,
+    draw_config::DrawConfig, drawables::Drawables, geometry::Geometry,
     navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
     transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
