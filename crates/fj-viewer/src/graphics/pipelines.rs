@@ -2,6 +2,7 @@ use std::mem::size_of;
 
 use super::{
     DEPTH_FORMAT, SAMPLE_COUNT,
+    geometry::Geometry,
     shaders::{Shader, Shaders},
     vertices::Vertex,
 };
@@ -134,5 +135,20 @@ impl Pipeline {
             });
 
         Self { inner: pipeline }
+    }
+
+    pub fn draw_geometry(
+        geometry: &Geometry,
+        pipeline: &Pipeline,
+        render_pass: &mut wgpu::RenderPass,
+    ) {
+        render_pass.set_pipeline(&pipeline.inner);
+        render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
+        render_pass.set_index_buffer(
+            geometry.index_buffer.slice(..),
+            wgpu::IndexFormat::Uint32,
+        );
+
+        render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
     }
 }

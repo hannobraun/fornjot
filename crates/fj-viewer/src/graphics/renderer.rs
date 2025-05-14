@@ -5,18 +5,13 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, graphics::pipelines::Pipeline};
 
 use super::{
-    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT,
-    device::Device,
-    draw_config::DrawConfig,
-    geometry::Geometry,
-    navigation_cube::NavigationCubeRenderer,
-    pipelines::{Pipeline, Pipelines},
-    transform::Transform,
-    uniforms::Uniforms,
-    vertices::Vertices,
+    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
+    draw_config::DrawConfig, geometry::Geometry,
+    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
 
 /// Graphics rendering state and target abstraction
@@ -305,7 +300,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             if config.draw_model {
-                Self::draw_geometry(
+                Pipeline::draw_geometry(
                     &self.geometry,
                     &self.pipelines.model,
                     &mut render_pass,
@@ -314,7 +309,7 @@ impl Renderer {
 
             if let Some(pipeline) = self.pipelines.mesh.as_ref() {
                 if config.draw_mesh {
-                    Self::draw_geometry(
+                    Pipeline::draw_geometry(
                         &self.geometry,
                         pipeline,
                         &mut render_pass,
@@ -383,21 +378,6 @@ impl Renderer {
         });
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
-    }
-
-    pub fn draw_geometry(
-        geometry: &Geometry,
-        pipeline: &Pipeline,
-        render_pass: &mut wgpu::RenderPass,
-    ) {
-        render_pass.set_pipeline(&pipeline.inner);
-        render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
-        render_pass.set_index_buffer(
-            geometry.index_buffer.slice(..),
-            wgpu::IndexFormat::Uint32,
-        );
-
-        render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
     }
 }
 
