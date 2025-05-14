@@ -138,11 +138,11 @@ impl Pipeline {
     }
 
     pub fn draw(
-        pipeline: &Pipeline,
+        &self,
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
-        render_pass.set_pipeline(&pipeline.inner);
+        render_pass.set_pipeline(&self.inner);
         render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
             geometry.index_buffer.slice(..),
