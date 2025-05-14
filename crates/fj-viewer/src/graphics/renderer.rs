@@ -176,7 +176,7 @@ impl Renderer {
             vertices.vertices(),
             vertices.indices(),
         );
-        let pipelines = Pipelines::new(
+        let pipelines = Pipelines::for_model(
             &device.device,
             &bind_group_layout,
             color_format,

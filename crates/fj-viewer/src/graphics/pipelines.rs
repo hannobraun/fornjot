@@ -16,7 +16,7 @@ pub enum Pipelines {
 }
 
 impl Pipelines {
-    pub fn new(
+    pub fn for_model(
         device: &wgpu::Device,
         bind_group_layout: &wgpu::BindGroupLayout,
         color_format: wgpu::TextureFormat,
