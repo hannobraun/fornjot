@@ -8,16 +8,10 @@ use winit::dpi::PhysicalSize;
 use crate::camera::Camera;
 
 use super::{
-    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT,
-    device::Device,
-    draw_config::DrawConfig,
-    drawables::Drawables,
-    geometries::{Geometries, Geometry},
-    navigation_cube::NavigationCubeRenderer,
-    pipelines::Pipelines,
-    transform::Transform,
-    uniforms::Uniforms,
-    vertices::Vertices,
+    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
+    draw_config::DrawConfig, drawables::Drawables, geometries::Geometry,
+    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
 
 /// Graphics rendering state and target abstraction
@@ -33,7 +27,7 @@ pub struct Renderer {
     uniform_buffer: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
 
-    geometries: Geometries,
+    geometries: Geometry,
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
@@ -177,13 +171,11 @@ impl Renderer {
                 label: None,
             });
 
-        let geometries = Geometries {
-            mesh: Geometry::new(
-                &device.device,
-                vertices.vertices(),
-                vertices.indices(),
-            ),
-        };
+        let geometries = Geometry::new(
+            &device.device,
+            vertices.vertices(),
+            vertices.indices(),
+        );
         let pipelines = Pipelines::new(
             &device.device,
             &bind_group_layout,
@@ -307,8 +299,7 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let drawables =
-                Drawables::new(&self.geometries.mesh, &self.pipelines);
+            let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
             if config.draw_model {
                 drawables.model.draw(&mut render_pass);
