@@ -8,10 +8,16 @@ use winit::dpi::PhysicalSize;
 use crate::camera::Camera;
 
 use super::{
-    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
-    draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
-    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, vertices::Vertices,
+    DEPTH_FORMAT, DeviceError, SAMPLE_COUNT,
+    device::Device,
+    draw_config::DrawConfig,
+    drawables::Drawables,
+    geometries::{Geometries, Geometry},
+    navigation_cube::NavigationCubeRenderer,
+    pipelines::Pipelines,
+    transform::Transform,
+    uniforms::Uniforms,
+    vertices::Vertices,
 };
 
 /// Graphics rendering state and target abstraction
@@ -171,7 +177,13 @@ impl Renderer {
                 label: None,
             });
 
-        let geometries = Geometries::new(&device.device, &vertices);
+        let geometries = Geometries {
+            mesh: Geometry::new(
+                &device.device,
+                vertices.vertices(),
+                vertices.indices(),
+            ),
+        };
         let pipelines = Pipelines::new(
             &device.device,
             &bind_group_layout,
