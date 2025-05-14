@@ -8,7 +8,6 @@ pub struct Drawables;
 
 impl Drawables {
     pub fn draw<'a, 'b>(
-        self,
         geometry: &'a Geometry,
         pipelines: &'a Pipelines,
         config: &DrawConfig,
