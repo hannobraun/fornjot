@@ -2,7 +2,6 @@
 
 mod device;
 mod draw_config;
-mod drawables;
 mod geometry;
 mod model;
 mod navigation_cube;
