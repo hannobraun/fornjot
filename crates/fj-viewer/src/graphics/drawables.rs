@@ -1,5 +1,5 @@
 use super::{
-    geometries::{Geometries, Geometry},
+    geometries::Geometry,
     pipelines::{Pipeline, Pipelines},
 };
 
@@ -9,12 +9,12 @@ pub struct Drawables<'r> {
 }
 
 impl<'r> Drawables<'r> {
-    pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
-        let model = Drawable::new(&geometries.mesh, &pipelines.model);
+    pub fn new(geometries: &'r Geometry, pipelines: &'r Pipelines) -> Self {
+        let model = Drawable::new(geometries, &pipelines.model);
         let mesh = pipelines
             .mesh
             .as_ref()
-            .map(|pipeline| Drawable::new(&geometries.mesh, pipeline));
+            .map(|pipeline| Drawable::new(geometries, pipeline));
 
         Self { model, mesh }
     }

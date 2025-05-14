@@ -307,7 +307,8 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let drawables = Drawables::new(&self.geometries, &self.pipelines);
+            let drawables =
+                Drawables::new(&self.geometries.mesh, &self.pipelines);
 
             if config.draw_model {
                 drawables.model.draw(&mut render_pass);
