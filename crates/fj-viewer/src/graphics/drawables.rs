@@ -4,7 +4,6 @@ pub struct Drawable;
 
 impl Drawable {
     pub fn draw(
-        &self,
         geometry: &Geometry,
         pipeline: &Pipeline,
         render_pass: &mut wgpu::RenderPass,
