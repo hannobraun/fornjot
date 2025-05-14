@@ -8,8 +8,8 @@ pub struct Drawables<'a> {
     pub mesh: Option<Drawable<'a>>,
 }
 
-impl<'r> Drawables<'r> {
-    pub fn new(geometry: &'r Geometry, pipelines: &'r Pipelines) -> Self {
+impl<'a> Drawables<'a> {
+    pub fn new(geometry: &'a Geometry, pipelines: &'a Pipelines) -> Self {
         let model = Drawable::new(geometry, &pipelines.model);
         let mesh = pipelines
             .mesh
