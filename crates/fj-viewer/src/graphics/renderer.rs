@@ -27,7 +27,7 @@ pub struct Renderer {
     uniform_buffer: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
 
-    geometries: Geometry,
+    geometry: Geometry,
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
@@ -200,7 +200,7 @@ impl Renderer {
             uniform_buffer,
             bind_group,
 
-            geometries,
+            geometry: geometries,
             pipelines,
 
             navigation_cube_renderer,
@@ -299,7 +299,7 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let drawables = Drawables::new(&self.geometries, &self.pipelines);
+            let drawables = Drawables::new(&self.geometry, &self.pipelines);
 
             if config.draw_model {
                 drawables.model.draw(&mut render_pass);
