@@ -137,7 +137,7 @@ impl Pipeline {
         Self { inner: pipeline }
     }
 
-    pub fn draw_geometry(
+    pub fn draw(
         geometry: &Geometry,
         pipeline: &Pipeline,
         render_pass: &mut wgpu::RenderPass,

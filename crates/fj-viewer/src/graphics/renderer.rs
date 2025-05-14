@@ -300,7 +300,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             if config.draw_model {
-                Pipeline::draw_geometry(
+                Pipeline::draw(
                     &self.geometry,
                     &self.pipelines.model,
                     &mut render_pass,
@@ -309,11 +309,7 @@ impl Renderer {
 
             if let Some(pipeline) = self.pipelines.mesh.as_ref() {
                 if config.draw_mesh {
-                    Pipeline::draw_geometry(
-                        &self.geometry,
-                        pipeline,
-                        &mut render_pass,
-                    );
+                    Pipeline::draw(&self.geometry, pipeline, &mut render_pass);
                 }
             };
         }
