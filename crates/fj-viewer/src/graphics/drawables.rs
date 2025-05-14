@@ -4,31 +4,27 @@ use super::{
     pipelines::{Pipeline, Pipelines},
 };
 
-pub struct Drawables;
+pub fn draw<'a, 'b>(
+    geometry: &'a Geometry,
+    pipelines: &'a Pipelines,
+    config: &DrawConfig,
+    render_pass: &mut wgpu::RenderPass<'b>,
+) where
+    'a: 'b,
+{
+    let model = Drawable::new(geometry, &pipelines.model);
+    let mesh = pipelines
+        .mesh
+        .as_ref()
+        .map(|pipeline| Drawable::new(geometry, pipeline));
 
-impl Drawables {
-    pub fn draw<'a, 'b>(
-        geometry: &'a Geometry,
-        pipelines: &'a Pipelines,
-        config: &DrawConfig,
-        render_pass: &mut wgpu::RenderPass<'b>,
-    ) where
-        'a: 'b,
-    {
-        let model = Drawable::new(geometry, &pipelines.model);
-        let mesh = pipelines
-            .mesh
-            .as_ref()
-            .map(|pipeline| Drawable::new(geometry, pipeline));
+    if config.draw_model {
+        model.draw(render_pass);
+    }
 
-        if config.draw_model {
-            model.draw(render_pass);
-        }
-
-        if let Some(drawable) = mesh {
-            if config.draw_mesh {
-                drawable.draw(render_pass);
-            }
+    if let Some(drawable) = mesh {
+        if config.draw_mesh {
+            drawable.draw(render_pass);
         }
     }
 }

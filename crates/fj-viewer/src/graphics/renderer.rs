@@ -9,7 +9,7 @@ use crate::camera::Camera;
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
-    draw_config::DrawConfig, drawables::Drawables, geometry::Geometry,
+    draw_config::DrawConfig, drawables::draw, geometry::Geometry,
     navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
     transform::Transform, uniforms::Uniforms, vertices::Vertices,
 };
@@ -299,12 +299,7 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            Drawables::draw(
-                &self.geometry,
-                &self.pipelines,
-                config,
-                &mut render_pass,
-            );
+            draw(&self.geometry, &self.pipelines, config, &mut render_pass);
         }
 
         self.navigation_cube_renderer.draw(
