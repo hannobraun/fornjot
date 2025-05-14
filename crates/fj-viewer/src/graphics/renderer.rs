@@ -300,16 +300,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             let drawables = Drawables::new(&self.geometry, &self.pipelines);
-
-            if config.draw_model {
-                drawables.model.draw(&mut render_pass);
-            }
-
-            if let Some(drawable) = drawables.mesh {
-                if config.draw_mesh {
-                    drawable.draw(&mut render_pass);
-                }
-            }
+            drawables.draw(config, &mut render_pass);
         }
 
         self.navigation_cube_renderer.draw(

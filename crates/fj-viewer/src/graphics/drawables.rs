@@ -1,4 +1,5 @@
 use super::{
+    DrawConfig,
     geometry::Geometry,
     pipelines::{Pipeline, Pipelines},
 };
@@ -17,6 +18,24 @@ impl<'a> Drawables<'a> {
             .map(|pipeline| Drawable::new(geometry, pipeline));
 
         Self { model, mesh }
+    }
+
+    pub fn draw<'b>(
+        self,
+        config: &DrawConfig,
+        render_pass: &mut wgpu::RenderPass<'b>,
+    ) where
+        'a: 'b,
+    {
+        if config.draw_model {
+            self.model.draw(render_pass);
+        }
+
+        if let Some(drawable) = self.mesh {
+            if config.draw_mesh {
+                drawable.draw(render_pass);
+            }
+        }
     }
 }
 
