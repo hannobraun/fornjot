@@ -3,9 +3,9 @@ use super::{
     pipelines::{Pipeline, Pipelines},
 };
 
-pub struct Drawables<'r> {
-    pub model: Drawable<'r>,
-    pub mesh: Option<Drawable<'r>>,
+pub struct Drawables<'a> {
+    pub model: Drawable<'a>,
+    pub mesh: Option<Drawable<'a>>,
 }
 
 impl<'r> Drawables<'r> {
