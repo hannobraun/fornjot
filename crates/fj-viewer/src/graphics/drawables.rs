@@ -2,11 +2,11 @@ use super::{geometry::Geometry, pipelines::Pipeline};
 
 pub struct Drawable;
 
-impl<'a> Drawable {
+impl Drawable {
     pub fn draw(
         &self,
-        geometry: &'a Geometry,
-        pipeline: &'a Pipeline,
+        geometry: &Geometry,
+        pipeline: &Pipeline,
         render_pass: &mut wgpu::RenderPass,
     ) {
         render_pass.set_pipeline(&pipeline.inner);
