@@ -3,10 +3,6 @@ use super::{geometry::Geometry, pipelines::Pipeline};
 pub struct Drawable;
 
 impl<'a> Drawable {
-    pub fn new() -> Self {
-        Self
-    }
-
     pub fn draw<'b>(
         &self,
         geometry: &'a Geometry,

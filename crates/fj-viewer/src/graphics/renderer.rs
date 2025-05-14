@@ -299,8 +299,8 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let model = Drawable::new();
-            let mesh = self.pipelines.mesh.as_ref().map(|_| Drawable::new());
+            let model = Drawable;
+            let mesh = self.pipelines.mesh.as_ref().map(|_| Drawable);
 
             if config.draw_model {
                 model.draw(
