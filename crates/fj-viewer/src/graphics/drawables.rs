@@ -8,9 +8,7 @@ impl<'a> Drawable {
         geometry: &'a Geometry,
         pipeline: &'a Pipeline,
         render_pass: &mut wgpu::RenderPass<'b>,
-    ) where
-        'a: 'b,
-    {
+    ) {
         render_pass.set_pipeline(&pipeline.inner);
         render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
         render_pass.set_index_buffer(
