@@ -3,11 +3,11 @@ use super::{geometry::Geometry, pipelines::Pipeline};
 pub struct Drawable;
 
 impl<'a> Drawable {
-    pub fn draw<'b>(
+    pub fn draw(
         &self,
         geometry: &'a Geometry,
         pipeline: &'a Pipeline,
-        render_pass: &mut wgpu::RenderPass<'b>,
+        render_pass: &mut wgpu::RenderPass,
     ) {
         render_pass.set_pipeline(&pipeline.inner);
         render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
