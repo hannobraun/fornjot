@@ -7,10 +7,6 @@ use super::{
 pub struct Drawables;
 
 impl Drawables {
-    pub fn new() -> Self {
-        Self
-    }
-
     pub fn draw<'a, 'b>(
         self,
         geometry: &'a Geometry,

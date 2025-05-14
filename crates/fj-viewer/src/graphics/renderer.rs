@@ -299,7 +299,7 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            Drawables::new().draw(
+            Drawables.draw(
                 &self.geometry,
                 &self.pipelines,
                 config,
