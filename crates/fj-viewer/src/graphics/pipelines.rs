@@ -8,9 +8,11 @@ use super::{
 };
 
 #[derive(Debug)]
-pub struct Pipelines {
-    pub model: Pipeline,
-    pub mesh: Option<Pipeline>,
+pub enum Pipelines {
+    ForModel {
+        model: Pipeline,
+        mesh: Option<Pipeline>,
+    },
 }
 
 impl Pipelines {
@@ -54,7 +56,7 @@ impl Pipelines {
             None
         };
 
-        Self { model, mesh }
+        Self::ForModel { model, mesh }
     }
 
     pub fn draw(
@@ -63,15 +65,19 @@ impl Pipelines {
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
-        if config.draw_model {
-            self.model.draw(geometry, render_pass);
-        }
+        match self {
+            Self::ForModel { model, mesh } => {
+                if config.draw_model {
+                    model.draw(geometry, render_pass);
+                }
 
-        if let Some(pipeline) = self.mesh.as_ref() {
-            if config.draw_mesh {
-                pipeline.draw(geometry, render_pass);
+                if let Some(pipeline) = mesh.as_ref() {
+                    if config.draw_mesh {
+                        pipeline.draw(geometry, render_pass);
+                    }
+                };
             }
-        };
+        }
     }
 }
 
