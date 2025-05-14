@@ -299,20 +299,21 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            let model = Drawable::new(&self.geometry, &self.pipelines.model);
-            let mesh = self
-                .pipelines
-                .mesh
-                .as_ref()
-                .map(|pipeline| Drawable::new(&self.geometry, pipeline));
+            let model = Drawable::new();
+            let mesh = self.pipelines.mesh.as_ref().map(|_| Drawable::new());
 
             if config.draw_model {
-                model.draw(&mut render_pass);
+                model.draw(
+                    &self.geometry,
+                    &self.pipelines.model,
+                    &mut render_pass,
+                );
             }
 
             if let Some(drawable) = mesh {
+                let pipeline = self.pipelines.mesh.as_ref().unwrap();
                 if config.draw_mesh {
-                    drawable.draw(&mut render_pass);
+                    drawable.draw(&self.geometry, pipeline, &mut render_pass);
                 }
             };
         }
