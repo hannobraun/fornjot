@@ -299,8 +299,12 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            Drawables::new(&self.geometry, &self.pipelines)
-                .draw(config, &mut render_pass);
+            Drawables::new().draw(
+                &self.geometry,
+                &self.pipelines,
+                config,
+                &mut render_pass,
+            );
         }
 
         self.navigation_cube_renderer.draw(
