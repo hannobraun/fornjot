@@ -86,11 +86,6 @@ impl WindowForModel {
         }
     }
 
-    /// # Remove the stored focus point
-    pub fn remove_focus_point(&mut self) {
-        self.focus_point = None;
-    }
-
     /// # Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
         self.new_screen_size = Some(new_size);
@@ -150,7 +145,7 @@ impl WindowForModel {
             self.most_recent_mouse_button = None;
         }
 
-        self.remove_focus_point();
+        self.focus_point = None;
     }
 
     /// # Handle zoom
