@@ -8,7 +8,7 @@ use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 use crate::{
     RendererInitError,
     camera::{Camera, FocusPoint},
-    graphics::{DrawConfig, Renderer, Vertices},
+    graphics::{DrawConfig, RenderMode, Renderer, Vertices},
     input::{
         CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
         MouseButton,
@@ -43,9 +43,12 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let renderer =
-            Renderer::new(window.clone(), Vertices::from_tri_mesh(&tri_mesh))
-                .await?;
+        let renderer = Renderer::new(
+            window.clone(),
+            Vertices::from_tri_mesh(&tri_mesh),
+            RenderMode::Model,
+        )
+        .await?;
         let camera = Camera::new(&aabb);
 
         Ok(Self {

@@ -39,6 +39,7 @@ impl Renderer {
     pub async fn new(
         window: Arc<winit::window::Window>,
         vertices: Vertices,
+        _: RenderMode,
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
 
@@ -375,6 +376,10 @@ impl Renderer {
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
     }
+}
+
+pub enum RenderMode {
+    Model,
 }
 
 /// Error describing the set of render surface initialization errors
