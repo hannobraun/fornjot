@@ -66,6 +66,11 @@ impl WindowForModel {
         &self.window
     }
 
+    /// Handle the screen being resized
+    pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
+        self.new_screen_size = Some(new_size);
+    }
+
     /// Toggle the "draw model" setting
     pub fn toggle_draw_model(&mut self) {
         self.draw_config.draw_model = !self.draw_config.draw_model;
@@ -140,11 +145,6 @@ impl WindowForModel {
         };
 
         self.camera.apply_zoom(zoom_delta, focus_point);
-    }
-
-    /// Handle the screen being resized
-    pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
-        self.new_screen_size = Some(new_size);
     }
 
     /// Compute and store a focus point, unless one is already stored
