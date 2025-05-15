@@ -107,11 +107,6 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
             return;
         };
 
-        let input_event = input_event(&event);
-        if let Some(input_event) = input_event {
-            window.handle_input_event(input_event);
-        }
-
         let mut drawn = false;
 
         match event {
@@ -164,8 +159,23 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
                     }
                 }
             }
-            WindowEvent::MouseWheel { .. } => {
+            WindowEvent::MouseWheel { delta, .. } => {
+                let delta = match delta {
+                    MouseScrollDelta::LineDelta(_, y) => {
+                        f64::from(y)
+                            * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_line
+                    }
+                    MouseScrollDelta::PixelDelta(PhysicalPosition {
+                        y,
+                        ..
+                    }) => {
+                        y * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_pixel
+                    }
+                };
+                let input_event = InputEvent::Zoom(delta);
+
                 window.add_focus_point();
+                window.handle_input_event(input_event);
             }
             WindowEvent::RedrawRequested => {
                 window.draw();
@@ -188,24 +198,5 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
         let window =
             block_on(WindowForModel::new(tri_mesh, event_loop)).unwrap();
         self.windows.insert(window.winit_window().id(), window);
-    }
-}
-
-fn input_event(event: &WindowEvent) -> Option<InputEvent> {
-    match event {
-        WindowEvent::MouseWheel { delta, .. } => {
-            let delta = match delta {
-                MouseScrollDelta::LineDelta(_, y) => {
-                    f64::from(*y)
-                        * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_line
-                }
-                MouseScrollDelta::PixelDelta(PhysicalPosition {
-                    y, ..
-                }) => y * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_pixel,
-            };
-
-            Some(InputEvent::Zoom(delta))
-        }
-        _ => None,
     }
 }
