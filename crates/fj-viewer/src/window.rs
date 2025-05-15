@@ -9,10 +9,7 @@ use crate::{
     RendererInitError,
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, RenderMode, Renderer, Vertices},
-    input::{
-        CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, InputEvent,
-        MouseButton,
-    },
+    input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
 };
 
 pub struct WindowForModel {
@@ -80,16 +77,12 @@ impl WindowForModel {
     }
 
     /// Handle an input event
-    pub fn handle_input_event(&mut self, event: InputEvent) {
+    pub fn handle_input_event(&mut self, zoom_delta: f64) {
         let Some(focus_point) = self.focus_point else {
             return;
         };
 
-        match event {
-            InputEvent::Zoom(zoom_delta) => {
-                self.camera.apply_zoom(zoom_delta, focus_point);
-            }
-        };
+        self.camera.apply_zoom(zoom_delta, focus_point);
     }
 
     /// # Handle a cursor movement

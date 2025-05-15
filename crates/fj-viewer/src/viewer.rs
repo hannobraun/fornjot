@@ -15,8 +15,7 @@ use winit::{
 };
 
 use crate::{
-    RendererInitError,
-    input::{DEFAULT_CAMERA_TUNING_CONFIG, InputEvent},
+    RendererInitError, input::DEFAULT_CAMERA_TUNING_CONFIG,
     window::WindowForModel,
 };
 
@@ -174,7 +173,7 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
                 };
 
                 window.add_focus_point();
-                window.handle_input_event(InputEvent::Zoom(delta));
+                window.handle_input_event(delta);
             }
             WindowEvent::RedrawRequested => {
                 window.draw();

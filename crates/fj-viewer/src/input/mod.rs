@@ -1,9 +1,5 @@
 //! User input parsing and propagation.
 
-mod event;
-
-pub use self::event::InputEvent;
-
 /// # Any mouse button that is relevant to the operation of this crate
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub enum MouseButton {
