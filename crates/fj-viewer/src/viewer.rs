@@ -172,10 +172,9 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
                         y * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_pixel
                     }
                 };
-                let input_event = InputEvent::Zoom(delta);
 
                 window.add_focus_point();
-                window.handle_input_event(input_event);
+                window.handle_input_event(InputEvent::Zoom(delta));
             }
             WindowEvent::RedrawRequested => {
                 window.draw();
