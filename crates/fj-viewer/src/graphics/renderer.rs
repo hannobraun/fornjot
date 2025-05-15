@@ -39,7 +39,7 @@ impl Renderer {
     pub async fn new(
         window: Arc<winit::window::Window>,
         vertices: Vertices,
-        _: RenderMode,
+        mode: RenderMode,
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
 
@@ -187,13 +187,15 @@ impl Renderer {
         );
 
         let shaders = Shaders::new(&device.device);
-        let pipelines = Pipelines::for_model(
-            &device.device,
-            &shaders,
-            &pipeline_layout,
-            color_format,
-            features,
-        );
+        let pipelines = match mode {
+            RenderMode::Model => Pipelines::for_model(
+                &device.device,
+                &shaders,
+                &pipeline_layout,
+                color_format,
+                features,
+            ),
+        };
 
         let navigation_cube_renderer = NavigationCubeRenderer::new(
             &device.device,
