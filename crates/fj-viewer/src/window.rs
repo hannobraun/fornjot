@@ -81,7 +81,7 @@ impl WindowForModel {
         self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
     }
 
-    /// # Handle a cursor movement
+    /// # Handle cursor movement
     pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
         let [width, height]: [f64; 2] = {
             let size = self.window.inner_size();
