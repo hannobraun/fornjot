@@ -76,15 +76,6 @@ impl WindowForModel {
         self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
     }
 
-    /// Handle zoom
-    pub fn on_zoom(&mut self, zoom_delta: f64) {
-        let Some(focus_point) = self.focus_point else {
-            return;
-        };
-
-        self.camera.apply_zoom(zoom_delta, focus_point);
-    }
-
     /// # Handle a cursor movement
     pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
         let [width, height]: [f64; 2] = {
@@ -140,6 +131,15 @@ impl WindowForModel {
         }
 
         self.remove_focus_point();
+    }
+
+    /// Handle zoom
+    pub fn on_zoom(&mut self, zoom_delta: f64) {
+        let Some(focus_point) = self.focus_point else {
+            return;
+        };
+
+        self.camera.apply_zoom(zoom_delta, focus_point);
     }
 
     /// Handle the screen being resized
