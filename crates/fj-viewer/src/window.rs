@@ -15,7 +15,7 @@ use crate::{
     },
 };
 
-pub struct Window {
+pub struct WindowForModel {
     new_screen_size: Option<PhysicalSize<u32>>,
     most_recent_mouse_button: Option<MouseButton>,
     camera_tuning_config: CameraTuningConfig,
@@ -28,7 +28,7 @@ pub struct Window {
     model: Option<(TriMesh, Aabb<3>)>,
 }
 
-impl Window {
+impl WindowForModel {
     pub async fn new(
         tri_mesh: TriMesh,
         event_loop: &ActiveEventLoop,
