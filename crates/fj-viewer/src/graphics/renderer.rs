@@ -170,6 +170,13 @@ impl Renderer {
                 }],
                 label: None,
             });
+        let pipeline_layout = device.device.create_pipeline_layout(
+            &wgpu::PipelineLayoutDescriptor {
+                label: None,
+                bind_group_layouts: &[&bind_group_layout],
+                push_constant_ranges: &[],
+            },
+        );
 
         let geometry = Geometry::new(
             &device.device,
@@ -178,7 +185,7 @@ impl Renderer {
         );
         let pipelines = Pipelines::for_model(
             &device.device,
-            &bind_group_layout,
+            &pipeline_layout,
             color_format,
             features,
         );

@@ -18,22 +18,15 @@ pub enum Pipelines {
 impl Pipelines {
     pub fn for_model(
         device: &wgpu::Device,
-        bind_group_layout: &wgpu::BindGroupLayout,
+        pipeline_layout: &wgpu::PipelineLayout,
         color_format: wgpu::TextureFormat,
         features: wgpu::Features,
     ) -> Self {
-        let pipeline_layout =
-            device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-                label: None,
-                bind_group_layouts: &[bind_group_layout],
-                push_constant_ranges: &[],
-            });
-
         let shaders = Shaders::new(device);
 
         let model = Pipeline::new(
             device,
-            &pipeline_layout,
+            pipeline_layout,
             shaders.model(),
             wgpu::PrimitiveTopology::TriangleList,
             wgpu::PolygonMode::Fill,
@@ -46,7 +39,7 @@ impl Pipelines {
 
             Some(Pipeline::new(
                 device,
-                &pipeline_layout,
+                pipeline_layout,
                 shaders.mesh(),
                 wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Line,
