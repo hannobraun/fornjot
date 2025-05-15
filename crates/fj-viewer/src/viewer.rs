@@ -164,7 +164,9 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
                     }
                 }
             }
-            WindowEvent::MouseWheel { .. } => window.add_focus_point(),
+            WindowEvent::MouseWheel { .. } => {
+                window.add_focus_point();
+            }
             WindowEvent::RedrawRequested => {
                 window.draw();
                 drawn = true;
