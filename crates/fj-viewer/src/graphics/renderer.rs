@@ -11,7 +11,8 @@ use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
     draw_config::DrawConfig, geometry::Geometry,
     navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, vertices::Vertices,
+    shaders::Shaders, transform::Transform, uniforms::Uniforms,
+    vertices::Vertices,
 };
 
 /// Graphics rendering state and target abstraction
@@ -185,6 +186,7 @@ impl Renderer {
         );
         let pipelines = Pipelines::for_model(
             &device.device,
+            &Shaders::new(&device.device),
             &pipeline_layout,
             color_format,
             features,

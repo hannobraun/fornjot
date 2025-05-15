@@ -18,12 +18,11 @@ pub enum Pipelines {
 impl Pipelines {
     pub fn for_model(
         device: &wgpu::Device,
+        shaders: &Shaders,
         pipeline_layout: &wgpu::PipelineLayout,
         color_format: wgpu::TextureFormat,
         features: wgpu::Features,
     ) -> Self {
-        let shaders = Shaders::new(device);
-
         let model = Pipeline::new(
             device,
             pipeline_layout,
