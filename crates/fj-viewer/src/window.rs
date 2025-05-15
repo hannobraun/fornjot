@@ -76,7 +76,7 @@ impl WindowForModel {
         self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
     }
 
-    /// Handle an input event
+    /// Handle zoom
     pub fn on_zoom(&mut self, zoom_delta: f64) {
         let Some(focus_point) = self.focus_point else {
             return;
