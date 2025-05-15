@@ -162,7 +162,7 @@ impl WindowForModel {
         self.focus_point = None;
     }
 
-    /// # Draw the graphics
+    /// # Draw the window
     pub fn draw(&mut self) {
         let size_is_invalid = {
             let size = self.window.inner_size();
