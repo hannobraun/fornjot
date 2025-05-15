@@ -173,7 +173,7 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
                 };
 
                 window.add_focus_point();
-                window.handle_input_event(delta);
+                window.on_zoom(delta);
             }
             WindowEvent::RedrawRequested => {
                 window.draw();

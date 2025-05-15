@@ -77,7 +77,7 @@ impl WindowForModel {
     }
 
     /// Handle an input event
-    pub fn handle_input_event(&mut self, zoom_delta: f64) {
+    pub fn on_zoom(&mut self, zoom_delta: f64) {
         let Some(focus_point) = self.focus_point else {
             return;
         };
