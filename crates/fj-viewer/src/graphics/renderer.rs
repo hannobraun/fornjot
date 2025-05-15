@@ -184,9 +184,11 @@ impl Renderer {
             vertices.vertices(),
             vertices.indices(),
         );
+
+        let shaders = Shaders::new(&device.device);
         let pipelines = Pipelines::for_model(
             &device.device,
-            &Shaders::new(&device.device),
+            &shaders,
             &pipeline_layout,
             color_format,
             features,
