@@ -76,6 +76,21 @@ impl WindowForModel {
         self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
     }
 
+    /// # Compute and store a focus point, unless one is already stored
+    pub fn add_focus_point(&mut self) {
+        if let Some((mesh, aabb)) = &self.model {
+            if self.focus_point.is_none() {
+                self.focus_point =
+                    Some(self.camera.focus_point(self.cursor, mesh, aabb));
+            }
+        }
+    }
+
+    /// # Remove the stored focus point
+    pub fn remove_focus_point(&mut self) {
+        self.focus_point = None;
+    }
+
     /// # Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
         self.new_screen_size = Some(new_size);
@@ -145,21 +160,6 @@ impl WindowForModel {
         };
 
         self.camera.apply_zoom(zoom_delta, focus_point);
-    }
-
-    /// # Compute and store a focus point, unless one is already stored
-    pub fn add_focus_point(&mut self) {
-        if let Some((mesh, aabb)) = &self.model {
-            if self.focus_point.is_none() {
-                self.focus_point =
-                    Some(self.camera.focus_point(self.cursor, mesh, aabb));
-            }
-        }
-    }
-
-    /// # Remove the stored focus point
-    pub fn remove_focus_point(&mut self) {
-        self.focus_point = None;
     }
 
     /// # Draw the window
