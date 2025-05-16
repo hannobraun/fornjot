@@ -30,6 +30,7 @@ impl Window {
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
         let ToDisplay::Model { tri_mesh, aabb } = &to_display;
+        let vertices = Vertices::from_tri_mesh(tri_mesh);
 
         let window = Arc::new(
             event_loop.create_window(
@@ -39,12 +40,8 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let renderer = Renderer::new(
-            window.clone(),
-            Vertices::from_tri_mesh(tri_mesh),
-            RenderMode::Model,
-        )
-        .await?;
+        let renderer =
+            Renderer::new(window.clone(), vertices, RenderMode::Model).await?;
         let camera = Camera::new(aabb);
 
         Ok(Self {
