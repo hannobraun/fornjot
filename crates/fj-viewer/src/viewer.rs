@@ -15,7 +15,9 @@ use winit::{
 };
 
 use crate::{
-    RendererInitError, input::DEFAULT_CAMERA_TUNING_CONFIG, window::Window,
+    RendererInitError,
+    input::DEFAULT_CAMERA_TUNING_CONFIG,
+    window::{ToDisplay, Window},
 };
 
 /// # Create a model viewer and spawn a new thread where to use it
@@ -192,7 +194,9 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
         event: EventLoopEvent,
     ) {
         let EventLoopEvent::DisplayMesh { tri_mesh } = event;
-        let window = block_on(Window::new(tri_mesh, event_loop)).unwrap();
+        let window =
+            block_on(Window::new(ToDisplay::Model { tri_mesh }, event_loop))
+                .unwrap();
         self.windows.insert(window.winit_window().id(), window);
     }
 }

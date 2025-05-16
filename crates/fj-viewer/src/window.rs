@@ -26,9 +26,10 @@ pub struct Window {
 
 impl Window {
     pub async fn new(
-        tri_mesh: TriMesh,
+        to_display: ToDisplay,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
+        let ToDisplay::Model { tri_mesh } = to_display;
         let aabb = tri_mesh.aabb();
 
         let window = Arc::new(
@@ -184,6 +185,10 @@ impl Window {
             warn!("Draw error: {}", err);
         }
     }
+}
+
+pub enum ToDisplay {
+    Model { tri_mesh: TriMesh },
 }
 
 #[derive(Debug, thiserror::Error)]
