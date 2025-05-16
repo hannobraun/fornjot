@@ -29,7 +29,7 @@ impl Pipelines {
             device,
             pipeline_layout,
             shaders.face(),
-            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PrimitiveTopology::LineStrip,
             wgpu::PolygonMode::Line,
             color_format,
         );
