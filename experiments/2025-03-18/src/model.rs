@@ -44,6 +44,13 @@ pub fn model(viewer: &Viewer) -> TriMesh {
     };
 
     render_projected_face::render(&ProjectedFace::new(&top, tolerance));
+    viewer.display_face(
+        ProjectedFace::new(&top, tolerance)
+            .points
+            .into_iter()
+            .map(|point| point.point_surface)
+            .collect(),
+    );
     viewer.display_model(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
