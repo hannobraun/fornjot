@@ -44,7 +44,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
     };
 
     render_projected_face::render(&ProjectedFace::new(&top, tolerance));
-    viewer.display_mesh(top.to_tri_mesh(tolerance));
+    viewer.display_model(top.to_tri_mesh(tolerance));
 
     let solid = top.sweep(
         FloatingCurve::new(Line {
@@ -52,7 +52,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         }),
         [1.],
     );
-    viewer.display_mesh(solid.to_tri_mesh(tolerance));
+    viewer.display_model(solid.to_tri_mesh(tolerance));
 
     solid.to_tri_mesh(tolerance)
 }
