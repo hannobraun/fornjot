@@ -21,7 +21,7 @@ pub struct Window {
     focus_point: Option<FocusPoint>,
     window: Arc<winit::window::Window>,
     renderer: Renderer,
-    model: Option<(TriMesh, Aabb<3>)>,
+    model: (TriMesh, Aabb<3>),
 }
 
 impl Window {
@@ -56,7 +56,7 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            model: Some((tri_mesh, aabb)),
+            model: (tri_mesh, aabb),
         })
     }
 
@@ -76,11 +76,11 @@ impl Window {
 
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Some((mesh, aabb)) = &self.model {
-            if self.focus_point.is_none() {
-                self.focus_point =
-                    Some(self.camera.focus_point(self.cursor, mesh, aabb));
-            }
+        let (mesh, aabb) = &self.model;
+
+        if self.focus_point.is_none() {
+            self.focus_point =
+                Some(self.camera.focus_point(self.cursor, mesh, aabb));
         }
     }
 
@@ -172,12 +172,7 @@ impl Window {
             self.renderer.handle_resize(new_size);
         }
 
-        let aabb = self
-            .model
-            .as_ref()
-            .map(|(_, aabb)| *aabb)
-            .unwrap_or_default();
-
+        let (_, aabb) = self.model;
         self.camera.update_planes(&aabb);
 
         if let Err(err) = self.renderer.draw(&self.camera, &self.draw_config) {
