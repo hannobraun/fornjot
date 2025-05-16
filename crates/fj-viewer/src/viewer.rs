@@ -194,9 +194,9 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
         event: EventLoopEvent,
     ) {
         let EventLoopEvent::DisplayMesh { tri_mesh } = event;
-        let window =
-            block_on(Window::new(ToDisplay::model(tri_mesh), event_loop))
-                .unwrap();
+        let to_display = ToDisplay::model(tri_mesh);
+
+        let window = block_on(Window::new(to_display, event_loop)).unwrap();
         self.windows.insert(window.winit_window().id(), window);
     }
 }
