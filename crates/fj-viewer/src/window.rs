@@ -31,7 +31,7 @@ impl Window {
     ) -> Result<Self, WindowError> {
         let (vertices, render_mode, aabb) = match &to_display {
             ToDisplay::Model { tri_mesh, aabb } => {
-                let vertices = Vertices::from_tri_mesh(tri_mesh);
+                let vertices = Vertices::for_model(tri_mesh);
                 let render_mode = RenderMode::Model;
                 (vertices, render_mode, aabb)
             }
