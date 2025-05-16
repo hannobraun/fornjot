@@ -63,7 +63,7 @@ pub struct Viewer {
 }
 
 impl Viewer {
-    /// # Display a triangle mesh in a new window
+    /// # Display a 3D model in a new window
     pub fn display_model(&self, tri_mesh: TriMesh) {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
