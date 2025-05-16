@@ -191,6 +191,12 @@ pub enum ToDisplay {
     Model { tri_mesh: TriMesh },
 }
 
+impl ToDisplay {
+    pub fn model(tri_mesh: TriMesh) -> Self {
+        Self::Model { tri_mesh }
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum WindowError {
     #[error("Failed to initialize window")]
