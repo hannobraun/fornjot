@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, panic, thread};
 
 use fj_interop::TriMesh;
+use fj_math::Point;
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -63,6 +64,14 @@ pub struct Viewer {
 }
 
 impl Viewer {
+    /// # Display a 2D face in a new window
+    pub fn display_face(&self, points: Vec<Point<2>>) {
+        // If there's an error, that means the display thread has closed down
+        // and we're on our way to shutting down as well. I don't think there's
+        // much we can do about that.
+        let _ = self.event_loop.send_event(ToDisplay::face(points));
+    }
+
     /// # Display a 3D model in a new window
     pub fn display_model(&self, tri_mesh: TriMesh) {
         // If there's an error, that means the display thread has closed down

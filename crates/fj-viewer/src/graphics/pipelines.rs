@@ -9,6 +9,9 @@ use super::{
 
 #[derive(Debug)]
 pub enum Pipelines {
+    ForFace {
+        lines: Pipeline,
+    },
     ForModel {
         model: Pipeline,
         mesh: Option<Pipeline>,
@@ -16,6 +19,24 @@ pub enum Pipelines {
 }
 
 impl Pipelines {
+    pub fn for_face(
+        device: &wgpu::Device,
+        shaders: &Shaders,
+        pipeline_layout: &wgpu::PipelineLayout,
+        color_format: wgpu::TextureFormat,
+    ) -> Self {
+        let lines = Pipeline::new(
+            device,
+            pipeline_layout,
+            shaders.face(),
+            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PolygonMode::Line,
+            color_format,
+        );
+
+        Self::ForFace { lines }
+    }
+
     pub fn for_model(
         device: &wgpu::Device,
         shaders: &Shaders,
@@ -58,6 +79,9 @@ impl Pipelines {
         render_pass: &mut wgpu::RenderPass,
     ) {
         match self {
+            Self::ForFace { lines } => {
+                lines.draw(geometry, render_pass);
+            }
             Self::ForModel { model, mesh } => {
                 if config.draw_model {
                     model.draw(geometry, render_pass);

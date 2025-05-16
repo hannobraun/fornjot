@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use fj_interop::TriMesh;
-use fj_math::Aabb;
+use fj_math::{Aabb, Point};
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
@@ -30,6 +30,11 @@ impl Window {
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
         let (vertices, render_mode, aabb) = match &to_display {
+            ToDisplay::Face { points, aabb } => {
+                let vertices = Vertices::for_face(points);
+                let render_mode = RenderMode::Face;
+                (vertices, render_mode, aabb)
+            }
             ToDisplay::Model { tri_mesh, aabb } => {
                 let vertices = Vertices::for_model(tri_mesh);
                 let render_mode = RenderMode::Model;
@@ -78,11 +83,11 @@ impl Window {
 
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        let ToDisplay::Model { tri_mesh, aabb } = &self.to_display;
-
-        if self.focus_point.is_none() {
-            self.focus_point =
-                Some(self.camera.focus_point(self.cursor, tri_mesh, aabb));
+        if let ToDisplay::Model { tri_mesh, aabb } = &self.to_display {
+            if self.focus_point.is_none() {
+                self.focus_point =
+                    Some(self.camera.focus_point(self.cursor, tri_mesh, aabb));
+            }
         }
     }
 
@@ -175,6 +180,7 @@ impl Window {
         }
 
         let aabb = match &self.to_display {
+            ToDisplay::Face { points: _, aabb } => aabb,
             ToDisplay::Model { tri_mesh: _, aabb } => aabb,
         };
         self.camera.update_planes(aabb);
@@ -186,10 +192,23 @@ impl Window {
 }
 
 pub enum ToDisplay {
-    Model { tri_mesh: TriMesh, aabb: Aabb<3> },
+    Face {
+        points: Vec<Point<2>>,
+        aabb: Aabb<3>,
+    },
+    Model {
+        tri_mesh: TriMesh,
+        aabb: Aabb<3>,
+    },
 }
 
 impl ToDisplay {
+    pub fn face(points: Vec<Point<2>>) -> Self {
+        let aabb =
+            Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
+        Self::Face { points, aabb }
+    }
+
     pub fn model(tri_mesh: TriMesh) -> Self {
         let aabb = tri_mesh.aabb();
         Self::Model { tri_mesh, aabb }

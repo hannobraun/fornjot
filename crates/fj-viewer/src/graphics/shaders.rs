@@ -17,6 +17,13 @@ impl Shaders {
         Self { module }
     }
 
+    pub fn face(&self) -> Shader {
+        Shader {
+            module: &self.module,
+            frag_entry: "frag_face",
+        }
+    }
+
     pub fn model(&self) -> Shader {
         Shader {
             module: &self.module,

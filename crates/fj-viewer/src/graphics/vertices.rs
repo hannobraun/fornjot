@@ -1,5 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 use fj_interop::{Index, TriMesh, vertices_to_indexed_vertices};
+use fj_math::{Point, Scalar};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -8,6 +9,24 @@ pub struct Vertices {
 }
 
 impl Vertices {
+    pub fn for_face(points: &[Point<2>]) -> Self {
+        let vertices = points
+            .iter()
+            .map(|point| {
+                let [x, y] = point.coords.components.map(Scalar::into_f32);
+
+                Vertex {
+                    position: [x, y, 0.],
+                    normal: [0., 0., 1.],
+                    color: [0., 0., 0., 1.],
+                }
+            })
+            .collect();
+        let indices = (0..).take(points.len()).collect();
+
+        Self { vertices, indices }
+    }
+
     pub fn for_model(tri_mesh: &TriMesh) -> Self {
         let (vertices, indices) = vertices_to_indexed_vertices(
             tri_mesh.triangles.iter().flat_map(|triangle| {

@@ -188,6 +188,12 @@ impl Renderer {
 
         let shaders = Shaders::new(&device.device);
         let pipelines = match mode {
+            RenderMode::Face => Pipelines::for_face(
+                &device.device,
+                &shaders,
+                &pipeline_layout,
+                color_format,
+            ),
             RenderMode::Model => Pipelines::for_model(
                 &device.device,
                 &shaders,
@@ -381,6 +387,7 @@ impl Renderer {
 }
 
 pub enum RenderMode {
+    Face,
     Model,
 }
 

@@ -36,6 +36,13 @@ fn vertex(in: VertexInput) -> VertexOutput {
 const pi: f32 = 3.14159265359;
 
 @fragment
+fn frag_face(in: VertexOutput) -> FragmentOutput {
+    var out: FragmentOutput;
+    out.color = vec4<f32>(0.0, 0.0, 0.0, 1.0);
+    return out;
+}
+
+@fragment
 fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
 
