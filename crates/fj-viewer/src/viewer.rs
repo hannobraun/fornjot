@@ -59,7 +59,7 @@ where
 
 /// # Fornjot model viewer
 pub struct Viewer {
-    event_loop: EventLoopProxy<EventLoopEvent>,
+    event_loop: EventLoopProxy<ToDisplay>,
 }
 
 impl Viewer {
@@ -68,9 +68,7 @@ impl Viewer {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
-        let _ = self
-            .event_loop
-            .send_event(EventLoopEvent::DisplayMesh { tri_mesh });
+        let _ = self.event_loop.send_event(ToDisplay::model(tri_mesh));
     }
 }
 
@@ -86,15 +84,11 @@ pub enum Error {
     Graphics(#[from] RendererInitError),
 }
 
-enum EventLoopEvent {
-    DisplayMesh { tri_mesh: TriMesh },
-}
-
 struct DisplayState {
     windows: BTreeMap<WindowId, Window>,
 }
 
-impl ApplicationHandler<EventLoopEvent> for DisplayState {
+impl ApplicationHandler<ToDisplay> for DisplayState {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
@@ -191,14 +185,8 @@ impl ApplicationHandler<EventLoopEvent> for DisplayState {
     fn user_event(
         &mut self,
         event_loop: &ActiveEventLoop,
-        event: EventLoopEvent,
+        to_display: ToDisplay,
     ) {
-        let to_display = match event {
-            EventLoopEvent::DisplayMesh { tri_mesh } => {
-                ToDisplay::model(tri_mesh)
-            }
-        };
-
         let window = block_on(Window::new(to_display, event_loop)).unwrap();
         self.windows.insert(window.winit_window().id(), window);
     }
