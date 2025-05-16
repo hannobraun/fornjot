@@ -29,8 +29,7 @@ impl Window {
         to_display: ToDisplay,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let ToDisplay::Model { tri_mesh } = to_display;
-        let aabb = tri_mesh.aabb();
+        let ToDisplay::Model { tri_mesh, aabb } = to_display;
 
         let window = Arc::new(
             event_loop.create_window(
@@ -188,12 +187,13 @@ impl Window {
 }
 
 pub enum ToDisplay {
-    Model { tri_mesh: TriMesh },
+    Model { tri_mesh: TriMesh, aabb: Aabb<3> },
 }
 
 impl ToDisplay {
     pub fn model(tri_mesh: TriMesh) -> Self {
-        Self::Model { tri_mesh }
+        let aabb = tri_mesh.aabb();
+        Self::Model { tri_mesh, aabb }
     }
 }
 
