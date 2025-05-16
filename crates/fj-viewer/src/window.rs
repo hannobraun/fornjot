@@ -9,13 +9,12 @@ use crate::{
     RendererInitError,
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, RenderMode, Renderer, Vertices},
-    input::{CameraTuningConfig, DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+    input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
 };
 
 pub struct Window {
     new_screen_size: Option<PhysicalSize<u32>>,
     most_recent_mouse_button: Option<MouseButton>,
-    camera_tuning_config: CameraTuningConfig,
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
@@ -51,7 +50,6 @@ impl Window {
         Ok(Self {
             new_screen_size: None,
             most_recent_mouse_button: None,
-            camera_tuning_config: DEFAULT_CAMERA_TUNING_CONFIG,
             camera,
             cursor: None,
             draw_config: DrawConfig::default(),
@@ -114,9 +112,9 @@ impl Window {
                     let diff_x = cursor_new.x - cursor_old.x;
                     let diff_y = cursor_new.y - cursor_old.y;
                     let angle_x = -diff_y
-                        * self.camera_tuning_config.rotation_sensitivity;
-                    let angle_y =
-                        diff_x * self.camera_tuning_config.rotation_sensitivity;
+                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
+                    let angle_y = diff_x
+                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
 
                     self.camera.apply_rotation(angle_x, angle_y, focus_point);
                 }
