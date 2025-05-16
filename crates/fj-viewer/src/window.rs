@@ -29,7 +29,7 @@ impl Window {
         to_display: ToDisplay,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let ToDisplay::Model { tri_mesh, aabb } = to_display;
+        let ToDisplay::Model { tri_mesh, aabb } = &to_display;
 
         let window = Arc::new(
             event_loop.create_window(
@@ -41,11 +41,11 @@ impl Window {
         );
         let renderer = Renderer::new(
             window.clone(),
-            Vertices::from_tri_mesh(&tri_mesh),
+            Vertices::from_tri_mesh(tri_mesh),
             RenderMode::Model,
         )
         .await?;
-        let camera = Camera::new(&aabb);
+        let camera = Camera::new(aabb);
 
         Ok(Self {
             new_screen_size: None,
@@ -56,7 +56,7 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            model: ToDisplay::Model { tri_mesh, aabb },
+            model: to_display,
         })
     }
 
