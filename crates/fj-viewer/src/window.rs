@@ -174,8 +174,8 @@ impl Window {
             self.renderer.handle_resize(new_size);
         }
 
-        let ToDisplay::Model { tri_mesh: _, aabb } = self.to_display;
-        self.camera.update_planes(&aabb);
+        let ToDisplay::Model { tri_mesh: _, aabb } = &self.to_display;
+        self.camera.update_planes(aabb);
 
         if let Err(err) = self.renderer.draw(&self.camera, &self.draw_config) {
             warn!("Draw error: {}", err);
