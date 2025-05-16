@@ -29,9 +29,13 @@ impl Window {
         to_display: ToDisplay,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let ToDisplay::Model { tri_mesh, aabb } = &to_display;
-        let vertices = Vertices::from_tri_mesh(tri_mesh);
-        let render_mode = RenderMode::Model;
+        let (vertices, render_mode, aabb) = match &to_display {
+            ToDisplay::Model { tri_mesh, aabb } => {
+                let vertices = Vertices::from_tri_mesh(tri_mesh);
+                let render_mode = RenderMode::Model;
+                (vertices, render_mode, aabb)
+            }
+        };
 
         let window = Arc::new(
             event_loop.create_window(
