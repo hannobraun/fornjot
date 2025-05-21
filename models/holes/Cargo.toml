@@ -11,3 +11,4 @@ path = "src/main.rs"
 fj = { path = "../../crates/fj" }
 clap = { version = "4.5", features = ["derive"] }
 anyhow = "1.0"
+cuboid = { path = "../cuboid" }

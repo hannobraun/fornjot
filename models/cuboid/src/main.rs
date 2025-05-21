@@ -4,7 +4,7 @@ use fj::{Args, Instance};
 #[derive(Parser)]
 struct Parameters {
     /// Size of the cuboid, as a comma-separated vector `x,y,z`
-    #[arg(long, value_parser = parse_vector_3)]
+    #[arg(long, value_parser = parse_vector_3, default_value = "1,1,1")]
     size: [f64; 3],
 
     #[command(flatten)]
