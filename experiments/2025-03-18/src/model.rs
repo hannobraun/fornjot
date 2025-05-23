@@ -3,7 +3,7 @@ use fj_math::Vector;
 use fj_viewer::Viewer;
 
 use crate::{
-    geometry::{FloatingCurve, Line, Sketch, SweptCurve, ToTriMesh},
+    geometry::{FloatingCurve, Line, Sketch, SweptCurve},
     handle::Handle,
     operations::sweep::SweepExt,
     topology::surface::Surface,

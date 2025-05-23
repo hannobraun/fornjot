@@ -3,7 +3,6 @@ use itertools::Itertools;
 
 use crate::{
     extra::triangulate::{ProjectedFace, triangulate},
-    geometry::ToTriMesh,
     handle::Handle,
 };
 
@@ -40,10 +39,8 @@ impl Face {
                 end_vertex: &b.start,
             })
     }
-}
 
-impl ToTriMesh for Face {
-    fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
+    pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
         let face = ProjectedFace::new(self, tolerance);
         triangulate(&face)
     }

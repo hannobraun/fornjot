@@ -1,6 +1,6 @@
 use fj_interop::{Tolerance, TriMesh};
 
-use crate::{geometry::ToTriMesh, handle::Handle};
+use crate::handle::Handle;
 
 use super::face::Face;
 
@@ -15,10 +15,8 @@ impl Solid {
             faces: faces.into_iter().collect(),
         }
     }
-}
 
-impl ToTriMesh for Solid {
-    fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
+    pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
         let tolerance = tolerance.into();
         let mut tri_mesh = TriMesh::new();
 
