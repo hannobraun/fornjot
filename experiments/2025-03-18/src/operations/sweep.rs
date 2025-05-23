@@ -9,14 +9,14 @@ use crate::{
 use super::{connect::ConnectExt, flip::FlipExt, translate::TranslateExt};
 
 pub trait SweepExt {
-    /// # Sweep a face along a path, creating a solid
+    /// # Sweep a face along a curve, creating a solid
     ///
     /// ## Implementation Note
     ///
     /// This method has very particular (and undocumented) requirements about
-    /// the orientation of the two faces relative to each other, and will
-    /// happily generate invalid geometry, if those undocumented requirements
-    /// aren't met.
+    /// the orientation of the face relative to the curve, and will happily
+    /// generate invalid geometry, if those undocumented requirements aren't
+    /// met.
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
