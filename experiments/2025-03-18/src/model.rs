@@ -42,13 +42,15 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         Handle::new(face)
     };
 
-    let solid = top.sweep(
-        FloatingCurve::new(Line {
-            direction: Vector::from([0., 0., -2.]),
-        }),
-        [1.],
-    );
-    let solid = solid.to_tri_mesh(tolerance);
+    let solid = {
+        let solid = top.sweep(
+            FloatingCurve::new(Line {
+                direction: Vector::from([0., 0., -2.]),
+            }),
+            [1.],
+        );
+        solid.to_tri_mesh(tolerance)
+    };
 
     viewer.display_model(solid.clone());
 
