@@ -49,6 +49,7 @@ pub fn model(viewer: &Viewer) -> TriMesh {
             }),
             [1.],
         );
+
         solid.to_tri_mesh(tolerance)
     };
 
