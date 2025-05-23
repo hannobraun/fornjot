@@ -48,7 +48,9 @@ pub fn model(viewer: &Viewer) -> TriMesh {
         }),
         [1.],
     );
-    viewer.display_model(solid.to_tri_mesh(tolerance));
+    let solid = solid.to_tri_mesh(tolerance);
 
-    solid.to_tri_mesh(tolerance)
+    viewer.display_model(solid.clone());
+
+    solid
 }
