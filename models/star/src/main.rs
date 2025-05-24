@@ -1,6 +1,4 @@
-use anyhow::Result;
 use clap::Parser;
-use fj::{Args, Instance};
 
 #[derive(Parser)]
 struct Parameters {
@@ -21,11 +19,11 @@ struct Parameters {
     height: f64,
 
     #[command(flatten)]
-    fj: Args,
+    fj: fj::Args,
 }
 
-fn main() -> Result<()> {
-    let mut fj = Instance::new();
+fn main() -> fj::Result {
+    let mut fj = fj::Instance::new();
     let params = Parameters::parse();
 
     let model = star::model(

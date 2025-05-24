@@ -3,11 +3,6 @@ name = "star"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "star"
-path = "src/main.rs"
-
 [dependencies]
 fj = { path = "../../crates/fj" }
 clap = { version = "4.5", features = ["derive"] }
-anyhow = "1.0"

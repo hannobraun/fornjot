@@ -686,7 +686,6 @@ checksum = "43da5946c66ffcc7745f48db692ffbb10a83bfe0afd96235c5c2a4fb23994929"
 name = "cuboid"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "clap",
  "fj",
 ]
@@ -1364,7 +1363,6 @@ checksum = "dfa686283ad6dd069f105e5ab091b04c62850d3e4cf5d67debad1933f55023df"
 name = "holes"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "clap",
  "cuboid",
  "fj",
@@ -3430,7 +3428,6 @@ dependencies = [
 name = "spacer"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "clap",
  "fj",
 ]
@@ -3474,7 +3471,6 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 name = "star"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "clap",
  "fj",
 ]

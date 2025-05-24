@@ -46,53 +46,8 @@ impl Instance {
         for<'r> (&'r M, Tolerance): Triangulate,
         for<'r> &'r M: BoundingVolume<3>,
     {
-        tracing_subscriber::registry()
-            .with(tracing_subscriber::fmt::layer())
-            .with(tracing_subscriber::EnvFilter::from_default_env())
-            .init();
-
         let args = Args::parse();
-
-        if !args.ignore_validation {
-            self.core.layers.validation.take_errors()?;
-        }
-
-        let aabb = model.aabb(&self.core.layers.geometry).unwrap_or(Aabb {
-            min: Point::origin(),
-            max: Point::origin(),
-        });
-
-        let tolerance = match args.tolerance {
-            None => {
-                // Compute a reasonable default for the tolerance value. To do
-                // this, we just look at the smallest non-zero extent of the
-                // bounding box and divide that by some value.
-
-                let mut min_extent = Scalar::MAX;
-                for extent in aabb.size().components {
-                    if extent > Scalar::ZERO && extent < min_extent {
-                        min_extent = extent;
-                    }
-                }
-
-                let tolerance = min_extent / Scalar::from_f64(1000.);
-                Tolerance::from_scalar(tolerance)?
-            }
-            Some(user_defined_tolerance) => user_defined_tolerance,
-        };
-
-        let tri_mesh = (model, tolerance).triangulate(&mut self.core);
-
-        if let Some(path) = args.export {
-            export::export(tri_mesh.all_triangles(), &path)?;
-            return Ok(());
-        }
-
-        make_viewer_and_spawn_thread(|viewer| {
-            viewer.display_model(tri_mesh);
-        })?;
-
-        Ok(())
+        self.process_model_args(model, args)
     }
 
     /// Process a model with pre-parsed arguments

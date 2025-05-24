@@ -1,30 +1,28 @@
 use clap::Parser;
-use fj::{Args, Instance};
 
 #[derive(Parser)]
 struct Parameters {
-    /// Size of the cuboid, as a comma-separated vector `x,y,z`
-    #[arg(long, value_parser = parse_vector_3, default_value = "1,1,1")]
-    size: [f64; 3],
+    /// Size of the cuboid along the x-axis
+    #[arg(long, default_value = "3.0")]
+    x: f64,
+
+    /// Size of the cuboid along the y-axis
+    #[arg(long, default_value = "2.0")]
+    y: f64,
+
+    /// Size of the cuboid along the z-axis
+    #[arg(long, default_value = "1.0")]
+    z: f64,
 
     #[command(flatten)]
-    fj: Args,
+    fj: fj::Args,
 }
 
-fn parse_vector_3(arg: &str) -> anyhow::Result<[f64; 3]> {
-    Ok(arg
-        .split(',')
-        .map(str::parse)
-        .collect::<Result<Vec<f64>, _>>()?
-        .as_slice()
-        .try_into()?)
-}
-
-fn main() -> anyhow::Result<()> {
-    let mut fj = Instance::new();
+fn main() -> fj::Result {
+    let mut fj = fj::Instance::new();
     let params = Parameters::parse();
 
-    let model = cuboid::model(params.size, &mut fj.core);
+    let model = cuboid::model([params.x, params.y, params.z], &mut fj.core);
     fj.process_model_args(&model, params.fj)?;
 
     Ok(())
