@@ -76,6 +76,9 @@ impl Instance {
 
         let tolerance = match args.tolerance {
             None => {
+                // Compute a reasonable default for the tolerance value. To do
+                // this, we just look at the smallest non-zero extent of the
+                // bounding box and divide that by some value.
                 let mut min_extent = Scalar::MAX;
                 for extent in aabb.size().components {
                     if extent > Scalar::ZERO && extent < min_extent {
