@@ -23,7 +23,7 @@ tobj = "4.0.3"
 raw-window-handle = "0.6.0"
 thiserror = "2.0.12"
 tracing = "0.1.41"
-winit = "0.30.10"
+winit = "0.30.11"
 
 [dependencies.bytemuck]
 version = "1.23.0"
@@ -35,7 +35,7 @@ default-features = false
 features = ["png", "jpeg"]
 
 [dependencies.wgpu]
-version = "25.0.0"
+version = "25.0.2"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the
