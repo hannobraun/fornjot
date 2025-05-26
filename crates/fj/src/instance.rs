@@ -46,12 +46,24 @@ impl Instance {
         for<'r> (&'r M, Tolerance): Triangulate,
         for<'r> &'r M: BoundingVolume<3>,
     {
+        let args = Args::parse();
+        self.process_model_args(model, args)
+    }
+
+    /// Process a model with pre-parsed arguments
+    ///
+    /// This function is similar to [`Self::process_model`], but accepts pre-parsed arguments
+    /// instead of parsing them from the command line. This is useful when you want to
+    /// extend the standard arguments with your own parameters.
+    pub fn process_model_args<M>(&mut self, model: &M, args: Args) -> Result
+    where
+        for<'r> (&'r M, Tolerance): Triangulate,
+        for<'r> &'r M: BoundingVolume<3>,
+    {
         tracing_subscriber::registry()
             .with(tracing_subscriber::fmt::layer())
             .with(tracing_subscriber::EnvFilter::from_default_env())
             .init();
-
-        let args = Args::parse();
 
         if !args.ignore_validation {
             self.core.layers.validation.take_errors()?;
@@ -67,7 +79,6 @@ impl Instance {
                 // Compute a reasonable default for the tolerance value. To do
                 // this, we just look at the smallest non-zero extent of the
                 // bounding box and divide that by some value.
-
                 let mut min_extent = Scalar::MAX;
                 for extent in aabb.size().components {
                     if extent > Scalar::ZERO && extent < min_extent {

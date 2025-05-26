@@ -3,8 +3,7 @@ name = "holes"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies.fj]
-path = "../../crates/fj"
-
-[dependencies.cuboid]
-path = "../cuboid"
+[dependencies]
+fj = { path = "../../crates/fj" }
+clap = { version = "4.5", features = ["derive"] }
+cuboid = { path = "../cuboid" }
