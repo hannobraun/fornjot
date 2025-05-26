@@ -6,7 +6,7 @@ use super::face::Face;
 
 #[derive(Clone)]
 pub struct Solid {
-    faces: Vec<Handle<Face>>,
+    pub faces: Vec<Handle<Face>>,
 }
 
 impl Solid {
