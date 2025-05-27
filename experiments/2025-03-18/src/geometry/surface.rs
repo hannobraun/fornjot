@@ -22,42 +22,6 @@ pub trait SurfaceGeometry: fmt::Debug {
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual surface. So far,
     /// this has not been necessary.
-    ///
-    /// ---
-    ///
-    /// There is an alternative approach to approximation that could also be
-    /// viable, which starts with providing the boundary as a 3D polyline
-    /// instead of a surface-local polygon.
-    ///
-    /// The boundary is necessary in the first place, because we need to
-    /// approximate finite faces, not infinite surfaces. Thus the boundary
-    /// derives from the half-edges that bound a face. And those are
-    /// approximated as a 3D polyline.
-    ///
-    /// If we could use that polyline directly as the boundary, then the generic
-    /// triangulation code would not need to project its points into the
-    /// surface. And then the `SurfaceGeometry` trait would not need to provide
-    /// that operation, thus simplifying it. This simplification would be the
-    /// motivation for the alternative approach.
-    ///
-    /// The surface-specific approximation code could then do the projecting
-    /// itself, using its surface-specific knowledge, or use some other means,
-    /// if that's more appropriate.
-    ///
-    /// However, the surface-local boundary polygon is also used by the generic
-    /// approximation code to filter the triangles afterwards, since the
-    /// triangles created from the approximation points would cover any holes in
-    /// the boundary. With this alternative approach, this surface-specific code
-    /// would need to do this, thus this method would need to return triangles
-    /// directly.
-    ///
-    /// And that would complicate the surface-specific code, thus possibly
-    /// offsetting any simplification achieved by not having to provide a
-    /// projection operation.
-    ///
-    /// It may be worth it to revisit this approach, once all of this
-    /// approximation and triangulation business is a bit more fleshed out.
-    /// Maybe there are gains to be had, or maybe not.
     fn approximate(&self, boundary: &Polygon) -> Vec<Point<2>>;
 }
 
