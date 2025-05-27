@@ -22,6 +22,20 @@ pub struct ProjectedFace {
 
 impl ProjectedFace {
     pub fn new(face: &Face, tolerance: impl Into<Tolerance>) -> Self {
+        let surface = {
+            // This happens to be big enough for the current model. But
+            // eventually, we need a solution here that works for _any_ model.
+            let size = 4.;
+
+            let boundary = Aabb {
+                min: Point::from([-size, -size]),
+                max: Point::from([size, size]),
+            };
+
+            face.surface.geometry.approximate(&boundary)
+        };
+        dbg!(surface);
+
         let mut points_from_half_edges = Vec::new();
         half_edges_to_points(face, &mut points_from_half_edges, tolerance);
 
