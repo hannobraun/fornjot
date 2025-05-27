@@ -1,7 +1,6 @@
 use std::fmt;
 
-use fj_math::{Point, Vector};
-use geo::Polygon;
+use fj_math::{Aabb, Point, Vector};
 
 use crate::geometry::SweptCurve;
 
@@ -22,7 +21,7 @@ pub trait SurfaceGeometry: fmt::Debug {
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual surface. So far,
     /// this has not been necessary.
-    fn approximate(&self, boundary: &Polygon) -> Vec<Point<2>>;
+    fn approximate(&self, boundary: &Aabb<2>) -> Vec<Point<2>>;
 }
 
 impl SurfaceGeometry for SweptCurve {
@@ -42,7 +41,7 @@ impl SurfaceGeometry for SweptCurve {
         Box::new((*self).translate(offset))
     }
 
-    fn approximate(&self, _: &Polygon) -> Vec<Point<2>> {
+    fn approximate(&self, _: &Aabb<2>) -> Vec<Point<2>> {
         // In a swept curve, the curve sweeps along a straight path. So the
         // surface is only curved along one dimension.
         //

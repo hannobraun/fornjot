@@ -4,7 +4,7 @@ use std::{
 };
 
 use fj_interop::Tolerance;
-use fj_math::Point;
+use fj_math::{Aabb, Point};
 use geo::{Coord, LineString, Polygon};
 
 use crate::topology::{
@@ -170,7 +170,14 @@ fn points_from_surface(
     boundary: &Polygon,
     target: &mut Vec<TriangulationPoint>,
 ) {
-    target.extend(surface.geometry.approximate(boundary).into_iter().map(
+    let aabb = Aabb::<2>::from_points(
+        boundary
+            .exterior()
+            .points()
+            .map(|point| Point::from([point.x(), point.y()])),
+    );
+
+    target.extend(surface.geometry.approximate(&aabb).into_iter().map(
         |point_surface| {
             let point_global = surface.geometry.point_from_local(point_surface);
 
