@@ -17,7 +17,7 @@ pub trait SurfaceGeometry: fmt::Debug {
     /// surface. The points returned must be within the provided boundary. Not
     /// outside of it, and not on it.
     ///
-    /// ## Implementation Notes
+    /// ## Implementation Note
     ///
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual surface. So far,
