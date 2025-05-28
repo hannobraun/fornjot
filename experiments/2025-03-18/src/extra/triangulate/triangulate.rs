@@ -6,7 +6,7 @@ use spade::Triangulation;
 use super::{ProjectedFace, TriangulationPoint};
 
 pub fn triangulate(face: &ProjectedFace) -> TriMesh {
-    let triangles_in_face = triangles(&face.points)
+    let triangles = triangles(&face.points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -28,7 +28,7 @@ pub fn triangulate(face: &ProjectedFace) -> TriMesh {
         });
 
     let mut mesh = TriMesh::new();
-    mesh.triangles.extend(triangles_in_face);
+    mesh.triangles.extend(triangles);
 
     mesh
 }
