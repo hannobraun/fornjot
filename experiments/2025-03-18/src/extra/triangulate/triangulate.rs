@@ -14,10 +14,12 @@ pub fn triangulate(face: &ProjectedFace) -> TriMesh {
 
             let [x, y] =
                 triangle.center().coords.components.map(|s| s.into_f64());
+
             face.polygon_from_half_edges.contains(&Coord { x, y })
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_global);
+
             MeshTriangle {
                 inner: Triangle { points },
                 is_internal: face.is_internal,
