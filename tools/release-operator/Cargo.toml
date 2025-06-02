@@ -7,7 +7,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.98"
-cargo_metadata = "0.19.2"
+cargo_metadata = "0.20.0"
 cmd_lib = "1.9.5"
 env_logger = "0.11.8"
 log = "0.4.27"
@@ -20,11 +20,11 @@ thiserror = "2.0.12"
 path = "../autolib"
 
 [dependencies.reqwest]
-version = "0.12.14"
+version = "0.12.18"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.5.38"
+version = "4.5.39"
 features = ["std", "derive", "env"]
 default-features = false
 
