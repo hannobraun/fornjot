@@ -19,7 +19,38 @@ pub fn triangulate_face(
     face: &Face,
     tolerance: impl Into<Tolerance>,
 ) -> TriMesh {
-    let face = ProjectedFace::new(face, tolerance);
+    let surface = {
+        // This happens to be big enough for the current model. But
+        // eventually, we need a solution here that works for _any_ model.
+        let size = 4.;
+
+        let boundary = Aabb {
+            min: Point::from([-size, -size]),
+            max: Point::from([size, size]),
+        };
+
+        face.surface.geometry.approximate(&boundary)
+    };
+    dbg!(surface);
+
+    let mut points_from_half_edges = Vec::new();
+    half_edges_to_points(face, &mut points_from_half_edges, tolerance);
+
+    let polygon_from_half_edges =
+        polygon_from_half_edges(&points_from_half_edges);
+
+    let mut all_points = points_from_half_edges;
+    points_from_surface(
+        &face.surface,
+        &polygon_from_half_edges,
+        &mut all_points,
+    );
+
+    let face = ProjectedFace {
+        is_internal: face.is_internal,
+        polygon_from_half_edges,
+        points: all_points,
+    };
 
     let triangles = triangles(&face.points)
         .into_iter()
@@ -52,43 +83,6 @@ pub struct ProjectedFace {
     pub is_internal: bool,
     pub polygon_from_half_edges: Polygon,
     pub points: Vec<TriangulationPoint>,
-}
-
-impl ProjectedFace {
-    pub fn new(face: &Face, tolerance: impl Into<Tolerance>) -> Self {
-        let surface = {
-            // This happens to be big enough for the current model. But
-            // eventually, we need a solution here that works for _any_ model.
-            let size = 4.;
-
-            let boundary = Aabb {
-                min: Point::from([-size, -size]),
-                max: Point::from([size, size]),
-            };
-
-            face.surface.geometry.approximate(&boundary)
-        };
-        dbg!(surface);
-
-        let mut points_from_half_edges = Vec::new();
-        half_edges_to_points(face, &mut points_from_half_edges, tolerance);
-
-        let polygon_from_half_edges =
-            polygon_from_half_edges(&points_from_half_edges);
-
-        let mut all_points = points_from_half_edges;
-        points_from_surface(
-            &face.surface,
-            &polygon_from_half_edges,
-            &mut all_points,
-        );
-
-        Self {
-            is_internal: face.is_internal,
-            polygon_from_half_edges,
-            points: all_points,
-        }
-    }
 }
 
 fn half_edges_to_points(
