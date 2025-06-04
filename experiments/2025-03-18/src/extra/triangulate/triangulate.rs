@@ -3,12 +3,16 @@ use fj_math::Triangle;
 use geo::{Contains, Coord};
 use spade::Triangulation;
 
+use crate::topology::face::Face;
+
 use super::{ProjectedFace, TriangulationPoint};
 
 pub fn triangulate_face(
-    face: &ProjectedFace,
-    _: impl Into<Tolerance>,
+    face: &Face,
+    tolerance: impl Into<Tolerance>,
 ) -> TriMesh {
+    let face = ProjectedFace::new(face, tolerance);
+
     let triangles = triangles(&face.points)
         .into_iter()
         .filter(|triangle| {

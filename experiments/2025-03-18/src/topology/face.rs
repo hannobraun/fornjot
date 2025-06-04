@@ -1,10 +1,7 @@
 use fj_interop::{Tolerance, TriMesh};
 use itertools::Itertools;
 
-use crate::{
-    extra::triangulate::{ProjectedFace, triangulate_face},
-    handle::Handle,
-};
+use crate::{extra::triangulate::triangulate_face, handle::Handle};
 
 use super::{half_edge::HalfEdge, surface::Surface, vertex::Vertex};
 
@@ -42,8 +39,7 @@ impl Face {
 
     pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
         let tolerance = tolerance.into();
-        let face = ProjectedFace::new(self, tolerance);
-        triangulate_face(&face, tolerance)
+        triangulate_face(self, tolerance)
     }
 }
 
