@@ -19,6 +19,8 @@ pub fn triangulate_face(
     face: &Face,
     tolerance: impl Into<Tolerance>,
 ) -> TriMesh {
+    let tolerance = tolerance.into();
+
     let surface = {
         // This happens to be big enough for the current model. But
         // eventually, we need a solution here that works for _any_ model.
