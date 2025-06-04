@@ -43,7 +43,7 @@ impl Face {
     pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
         let tolerance = tolerance.into();
         let face = ProjectedFace::new(self, tolerance);
-        triangulate_face(&face)
+        triangulate_face(&face, tolerance)
     }
 }
 
