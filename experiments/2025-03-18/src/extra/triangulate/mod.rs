@@ -1,4 +1,4 @@
+mod face;
 mod point;
-mod triangulate;
 
-pub use self::{point::TriangulationPoint, triangulate::triangulate_face};
+pub use self::{face::triangulate_face, point::TriangulationPoint};
