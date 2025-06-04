@@ -3,9 +3,9 @@ use fj_math::Triangle;
 use geo::{Contains, Coord};
 use spade::Triangulation;
 
-use crate::topology::face::Face;
+use crate::{extra::triangulate::face::ProjectedFace, topology::face::Face};
 
-use super::{ProjectedFace, TriangulationPoint};
+use super::TriangulationPoint;
 
 pub fn triangulate_face(
     face: &Face,
