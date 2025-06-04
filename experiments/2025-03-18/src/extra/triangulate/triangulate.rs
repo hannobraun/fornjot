@@ -5,7 +5,7 @@ use spade::Triangulation;
 
 use super::{ProjectedFace, TriangulationPoint};
 
-pub fn triangulate(face: &ProjectedFace) -> TriMesh {
+pub fn triangulate_face(face: &ProjectedFace) -> TriMesh {
     let triangles = triangles(&face.points)
         .into_iter()
         .filter(|triangle| {

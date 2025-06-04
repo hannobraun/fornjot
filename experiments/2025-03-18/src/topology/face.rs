@@ -2,7 +2,7 @@ use fj_interop::{Tolerance, TriMesh};
 use itertools::Itertools;
 
 use crate::{
-    extra::triangulate::{ProjectedFace, triangulate},
+    extra::triangulate::{ProjectedFace, triangulate_face},
     handle::Handle,
 };
 
@@ -42,7 +42,7 @@ impl Face {
 
     pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
         let face = ProjectedFace::new(self, tolerance);
-        triangulate(&face)
+        triangulate_face(&face)
     }
 }
 
