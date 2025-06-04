@@ -38,7 +38,6 @@ impl Face {
     }
 
     pub fn to_tri_mesh(&self, tolerance: impl Into<Tolerance>) -> TriMesh {
-        let tolerance = tolerance.into();
         triangulate_face(self, tolerance)
     }
 }
