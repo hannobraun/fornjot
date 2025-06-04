@@ -8,9 +8,12 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::topology::{
-    face::{Face, HalfEdgeWithEndVertex},
-    surface::Surface,
+use crate::{
+    extra::triangulate::triangulate_surface,
+    topology::{
+        face::{Face, HalfEdgeWithEndVertex},
+        surface::Surface,
+    },
 };
 
 use super::TriangulationPoint;
@@ -31,7 +34,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        face.surface.geometry.approximate(&boundary)
+        triangulate_surface(&face.surface, &boundary, tolerance)
     };
     dbg!(surface);
 
