@@ -45,11 +45,7 @@ pub fn triangulate_face(
         polygon_from_half_edges(&points_from_half_edges);
 
     let mut all_points = points_from_half_edges;
-    points_from_surface(
-        &face.surface,
-        &polygon_from_half_edges,
-        &mut all_points,
-    );
+    surface_to_points(&face.surface, &polygon_from_half_edges, &mut all_points);
 
     let triangles = triangles(&all_points)
         .into_iter()
@@ -200,7 +196,7 @@ fn polygon_from_half_edges(
     Polygon::new(exterior, interiors)
 }
 
-fn points_from_surface(
+fn surface_to_points(
     surface: &Surface,
     boundary: &Polygon,
     target: &mut Vec<TriangulationPoint>,
