@@ -46,13 +46,7 @@ pub fn triangulate_face(
         &mut all_points,
     );
 
-    let face = ProjectedFace {
-        is_internal: face.is_internal,
-        polygon_from_half_edges,
-        points: all_points,
-    };
-
-    let triangles = triangles(&face.points)
+    let triangles = triangles(&all_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -61,7 +55,7 @@ pub fn triangulate_face(
             let [x, y] =
                 triangle.center().coords.components.map(|s| s.into_f64());
 
-            face.polygon_from_half_edges.contains(&Coord { x, y })
+            polygon_from_half_edges.contains(&Coord { x, y })
         })
         .map(|triangle| {
             let points = triangle.map(|point| point.point_global);
@@ -77,12 +71,6 @@ pub fn triangulate_face(
     mesh.triangles.extend(triangles);
 
     mesh
-}
-
-pub struct ProjectedFace {
-    pub is_internal: bool,
-    pub polygon_from_half_edges: Polygon,
-    pub points: Vec<TriangulationPoint>,
 }
 
 fn half_edges_to_points(
