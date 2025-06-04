@@ -44,10 +44,14 @@ pub fn triangulate_face(
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let mut all_points = points_from_half_edges;
-    surface_to_points(&face.surface, &polygon_from_half_edges, &mut all_points);
+    let mut points_from_surface = Vec::new();
+    surface_to_points(
+        &face.surface,
+        &polygon_from_half_edges,
+        &mut points_from_surface,
+    );
 
-    let triangles = triangles(&all_points)
+    let triangles = triangles(&points_from_half_edges, &points_from_surface)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -222,6 +226,7 @@ fn surface_to_points(
 
 fn triangles(
     points_from_half_edges: &[TriangulationPoint],
+    _points_from_surface: &[TriangulationPoint],
 ) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
