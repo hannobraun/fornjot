@@ -1,4 +1,3 @@
-mod face;
 mod point;
 mod triangulate;
 
