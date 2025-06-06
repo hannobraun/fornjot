@@ -50,7 +50,7 @@ pub fn triangulate_face(
         &mut points_from_surface,
     );
 
-    let triangles = triangles(&points_from_half_edges, &points_from_surface)
+    let triangles = triangles(points_from_half_edges, &points_from_surface)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
