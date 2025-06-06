@@ -226,7 +226,7 @@ fn surface_to_points(
 
 fn triangles(
     points_from_half_edges: &[TriangulationPoint],
-    _points_from_surface: &[TriangulationPoint],
+    points_from_surface: &[TriangulationPoint],
 ) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
@@ -236,7 +236,7 @@ fn triangles(
         .add_constraint_edges(points_from_half_edges.iter().copied(), true)
         .unwrap();
 
-    for point in _points_from_surface {
+    for point in points_from_surface {
         triangulation.insert(*point).unwrap();
     }
 
