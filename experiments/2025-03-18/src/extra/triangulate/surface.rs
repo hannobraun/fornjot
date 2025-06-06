@@ -1,5 +1,5 @@
-use fj_interop::Tolerance;
-use fj_math::{Aabb, Point};
+use fj_interop::{Color, MeshTriangle, Tolerance, TriMesh};
+use fj_math::{Aabb, Point, Triangle};
 
 use crate::{
     extra::triangulate::{TriangulationPoint, delaunay::triangles},
@@ -10,7 +10,7 @@ pub fn triangulate_surface(
     surface: &Surface,
     boundary: &Aabb<2>,
     _: impl Into<Tolerance>,
-) -> (Vec<Point<2>>, Vec<[TriangulationPoint; 3]>) {
+) -> (Vec<Point<2>>, TriMesh) {
     let surface_points = surface.geometry.approximate(boundary);
 
     let boundary_points = {
@@ -38,7 +38,20 @@ pub fn triangulate_surface(
                 point_global,
             }
         }),
-    );
+    )
+    .into_iter()
+    .map(|triangle| {
+        let points = triangle.map(|point| point.point_global);
 
-    (surface_points, triangles)
+        MeshTriangle {
+            inner: Triangle { points },
+            is_internal: false,
+            color: Color::default(),
+        }
+    });
+
+    let mut tri_mesh = TriMesh::new();
+    tri_mesh.triangles.extend(triangles);
+
+    (surface_points, tri_mesh)
 }
