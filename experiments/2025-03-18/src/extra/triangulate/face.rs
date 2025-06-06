@@ -236,6 +236,10 @@ fn triangles(
         .add_constraint_edges(points_from_half_edges.iter().copied(), true)
         .unwrap();
 
+    for point in _points_from_surface {
+        triangulation.insert(*point).unwrap();
+    }
+
     triangulation
         .inner_faces()
         .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
