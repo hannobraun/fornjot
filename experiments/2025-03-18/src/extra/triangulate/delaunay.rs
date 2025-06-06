@@ -2,9 +2,9 @@ use spade::Triangulation;
 
 use crate::extra::triangulate::TriangulationPoint;
 
-pub fn triangles<'a>(
+pub fn triangles(
     points_from_half_edges: impl IntoIterator<Item = TriangulationPoint>,
-    points_from_surface: impl IntoIterator<Item = &'a TriangulationPoint>,
+    points_from_surface: impl IntoIterator<Item = TriangulationPoint>,
 ) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
@@ -15,7 +15,7 @@ pub fn triangles<'a>(
         .unwrap();
 
     for point in points_from_surface {
-        triangulation.insert(*point).unwrap();
+        triangulation.insert(point).unwrap();
     }
 
     triangulation
