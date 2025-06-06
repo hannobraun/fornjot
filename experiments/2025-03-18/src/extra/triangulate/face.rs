@@ -224,7 +224,7 @@ fn surface_to_points(
     ))
 }
 
-fn triangles(
+pub fn triangles(
     points_from_half_edges: &[TriangulationPoint],
     points_from_surface: &[TriangulationPoint],
 ) -> Vec<[TriangulationPoint; 3]> {
