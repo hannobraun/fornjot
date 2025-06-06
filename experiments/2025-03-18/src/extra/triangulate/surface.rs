@@ -10,8 +10,18 @@ pub fn triangulate_surface(
     surface: &Surface,
     boundary: &Aabb<2>,
     _: impl Into<Tolerance>,
-) -> (Vec<Point<2>>, TriMesh) {
-    let surface_points = surface.geometry.approximate(boundary);
+) -> (Vec<TriangulationPoint>, TriMesh) {
+    let surface_points = surface
+        .geometry
+        .approximate(boundary)
+        .into_iter()
+        .map(|point_surface| {
+            TriangulationPoint::from_surface_point(
+                point_surface,
+                surface.geometry.as_ref(),
+            )
+        })
+        .collect::<Vec<_>>();
 
     let boundary_points = {
         let [[min_u, min_v], [max_u, max_v]] =
@@ -24,22 +34,18 @@ pub fn triangulate_surface(
             [max_u, max_v],
         ]
         .map(Point::from)
+        .map(|point_surface| {
+            TriangulationPoint::from_surface_point(
+                point_surface,
+                surface.geometry.as_ref(),
+            )
+        })
     };
 
     let mut all_points = surface_points.clone();
     all_points.extend(boundary_points);
 
-    let triangles = triangles(
-        [],
-        all_points.into_iter().map(|point_surface| {
-            TriangulationPoint::from_surface_point(
-                point_surface,
-                surface.geometry.as_ref(),
-            )
-        }),
-    )
-    .into_iter()
-    .map(|triangle| {
+    let triangles = triangles([], all_points).into_iter().map(|triangle| {
         let points = triangle.map(|point| point.point_global);
 
         MeshTriangle {
