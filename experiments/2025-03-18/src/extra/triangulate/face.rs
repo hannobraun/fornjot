@@ -9,10 +9,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
     extra::triangulate::{delaunay::triangles, triangulate_surface},
-    topology::{
-        face::{Face, HalfEdgeWithEndVertex},
-        surface::Surface,
-    },
+    topology::face::{Face, HalfEdgeWithEndVertex},
 };
 
 use super::TriangulationPoint;
@@ -35,7 +32,6 @@ pub fn triangulate_face(
 
         triangulate_surface(&face.surface, &boundary, tolerance)
     };
-    dbg!(surface_points);
     dbg!(surface_triangles);
 
     let mut points_from_half_edges = Vec::new();
@@ -44,14 +40,7 @@ pub fn triangulate_face(
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let mut points_from_surface = Vec::new();
-    surface_to_points(
-        &face.surface,
-        &polygon_from_half_edges,
-        &mut points_from_surface,
-    );
-
-    let triangles = triangles(points_from_half_edges, points_from_surface)
+    let triangles = triangles(points_from_half_edges, surface_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -198,28 +187,4 @@ fn polygon_from_half_edges(
     };
 
     Polygon::new(exterior, interiors)
-}
-
-fn surface_to_points(
-    surface: &Surface,
-    boundary: &Polygon,
-    target: &mut Vec<TriangulationPoint>,
-) {
-    let aabb = Aabb::<2>::from_points(
-        boundary
-            .exterior()
-            .points()
-            .map(|point| Point::from([point.x(), point.y()])),
-    );
-
-    target.extend(surface.geometry.approximate(&aabb).into_iter().map(
-        |point_surface| {
-            let point_global = surface.geometry.point_from_local(point_surface);
-
-            TriangulationPoint {
-                point_surface,
-                point_global,
-            }
-        },
-    ))
 }
