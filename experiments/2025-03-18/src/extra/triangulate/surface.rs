@@ -32,11 +32,10 @@ pub fn triangulate_surface(
     let triangles = triangles(
         [],
         all_points.into_iter().map(|point_surface| {
-            let point_global = surface.geometry.point_from_local(point_surface);
-            TriangulationPoint {
+            TriangulationPoint::from_surface_point(
                 point_surface,
-                point_global,
-            }
+                surface.geometry.as_ref(),
+            )
         }),
     )
     .into_iter()
