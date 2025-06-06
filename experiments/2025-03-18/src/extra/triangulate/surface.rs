@@ -11,7 +11,7 @@ pub fn triangulate_surface(
     boundary: &Aabb<2>,
     _: impl Into<Tolerance>,
 ) -> (Vec<Point<2>>, Vec<[TriangulationPoint; 3]>) {
-    let mut points = surface.geometry.approximate(boundary);
+    let surface_points = surface.geometry.approximate(boundary);
 
     let boundary_points = {
         let [[min_u, min_v], [max_u, max_v]] =
@@ -26,11 +26,12 @@ pub fn triangulate_surface(
         .map(Point::from)
     };
 
-    points.extend(boundary_points);
+    let mut all_points = surface_points.clone();
+    all_points.extend(boundary_points);
 
     let triangles = triangles(
         [],
-        points.iter().copied().map(|point_surface| {
+        all_points.iter().copied().map(|point_surface| {
             let point_global = surface.geometry.point_from_local(point_surface);
             TriangulationPoint {
                 point_surface,
@@ -39,5 +40,5 @@ pub fn triangulate_surface(
         }),
     );
 
-    (points, triangles)
+    (surface_points, triangles)
 }
