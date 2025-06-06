@@ -1,3 +1,4 @@
+mod delaunay;
 mod face;
 mod point;
 mod surface;

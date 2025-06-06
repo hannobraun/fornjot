@@ -6,10 +6,9 @@ use std::{
 use fj_interop::{Color, MeshTriangle, Tolerance, TriMesh};
 use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
-use spade::Triangulation;
 
 use crate::{
-    extra::triangulate::triangulate_surface,
+    extra::triangulate::{delaunay::triangles, triangulate_surface},
     topology::{
         face::{Face, HalfEdgeWithEndVertex},
         surface::Surface,
@@ -222,26 +221,4 @@ fn surface_to_points(
             }
         },
     ))
-}
-
-pub fn triangles(
-    points_from_half_edges: &[TriangulationPoint],
-    points_from_surface: &[TriangulationPoint],
-) -> Vec<[TriangulationPoint; 3]> {
-    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
-
-    // We're passing duplicate points to the triangulation here. It doesn't seem
-    // to mind though.
-    triangulation
-        .add_constraint_edges(points_from_half_edges.iter().copied(), true)
-        .unwrap();
-
-    for point in points_from_surface {
-        triangulation.insert(*point).unwrap();
-    }
-
-    triangulation
-        .inner_faces()
-        .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
-        .collect()
 }
