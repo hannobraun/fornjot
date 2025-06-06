@@ -4,7 +4,7 @@ use crate::extra::triangulate::TriangulationPoint;
 
 pub fn triangles<'a>(
     points_from_half_edges: impl IntoIterator<Item = &'a TriangulationPoint>,
-    points_from_surface: &[TriangulationPoint],
+    points_from_surface: impl IntoIterator<Item = &'a TriangulationPoint>,
 ) -> Vec<[TriangulationPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
