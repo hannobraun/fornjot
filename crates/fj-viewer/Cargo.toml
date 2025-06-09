@@ -26,7 +26,7 @@ tracing = "0.1.41"
 winit = "0.30.11"
 
 [dependencies.bytemuck]
-version = "1.23.0"
+version = "1.23.1"
 features = ["derive"]
 
 [dependencies.image]
