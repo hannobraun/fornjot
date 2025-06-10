@@ -60,6 +60,42 @@ impl<const D: usize> Triangle<D> {
         Point { coords }
     }
 
+    /// # Project a point into the triangle
+    ///
+    /// Returns barycentric coordinates of the projected point.
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the triangle is degenerate.
+    pub fn point_to_barycentric_coords(
+        &self,
+        point: impl Into<Point<D>>,
+    ) -> [Scalar; 3] {
+        // Algorithm from Real-Time Collision Detection by Christer Ericson,
+        // pages 47-48.
+
+        let p = point.into();
+        let [a, b, c] = self.points;
+
+        let v0 = b - a;
+        let v1 = c - a;
+        let v2 = p - a;
+
+        let d00 = v0.dot(&v0);
+        let d01 = v0.dot(&v1);
+        let d11 = v1.dot(&v1);
+        let d20 = v2.dot(&v0);
+        let d21 = v2.dot(&v1);
+
+        let denom = d00 * d11 - d01 * d01;
+
+        let v = (d11 * d20 - d01 * d21) / denom;
+        let w = (d00 * d21 - d01 * d20) / denom;
+        let u = Scalar::ONE - v - w;
+
+        [u, v, w]
+    }
+
     /// # Normalize the triangle
     ///
     /// Returns a new `Triangle` instance with the same points, but the points
