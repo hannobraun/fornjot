@@ -16,7 +16,7 @@ impl SurfaceMesh {
         surface: &Surface,
         boundary: &Aabb<2>,
         _: impl Into<Tolerance>,
-    ) -> SurfaceMesh {
+    ) -> Self {
         let surface_points = surface
             .geometry
             .approximate(boundary)
@@ -64,7 +64,7 @@ impl SurfaceMesh {
         let mut tri_mesh = TriMesh::new();
         tri_mesh.triangles.extend(triangles);
 
-        SurfaceMesh {
+        Self {
             points: surface_points,
             triangles: tri_mesh,
         }
