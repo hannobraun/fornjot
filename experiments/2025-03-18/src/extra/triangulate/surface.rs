@@ -61,8 +61,7 @@ impl SurfaceMesh {
             }
         });
 
-        let mut tri_mesh = Vec::new();
-        tri_mesh.extend(triangles);
+        let tri_mesh = triangles.collect();
 
         Self {
             points: surface_points,
