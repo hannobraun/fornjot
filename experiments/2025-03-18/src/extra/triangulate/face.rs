@@ -8,7 +8,7 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    extra::triangulate::{delaunay::triangles, surface::triangulate_surface},
+    extra::triangulate::{delaunay::triangles, surface::SurfaceMesh},
     topology::face::{Face, HalfEdgeWithEndVertex},
 };
 
@@ -30,7 +30,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        triangulate_surface(&face.surface, &boundary, tolerance)
+        SurfaceMesh::triangulate_surface(&face.surface, &boundary, tolerance)
     };
     dbg!(surface_mesh.triangles);
 
