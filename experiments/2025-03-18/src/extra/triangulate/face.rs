@@ -33,7 +33,7 @@ pub fn triangulate_face(
         SurfaceMesh::from_surface(&face.surface, &boundary, tolerance)
     };
     for triangle in surface_mesh.triangles {
-        dbg!(triangle);
+        dbg!(triangle.points);
     }
 
     let mut points_from_half_edges = Vec::new();
