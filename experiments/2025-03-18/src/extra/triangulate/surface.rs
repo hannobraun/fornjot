@@ -12,7 +12,7 @@ pub struct SurfaceMesh {
 }
 
 impl SurfaceMesh {
-    pub fn triangulate_surface(
+    pub fn from_surface(
         surface: &Surface,
         boundary: &Aabb<2>,
         _: impl Into<Tolerance>,

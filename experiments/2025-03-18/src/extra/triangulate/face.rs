@@ -30,7 +30,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        SurfaceMesh::triangulate_surface(&face.surface, &boundary, tolerance)
+        SurfaceMesh::from_surface(&face.surface, &boundary, tolerance)
     };
     dbg!(surface_mesh.triangles);
 
