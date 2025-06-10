@@ -8,7 +8,7 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    extra::triangulate::{delaunay::triangles, triangulate_surface},
+    extra::triangulate::{delaunay::triangles, surface::triangulate_surface},
     topology::face::{Face, HalfEdgeWithEndVertex},
 };
 
