@@ -1,4 +1,4 @@
-use fj_interop::{Color, MeshTriangle, Tolerance, TriMesh};
+use fj_interop::{Color, MeshTriangle, Tolerance};
 use fj_math::{Aabb, Point, Triangle};
 
 use crate::{
@@ -8,7 +8,7 @@ use crate::{
 
 pub struct SurfaceMesh {
     pub points: Vec<TriangulationPoint>,
-    pub triangles: TriMesh,
+    pub triangles: Vec<MeshTriangle>,
 }
 
 impl SurfaceMesh {
@@ -61,8 +61,8 @@ impl SurfaceMesh {
             }
         });
 
-        let mut tri_mesh = TriMesh::new();
-        tri_mesh.triangles.extend(triangles);
+        let mut tri_mesh = Vec::new();
+        tri_mesh.extend(triangles);
 
         Self {
             points: surface_points,
