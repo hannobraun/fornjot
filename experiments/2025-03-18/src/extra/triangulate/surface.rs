@@ -1,4 +1,4 @@
-use fj_interop::{Color, MeshTriangle, Tolerance};
+use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Triangle};
 
 use crate::{
@@ -8,7 +8,7 @@ use crate::{
 
 pub struct SurfaceMesh {
     pub points: Vec<TriangulationPoint>,
-    pub triangles: Vec<MeshTriangle>,
+    pub triangles: Vec<Triangle<3>>,
 }
 
 impl SurfaceMesh {
@@ -56,11 +56,7 @@ impl SurfaceMesh {
             .map(|triangle| {
                 let points = triangle.map(|point| point.point_global);
 
-                MeshTriangle {
-                    inner: Triangle { points },
-                    is_internal: false,
-                    color: Color::default(),
-                }
+                Triangle { points }
             })
             .collect();
 
