@@ -61,11 +61,11 @@ impl SurfaceMesh {
             }
         });
 
-        let tri_mesh = triangles.collect();
+        let triangles = triangles.collect();
 
         Self {
             points: surface_points,
-            triangles: tri_mesh,
+            triangles,
         }
     }
 }
