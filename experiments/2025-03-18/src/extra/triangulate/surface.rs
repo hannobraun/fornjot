@@ -6,11 +6,16 @@ use crate::{
     topology::surface::Surface,
 };
 
+pub struct SurfaceMesh {
+    pub points: Vec<TriangulationPoint>,
+    pub triangles: TriMesh,
+}
+
 pub fn triangulate_surface(
     surface: &Surface,
     boundary: &Aabb<2>,
     _: impl Into<Tolerance>,
-) -> (Vec<TriangulationPoint>, TriMesh) {
+) -> SurfaceMesh {
     let surface_points = surface
         .geometry
         .approximate(boundary)
@@ -58,5 +63,8 @@ pub fn triangulate_surface(
     let mut tri_mesh = TriMesh::new();
     tri_mesh.triangles.extend(triangles);
 
-    (surface_points, tri_mesh)
+    SurfaceMesh {
+        points: surface_points,
+        triangles: tri_mesh,
+    }
 }

@@ -20,7 +20,7 @@ pub fn triangulate_face(
 ) -> TriMesh {
     let tolerance = tolerance.into();
 
-    let (surface_points, surface_mesh) = {
+    let surface_mesh = {
         // This happens to be big enough for the current model. But
         // eventually, we need a solution here that works for _any_ model.
         let size = 4.;
@@ -32,7 +32,7 @@ pub fn triangulate_face(
 
         triangulate_surface(&face.surface, &boundary, tolerance)
     };
-    dbg!(surface_mesh);
+    dbg!(surface_mesh.triangles);
 
     let mut points_from_half_edges = Vec::new();
     half_edges_to_points(face, &mut points_from_half_edges, tolerance);
@@ -40,7 +40,7 @@ pub fn triangulate_face(
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let triangles = triangles(points_from_half_edges, surface_points)
+    let triangles = triangles(points_from_half_edges, surface_mesh.points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
