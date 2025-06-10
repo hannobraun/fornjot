@@ -1,5 +1,5 @@
 use fj_interop::Tolerance;
-use fj_math::{Aabb, Point, Triangle};
+use fj_math::{Aabb, Point};
 
 use crate::{
     extra::triangulate::{TriangulationPoint, delaunay::triangles},
@@ -8,7 +8,7 @@ use crate::{
 
 pub struct SurfaceMesh {
     pub points: Vec<TriangulationPoint>,
-    pub triangles: Vec<Triangle<3>>,
+    pub triangles: Vec<MeshTriangle>,
 }
 
 impl SurfaceMesh {
@@ -53,11 +53,7 @@ impl SurfaceMesh {
 
         let triangles = triangles([], all_points)
             .into_iter()
-            .map(|triangle| {
-                let points = triangle.map(|point| point.point_global);
-
-                Triangle { points }
-            })
+            .map(|triangle| MeshTriangle { points: triangle })
             .collect();
 
         Self {
@@ -65,4 +61,9 @@ impl SurfaceMesh {
             triangles,
         }
     }
+}
+
+#[derive(Debug)]
+pub struct MeshTriangle {
+    pub points: [TriangulationPoint; 3],
 }
