@@ -51,17 +51,18 @@ impl SurfaceMesh {
         let mut all_points = surface_points.clone();
         all_points.extend(boundary_points);
 
-        let triangles = triangles([], all_points).into_iter().map(|triangle| {
-            let points = triangle.map(|point| point.point_global);
+        let triangles = triangles([], all_points)
+            .into_iter()
+            .map(|triangle| {
+                let points = triangle.map(|point| point.point_global);
 
-            MeshTriangle {
-                inner: Triangle { points },
-                is_internal: false,
-                color: Color::default(),
-            }
-        });
-
-        let triangles = triangles.collect();
+                MeshTriangle {
+                    inner: Triangle { points },
+                    is_internal: false,
+                    color: Color::default(),
+                }
+            })
+            .collect();
 
         Self {
             points: surface_points,
