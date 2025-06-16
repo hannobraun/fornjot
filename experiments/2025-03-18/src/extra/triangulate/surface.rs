@@ -6,6 +6,7 @@ use crate::{
     topology::surface::Surface,
 };
 
+#[derive(Debug)]
 pub struct SurfaceMesh {
     pub points: Vec<TriangulationPoint>,
     pub triangles: Vec<MeshTriangle>,
