@@ -18,7 +18,7 @@ use winit::{
 use crate::{
     RendererInitError,
     input::DEFAULT_CAMERA_TUNING_CONFIG,
-    window::{ToDisplay, Window},
+    window::{Displayable, Window},
 };
 
 /// # Create a model viewer and spawn a new thread where to use it
@@ -60,7 +60,7 @@ where
 
 /// # Handle to the model viewer
 pub struct ViewerHandle {
-    event_loop: EventLoopProxy<ToDisplay>,
+    event_loop: EventLoopProxy<Displayable>,
 }
 
 impl ViewerHandle {
@@ -69,7 +69,7 @@ impl ViewerHandle {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
-        let _ = self.event_loop.send_event(ToDisplay::face(points));
+        let _ = self.event_loop.send_event(Displayable::face(points));
     }
 
     /// # Display a 3D model in a new window
@@ -77,7 +77,7 @@ impl ViewerHandle {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
-        let _ = self.event_loop.send_event(ToDisplay::model(tri_mesh));
+        let _ = self.event_loop.send_event(Displayable::model(tri_mesh));
     }
 }
 
@@ -97,7 +97,7 @@ struct Viewer {
     windows: BTreeMap<WindowId, Window>,
 }
 
-impl ApplicationHandler<ToDisplay> for Viewer {
+impl ApplicationHandler<Displayable> for Viewer {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
@@ -194,7 +194,7 @@ impl ApplicationHandler<ToDisplay> for Viewer {
     fn user_event(
         &mut self,
         event_loop: &ActiveEventLoop,
-        to_display: ToDisplay,
+        to_display: Displayable,
     ) {
         let window = block_on(Window::new(to_display, event_loop)).unwrap();
         self.windows.insert(window.winit_window().id(), window);
