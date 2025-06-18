@@ -34,7 +34,7 @@ use crate::{
 /// This function should be called from the application's main thread, or
 /// displaying models might end up not working correctly.
 pub fn make_viewer_and_spawn_thread<R>(
-    f: impl FnOnce(Viewer) -> R + Send + 'static,
+    f: impl FnOnce(ViewerHandle) -> R + Send + 'static,
 ) -> Result<R, Error>
 where
     R: Send + 'static,
@@ -46,7 +46,7 @@ where
     };
 
     let proxy = event_loop.create_proxy();
-    let handle = thread::spawn(|| f(Viewer { event_loop: proxy }));
+    let handle = thread::spawn(|| f(ViewerHandle { event_loop: proxy }));
 
     event_loop.run_app(&mut display_state)?;
 
@@ -59,11 +59,11 @@ where
 }
 
 /// # Fornjot model viewer
-pub struct Viewer {
+pub struct ViewerHandle {
     event_loop: EventLoopProxy<ToDisplay>,
 }
 
-impl Viewer {
+impl ViewerHandle {
     /// # Display a 2D face in a new window
     pub fn display_face(&self, points: Vec<Point<2>>) {
         // If there's an error, that means the display thread has closed down

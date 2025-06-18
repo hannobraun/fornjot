@@ -1,6 +1,6 @@
 use fj_interop::{Tolerance, TriMesh};
 use fj_math::Vector;
-use fj_viewer::Viewer;
+use fj_viewer::ViewerHandle;
 
 use crate::{
     geometry::{FloatingCurve, Line, Sketch, SweptCurve},
@@ -9,7 +9,7 @@ use crate::{
     topology::surface::Surface,
 };
 
-pub fn model(viewer: &Viewer) -> TriMesh {
+pub fn model(viewer: &ViewerHandle) -> TriMesh {
     let tolerance = Tolerance::from(0.001);
 
     let top = {
