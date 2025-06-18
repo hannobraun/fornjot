@@ -26,10 +26,10 @@ pub struct Window {
 
 impl Window {
     pub async fn new(
-        to_display: Displayable,
+        displayable: Displayable,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let (vertices, render_mode, aabb) = match &to_display {
+        let (vertices, render_mode, aabb) = match &displayable {
             Displayable::Face { points, aabb } => {
                 let vertices = Vertices::for_face(points);
                 let render_mode = RenderMode::Face;
@@ -63,7 +63,7 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            displayable: to_display,
+            displayable,
         })
     }
 
