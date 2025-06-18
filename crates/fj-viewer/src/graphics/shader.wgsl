@@ -46,13 +46,21 @@ fn frag_face(in: VertexOutput) -> FragmentOutput {
 fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
 
+    // normal-based shading
     let angle = acos(dot(light, -in.normal));
     let f_angle = angle / (pi * 0.75);
-
     let f_normal = max(1.0 - f_angle, 0.0);
 
+    // Depth-based shading to improve visibility of blind holes and recessed surfaces
+    let depth = in.position.z;
+    
+    //50% max darkening
+    let depth_factor = 1.0 - depth * 0.5;
+    
+    let final_shading = f_normal * depth_factor;
+
     var out: FragmentOutput;
-    out.color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
+    out.color = vec4<f32>(in.color.rgb * final_shading, in.color.a);
 
     return out;
 }
