@@ -58,7 +58,7 @@ where
     Ok(result)
 }
 
-/// # Fornjot model viewer
+/// # Handle to the model viewer
 pub struct ViewerHandle {
     event_loop: EventLoopProxy<ToDisplay>,
 }
