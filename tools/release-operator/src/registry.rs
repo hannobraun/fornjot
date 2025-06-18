@@ -70,7 +70,7 @@ impl Registry {
         while let Some((name, metadata)) = crates.pop_front() {
             let mut package = None;
             for p in &metadata.packages {
-                if p.name == name {
+                if p.name.as_str() == name {
                     package = Some(p.clone());
                 }
             }
@@ -140,7 +140,7 @@ impl Crate {
         let package = metadata
             .packages
             .iter()
-            .find(|p| p.name == name)
+            .find(|p| p.name.as_str() == name)
             .ok_or_else(|| anyhow!("could not find package"))?;
 
         let version = package.version.to_owned();

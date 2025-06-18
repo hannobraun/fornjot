@@ -7,7 +7,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.98"
-cargo_metadata = "0.19.2"
+cargo_metadata = "0.20.0"
 cmd_lib = "1.9.6"
 env_logger = "0.11.8"
 log = "0.4.27"
