@@ -41,7 +41,7 @@ where
 {
     let event_loop = EventLoop::with_user_event().build()?;
 
-    let mut display_state = DisplayState {
+    let mut display_state = Viewer {
         windows: BTreeMap::new(),
     };
 
@@ -93,11 +93,11 @@ pub enum Error {
     Graphics(#[from] RendererInitError),
 }
 
-struct DisplayState {
+struct Viewer {
     windows: BTreeMap<WindowId, Window>,
 }
 
-impl ApplicationHandler<ToDisplay> for DisplayState {
+impl ApplicationHandler<ToDisplay> for Viewer {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
