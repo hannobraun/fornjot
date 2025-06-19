@@ -48,6 +48,7 @@ pub mod merge;
 pub mod presentation;
 pub mod replace;
 pub mod reverse;
+pub mod selector;
 pub mod split;
 pub mod sweep;
 pub mod transform;
