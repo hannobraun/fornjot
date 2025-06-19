@@ -95,7 +95,9 @@ mod half_edge;
 mod vertex;
 
 pub use self::{
-    curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
+    curve::{ReplaceCurve, ReplaceCurveWithSelector},
+    half_edge::{ReplaceHalfEdge, ReplaceHalfEdgeWithSelector},
+    vertex::{ReplaceVertex, ReplaceVertexWithSelector},
 };
 
 /// The output of a replace operation
