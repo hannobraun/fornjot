@@ -9,7 +9,11 @@ mod sketch;
 mod solid;
 
 pub use self::{
-    cycle::UpdateCycle, face::UpdateFace, half_edge::UpdateHalfEdge,
-    region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
-    solid::UpdateSolid,
+    cycle::{UpdateCycle, UpdateCycleWithSelector},
+    face::{UpdateFace, UpdateFaceWithSelector},
+    half_edge::{UpdateHalfEdge, UpdateHalfEdgeWithSelector},
+    region::{UpdateRegion, UpdateRegionWithSelector},
+    shell::{UpdateShell, UpdateShellWithSelector},
+    sketch::{UpdateSketch, UpdateSketchWithSelector},
+    solid::{UpdateSolid, UpdateSolidWithSelector},
 };
