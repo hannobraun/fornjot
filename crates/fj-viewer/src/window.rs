@@ -22,6 +22,7 @@ pub struct Window {
     window: Arc<winit::window::Window>,
     renderer: Renderer,
     displayable: Displayable,
+    tri_mesh: TriMesh,
     aabb: Aabb<3>,
 }
 
@@ -30,6 +31,8 @@ impl Window {
         displayable: Displayable,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
+        let mut tri_mesh = TriMesh::default();
+
         let (vertices, render_mode, aabb) = match &displayable {
             Displayable::Face { points, aabb } => {
                 let vertices = Vertices::for_face(points);
@@ -37,6 +40,8 @@ impl Window {
                 (vertices, render_mode, *aabb)
             }
             Displayable::Model { tri_mesh: m, aabb } => {
+                tri_mesh = tri_mesh.merge(m.clone());
+
                 let vertices = Vertices::for_model(m);
                 let render_mode = RenderMode::Model;
                 (vertices, render_mode, *aabb)
@@ -65,6 +70,7 @@ impl Window {
             window,
             renderer,
             displayable,
+            tri_mesh,
             aabb,
         })
     }
@@ -85,11 +91,11 @@ impl Window {
 
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Displayable::Model { tri_mesh, .. } = &self.displayable {
+        if let Displayable::Model { .. } = &self.displayable {
             if self.focus_point.is_none() {
                 self.focus_point = Some(self.camera.focus_point(
                     self.cursor,
-                    tri_mesh,
+                    &self.tri_mesh,
                     &self.aabb,
                 ));
             }
