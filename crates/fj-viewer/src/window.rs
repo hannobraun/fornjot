@@ -21,7 +21,6 @@ pub struct Window {
     focus_point: Option<FocusPoint>,
     window: Arc<winit::window::Window>,
     renderer: Renderer,
-    displayable: Displayable,
     tri_mesh: TriMesh,
     aabb: Aabb<3>,
 }
@@ -69,7 +68,6 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            displayable,
             tri_mesh,
             aabb,
         })
@@ -91,14 +89,12 @@ impl Window {
 
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Displayable::Model { .. } = &self.displayable {
-            if self.focus_point.is_none() {
-                self.focus_point = Some(self.camera.focus_point(
-                    self.cursor,
-                    &self.tri_mesh,
-                    &self.aabb,
-                ));
-            }
+        if self.focus_point.is_none() {
+            self.focus_point = Some(self.camera.focus_point(
+                self.cursor,
+                &self.tri_mesh,
+                &self.aabb,
+            ));
         }
     }
 
