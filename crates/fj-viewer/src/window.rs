@@ -33,12 +33,12 @@ impl Window {
             Displayable::Face { points, aabb } => {
                 let vertices = Vertices::for_face(points);
                 let render_mode = RenderMode::Face;
-                (vertices, render_mode, aabb)
+                (vertices, render_mode, *aabb)
             }
             Displayable::Model { tri_mesh, aabb } => {
                 let vertices = Vertices::for_model(tri_mesh);
                 let render_mode = RenderMode::Model;
-                (vertices, render_mode, aabb)
+                (vertices, render_mode, *aabb)
             }
         };
 
@@ -52,7 +52,7 @@ impl Window {
         );
         let renderer =
             Renderer::new(window.clone(), vertices, render_mode).await?;
-        let camera = Camera::new(aabb);
+        let camera = Camera::new(&aabb);
 
         Ok(Self {
             new_screen_size: None,
