@@ -22,6 +22,7 @@ pub struct Window {
     window: Arc<winit::window::Window>,
     renderer: Renderer,
     displayable: Displayable,
+    aabb: Aabb<3>,
 }
 
 impl Window {
@@ -64,6 +65,7 @@ impl Window {
             window,
             renderer,
             displayable,
+            aabb,
         })
     }
 
@@ -83,10 +85,13 @@ impl Window {
 
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
-        if let Displayable::Model { tri_mesh, aabb } = &self.displayable {
+        if let Displayable::Model { tri_mesh, .. } = &self.displayable {
             if self.focus_point.is_none() {
-                self.focus_point =
-                    Some(self.camera.focus_point(self.cursor, tri_mesh, aabb));
+                self.focus_point = Some(self.camera.focus_point(
+                    self.cursor,
+                    tri_mesh,
+                    &self.aabb,
+                ));
             }
         }
     }
@@ -179,11 +184,7 @@ impl Window {
             self.renderer.handle_resize(new_size);
         }
 
-        let aabb = match &self.displayable {
-            Displayable::Face { points: _, aabb } => aabb,
-            Displayable::Model { tri_mesh: _, aabb } => aabb,
-        };
-        self.camera.update_planes(aabb);
+        self.camera.update_planes(&self.aabb);
 
         if let Err(err) = self.renderer.draw(&self.camera, &self.draw_config) {
             warn!("Draw error: {}", err);
