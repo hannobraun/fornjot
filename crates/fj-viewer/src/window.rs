@@ -36,6 +36,7 @@ impl Window {
             Displayable::Face { points, aabb } => {
                 let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
+
                 (vertices, render_mode, aabb)
             }
             Displayable::Model { tri_mesh: m, aabb } => {
@@ -43,6 +44,7 @@ impl Window {
 
                 let vertices = Vertices::for_model(&m);
                 let render_mode = RenderMode::Model;
+
                 (vertices, render_mode, aabb)
             }
         };
