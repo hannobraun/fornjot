@@ -32,18 +32,18 @@ impl Window {
     ) -> Result<Self, WindowError> {
         let mut tri_mesh = TriMesh::default();
 
-        let (vertices, render_mode, aabb) = match &displayable {
+        let (vertices, render_mode, aabb) = match displayable {
             Displayable::Face { points, aabb } => {
-                let vertices = Vertices::for_face(points);
+                let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
-                (vertices, render_mode, *aabb)
+                (vertices, render_mode, aabb)
             }
             Displayable::Model { tri_mesh: m, aabb } => {
                 tri_mesh = tri_mesh.merge(m.clone());
 
-                let vertices = Vertices::for_model(m);
+                let vertices = Vertices::for_model(&m);
                 let render_mode = RenderMode::Model;
-                (vertices, render_mode, *aabb)
+                (vertices, render_mode, aabb)
             }
         };
 
