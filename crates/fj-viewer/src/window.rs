@@ -40,10 +40,10 @@ impl Window {
                 (vertices, render_mode, aabb)
             }
             Displayable::Model { tri_mesh: m, aabb } => {
-                tri_mesh = tri_mesh.merge(m.clone());
-
                 let vertices = Vertices::for_model(&m);
                 let render_mode = RenderMode::Model;
+
+                tri_mesh = tri_mesh.merge(m);
 
                 (vertices, render_mode, aabb)
             }
