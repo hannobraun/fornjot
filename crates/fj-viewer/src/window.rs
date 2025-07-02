@@ -39,13 +39,16 @@ impl Window {
 
                 (vertices, render_mode, b)
             }
-            Displayable::Model { tri_mesh: m, aabb } => {
+            Displayable::Model {
+                tri_mesh: m,
+                aabb: b,
+            } => {
                 let vertices = Vertices::for_model(&m);
                 let render_mode = RenderMode::Model;
 
                 tri_mesh = tri_mesh.merge(m);
 
-                (vertices, render_mode, aabb)
+                (vertices, render_mode, b)
             }
         };
 
