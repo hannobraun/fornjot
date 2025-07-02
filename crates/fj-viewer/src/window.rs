@@ -57,8 +57,9 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let renderer =
-            Renderer::new(window.clone(), vertices, render_mode).await?;
+        let mut renderer = Renderer::new(window.clone(), render_mode).await?;
+        renderer.update_geometry(vertices);
+
         let camera = Camera::new(&aabb);
 
         Ok(Self {

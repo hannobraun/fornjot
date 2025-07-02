@@ -38,7 +38,6 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         window: Arc<winit::window::Window>,
-        vertices: Vertices,
         mode: RenderMode,
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
@@ -180,11 +179,7 @@ impl Renderer {
             },
         );
 
-        let geometry = Geometry::new(
-            &device.device,
-            vertices.vertices(),
-            vertices.indices(),
-        );
+        let geometry = Geometry::new(&device.device, &[], &[]);
 
         let shaders = Shaders::new(&device.device);
         let pipelines = match mode {
@@ -225,6 +220,14 @@ impl Renderer {
 
             navigation_cube_renderer,
         })
+    }
+
+    pub fn update_geometry(&mut self, vertices: Vertices) {
+        self.geometry = Geometry::new(
+            &self.device.device,
+            vertices.vertices(),
+            vertices.indices(),
+        );
     }
 
     /// Resizes the render surface.
