@@ -31,24 +31,29 @@ impl Window {
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
         let mut tri_mesh = TriMesh::default();
+        let mut aabb = Aabb::<3>::default();
 
-        let (vertices, render_mode, aabb) = match displayable {
+        let (vertices, render_mode) = match displayable {
             Displayable::Face { points, aabb: b } => {
+                aabb = aabb.merged(&b);
+
                 let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
 
-                (vertices, render_mode, b)
+                (vertices, render_mode)
             }
             Displayable::Model {
                 tri_mesh: m,
                 aabb: b,
             } => {
+                aabb = aabb.merged(&b);
+
                 let vertices = Vertices::for_model(&m);
                 let render_mode = RenderMode::Model;
 
                 tri_mesh = tri_mesh.merge(m);
 
-                (vertices, render_mode, b)
+                (vertices, render_mode)
             }
         };
 
