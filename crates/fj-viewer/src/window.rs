@@ -33,11 +33,11 @@ impl Window {
         let mut tri_mesh = TriMesh::default();
 
         let (vertices, render_mode, aabb) = match displayable {
-            Displayable::Face { points, aabb } => {
+            Displayable::Face { points, aabb: b } => {
                 let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
 
-                (vertices, render_mode, aabb)
+                (vertices, render_mode, b)
             }
             Displayable::Model { tri_mesh: m, aabb } => {
                 let vertices = Vertices::for_model(&m);
