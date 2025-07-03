@@ -8,22 +8,21 @@ use super::{
 };
 
 #[derive(Debug)]
-pub enum Pipelines {
-    ForFace {
-        lines: Pipeline,
-    },
-    ForModel {
-        model: Pipeline,
-        mesh: Option<Pipeline>,
-    },
+pub struct Pipelines {
+    mode: RenderMode,
+    lines: Pipeline,
+    model: Pipeline,
+    mesh: Option<Pipeline>,
 }
 
 impl Pipelines {
-    pub fn for_face(
+    pub fn new(
+        mode: RenderMode,
         device: &wgpu::Device,
         shaders: &Shaders,
         pipeline_layout: &wgpu::PipelineLayout,
         color_format: wgpu::TextureFormat,
+        features: wgpu::Features,
     ) -> Self {
         let lines = Pipeline::new(
             device,
@@ -34,16 +33,6 @@ impl Pipelines {
             color_format,
         );
 
-        Self::ForFace { lines }
-    }
-
-    pub fn for_model(
-        device: &wgpu::Device,
-        shaders: &Shaders,
-        pipeline_layout: &wgpu::PipelineLayout,
-        color_format: wgpu::TextureFormat,
-        features: wgpu::Features,
-    ) -> Self {
         let model = Pipeline::new(
             device,
             pipeline_layout,
@@ -69,7 +58,12 @@ impl Pipelines {
             None
         };
 
-        Self::ForModel { model, mesh }
+        Self {
+            mode,
+            lines,
+            model,
+            mesh,
+        }
     }
 
     pub fn draw(
@@ -78,16 +72,16 @@ impl Pipelines {
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
-        match self {
-            Self::ForFace { lines } => {
-                lines.draw(geometry, render_pass);
+        match self.mode {
+            RenderMode::Face => {
+                self.lines.draw(geometry, render_pass);
             }
-            Self::ForModel { model, mesh } => {
+            RenderMode::Model => {
                 if config.draw_model {
-                    model.draw(geometry, render_pass);
+                    self.model.draw(geometry, render_pass);
                 }
 
-                if let Some(pipeline) = mesh.as_ref() {
+                if let Some(pipeline) = self.mesh.as_ref() {
                     if config.draw_mesh {
                         pipeline.draw(geometry, render_pass);
                     }
