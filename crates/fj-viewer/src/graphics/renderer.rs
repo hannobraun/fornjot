@@ -320,7 +320,12 @@ impl Renderer {
 
             for geometry in &self.geometries {
                 let _ = geometry.render_mode;
-                self.pipelines.draw(config, geometry, &mut render_pass);
+                self.pipelines.draw(
+                    &geometry.render_mode,
+                    config,
+                    geometry,
+                    &mut render_pass,
+                );
             }
         }
 

@@ -9,7 +9,6 @@ use super::{
 
 #[derive(Debug)]
 pub struct Pipelines {
-    mode: RenderMode,
     lines: Pipeline,
     model: Pipeline,
     mesh: Option<Pipeline>,
@@ -17,7 +16,7 @@ pub struct Pipelines {
 
 impl Pipelines {
     pub fn new(
-        mode: RenderMode,
+        _: RenderMode,
         device: &wgpu::Device,
         shaders: &Shaders,
         pipeline_layout: &wgpu::PipelineLayout,
@@ -58,21 +57,17 @@ impl Pipelines {
             None
         };
 
-        Self {
-            mode,
-            lines,
-            model,
-            mesh,
-        }
+        Self { lines, model, mesh }
     }
 
     pub fn draw(
         &self,
+        render_mode: &RenderMode,
         config: &DrawConfig,
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
-        match self.mode {
+        match render_mode {
             RenderMode::Face => {
                 self.lines.draw(geometry, render_pass);
             }
