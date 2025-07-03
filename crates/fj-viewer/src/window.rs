@@ -155,28 +155,26 @@ impl Window {
     }
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
-        let (vertices, render_mode) = match displayable {
+        let (vertices, render_mode, aabb) = match displayable {
             Displayable::Face { points, aabb } => {
-                self.aabb = self.aabb.merged(&aabb);
-
                 let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
 
-                (vertices, render_mode)
+                (vertices, render_mode, aabb)
             }
             Displayable::Model { tri_mesh, aabb } => {
-                self.aabb = self.aabb.merged(&aabb);
-
                 let vertices = Vertices::for_model(&tri_mesh);
                 let render_mode = RenderMode::Model;
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
-                (vertices, render_mode)
+                (vertices, render_mode, aabb)
             }
         };
 
         self.renderer.add_geometry(render_mode, vertices);
+
+        self.aabb = self.aabb.merged(&aabb);
         self.camera = Camera::new(&self.aabb);
     }
 
