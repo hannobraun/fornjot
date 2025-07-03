@@ -28,7 +28,7 @@ pub struct Renderer {
     uniform_buffer: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
 
-    geometry: Vec<Geometry>,
+    geometries: Vec<Geometry>,
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
@@ -206,7 +206,7 @@ impl Renderer {
             uniform_buffer,
             bind_group,
 
-            geometry: Vec::new(),
+            geometries: Vec::new(),
             pipelines,
 
             navigation_cube_renderer,
@@ -214,7 +214,7 @@ impl Renderer {
     }
 
     pub fn update_geometry(&mut self, vertices: Vertices) {
-        self.geometry.push(Geometry::new(
+        self.geometries.push(Geometry::new(
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
@@ -313,7 +313,7 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            for geometry in &self.geometry {
+            for geometry in &self.geometries {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
         }
