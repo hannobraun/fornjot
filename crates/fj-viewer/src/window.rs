@@ -164,8 +164,8 @@ impl Window {
 
                 (vertices, render_mode)
             }
-            Displayable::Model { tri_mesh, aabb: b } => {
-                self.aabb = self.aabb.merged(&b);
+            Displayable::Model { tri_mesh, aabb } => {
+                self.aabb = self.aabb.merged(&aabb);
 
                 let vertices = Vertices::for_model(&tri_mesh);
                 let render_mode = RenderMode::Model;
