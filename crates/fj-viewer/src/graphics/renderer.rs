@@ -319,6 +319,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             for geometry in &self.geometries {
+                let _ = geometry.render_mode;
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
         }

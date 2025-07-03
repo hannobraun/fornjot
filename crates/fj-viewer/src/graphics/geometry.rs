@@ -8,6 +8,7 @@ use super::vertices::Vertex;
 
 #[derive(Debug)]
 pub struct Geometry {
+    pub render_mode: RenderMode,
     pub vertex_buffer: wgpu::Buffer,
     pub index_buffer: wgpu::Buffer,
     pub num_indices: u32,
@@ -15,12 +16,13 @@ pub struct Geometry {
 
 impl Geometry {
     pub fn new(
-        _: RenderMode,
+        render_mode: RenderMode,
         device: &wgpu::Device,
         vertices: &[Vertex],
         indices: &[u32],
     ) -> Self {
         Self {
+            render_mode,
             vertex_buffer: device.create_buffer_init(
                 &wgpu::util::BufferInitDescriptor {
                     label: None,
