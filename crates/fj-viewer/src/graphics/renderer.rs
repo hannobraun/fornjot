@@ -5,7 +5,7 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, graphics::RenderMode};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -387,11 +387,6 @@ impl Renderer {
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
     }
-}
-
-pub enum RenderMode {
-    Face,
-    Model,
 }
 
 /// Error describing the set of render surface initialization errors

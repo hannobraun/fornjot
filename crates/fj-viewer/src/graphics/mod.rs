@@ -16,7 +16,8 @@ mod vertices;
 pub use self::{
     device::DeviceError,
     draw_config::DrawConfig,
-    renderer::{RenderMode, Renderer, RendererInitError},
+    pipelines::RenderMode,
+    renderer::{Renderer, RendererInitError},
     vertices::Vertices,
 };
 

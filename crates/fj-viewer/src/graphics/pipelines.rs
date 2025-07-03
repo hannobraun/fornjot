@@ -191,3 +191,8 @@ impl Pipeline {
         render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
     }
 }
+
+pub enum RenderMode {
+    Face,
+    Model,
+}
