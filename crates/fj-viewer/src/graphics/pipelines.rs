@@ -192,6 +192,7 @@ impl Pipeline {
     }
 }
 
+#[derive(Debug)]
 pub enum RenderMode {
     Face,
     Model,
