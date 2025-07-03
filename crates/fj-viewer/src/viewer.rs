@@ -196,7 +196,9 @@ impl ApplicationHandler<Displayable> for Viewer {
         event_loop: &ActiveEventLoop,
         displayable: Displayable,
     ) {
-        let window = block_on(Window::new(displayable, event_loop)).unwrap();
+        let mut window = block_on(Window::new(event_loop)).unwrap();
+        window.add_displayable(displayable);
+
         self.windows.insert(window.winit_window().id(), window);
     }
 }

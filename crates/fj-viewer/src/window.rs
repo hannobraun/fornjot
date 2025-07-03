@@ -27,35 +27,10 @@ pub struct Window {
 
 impl Window {
     pub async fn new(
-        displayable: Displayable,
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let mut tri_mesh = TriMesh::default();
-        let mut aabb = Aabb::<3>::default();
-
-        let (vertices, render_mode) = match displayable {
-            Displayable::Face { points, aabb: b } => {
-                aabb = aabb.merged(&b);
-
-                let vertices = Vertices::for_face(&points);
-                let render_mode = RenderMode::Face;
-
-                (vertices, render_mode)
-            }
-            Displayable::Model {
-                tri_mesh: m,
-                aabb: b,
-            } => {
-                aabb = aabb.merged(&b);
-
-                let vertices = Vertices::for_model(&m);
-                let render_mode = RenderMode::Model;
-
-                tri_mesh = tri_mesh.merge(m);
-
-                (vertices, render_mode)
-            }
-        };
+        let tri_mesh = TriMesh::default();
+        let aabb = Aabb::<3>::default();
 
         let window = Arc::new(
             event_loop.create_window(
@@ -65,8 +40,7 @@ impl Window {
                     .with_transparent(false),
             )?,
         );
-        let mut renderer = Renderer::new(window.clone()).await?;
-        renderer.update_geometry(render_mode, vertices);
+        let renderer = Renderer::new(window.clone()).await?;
 
         let camera = Camera::new(&aabb);
 
@@ -178,6 +152,35 @@ impl Window {
         };
 
         self.camera.apply_zoom(delta, focus_point);
+    }
+
+    pub fn add_displayable(&mut self, displayable: Displayable) {
+        let (vertices, render_mode) = match displayable {
+            Displayable::Face { points, aabb: b } => {
+                self.aabb = self.aabb.merged(&b);
+
+                let vertices = Vertices::for_face(&points);
+                let render_mode = RenderMode::Face;
+
+                (vertices, render_mode)
+            }
+            Displayable::Model {
+                tri_mesh: m,
+                aabb: b,
+            } => {
+                self.aabb = self.aabb.merged(&b);
+
+                let vertices = Vertices::for_model(&m);
+                let render_mode = RenderMode::Model;
+
+                self.tri_mesh = self.tri_mesh.clone().merge(m);
+
+                (vertices, render_mode)
+            }
+        };
+
+        self.renderer.update_geometry(render_mode, vertices);
+        self.camera = Camera::new(&self.aabb);
     }
 
     /// # Draw the window
