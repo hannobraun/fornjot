@@ -16,7 +16,6 @@ pub struct Pipelines {
 
 impl Pipelines {
     pub fn new(
-        _: RenderMode,
         device: &wgpu::Device,
         shaders: &Shaders,
         pipeline_layout: &wgpu::PipelineLayout,

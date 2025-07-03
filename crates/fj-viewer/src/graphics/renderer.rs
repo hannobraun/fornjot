@@ -38,7 +38,7 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         window: Arc<winit::window::Window>,
-        mode: RenderMode,
+        _: RenderMode,
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
 
@@ -181,7 +181,6 @@ impl Renderer {
 
         let shaders = Shaders::new(&device.device);
         let pipelines = Pipelines::new(
-            mode,
             &device.device,
             &shaders,
             &pipeline_layout,
