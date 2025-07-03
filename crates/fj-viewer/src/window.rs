@@ -179,7 +179,7 @@ impl Window {
             }
         };
 
-        self.renderer.update_geometry(render_mode, vertices);
+        self.renderer.add_geometry(render_mode, vertices);
         self.camera = Camera::new(&self.aabb);
     }
 

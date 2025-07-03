@@ -211,7 +211,7 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(
+    pub fn add_geometry(
         &mut self,
         render_mode: RenderMode,
         vertices: Vertices,
