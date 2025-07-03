@@ -186,7 +186,7 @@ impl Pipeline {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum RenderMode {
     Face,
     Model,
