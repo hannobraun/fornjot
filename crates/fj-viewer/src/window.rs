@@ -156,8 +156,8 @@ impl Window {
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
         let (vertices, render_mode) = match displayable {
-            Displayable::Face { points, aabb: b } => {
-                self.aabb = self.aabb.merged(&b);
+            Displayable::Face { points, aabb } => {
+                self.aabb = self.aabb.merged(&aabb);
 
                 let vertices = Vertices::for_face(&points);
                 let render_mode = RenderMode::Face;
