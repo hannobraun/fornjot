@@ -28,7 +28,7 @@ pub struct Renderer {
     uniform_buffer: wgpu::Buffer,
     bind_group: wgpu::BindGroup,
 
-    geometry: Geometry,
+    geometry: Vec<Geometry>,
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
@@ -179,8 +179,6 @@ impl Renderer {
             },
         );
 
-        let geometry = Geometry::new(&device.device, &[], &[]);
-
         let shaders = Shaders::new(&device.device);
         let pipelines = Pipelines::new(
             mode,
@@ -208,7 +206,7 @@ impl Renderer {
             uniform_buffer,
             bind_group,
 
-            geometry,
+            geometry: Vec::new(),
             pipelines,
 
             navigation_cube_renderer,
@@ -216,11 +214,11 @@ impl Renderer {
     }
 
     pub fn update_geometry(&mut self, vertices: Vertices) {
-        self.geometry = Geometry::new(
+        self.geometry.push(Geometry::new(
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
-        );
+        ));
     }
 
     /// Resizes the render surface.
@@ -315,8 +313,9 @@ impl Renderer {
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
-            self.pipelines
-                .draw(config, &self.geometry, &mut render_pass);
+            for geometry in &self.geometry {
+                self.pipelines.draw(config, geometry, &mut render_pass);
+            }
         }
 
         self.navigation_cube_renderer.draw(
