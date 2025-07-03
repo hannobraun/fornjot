@@ -38,7 +38,6 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(
         window: Arc<winit::window::Window>,
-        _: RenderMode,
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
 
