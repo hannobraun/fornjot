@@ -213,7 +213,7 @@ impl Renderer {
         })
     }
 
-    pub fn update_geometry(&mut self, vertices: Vertices) {
+    pub fn update_geometry(&mut self, _: RenderMode, vertices: Vertices) {
         self.geometries.push(Geometry::new(
             &self.device.device,
             vertices.vertices(),

@@ -66,7 +66,7 @@ impl Window {
             )?,
         );
         let mut renderer = Renderer::new(window.clone(), render_mode).await?;
-        renderer.update_geometry(vertices);
+        renderer.update_geometry(render_mode, vertices);
 
         let camera = Camera::new(&aabb);
 
