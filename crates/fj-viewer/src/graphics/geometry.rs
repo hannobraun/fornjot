@@ -2,6 +2,8 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
+use crate::graphics::RenderMode;
+
 use super::vertices::Vertex;
 
 #[derive(Debug)]
@@ -13,6 +15,7 @@ pub struct Geometry {
 
 impl Geometry {
     pub fn new(
+        _: RenderMode,
         device: &wgpu::Device,
         vertices: &[Vertex],
         indices: &[u32],
