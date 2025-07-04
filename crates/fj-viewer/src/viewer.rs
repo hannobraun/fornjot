@@ -46,7 +46,12 @@ where
     };
 
     let proxy = event_loop.create_proxy();
-    let handle = thread::spawn(|| f(ViewerHandle { event_loop: proxy }));
+    let handle = thread::spawn(|| {
+        f(ViewerHandle {
+            next_window_id: 0,
+            event_loop: proxy,
+        })
+    });
 
     event_loop.run_app(&mut display_state)?;
 
@@ -60,15 +65,22 @@ where
 
 /// # Handle to the model viewer
 pub struct ViewerHandle {
+    next_window_id: u64,
     event_loop: EventLoopProxy<EventLoopEvent>,
 }
 
 impl ViewerHandle {
     /// # Display a 2D face in a new window
     pub fn display_face(&mut self, points: Vec<Point<2>>) {
+        let window_id = self.next_window_id;
+        self.next_window_id += 1;
+
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
+        let _ = self
+            .event_loop
+            .send_event(EventLoopEvent::Window { window_id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
         });
@@ -76,9 +88,15 @@ impl ViewerHandle {
 
     /// # Display a 3D model in a new window
     pub fn display_model(&mut self, tri_mesh: TriMesh) {
+        let window_id = self.next_window_id;
+        self.next_window_id += 1;
+
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
+        let _ = self
+            .event_loop
+            .send_event(EventLoopEvent::Window { window_id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
         });
@@ -201,6 +219,10 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         event: EventLoopEvent,
     ) {
         match event {
+            EventLoopEvent::Window { window_id } => {
+                // Support for this event is being implemented.
+                let _ = window_id;
+            }
             EventLoopEvent::Displayable { displayable } => {
                 let mut window = block_on(Window::new(event_loop)).unwrap();
                 window.add_displayable(displayable);
@@ -212,5 +234,6 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
 }
 
 enum EventLoopEvent {
+    Window { window_id: u64 },
     Displayable { displayable: Displayable },
 }
