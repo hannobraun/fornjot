@@ -43,6 +43,7 @@ where
 
     let mut display_state = Viewer {
         windows: BTreeMap::new(),
+        id_map: BTreeMap::new(),
     };
 
     let proxy = event_loop.create_proxy();
@@ -119,6 +120,7 @@ pub enum Error {
 
 struct Viewer {
     windows: BTreeMap<WindowId, Window>,
+    id_map: BTreeMap<u64, WindowId>,
 }
 
 impl ApplicationHandler<EventLoopEvent> for Viewer {
@@ -222,19 +224,30 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
     ) {
         match event {
             EventLoopEvent::Window { window_id } => {
-                // Support for this event is being implemented.
-                let _ = window_id;
+                let window = block_on(Window::new(event_loop)).unwrap();
+                let winit_window_id = window.winit_window().id();
+
+                self.windows.insert(winit_window_id, window);
+                self.id_map.insert(window_id, winit_window_id);
             }
             EventLoopEvent::Displayable {
                 displayable,
                 window_id,
             } => {
-                let _ = window_id;
+                let Some(winit_window_id) = self.id_map.get(&window_id) else {
+                    unreachable!(
+                        "Mappings for all window IDs are created when handling \
+                        the `Window` event."
+                    );
+                };
+                let Some(window) = self.windows.get_mut(winit_window_id) else {
+                    unreachable!(
+                        "We never remove any windows, so it's not possible to \
+                        have a mapping to an ID, but not a window with that ID."
+                    );
+                };
 
-                let mut window = block_on(Window::new(event_loop)).unwrap();
                 window.add_displayable(displayable);
-
-                self.windows.insert(window.winit_window().id(), window);
             }
         }
     }
