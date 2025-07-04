@@ -96,7 +96,7 @@ impl WindowHandle {
         // much we can do about that.
         let _ = self
             .event_loop
-            .send_event(EventLoopEvent::Window { window_id: self.id });
+            .send_event(EventLoopEvent::Window { id: self.id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
             window_id: self.id,
@@ -110,7 +110,7 @@ impl WindowHandle {
         // much we can do about that.
         let _ = self
             .event_loop
-            .send_event(EventLoopEvent::Window { window_id: self.id });
+            .send_event(EventLoopEvent::Window { id: self.id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
             window_id: self.id,
@@ -235,7 +235,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         event: EventLoopEvent,
     ) {
         match event {
-            EventLoopEvent::Window { window_id } => {
+            EventLoopEvent::Window { id: window_id } => {
                 let window = block_on(Window::new(event_loop)).unwrap();
                 let winit_window_id = window.winit_window().id();
 
@@ -267,7 +267,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
 
 enum EventLoopEvent {
     Window {
-        window_id: u64,
+        id: u64,
     },
     Displayable {
         displayable: Displayable,
