@@ -60,7 +60,7 @@ where
 
 /// # Handle to the model viewer
 pub struct ViewerHandle {
-    event_loop: EventLoopProxy<Displayable>,
+    event_loop: EventLoopProxy<EventLoopEvent>,
 }
 
 impl ViewerHandle {
@@ -69,7 +69,9 @@ impl ViewerHandle {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
-        let _ = self.event_loop.send_event(Displayable::face(points));
+        let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::face(points),
+        });
     }
 
     /// # Display a 3D model in a new window
@@ -77,7 +79,9 @@ impl ViewerHandle {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
-        let _ = self.event_loop.send_event(Displayable::model(tri_mesh));
+        let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::model(tri_mesh),
+        });
     }
 }
 
@@ -97,7 +101,7 @@ struct Viewer {
     windows: BTreeMap<WindowId, Window>,
 }
 
-impl ApplicationHandler<Displayable> for Viewer {
+impl ApplicationHandler<EventLoopEvent> for Viewer {
     fn resumed(&mut self, _: &ActiveEventLoop) {}
 
     fn window_event(
@@ -194,11 +198,17 @@ impl ApplicationHandler<Displayable> for Viewer {
     fn user_event(
         &mut self,
         event_loop: &ActiveEventLoop,
-        displayable: Displayable,
+        event: EventLoopEvent,
     ) {
+        let EventLoopEvent::Displayable { displayable } = event;
+
         let mut window = block_on(Window::new(event_loop)).unwrap();
         window.add_displayable(displayable);
 
         self.windows.insert(window.winit_window().id(), window);
     }
+}
+
+enum EventLoopEvent {
+    Displayable { displayable: Displayable },
 }
