@@ -200,12 +200,14 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         event_loop: &ActiveEventLoop,
         event: EventLoopEvent,
     ) {
-        let EventLoopEvent::Displayable { displayable } = event;
+        match event {
+            EventLoopEvent::Displayable { displayable } => {
+                let mut window = block_on(Window::new(event_loop)).unwrap();
+                window.add_displayable(displayable);
 
-        let mut window = block_on(Window::new(event_loop)).unwrap();
-        window.add_displayable(displayable);
-
-        self.windows.insert(window.winit_window().id(), window);
+                self.windows.insert(window.winit_window().id(), window);
+            }
+        }
     }
 }
 
