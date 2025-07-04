@@ -65,7 +65,7 @@ pub struct ViewerHandle {
 
 impl ViewerHandle {
     /// # Display a 2D face in a new window
-    pub fn display_face(&self, points: Vec<Point<2>>) {
+    pub fn display_face(&mut self, points: Vec<Point<2>>) {
         // If there's an error, that means the display thread has closed down
         // and we're on our way to shutting down as well. I don't think there's
         // much we can do about that.
