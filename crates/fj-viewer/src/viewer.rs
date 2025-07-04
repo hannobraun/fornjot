@@ -83,6 +83,7 @@ impl ViewerHandle {
             .send_event(EventLoopEvent::Window { window_id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
+            window_id,
         });
     }
 
@@ -99,6 +100,7 @@ impl ViewerHandle {
             .send_event(EventLoopEvent::Window { window_id });
         let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
+            window_id,
         });
     }
 }
@@ -223,7 +225,12 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                 // Support for this event is being implemented.
                 let _ = window_id;
             }
-            EventLoopEvent::Displayable { displayable } => {
+            EventLoopEvent::Displayable {
+                displayable,
+                window_id,
+            } => {
+                let _ = window_id;
+
                 let mut window = block_on(Window::new(event_loop)).unwrap();
                 window.add_displayable(displayable);
 
@@ -234,6 +241,11 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
 }
 
 enum EventLoopEvent {
-    Window { window_id: u64 },
-    Displayable { displayable: Displayable },
+    Window {
+        window_id: u64,
+    },
+    Displayable {
+        displayable: Displayable,
+        window_id: u64,
+    },
 }
