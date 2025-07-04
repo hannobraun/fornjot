@@ -73,11 +73,11 @@ pub struct ViewerHandle {
 impl ViewerHandle {
     /// # Open a new window
     pub fn open_window(&mut self) -> WindowHandle {
-        let window_id = self.next_window_id;
+        let id = self.next_window_id;
         self.next_window_id += 1;
 
         WindowHandle {
-            id: window_id,
+            id,
             event_loop: self.event_loop.clone(),
         }
     }
