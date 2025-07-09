@@ -61,12 +61,12 @@ impl Pipelines {
 
     pub fn draw(
         &self,
-        render_mode: &RenderMode,
+        _: &RenderMode,
         config: &DrawConfig,
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
     ) {
-        match render_mode {
+        match geometry.render_mode {
             RenderMode::Face => {
                 self.lines.draw(geometry, render_pass);
             }
