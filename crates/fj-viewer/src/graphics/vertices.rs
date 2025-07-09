@@ -47,6 +47,17 @@ impl Vertices {
         Self { vertices, indices }
     }
 
+    pub fn for_point(point: Point<3>) -> Self {
+        let vertices = vec![Vertex {
+            position: point.coords.components.map(|coord| coord.into_f32()),
+            normal: [0.; 3],
+            color: [0., 0., 0., 1.],
+        }];
+        let indices = vec![0];
+
+        Self { vertices, indices }
+    }
+
     pub fn vertices(&self) -> &[Vertex] {
         self.vertices.as_slice()
     }

@@ -170,6 +170,17 @@ impl Window {
 
                 (render_mode, vertices, aabb)
             }
+            Displayable::Point { point } => {
+                let render_mode = RenderMode::Point;
+                let vertices = Vertices::for_point(point);
+
+                let aabb = Aabb {
+                    min: point,
+                    max: point,
+                };
+
+                (render_mode, vertices, aabb)
+            }
         };
 
         self.renderer.add_geometry(render_mode, vertices);
@@ -211,6 +222,9 @@ pub enum Displayable {
     Model {
         tri_mesh: TriMesh,
         aabb: Aabb<3>,
+    },
+    Point {
+        point: Point<3>,
     },
 }
 

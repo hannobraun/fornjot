@@ -12,6 +12,7 @@ pub struct Pipelines {
     lines: Pipeline,
     model: Pipeline,
     mesh: Option<Pipeline>,
+    points: Pipeline,
 }
 
 impl Pipelines {
@@ -56,7 +57,21 @@ impl Pipelines {
             None
         };
 
-        Self { lines, model, mesh }
+        let points = Pipeline::new(
+            device,
+            pipeline_layout,
+            shaders.model(),
+            wgpu::PrimitiveTopology::PointList,
+            wgpu::PolygonMode::Fill,
+            color_format,
+        );
+
+        Self {
+            lines,
+            model,
+            mesh,
+            points,
+        }
     }
 
     pub fn draw(
@@ -79,6 +94,9 @@ impl Pipelines {
                         pipeline.draw(geometry, render_pass);
                     }
                 };
+            }
+            RenderMode::Point => {
+                self.points.draw(geometry, render_pass);
             }
         }
     }
@@ -183,4 +201,5 @@ impl Pipeline {
 pub enum RenderMode {
     Face,
     Model,
+    Point,
 }

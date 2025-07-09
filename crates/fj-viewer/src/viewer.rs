@@ -106,6 +106,18 @@ impl WindowHandle {
             window_id: self.id,
         });
     }
+
+    /// # Display a 3D point
+    ///
+    /// Please note that currently the point is only displayed as a single
+    /// pixel. Depending on your resolution, that might mean that it's barely
+    /// visible.
+    pub fn display_point(&mut self, point: Point<3>) {
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::Point { point },
+            window_id: self.id,
+        });
+    }
 }
 
 #[derive(Clone)]
