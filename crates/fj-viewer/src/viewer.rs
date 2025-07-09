@@ -76,6 +76,8 @@ impl ViewerHandle {
         let id = self.next_window_id;
         self.next_window_id += 1;
 
+        self.event_loop.send_event(EventLoopEvent::Window { id });
+
         WindowHandle {
             id,
             event_loop: self.event_loop.clone(),
@@ -91,8 +93,6 @@ pub struct WindowHandle {
 impl WindowHandle {
     /// # Display a 2D face
     pub fn display_face(&mut self, points: Vec<Point<2>>) {
-        self.event_loop
-            .send_event(EventLoopEvent::Window { id: self.id });
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
             window_id: self.id,
@@ -101,8 +101,6 @@ impl WindowHandle {
 
     /// # Display a 3D model
     pub fn display_model(&mut self, tri_mesh: TriMesh) {
-        self.event_loop
-            .send_event(EventLoopEvent::Window { id: self.id });
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
             window_id: self.id,
