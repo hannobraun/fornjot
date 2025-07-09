@@ -10,7 +10,7 @@ use winit::{
     event::{
         ElementState, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent,
     },
-    event_loop::{ActiveEventLoop, EventLoop, EventLoopProxy},
+    event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{Key, NamedKey},
     window::WindowId,
 };
@@ -50,7 +50,7 @@ where
     let handle = thread::spawn(|| {
         f(ViewerHandle {
             next_window_id: 0,
-            event_loop: proxy,
+            event_loop: EventLoopProxy { inner: proxy },
         })
     });
 
@@ -67,7 +67,7 @@ where
 /// # Handle to the model viewer
 pub struct ViewerHandle {
     next_window_id: u64,
-    event_loop: EventLoopProxy<EventLoopEvent>,
+    event_loop: EventLoopProxy,
 }
 
 impl ViewerHandle {
@@ -85,7 +85,7 @@ impl ViewerHandle {
 
 pub struct WindowHandle {
     id: u64,
-    event_loop: EventLoopProxy<EventLoopEvent>,
+    event_loop: EventLoopProxy,
 }
 
 impl WindowHandle {
@@ -96,11 +96,15 @@ impl WindowHandle {
         // much we can do about that.
         let _ = self
             .event_loop
+            .inner
             .send_event(EventLoopEvent::Window { id: self.id });
-        let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::face(points),
-            window_id: self.id,
-        });
+        let _ = self
+            .event_loop
+            .inner
+            .send_event(EventLoopEvent::Displayable {
+                displayable: Displayable::face(points),
+                window_id: self.id,
+            });
     }
 
     /// # Display a 3D model
@@ -110,12 +114,21 @@ impl WindowHandle {
         // much we can do about that.
         let _ = self
             .event_loop
+            .inner
             .send_event(EventLoopEvent::Window { id: self.id });
-        let _ = self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::model(tri_mesh),
-            window_id: self.id,
-        });
+        let _ = self
+            .event_loop
+            .inner
+            .send_event(EventLoopEvent::Displayable {
+                displayable: Displayable::model(tri_mesh),
+                window_id: self.id,
+            });
     }
+}
+
+#[derive(Clone)]
+struct EventLoopProxy {
+    inner: winit::event_loop::EventLoopProxy<EventLoopEvent>,
 }
 
 /// Main loop initialization error
