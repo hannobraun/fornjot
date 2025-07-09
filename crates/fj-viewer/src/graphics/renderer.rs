@@ -317,12 +317,7 @@ impl Renderer {
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 
             for geometry in &self.geometries {
-                self.pipelines.draw(
-                    &geometry.render_mode,
-                    config,
-                    geometry,
-                    &mut render_pass,
-                );
+                self.pipelines.draw(config, geometry, &mut render_pass);
             }
         }
 

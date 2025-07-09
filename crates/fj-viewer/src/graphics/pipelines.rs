@@ -61,7 +61,6 @@ impl Pipelines {
 
     pub fn draw(
         &self,
-        _: &RenderMode,
         config: &DrawConfig,
         geometry: &Geometry,
         render_pass: &mut wgpu::RenderPass,
