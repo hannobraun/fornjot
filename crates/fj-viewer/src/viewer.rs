@@ -91,44 +91,37 @@ pub struct WindowHandle {
 impl WindowHandle {
     /// # Display a 2D face
     pub fn display_face(&mut self, points: Vec<Point<2>>) {
-        // If there's an error, that means the display thread has closed down
-        // and we're on our way to shutting down as well. I don't think there's
-        // much we can do about that.
-        let _ = self
-            .event_loop
-            .inner
+        self.event_loop
             .send_event(EventLoopEvent::Window { id: self.id });
-        let _ = self
-            .event_loop
-            .inner
-            .send_event(EventLoopEvent::Displayable {
-                displayable: Displayable::face(points),
-                window_id: self.id,
-            });
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::face(points),
+            window_id: self.id,
+        });
     }
 
     /// # Display a 3D model
     pub fn display_model(&mut self, tri_mesh: TriMesh) {
-        // If there's an error, that means the display thread has closed down
-        // and we're on our way to shutting down as well. I don't think there's
-        // much we can do about that.
-        let _ = self
-            .event_loop
-            .inner
+        self.event_loop
             .send_event(EventLoopEvent::Window { id: self.id });
-        let _ = self
-            .event_loop
-            .inner
-            .send_event(EventLoopEvent::Displayable {
-                displayable: Displayable::model(tri_mesh),
-                window_id: self.id,
-            });
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::model(tri_mesh),
+            window_id: self.id,
+        });
     }
 }
 
 #[derive(Clone)]
 struct EventLoopProxy {
     inner: winit::event_loop::EventLoopProxy<EventLoopEvent>,
+}
+
+impl EventLoopProxy {
+    fn send_event(&self, event: EventLoopEvent) {
+        // If there's an error, that means the display thread has closed down
+        // and we're on our way to shutting down as well. I don't think there's
+        // much we can do about that.
+        let _ = self.inner.send_event(event);
+    }
 }
 
 /// Main loop initialization error
