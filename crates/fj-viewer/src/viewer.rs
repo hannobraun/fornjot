@@ -189,7 +189,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                     window.toggle_draw_mesh_triangles();
                 }
                 Key::Character("2") => {
-                    window.toggle_draw_mesh();
+                    window.toggle_draw_mesh_lines();
                 }
                 _ => {}
             },

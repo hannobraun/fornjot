@@ -69,7 +69,7 @@ impl Window {
     }
 
     /// # Toggle the "draw mesh" setting
-    pub fn toggle_draw_mesh(&mut self) {
+    pub fn toggle_draw_mesh_lines(&mut self) {
         self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
     }
 
