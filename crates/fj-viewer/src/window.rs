@@ -235,7 +235,7 @@ impl Displayable {
         Self::Face { points, aabb }
     }
 
-    pub fn model(tri_mesh: TriMesh) -> Self {
+    pub fn mesh(tri_mesh: TriMesh) -> Self {
         let aabb = tri_mesh.aabb();
         Self::Model { tri_mesh, aabb }
     }
