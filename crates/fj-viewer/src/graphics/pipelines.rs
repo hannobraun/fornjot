@@ -43,7 +43,7 @@ impl Pipelines {
 
         let can_draw_outline =
             features.contains(wgpu::Features::POLYGON_MODE_LINE);
-        let mesh = if can_draw_outline {
+        let mesh_outline = if can_draw_outline {
             // We need this feature, otherwise initializing the pipeline will
             // panic.
 
@@ -71,7 +71,7 @@ impl Pipelines {
         Self {
             lines,
             mesh_triangles,
-            mesh_outline: mesh,
+            mesh_outline,
             points,
         }
     }
