@@ -68,7 +68,7 @@ impl Window {
             !self.draw_config.draw_mesh_triangles;
     }
 
-    /// # Toggle the "draw mesh" setting
+    /// # Toggle whether the lines of meshes are drawn
     pub fn toggle_draw_mesh_lines(&mut self) {
         self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
     }
