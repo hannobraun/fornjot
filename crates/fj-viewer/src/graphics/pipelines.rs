@@ -41,7 +41,9 @@ impl Pipelines {
             color_format,
         );
 
-        let mesh = if features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+        let can_draw_outline =
+            features.contains(wgpu::Features::POLYGON_MODE_LINE);
+        let mesh = if can_draw_outline {
             // We need this feature, otherwise initializing the pipeline will
             // panic.
 
