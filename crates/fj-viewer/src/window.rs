@@ -63,7 +63,7 @@ impl Window {
     }
 
     /// # Toggle the "draw model" setting
-    pub fn toggle_draw_model(&mut self) {
+    pub fn toggle_draw_mesh_triangles(&mut self) {
         self.draw_config.draw_mesh_triangles =
             !self.draw_config.draw_mesh_triangles;
     }

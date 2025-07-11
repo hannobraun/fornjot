@@ -186,7 +186,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                     event_loop.exit();
                 }
                 Key::Character("1") => {
-                    window.toggle_draw_model();
+                    window.toggle_draw_mesh_triangles();
                 }
                 Key::Character("2") => {
                     window.toggle_draw_mesh();
