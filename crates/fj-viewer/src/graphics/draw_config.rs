@@ -2,7 +2,7 @@
 #[derive(Debug)]
 pub struct DrawConfig {
     /// Toggle for displaying the shaded model
-    pub draw_model: bool,
+    pub draw_mesh_triangles: bool,
 
     /// Toggle for displaying the wireframe model
     pub draw_mesh: bool,
@@ -11,7 +11,7 @@ pub struct DrawConfig {
 impl Default for DrawConfig {
     fn default() -> Self {
         Self {
-            draw_model: true,
+            draw_mesh_triangles: true,
             draw_mesh: false,
         }
     }
