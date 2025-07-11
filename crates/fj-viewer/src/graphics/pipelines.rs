@@ -32,7 +32,7 @@ impl Pipelines {
             color_format,
         );
 
-        let model = Pipeline::new(
+        let mesh_triangles = Pipeline::new(
             device,
             pipeline_layout,
             shaders.model(),
@@ -68,7 +68,7 @@ impl Pipelines {
 
         Self {
             lines,
-            mesh_triangles: model,
+            mesh_triangles,
             mesh_outline: mesh,
             points,
         }
