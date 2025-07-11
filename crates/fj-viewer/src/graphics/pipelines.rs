@@ -10,7 +10,7 @@ use super::{
 #[derive(Debug)]
 pub struct Pipelines {
     lines: Pipeline,
-    model: Pipeline,
+    mesh_triangles: Pipeline,
     mesh: Option<Pipeline>,
     points: Pipeline,
 }
@@ -68,7 +68,7 @@ impl Pipelines {
 
         Self {
             lines,
-            model,
+            mesh_triangles: model,
             mesh,
             points,
         }
@@ -86,7 +86,7 @@ impl Pipelines {
             }
             RenderMode::Mesh => {
                 if config.draw_model {
-                    self.model.draw(geometry, render_pass);
+                    self.mesh_triangles.draw(geometry, render_pass);
                 }
 
                 if let Some(pipeline) = self.mesh.as_ref() {
