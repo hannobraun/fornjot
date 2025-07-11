@@ -62,7 +62,7 @@ impl Window {
         &self.window
     }
 
-    /// # Toggle the "draw model" setting
+    /// # Toggle whether the triangles of meshes are drawn
     pub fn toggle_draw_mesh_triangles(&mut self) {
         self.draw_config.draw_mesh_triangles =
             !self.draw_config.draw_mesh_triangles;
