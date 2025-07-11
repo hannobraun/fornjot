@@ -11,7 +11,7 @@ use super::{
 pub struct Pipelines {
     lines: Pipeline,
     mesh_triangles: Pipeline,
-    mesh_outline: Option<Pipeline>,
+    mesh_lines: Option<Pipeline>,
     points: Pipeline,
 }
 
@@ -71,7 +71,7 @@ impl Pipelines {
         Self {
             lines,
             mesh_triangles,
-            mesh_outline,
+            mesh_lines: mesh_outline,
             points,
         }
     }
@@ -91,7 +91,7 @@ impl Pipelines {
                     self.mesh_triangles.draw(geometry, render_pass);
                 }
 
-                if let Some(pipeline) = self.mesh_outline.as_ref() {
+                if let Some(pipeline) = self.mesh_lines.as_ref() {
                     if config.draw_mesh_lines {
                         pipeline.draw(geometry, render_pass);
                     }
