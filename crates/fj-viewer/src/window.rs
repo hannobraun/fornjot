@@ -162,7 +162,7 @@ impl Window {
 
                 (render_mode, vertices, aabb)
             }
-            Displayable::Model { tri_mesh, aabb } => {
+            Displayable::Mesh { tri_mesh, aabb } => {
                 let render_mode = RenderMode::Model;
                 let vertices = Vertices::for_model(&tri_mesh);
 
@@ -219,7 +219,7 @@ pub enum Displayable {
         points: Vec<Point<2>>,
         aabb: Aabb<3>,
     },
-    Model {
+    Mesh {
         tri_mesh: TriMesh,
         aabb: Aabb<3>,
     },
@@ -237,7 +237,7 @@ impl Displayable {
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
         let aabb = tri_mesh.aabb();
-        Self::Model { tri_mesh, aabb }
+        Self::Mesh { tri_mesh, aabb }
     }
 }
 
