@@ -99,7 +99,7 @@ impl WindowHandle {
         });
     }
 
-    /// # Display a 3D model
+    /// # Display a 3D triangle mesh
     pub fn display_mesh(&mut self, tri_mesh: TriMesh) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
