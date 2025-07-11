@@ -100,7 +100,7 @@ impl Instance {
         }
 
         make_viewer_and_spawn_thread(|mut viewer| {
-            viewer.open_window().display_model(tri_mesh);
+            viewer.open_window().display_mesh(tri_mesh);
         })?;
 
         Ok(())

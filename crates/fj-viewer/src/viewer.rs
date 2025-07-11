@@ -100,7 +100,7 @@ impl WindowHandle {
     }
 
     /// # Display a 3D model
-    pub fn display_model(&mut self, tri_mesh: TriMesh) {
+    pub fn display_mesh(&mut self, tri_mesh: TriMesh) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::model(tri_mesh),
             window_id: self.id,
