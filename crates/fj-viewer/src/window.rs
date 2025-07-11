@@ -70,7 +70,7 @@ impl Window {
 
     /// # Toggle the "draw mesh" setting
     pub fn toggle_draw_mesh(&mut self) {
-        self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
+        self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
     }
 
     /// # Compute and store a focus point, unless one is already stored

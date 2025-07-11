@@ -92,7 +92,7 @@ impl Pipelines {
                 }
 
                 if let Some(pipeline) = self.mesh_outline.as_ref() {
-                    if config.draw_mesh {
+                    if config.draw_mesh_lines {
                         pipeline.draw(geometry, render_pass);
                     }
                 };

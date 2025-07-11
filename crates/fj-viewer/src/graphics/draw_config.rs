@@ -5,14 +5,14 @@ pub struct DrawConfig {
     pub draw_mesh_triangles: bool,
 
     /// Toggle for displaying the wireframe model
-    pub draw_mesh: bool,
+    pub draw_mesh_lines: bool,
 }
 
 impl Default for DrawConfig {
     fn default() -> Self {
         Self {
             draw_mesh_triangles: true,
-            draw_mesh: false,
+            draw_mesh_lines: false,
         }
     }
 }
