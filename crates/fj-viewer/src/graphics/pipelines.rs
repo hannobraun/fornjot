@@ -84,7 +84,7 @@ impl Pipelines {
             RenderMode::Face => {
                 self.lines.draw(geometry, render_pass);
             }
-            RenderMode::Model => {
+            RenderMode::Mesh => {
                 if config.draw_model {
                     self.model.draw(geometry, render_pass);
                 }
@@ -200,6 +200,6 @@ impl Pipeline {
 #[derive(Clone, Copy, Debug)]
 pub enum RenderMode {
     Face,
-    Model,
+    Mesh,
     Point,
 }

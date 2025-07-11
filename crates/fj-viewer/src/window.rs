@@ -163,7 +163,7 @@ impl Window {
                 (render_mode, vertices, aabb)
             }
             Displayable::Mesh { tri_mesh, aabb } => {
-                let render_mode = RenderMode::Model;
+                let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
