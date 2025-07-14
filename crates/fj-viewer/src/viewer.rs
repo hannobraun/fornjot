@@ -1,4 +1,9 @@
-use std::{collections::BTreeMap, panic, thread};
+use std::{
+    collections::BTreeMap,
+    panic,
+    sync::atomic::{AtomicU64, Ordering},
+    thread,
+};
 
 use fj_interop::TriMesh;
 use fj_math::Point;
@@ -49,7 +54,7 @@ where
     let proxy = event_loop.create_proxy();
     let handle = thread::spawn(|| {
         f(ViewerHandle {
-            next_window_id: 0,
+            next_window_id: AtomicU64::new(0),
             event_loop: EventLoopProxy { inner: proxy },
         })
     });
@@ -66,15 +71,16 @@ where
 
 /// # Handle to the model viewer
 pub struct ViewerHandle {
-    next_window_id: u64,
+    next_window_id: AtomicU64,
     event_loop: EventLoopProxy,
 }
 
 impl ViewerHandle {
     /// # Open a new window
     pub fn open_window(&mut self) -> WindowHandle {
-        let id = self.next_window_id;
-        self.next_window_id += 1;
+        // Use a conservative ordering, just to be on the safe side. This code
+        // shouldn't be performance-sensitive anyway.
+        let id = self.next_window_id.fetch_add(1, Ordering::SeqCst);
 
         self.event_loop.send_event(EventLoopEvent::Window { id });
 
