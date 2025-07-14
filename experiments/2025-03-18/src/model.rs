@@ -9,7 +9,7 @@ use crate::{
     topology::surface::Surface,
 };
 
-pub fn model(viewer: &mut ViewerHandle) -> TriMesh {
+pub fn model(viewer: &ViewerHandle) -> TriMesh {
     let tolerance = Tolerance::from(0.001);
 
     let top = {
