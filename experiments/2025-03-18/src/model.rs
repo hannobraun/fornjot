@@ -9,7 +9,7 @@ use crate::{
     topology::surface::Surface,
 };
 
-pub fn model(viewer: &ViewerHandle) -> TriMesh {
+pub fn model(viewer: &mut ViewerHandle) -> TriMesh {
     let tolerance = Tolerance::from(0.001);
 
     let top = {
@@ -53,7 +53,7 @@ pub fn model(viewer: &ViewerHandle) -> TriMesh {
         solid.to_tri_mesh(tolerance)
     };
 
-    viewer.display_model(solid.clone());
+    viewer.open_window().display_mesh(solid.clone());
 
     solid
 }
