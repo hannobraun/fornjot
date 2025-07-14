@@ -99,7 +99,7 @@ impl Instance {
             return Ok(());
         }
 
-        make_viewer_and_spawn_thread(|mut viewer| {
+        make_viewer_and_spawn_thread(|viewer| {
             viewer.open_window().display_mesh(tri_mesh);
         })?;
 

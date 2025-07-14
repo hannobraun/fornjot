@@ -77,7 +77,7 @@ pub struct ViewerHandle {
 
 impl ViewerHandle {
     /// # Open a new window
-    pub fn open_window(&mut self) -> WindowHandle {
+    pub fn open_window(&self) -> WindowHandle {
         // Use a conservative ordering, just to be on the safe side. This code
         // shouldn't be performance-sensitive anyway.
         let id = self.next_window_id.fetch_add(1, Ordering::SeqCst);
