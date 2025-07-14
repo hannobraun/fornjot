@@ -98,7 +98,7 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a 2D face
-    pub fn display_face(&mut self, points: Vec<Point<2>>) {
+    pub fn display_face(&self, points: Vec<Point<2>>) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
             window_id: self.id,
@@ -106,7 +106,7 @@ impl WindowHandle {
     }
 
     /// # Display a 3D triangle mesh
-    pub fn display_mesh(&mut self, tri_mesh: TriMesh) {
+    pub fn display_mesh(&self, tri_mesh: TriMesh) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::mesh(tri_mesh),
             window_id: self.id,
@@ -118,7 +118,7 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point(&mut self, point: Point<3>) {
+    pub fn display_point(&self, point: Point<3>) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Point { point },
             window_id: self.id,
