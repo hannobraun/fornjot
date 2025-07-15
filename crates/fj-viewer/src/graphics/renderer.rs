@@ -294,6 +294,7 @@ impl Renderer {
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &self.frame_buffer,
+                            depth_slice: None,
                             resolve_target: Some(&color_view),
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
