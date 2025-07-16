@@ -91,6 +91,9 @@ impl ViewerHandle {
     }
 }
 
+/// # Handle to a model viewer window
+///
+/// See [`ViewerHandle::open_window`].
 pub struct WindowHandle {
     id: u64,
     event_loop: EventLoopProxy,
