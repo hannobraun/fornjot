@@ -12,10 +12,6 @@ pub trait SurfaceGeometry: fmt::Debug {
 
     /// # Approximate the surface
     ///
-    /// Returns a set of points, in surface coordinates, that approximate the
-    /// surface. The points returned must be within the provided boundary. Not
-    /// outside of it, and not on it.
-    ///
     /// ## Implementation Note
     ///
     /// This method should take a tolerance parameter, to define how far the
