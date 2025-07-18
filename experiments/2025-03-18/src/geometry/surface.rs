@@ -42,6 +42,8 @@ impl SurfaceGeometry for SweptCurve {
     }
 
     fn approximate(&self, boundary: &Aabb<2>) -> SurfaceApproximation {
+        // This doesn't take the curvature of the surface into account, thus
+        // producing incorrect results unless the surface is flat.
         let boundary = {
             let [[min_u, min_v], [max_u, max_v]] = [boundary.min, boundary.max]
                 .map(|point| point.coords.components);
