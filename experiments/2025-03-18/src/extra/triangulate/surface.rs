@@ -21,6 +21,7 @@ impl SurfaceMesh {
         let surface_points = surface
             .geometry
             .approximate(boundary)
+            .surface_points
             .into_iter()
             .map(|point_surface| {
                 TriangulationPoint::from_surface_point(

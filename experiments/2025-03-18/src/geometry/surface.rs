@@ -21,7 +21,7 @@ pub trait SurfaceGeometry: fmt::Debug {
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual surface. So far,
     /// this has not been necessary.
-    fn approximate(&self, boundary: &Aabb<2>) -> Vec<Point<2>>;
+    fn approximate(&self, boundary: &Aabb<2>) -> SurfaceApproximation;
 }
 
 impl SurfaceGeometry for SweptCurve {
@@ -41,13 +41,20 @@ impl SurfaceGeometry for SweptCurve {
         Box::new((*self).translate(offset))
     }
 
-    fn approximate(&self, _: &Aabb<2>) -> Vec<Point<2>> {
+    fn approximate(&self, _: &Aabb<2>) -> SurfaceApproximation {
         // In a swept curve, the curve sweeps along a straight path. So the
         // surface is only curved along one dimension.
         //
         // As a result, all points that could possibly be needed to approximate
         // the surface, are already on the provided boundary. As per the
         // contract of this method, we must not return those.
-        vec![]
+        SurfaceApproximation {
+            surface_points: vec![],
+        }
     }
+}
+
+pub struct SurfaceApproximation {
+    /// # The points that approximate the curvature of the surface
+    pub surface_points: Vec<Point<2>>,
 }
