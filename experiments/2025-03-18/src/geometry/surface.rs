@@ -48,13 +48,11 @@ impl SurfaceGeometry for SweptCurve {
         // As a result, all points that could possibly be needed to approximate
         // the surface, are already on the provided boundary. As per the
         // contract of this method, we must not return those.
-        SurfaceApproximation {
-            surface_points: vec![],
-        }
+        SurfaceApproximation { curvature: vec![] }
     }
 }
 
 pub struct SurfaceApproximation {
     /// # The points that approximate the curvature of the surface
-    pub surface_points: Vec<Point<2>>,
+    pub curvature: Vec<Point<2>>,
 }
