@@ -20,7 +20,7 @@ impl SurfaceMesh {
     ) -> Self {
         let approx = surface.geometry.approximate(boundary);
 
-        let surface_points = approx
+        let curvature_points = approx
             .curvature
             .into_iter()
             .map(|point_surface| {
@@ -39,7 +39,7 @@ impl SurfaceMesh {
                 )
             });
 
-        let mut all_points = surface_points.clone();
+        let mut all_points = curvature_points.clone();
         all_points.extend(boundary_points);
 
         let triangles = triangles([], all_points)
@@ -48,7 +48,7 @@ impl SurfaceMesh {
             .collect();
 
         Self {
-            points: surface_points,
+            points: curvature_points,
             triangles,
         }
     }
