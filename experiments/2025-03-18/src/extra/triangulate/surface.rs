@@ -16,9 +16,9 @@ impl SurfaceMesh {
     pub fn from_surface(
         surface: &Surface,
         boundary: &Aabb<2>,
-        _: impl Into<Tolerance>,
+        tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let approx = surface.geometry.approximate(boundary);
+        let approx = surface.geometry.approximate(boundary, tolerance.into());
 
         let curvature_points = approx
             .curvature

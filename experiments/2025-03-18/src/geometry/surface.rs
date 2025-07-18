@@ -1,5 +1,6 @@
 use std::fmt;
 
+use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Vector};
 
 use crate::geometry::SweptCurve;
@@ -17,7 +18,11 @@ pub trait SurfaceGeometry: fmt::Debug {
     /// This method should take a tolerance parameter, to define how far the
     /// approximation is allowed to deviate from the actual surface. So far,
     /// this has not been necessary.
-    fn approximate(&self, boundary: &Aabb<2>) -> SurfaceApproximation;
+    fn approximate(
+        &self,
+        boundary: &Aabb<2>,
+        tolerance: Tolerance,
+    ) -> SurfaceApproximation;
 }
 
 impl SurfaceGeometry for SweptCurve {
@@ -37,7 +42,11 @@ impl SurfaceGeometry for SweptCurve {
         Box::new((*self).translate(offset))
     }
 
-    fn approximate(&self, boundary: &Aabb<2>) -> SurfaceApproximation {
+    fn approximate(
+        &self,
+        boundary: &Aabb<2>,
+        _: Tolerance,
+    ) -> SurfaceApproximation {
         // This doesn't take the curvature of the surface into account, thus
         // producing incorrect results unless the surface is flat.
         let boundary = {
