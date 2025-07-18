@@ -41,18 +41,33 @@ impl SurfaceGeometry for SweptCurve {
         Box::new((*self).translate(offset))
     }
 
-    fn approximate(&self, _: &Aabb<2>) -> SurfaceApproximation {
-        // In a swept curve, the curve sweeps along a straight path. So the
-        // surface is only curved along one dimension.
-        //
-        // As a result, all points that could possibly be needed to approximate
-        // the surface, are already on the provided boundary. As per the
-        // contract of this method, we must not return those.
-        SurfaceApproximation { curvature: vec![] }
+    fn approximate(&self, boundary: &Aabb<2>) -> SurfaceApproximation {
+        let boundary = {
+            let [[min_u, min_v], [max_u, max_v]] = [boundary.min, boundary.max]
+                .map(|point| point.coords.components);
+
+            [
+                [min_u, min_v],
+                [min_u, max_v],
+                [max_u, min_v],
+                [max_u, max_v],
+            ]
+            .map(Point::from)
+            .into_iter()
+            .collect()
+        };
+
+        SurfaceApproximation {
+            curvature: vec![],
+            boundary,
+        }
     }
 }
 
 pub struct SurfaceApproximation {
     /// # The points that approximate the curvature of the surface
     pub curvature: Vec<Point<2>>,
+
+    /// # The points that approximate the boundary of the approximation
+    pub boundary: Vec<Point<2>>,
 }

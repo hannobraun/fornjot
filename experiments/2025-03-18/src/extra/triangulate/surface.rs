@@ -1,5 +1,5 @@
 use fj_interop::Tolerance;
-use fj_math::{Aabb, Point};
+use fj_math::Aabb;
 
 use crate::{
     extra::triangulate::{TriangulationPoint, delaunay::triangles},
@@ -31,24 +31,13 @@ impl SurfaceMesh {
             })
             .collect::<Vec<_>>();
 
-        let boundary_points = {
-            let [[min_u, min_v], [max_u, max_v]] = [boundary.min, boundary.max]
-                .map(|point| point.coords.components);
-
-            [
-                [min_u, min_v],
-                [min_u, max_v],
-                [max_u, min_v],
-                [max_u, max_v],
-            ]
-            .map(Point::from)
-            .map(|point_surface| {
+        let boundary_points =
+            approx.boundary.into_iter().map(|point_surface| {
                 TriangulationPoint::from_surface_point(
                     point_surface,
                     surface.geometry.as_ref(),
                 )
-            })
-        };
+            });
 
         let mut all_points = surface_points.clone();
         all_points.extend(boundary_points);
