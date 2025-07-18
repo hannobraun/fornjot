@@ -18,9 +18,9 @@ impl SurfaceMesh {
         boundary: &Aabb<2>,
         _: impl Into<Tolerance>,
     ) -> Self {
-        let surface_points = surface
-            .geometry
-            .approximate(boundary)
+        let approx = surface.geometry.approximate(boundary);
+
+        let surface_points = approx
             .surface_points
             .into_iter()
             .map(|point_surface| {
