@@ -32,12 +32,14 @@ pub fn triangulate_face(
 
         SurfaceMesh::from_surface(&face.surface, &boundary, tolerance)
     };
-    for triangle in surface_mesh.triangles {
-        dbg!(triangle.points);
-    }
 
     let mut points_from_half_edges = Vec::new();
-    half_edges_to_points(face, &mut points_from_half_edges, tolerance);
+    half_edges_to_points(
+        face,
+        &surface_mesh,
+        &mut points_from_half_edges,
+        tolerance,
+    );
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
@@ -71,6 +73,7 @@ pub fn triangulate_face(
 
 fn half_edges_to_points(
     face: &Face,
+    surface: &SurfaceMesh,
     target: &mut Vec<TriangulationPoint>,
     tolerance: impl Into<Tolerance>,
 ) {
@@ -100,7 +103,7 @@ fn half_edges_to_points(
                 // original 3D points to build those triangles. We never convert
                 // the 2D points back into 3D.
                 let point_surface =
-                    face.surface.geometry.project_point(point_global);
+                    surface.project_point(point_global, tolerance);
 
                 TriangulationPoint {
                     point_surface,

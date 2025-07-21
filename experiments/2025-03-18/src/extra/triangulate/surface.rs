@@ -1,5 +1,5 @@
 use fj_interop::Tolerance;
-use fj_math::Aabb;
+use fj_math::{Aabb, Point, Scalar, Triangle};
 
 use crate::{
     extra::triangulate::{TriangulationPoint, delaunay::triangles},
@@ -52,9 +52,78 @@ impl SurfaceMesh {
             triangles,
         }
     }
+
+    pub fn project_point(
+        &self,
+        point_global: Point<3>,
+        tolerance: Tolerance,
+    ) -> Point<2> {
+        let mut projection = None;
+
+        for triangle in &self.triangles {
+            let (point_surface, distance) =
+                triangle.project_point(point_global);
+
+            let Some((_, min_distance)) = projection else {
+                projection = Some((point_surface, distance));
+                continue;
+            };
+
+            if distance < min_distance {
+                projection = Some((point_surface, distance));
+            }
+        }
+
+        let Some((point_surface, distance)) = projection else {
+            unreachable!(
+                "Surface mesh can't be empty. At the very least, there must be \
+                two triangles from the AABB. This means that the loop above \
+                ran at least twice, and the first time it ran it definitely \
+                initialized `projection`."
+            );
+        };
+
+        assert!(
+            distance < tolerance.inner(),
+            "Expected to project a global point that is coincident with the \
+            surface.\n\
+            \n\
+            Original point: {point_global:?}\n\
+            Projected point: {point_surface:?}\n\
+            \n\
+            Distance to surface: {distance}\n\
+            \n\
+            Surface mesh: {self:#?}",
+        );
+
+        point_surface
+    }
 }
 
 #[derive(Debug)]
 pub struct MeshTriangle {
     pub points: [TriangulationPoint; 3],
+}
+
+impl MeshTriangle {
+    pub fn project_point(&self, point_global: Point<3>) -> (Point<2>, Scalar) {
+        let triangle_global = Triangle {
+            points: self.points.map(|point| point.point_global),
+        };
+        let triangle_surface = Triangle {
+            points: self.points.map(|point| point.point_surface),
+        };
+
+        let barycentric_coords =
+            triangle_global.point_to_barycentric_coords(point_global);
+
+        let point_surface =
+            triangle_surface.point_from_barycentric_coords(barycentric_coords);
+
+        let distance = (point_global
+            - triangle_global.closest_point(point_global))
+        .magnitude();
+
+        (point_surface, distance)
+    }
 }

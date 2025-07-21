@@ -27,22 +27,6 @@ impl SweptCurve {
         self.u.point_from_local([u]) + self.v.vector_from_local_point([v])
     }
 
-    pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
-        let point = point.into();
-
-        let u = self.u.project_point(point);
-        let v = {
-            let v = AnchoredCurve {
-                origin: self.u.point_from_local(u),
-                floating: self.v.clone(),
-            };
-
-            v.project_point(point)
-        };
-
-        Point::from([u.t, v.t])
-    }
-
     pub fn flip(&self) -> Self {
         Self {
             u: self.u.clone(),
@@ -55,22 +39,5 @@ impl SweptCurve {
             u: self.u.translate(offset),
             v: self.v.clone(),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use fj_math::Point;
-
-    use super::SweptCurve;
-
-    #[test]
-    fn project_point() {
-        let plane = SweptCurve::plane_from_coord_system(
-            [1., 1., 1.],
-            [[1., 0., 0.], [0., 1., 0.]],
-        );
-
-        assert_eq!(plane.project_point([2., 2., 2.]), Point::from([1., 1.]));
     }
 }
