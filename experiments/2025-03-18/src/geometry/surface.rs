@@ -46,6 +46,7 @@ impl SurfaceGeometry for SweptCurve {
             [boundary.min, boundary.max].map(|point| point.coords.components);
 
         let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
+        let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
 
         // This doesn't take the curvature of the `v` axis into account, thus
         // producing incorrect results unless the surface is flat, or only
@@ -70,6 +71,18 @@ impl SurfaceGeometry for SweptCurve {
                     .iter()
                     .copied()
                     .map(|point_u| Point::from([point_u.t, max_v])),
+            )
+            .chain(
+                approx_v
+                    .iter()
+                    .copied()
+                    .map(|point_v| Point::from([min_u, point_v.t])),
+            )
+            .chain(
+                approx_v
+                    .iter()
+                    .copied()
+                    .map(|point_v| Point::from([max_u, point_v.t])),
             )
             .collect()
         };
