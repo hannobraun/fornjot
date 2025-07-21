@@ -2,6 +2,7 @@ use std::fmt;
 
 use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Vector};
+use itertools::Itertools;
 
 use crate::geometry::SweptCurve;
 
@@ -89,7 +90,11 @@ impl SurfaceGeometry for SweptCurve {
         // all approximation points we need are _on_ the boundary though. So
         // until this code is expanded to support curvature in `v` too, we don't
         // need to generate any points here.
-        let curvature = Vec::new();
+        let curvature = approx_u
+            .into_iter()
+            .cartesian_product(approx_v)
+            .map(|(point_u, point_v)| Point::from([point_u.t, point_v.t]))
+            .collect();
 
         SurfaceApproximation {
             curvature,
