@@ -79,7 +79,7 @@ impl SurfaceGeometry for SweptCurve {
             .collect()
         };
 
-        let curvature = vec![];
+        let curvature = Vec::new();
 
         SurfaceApproximation {
             curvature,
