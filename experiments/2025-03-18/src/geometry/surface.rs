@@ -52,8 +52,9 @@ impl SurfaceGeometry for SweptCurve {
 
         let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
 
-        // This doesn't take the curvature of the surface into account, thus
-        // producing incorrect results unless the surface is flat.
+        // This doesn't take the curvature of the `v` axis into account, thus
+        // producing incorrect results unless the surface is flat, or only
+        // curved along `u`.
         let boundary = {
             [
                 [min_u, min_v],
