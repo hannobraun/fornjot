@@ -67,6 +67,10 @@ impl AnchoredCurve {
         }
     }
 
+    /// # Approximate the curve
+    ///
+    /// Calls [`CurveGeometry::approximate`] internally, and follows the same
+    /// contract in regards to which points are part of the approximation.
     pub fn approximate(
         &self,
         boundary: [impl Into<Point<1>>; 2],
