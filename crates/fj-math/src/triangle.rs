@@ -96,6 +96,73 @@ impl<const D: usize> Triangle<D> {
         [u, v, w]
     }
 
+    /// # Compute the point on the triangle that is closest to the provided `p`
+    pub fn closest_point(&self, p: impl Into<Point<D>>) -> Point<D> {
+        // From Real-Time Collision Detection by Christer Ericson, pages 141 and
+        // 142.
+
+        const Z: Scalar = Scalar::ZERO;
+
+        let p = p.into();
+        let [a, b, c] = self.points;
+
+        let ab = b - a;
+        let ac = c - a;
+        let ap = p - a;
+
+        let d1 = ab.dot(&ap);
+        let d2 = ac.dot(&ap);
+
+        if d1 <= Z && d2 <= Z {
+            return a;
+        }
+
+        let bp = p - b;
+
+        let d3 = ab.dot(&bp);
+        let d4 = ac.dot(&bp);
+
+        if d3 >= Z && d4 <= d3 {
+            return b;
+        }
+
+        let vc = d1 * d4 - d3 * d2;
+
+        if vc <= Z && d1 >= Z && d3 <= Z {
+            let v = d1 / (d1 - d3);
+            return a + ab * v;
+        }
+
+        let cp = p - c;
+
+        let d5 = ab.dot(&cp);
+        let d6 = ac.dot(&cp);
+
+        if d6 >= Z && d5 <= d6 {
+            return c;
+        }
+
+        let vb = d5 * d2 - d1 * d6;
+
+        if vb <= Z && d2 >= Z && d6 <= Z {
+            let w = d2 / (d2 - d6);
+            return a + ac * w;
+        }
+
+        let va = d3 * d6 - d5 * d4;
+
+        if va <= Z && (d4 - d3) >= Z && (d5 - d6) >= Z {
+            let w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+            return b + (c - b) * w;
+        }
+
+        let denom = Scalar::ONE / (va + vb + vc);
+        let v = vb * denom;
+        let w = vc * denom;
+
+        a + ab * v + ac * w
+    }
+
     /// # Normalize the triangle
     ///
     /// Returns a new `Triangle` instance with the same points, but the points
