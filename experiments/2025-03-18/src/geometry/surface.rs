@@ -45,10 +45,12 @@ impl SurfaceGeometry for SweptCurve {
     fn approximate(
         &self,
         boundary: &Aabb<2>,
-        _: Tolerance,
+        tolerance: Tolerance,
     ) -> SurfaceApproximation {
         let [[min_u, min_v], [max_u, max_v]] =
             [boundary.min, boundary.max].map(|point| point.coords.components);
+
+        let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
 
         // This doesn't take the curvature of the surface into account, thus
         // producing incorrect results unless the surface is flat.
@@ -61,6 +63,18 @@ impl SurfaceGeometry for SweptCurve {
             ]
             .map(Point::from)
             .into_iter()
+            .chain(
+                approx_u
+                    .iter()
+                    .copied()
+                    .map(|point_curve| Point::from([point_curve.t, min_v])),
+            )
+            .chain(
+                approx_u
+                    .iter()
+                    .copied()
+                    .map(|point_curve| Point::from([point_curve.t, max_v])),
+            )
             .collect()
         };
 
