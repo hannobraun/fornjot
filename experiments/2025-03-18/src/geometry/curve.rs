@@ -77,7 +77,7 @@ impl AnchoredCurve {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         let boundary = boundary.map(Into::into);
-        self.floating.inner.approximate(boundary, tolerance)
+        self.floating.approximate(boundary, tolerance)
     }
 }
 
@@ -104,6 +104,19 @@ impl FloatingCurve {
         Self {
             inner: self.inner.flip(),
         }
+    }
+
+    /// # Approximate the curve
+    ///
+    /// Calls [`CurveGeometry::approximate`] internally, and follows the same
+    /// contract in regards to which points are part of the approximation.
+    pub fn approximate(
+        &self,
+        boundary: [impl Into<Point<1>>; 2],
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        let boundary = boundary.map(Into::into);
+        self.inner.approximate(boundary, tolerance)
     }
 }
 
