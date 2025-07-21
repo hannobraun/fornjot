@@ -85,11 +85,6 @@ impl SurfaceGeometry for SweptCurve {
             .collect()
         };
 
-        // These points only approximate the curvature of the surface _within_
-        // the boundary. Since only curvature of `u` is supported here, so far,
-        // all approximation points we need are _on_ the boundary though. So
-        // until this code is expanded to support curvature in `v` too, we don't
-        // need to generate any points here.
         let curvature = approx_u
             .into_iter()
             .cartesian_product(approx_v)
