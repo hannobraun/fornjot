@@ -69,7 +69,7 @@ impl SurfaceGeometry for SweptCurve {
                 approx_u
                     .iter()
                     .copied()
-                    .map(|point_curve| Point::from([point_curve.t, max_v])),
+                    .map(|point_u| Point::from([point_u.t, max_v])),
             )
             .collect()
         };
