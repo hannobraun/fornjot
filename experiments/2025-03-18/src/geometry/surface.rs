@@ -79,8 +79,10 @@ impl SurfaceGeometry for SweptCurve {
             .collect()
         };
 
+        let curvature = vec![];
+
         SurfaceApproximation {
-            curvature: vec![],
+            curvature,
             boundary,
         }
     }
