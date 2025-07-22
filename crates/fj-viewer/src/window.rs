@@ -23,6 +23,7 @@ pub struct Window {
     renderer: Renderer,
     tri_mesh: TriMesh,
     aabb: Aabb<3>,
+    should_render: bool,
 }
 
 impl Window {
@@ -55,6 +56,7 @@ impl Window {
             renderer,
             tri_mesh,
             aabb,
+            should_render: false,
         })
     }
 
@@ -188,6 +190,8 @@ impl Window {
 
         self.aabb = self.aabb.merged(&aabb);
         self.camera = Camera::new(&self.aabb);
+
+        self.should_render = true;
     }
 
     /// # Draw the window
@@ -209,8 +213,12 @@ impl Window {
 
         self.camera.update_planes(&self.aabb);
 
-        if let Err(err) = self.renderer.draw(&self.camera, &self.draw_config) {
-            warn!("Draw error: {}", err);
+        if self.should_render {
+            if let Err(err) =
+                self.renderer.draw(&self.camera, &self.draw_config)
+            {
+                warn!("Draw error: {}", err);
+            }
         }
     }
 }
