@@ -1,4 +1,4 @@
-use fj_interop::Tolerance;
+use fj_interop::{Tolerance, TriMesh};
 use fj_math::{Aabb, Point, Scalar, Triangle};
 
 use crate::{
@@ -51,6 +51,27 @@ impl SurfaceMesh {
             points: curvature_points,
             triangles,
         }
+    }
+
+    #[allow(unused)] // useful for occasional debugging
+    pub fn to_tri_mesh(&self) -> TriMesh {
+        let triangles = self
+            .triangles
+            .iter()
+            .map(|triangle| {
+                let triangle = Triangle {
+                    points: triangle.points.map(|point| point.point_global),
+                };
+
+                fj_interop::MeshTriangle {
+                    inner: triangle,
+                    is_internal: false,
+                    color: fj_interop::Color([0, 0, 255, 255]),
+                }
+            })
+            .collect();
+
+        TriMesh { triangles }
     }
 
     pub fn project_point(
