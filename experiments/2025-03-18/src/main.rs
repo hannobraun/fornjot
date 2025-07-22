@@ -1,5 +1,6 @@
 #![allow(clippy::module_inception)]
 
+mod debug;
 mod extra;
 mod geometry;
 mod handle;
@@ -7,8 +8,11 @@ mod model;
 mod operations;
 mod topology;
 
+use debug::DEBUG_WINDOW;
+
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
+        DEBUG_WINDOW.initialize(&viewer);
         model::model(&viewer)
     })?;
 
