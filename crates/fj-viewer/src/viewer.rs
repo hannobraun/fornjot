@@ -77,6 +77,9 @@ pub struct ViewerHandle {
 
 impl ViewerHandle {
     /// # Open a new window
+    ///
+    /// The new window will not be shown, initially. You must display something
+    /// first, by calling one of the [`WindowHandle`]'s methods.
     pub fn open_window(&self) -> WindowHandle {
         // Use a conservative ordering, just to be on the safe side. This code
         // shouldn't be performance-sensitive anyway.
