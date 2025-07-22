@@ -1,6 +1,7 @@
 use std::{ops::Deref, sync::Mutex};
 
 use fj_interop::TriMesh;
+use fj_math::Point;
 use fj_viewer::{ViewerHandle, WindowHandle};
 
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
@@ -24,6 +25,17 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
+    pub fn display_face(&self, points: Vec<Point<2>>) {
+        let inner = self.inner.lock().unwrap();
+
+        let DebugWindowInner::Initialized { window } = inner.deref() else {
+            panic!("Debug window has not been initialized.");
+        };
+
+        window.display_face(points);
+    }
+
+    #[allow(unused)] // occasionally useful for debugging
     pub fn display_mesh(&self, tri_mesh: TriMesh) {
         let inner = self.inner.lock().unwrap();
 
@@ -32,6 +44,17 @@ impl DebugWindow {
         };
 
         window.display_mesh(tri_mesh);
+    }
+
+    #[allow(unused)] // occasionally useful for debugging
+    pub fn display_point(&self, point: Point<3>) {
+        let inner = self.inner.lock().unwrap();
+
+        let DebugWindowInner::Initialized { window } = inner.deref() else {
+            panic!("Debug window has not been initialized.");
+        };
+
+        window.display_point(point);
     }
 }
 
