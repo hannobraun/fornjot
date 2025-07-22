@@ -246,8 +246,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                 window.on_zoom(delta);
             }
             WindowEvent::RedrawRequested => {
-                window.draw();
-                drawn = true;
+                drawn = window.draw();
             }
             _ => {}
         }

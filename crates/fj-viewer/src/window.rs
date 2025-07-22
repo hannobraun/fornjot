@@ -195,13 +195,13 @@ impl Window {
     }
 
     /// # Draw the window
-    pub fn draw(&mut self) {
+    pub fn draw(&mut self) -> bool {
         let size_is_invalid = {
             let size = self.window.inner_size();
             size.width == 0 || size.height == 0
         };
         if size_is_invalid {
-            return;
+            return false;
         }
 
         if let Some(new_size) = self.new_screen_size.take() {
@@ -219,6 +219,10 @@ impl Window {
             {
                 warn!("Draw error: {}", err);
             }
+
+            true
+        } else {
+            false
         }
     }
 }
