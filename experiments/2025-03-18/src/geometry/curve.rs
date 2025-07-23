@@ -41,7 +41,6 @@ impl AnchoredCurve {
         direction: Vector<3>,
     ) -> Self {
         let line = Line { direction };
-
         Self::from_origin_and_curve(origin, line)
     }
 
