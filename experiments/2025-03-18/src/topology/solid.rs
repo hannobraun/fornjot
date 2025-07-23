@@ -4,7 +4,7 @@ use crate::handle::Handle;
 
 use super::face::Face;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Solid {
     pub faces: Vec<Handle<Face>>,
 }
