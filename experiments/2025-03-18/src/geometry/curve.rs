@@ -199,3 +199,39 @@ impl CurveGeometry for Line {
         vec![]
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use fj_math::{Point, Vector};
+
+    use crate::geometry::{Circle, Line, curve::CurveGeometry};
+
+    #[test]
+    fn flip() {
+        let circle = Circle {
+            a: Vector::from([1., 0., 0.]),
+            b: Vector::from([0., 1., 0.]),
+        };
+        let line = Line {
+            direction: Vector::from([1., 0., 0.]),
+        };
+
+        check(circle);
+        check(line);
+
+        fn check(curve: impl CurveGeometry) {
+            for i in 0..8 {
+                let point = Point::from([i as f64]);
+
+                assert_eq!(
+                    curve.vector_from_local_point(point),
+                    curve.flip().vector_from_local_point(-point)
+                );
+                assert_eq!(
+                    curve.vector_from_local_point(-point),
+                    curve.flip().vector_from_local_point(point)
+                );
+            }
+        }
+    }
+}
