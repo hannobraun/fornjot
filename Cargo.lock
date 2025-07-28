@@ -1531,7 +1531,7 @@ dependencies = [
  "libc",
  "percent-encoding",
  "pin-project-lite",
- "socket2 0.6.0",
+ "socket2",
  "system-configuration",
  "tokio",
  "tower-service",
@@ -2619,9 +2619,9 @@ dependencies = [
 
 [[package]]
 name = "parry2d-f64"
-version = "0.21.1"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c1bf4d25366c83ff7c3f6d4e7a718b44dae8582c07867fc22fadc787726ffc2"
+checksum = "1aabefce361cdfd04cbd0e800131d446c9921d7de9e8452a53baab184cc20db1"
 dependencies = [
  "approx",
  "arrayvec",
@@ -2637,15 +2637,16 @@ dependencies = [
  "ordered-float 5.0.0",
  "simba",
  "slab",
+ "smallvec",
  "spade",
  "thiserror 2.0.12",
 ]
 
 [[package]]
 name = "parry3d-f64"
-version = "0.21.1"
+version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95ba84fdf1b5b1579829399cee5e1e78d52ad0e376a17e8bd56768568080821d"
+checksum = "8f8ebc5bffd7ff72b1e63f582c89fa5b42bdaa9c2bb58a959050ac7c6e6940f1"
 dependencies = [
  "approx",
  "arrayvec",
@@ -2662,6 +2663,7 @@ dependencies = [
  "rstar",
  "simba",
  "slab",
+ "smallvec",
  "spade",
  "thiserror 2.0.12",
 ]
@@ -3483,16 +3485,6 @@ dependencies = [
 
 [[package]]
 name = "socket2"
-version = "0.5.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e22376abed350d73dd1cd119b57ffccad95b4e585a7cda43e286245ce23c0678"
-dependencies = [
- "libc",
- "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "socket2"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "233504af464074f9d066d7b5416c5f9b894a5862a6506e306f7b816cdd6f1807"
@@ -3797,9 +3789,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.46.1"
+version = "1.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0cc3a2344dafbe23a245241fe8b09735b521110d30fcefbbd5feb1797ca35d17"
+checksum = "43864ed400b6043a4757a25c7a64a8efde741aed79a056a2fb348a406701bb35"
 dependencies = [
  "backtrace",
  "bytes",
@@ -3810,9 +3802,9 @@ dependencies = [
  "pin-project-lite",
  "signal-hook-registry",
  "slab",
- "socket2 0.5.10",
+ "socket2",
  "tokio-macros",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -4977,9 +4969,9 @@ checksum = "271414315aff87387382ec3d271b52d7ae78726f5d44ac98b4f4030c91880486"
 
 [[package]]
 name = "winit"
-version = "0.30.11"
+version = "0.30.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4409c10174df8779dc29a4788cac85ed84024ccbc1743b776b21a520ee1aaf4"
+checksum = "c66d4b9ed69c4009f6321f762d6e61ad8a2389cd431b97cb1e146812e9e6c732"
 dependencies = [
  "ahash",
  "android-activity",
