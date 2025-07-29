@@ -91,7 +91,7 @@ impl Aabb<3> {
             .into_iter()
             .map(|point| point.into().to_na())
             .collect();
-        parry3d_f64::bounding_volume::Aabb::from_points(&points).into()
+        parry3d_f64::bounding_volume::Aabb::from_points(points).into()
     }
 
     /// Construct a 3-dimensional AABB from a Parry AABB
