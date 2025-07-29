@@ -87,10 +87,7 @@ impl Aabb<3> {
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
     ) -> Self {
-        let points: Vec<_> = points
-            .into_iter()
-            .map(|point| point.into().to_na())
-            .collect();
+        let points = points.into_iter().map(|point| point.into().to_na());
         parry3d_f64::bounding_volume::Aabb::from_points(points).into()
     }
 
