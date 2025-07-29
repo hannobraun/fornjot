@@ -58,7 +58,7 @@ impl Aabb<2> {
             .into_iter()
             .map(|point| point.into().to_na())
             .collect();
-        parry2d_f64::bounding_volume::Aabb::from_points(&points).into()
+        parry2d_f64::bounding_volume::Aabb::from_points(points).into()
     }
 
     /// Construct a 2-dimensional AABB from a Parry AABB
