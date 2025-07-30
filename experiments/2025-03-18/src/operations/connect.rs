@@ -46,8 +46,10 @@ impl ConnectExt for Handle<Face> {
         self,
         other: Self,
         with: FloatingCurve,
-        _: impl Into<Tolerance>,
+        tolerance: impl Into<Tolerance>,
     ) -> Solid {
+        let tolerance = tolerance.into();
+
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
         // following code.
@@ -63,7 +65,8 @@ impl ConnectExt for Handle<Face> {
             "Can only connect faces that have the same number of vertices.",
         );
 
-        let connecting_faces = build_connecting_faces([&bottom, &top], with);
+        let connecting_faces =
+            build_connecting_faces([&bottom, &top], with, tolerance);
 
         // This is doing some checks, to make sure that the faces have been
         // connected correctly. There are other ways to do this. For now, this
@@ -92,6 +95,7 @@ impl ConnectExt for Handle<Face> {
 fn build_connecting_faces(
     [bottom, top]: [&Face; 2],
     connecting_curve: FloatingCurve,
+    _: Tolerance,
 ) -> Vec<Handle<Face>> {
     let connecting_curves =
         build_connecting_curves([bottom, top], connecting_curve);
