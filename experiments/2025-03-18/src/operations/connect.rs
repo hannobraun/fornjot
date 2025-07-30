@@ -123,16 +123,13 @@ fn build_connecting_curves(
 
     bottom_vertices
         .zip(top_vertices)
-        .map(|(bottom, top)| {
+        .map(|(bottom, _)| {
             let curve = Curve {
                 geometry: AnchoredCurve {
                     origin: bottom.point,
                     floating: connecting_curve.clone(),
                 },
             };
-
-            // We should check here that `top` is not too far from the curve.
-            let _ = top;
 
             Handle::new(curve)
         })
