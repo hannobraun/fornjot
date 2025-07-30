@@ -95,10 +95,10 @@ impl ConnectExt for Handle<Face> {
 fn build_connecting_faces(
     [bottom, top]: [&Face; 2],
     connecting_curve: FloatingCurve,
-    _: Tolerance,
+    tolerance: Tolerance,
 ) -> Vec<Handle<Face>> {
     let connecting_curves =
-        build_connecting_curves([bottom, top], connecting_curve);
+        build_connecting_curves([bottom, top], connecting_curve, tolerance);
 
     connecting_curves
         .into_iter()
@@ -114,6 +114,7 @@ fn build_connecting_faces(
 fn build_connecting_curves(
     [bottom, top]: [&Face; 2],
     connecting_curve: FloatingCurve,
+    _: Tolerance,
 ) -> Vec<Handle<Curve>> {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
