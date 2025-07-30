@@ -48,7 +48,7 @@ impl ConnectExt for Handle<Face> {
         with: FloatingCurve,
         tolerance: impl Into<Tolerance>,
     ) -> Solid {
-        let _ = tolerance.into();
+        let tolerance = tolerance.into();
 
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
@@ -89,6 +89,7 @@ impl ConnectExt for Handle<Face> {
         check_that_connecting_curves_actually_connect_vertices(
             [&bottom, &top],
             &connecting_faces,
+            tolerance,
         );
 
         Solid::new([bottom, top].into_iter().chain(connecting_faces))
@@ -224,6 +225,7 @@ fn check_that_connecting_curves_are_shared(connecting_faces: &[Handle<Face>]) {
 fn check_that_connecting_curves_actually_connect_vertices(
     [bottom, top]: [&Face; 2],
     connecting_faces: &[Handle<Face>],
+    _: Tolerance,
 ) {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
