@@ -80,8 +80,8 @@ impl ConnectExt for Handle<Face> {
         //    form, be true for all solids, not just the one constructed here.
         //    But so far, there's no infrastructure for this kind of validation.
         //
-        // Long-term, such validation infrastructure should exist, and then
-        // these we can generalize these checks and move them there.
+        // Long-term, such validation infrastructure should exist, and then we
+        // can generalize these checks and move them there.
         check_that_bottom_and_top_curves_are_shared(
             [&bottom, &top],
             &connecting_faces,
