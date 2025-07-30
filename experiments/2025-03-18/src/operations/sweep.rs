@@ -34,7 +34,7 @@ impl SweepExt for Handle<Face> {
         self,
         along: FloatingCurve,
         to: impl Into<Point<1>>,
-        _: impl Into<Tolerance>,
+        tolerance: impl Into<Tolerance>,
     ) -> Solid {
         let [from, to] = [Point::from([0.]), to.into()]
             .map(|point| along.vector_from_local_point(point));
@@ -45,6 +45,6 @@ impl SweepExt for Handle<Face> {
             Handle::new(bottom.flip().translate(offset))
         };
 
-        top.connect(bottom, along)
+        top.connect(bottom, along, tolerance)
     }
 }

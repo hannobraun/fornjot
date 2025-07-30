@@ -1,3 +1,4 @@
+use fj_interop::Tolerance;
 use itertools::Itertools;
 
 use crate::{
@@ -32,11 +33,21 @@ pub trait ConnectExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn connect(self, other: Self, with: FloatingCurve) -> Solid;
+    fn connect(
+        self,
+        other: Self,
+        with: FloatingCurve,
+        tolerance: impl Into<Tolerance>,
+    ) -> Solid;
 }
 
 impl ConnectExt for Handle<Face> {
-    fn connect(self, other: Self, with: FloatingCurve) -> Solid {
+    fn connect(
+        self,
+        other: Self,
+        with: FloatingCurve,
+        _: impl Into<Tolerance>,
+    ) -> Solid {
         // Let's designate the two faces as "bottom" and "top", to make it
         // easier to talk about them and things related to them, in the
         // following code.
