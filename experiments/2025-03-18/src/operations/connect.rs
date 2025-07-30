@@ -118,12 +118,11 @@ fn build_connecting_curves(
     [bottom, top]: [&Face; 2],
     connecting_curve: FloatingCurve,
 ) -> Vec<Handle<Curve>> {
-    let [bottom_vertices, top_vertices] = [bottom, top]
+    let [bottom_vertices, _] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
 
     bottom_vertices
-        .zip(top_vertices)
-        .map(|(bottom, _)| {
+        .map(|bottom| {
             let curve = Curve {
                 geometry: AnchoredCurve {
                     origin: bottom.point,
