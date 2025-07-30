@@ -48,6 +48,7 @@ pub fn model(viewer: &ViewerHandle) -> TriMesh {
                 direction: Vector::from([0., 0., -2.]),
             }),
             [1.],
+            tolerance,
         );
 
         solid.to_tri_mesh(tolerance)

@@ -1,3 +1,4 @@
+use fj_interop::Tolerance;
 use fj_math::Point;
 
 use crate::{
@@ -20,11 +21,21 @@ pub trait SweepExt {
     ///
     /// It should be seen as more of a placeholder for a real implementation of
     /// this operation.
-    fn sweep(self, along: FloatingCurve, to: impl Into<Point<1>>) -> Solid;
+    fn sweep(
+        self,
+        along: FloatingCurve,
+        to: impl Into<Point<1>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> Solid;
 }
 
 impl SweepExt for Handle<Face> {
-    fn sweep(self, along: FloatingCurve, to: impl Into<Point<1>>) -> Solid {
+    fn sweep(
+        self,
+        along: FloatingCurve,
+        to: impl Into<Point<1>>,
+        _: impl Into<Tolerance>,
+    ) -> Solid {
         let [from, to] = [Point::from([0.]), to.into()]
             .map(|point| along.vector_from_local_point(point));
 
