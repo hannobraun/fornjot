@@ -87,6 +87,10 @@ impl ConnectExt for Handle<Face> {
             &connecting_faces,
         );
         check_that_connecting_curves_are_shared(&connecting_faces);
+        check_that_connecting_curves_actually_connect_vertices(
+            [&bottom, &top],
+            &connecting_faces,
+        );
 
         Solid::new([bottom, top].into_iter().chain(connecting_faces))
     }
@@ -217,5 +221,33 @@ fn check_that_connecting_curves_are_shared(connecting_faces: &[Handle<Face>]) {
             };
 
             assert_eq!(a.curve, b.curve);
+        });
+}
+
+fn check_that_connecting_curves_actually_connect_vertices(
+    [bottom, top]: [&Face; 2],
+    connecting_faces: &[Handle<Face>],
+) {
+    let [bottom_vertices, top_vertices] = [bottom, top]
+        .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
+    let connecting_curves = connecting_faces.iter().map(|face| {
+        let Some([_, _, _, half_edge]) = face.half_edges.iter().collect_array()
+        else {
+            unreachable!(
+                "Created connecting faces with exactly four half-edges."
+            );
+        };
+
+        &half_edge.curve
+    });
+
+    bottom_vertices
+        .zip(top_vertices)
+        .zip(connecting_curves)
+        .for_each(|((bottom_vertex, top_vertex), connecting_curve)| {
+            assert_eq!(bottom_vertex.point, connecting_curve.geometry.origin);
+
+            // We also need to check that `top_vertex` is on the curve.
+            let _ = top_vertex;
         });
 }
