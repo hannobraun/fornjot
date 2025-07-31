@@ -1,4 +1,7 @@
+use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Point, Scalar, Vector};
+
+use crate::geometry::curve::CurveGeometry;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
@@ -35,5 +38,36 @@ impl Circle {
         };
 
         Point::from([coord])
+    }
+}
+
+impl CurveGeometry for Circle {
+    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
+        Box::new(*self)
+    }
+
+    fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
+        self.vector_from_local_point(point)
+    }
+
+    fn project_vector(&self, vector: Vector<3>) -> Point<1> {
+        self.project_vector(vector)
+    }
+
+    fn flip(&self) -> Box<dyn CurveGeometry> {
+        Box::new(Circle {
+            a: self.a,
+            b: -self.b,
+        })
+    }
+
+    fn approximate(
+        &self,
+        boundary: [Point<1>; 2],
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        CircleApproxParams::new(self.radius(), tolerance)
+            .approx_circle(boundary)
+            .collect()
     }
 }
