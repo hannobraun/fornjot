@@ -93,12 +93,14 @@ impl SurfaceGeometry for SweptCurve {
             )
             .chain(
                 approx_v
+                    .curvature
                     .iter()
                     .copied()
                     .map(|point_v| Point::from([min_u, point_v.t])),
             )
             .chain(
                 approx_v
+                    .curvature
                     .iter()
                     .copied()
                     .map(|point_v| Point::from([max_u, point_v.t])),
@@ -108,7 +110,7 @@ impl SurfaceGeometry for SweptCurve {
 
         let curvature = approx_u
             .into_iter()
-            .cartesian_product(approx_v)
+            .cartesian_product(approx_v.curvature)
             .map(|(point_u, point_v)| Point::from([point_u.t, point_v.t]))
             .collect();
 

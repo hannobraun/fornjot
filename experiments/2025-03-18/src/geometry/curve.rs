@@ -76,7 +76,7 @@ impl AnchoredCurve {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         let boundary = boundary.map(Into::into);
-        self.floating.approximate(boundary, tolerance)
+        self.floating.approximate(boundary, tolerance).curvature
     }
 }
 
@@ -113,9 +113,9 @@ impl FloatingCurve {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> Vec<Point<1>> {
+    ) -> CurveApprox {
         let boundary = boundary.map(Into::into);
-        self.inner.approximate(boundary, tolerance).curvature
+        self.inner.approximate(boundary, tolerance)
     }
 }
 
