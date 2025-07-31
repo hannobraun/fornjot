@@ -1,7 +1,7 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Point, Scalar, Vector};
 
-use crate::geometry::curve::CurveGeometry;
+use crate::geometry::curve::{CurveApprox, CurveGeometry};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
@@ -65,9 +65,11 @@ impl CurveGeometry for Circle {
         &self,
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
-    ) -> Vec<Point<1>> {
-        CircleApproxParams::new(self.radius(), tolerance)
+    ) -> CurveApprox {
+        let curvature = CircleApproxParams::new(self.radius(), tolerance)
             .approx_circle(boundary)
-            .collect()
+            .collect();
+
+        CurveApprox { curvature }
     }
 }
