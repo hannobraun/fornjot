@@ -1,4 +1,8 @@
-use fj_math::{Point, Vector};
+use fj_interop::Tolerance;
+use fj_math::{Aabb, Point, Vector};
+use itertools::Itertools;
+
+use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
 
 use super::{AnchoredCurve, Line, curve::FloatingCurve};
 
@@ -38,6 +42,79 @@ impl SweptCurve {
         Self {
             u: self.u.translate(offset),
             v: self.v.clone(),
+        }
+    }
+}
+
+impl SurfaceGeometry for SweptCurve {
+    fn point_from_local(&self, point: Point<2>) -> Point<3> {
+        self.point_from_local(point)
+    }
+
+    fn flip(&self) -> Box<dyn SurfaceGeometry> {
+        Box::new((*self).flip())
+    }
+
+    fn translate(&self, offset: Vector<3>) -> Box<dyn SurfaceGeometry> {
+        Box::new((*self).translate(offset))
+    }
+
+    fn approximate(
+        &self,
+        boundary: &Aabb<2>,
+        tolerance: Tolerance,
+    ) -> SurfaceApprox {
+        let [[min_u, min_v], [max_u, max_v]] =
+            [boundary.min, boundary.max].map(|point| point.coords.components);
+
+        let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
+        let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
+
+        let boundary = {
+            [
+                [min_u, min_v],
+                [min_u, max_v],
+                [max_u, min_v],
+                [max_u, max_v],
+            ]
+            .map(Point::from)
+            .into_iter()
+            .chain(
+                approx_u
+                    .iter()
+                    .copied()
+                    .map(|point_u| Point::from([point_u.t, min_v])),
+            )
+            .chain(
+                approx_u
+                    .iter()
+                    .copied()
+                    .map(|point_u| Point::from([point_u.t, max_v])),
+            )
+            .chain(
+                approx_v
+                    .iter()
+                    .copied()
+                    .map(|point_v| Point::from([min_u, point_v.t])),
+            )
+            .chain(
+                approx_v
+                    .iter()
+                    .copied()
+                    .map(|point_v| Point::from([max_u, point_v.t])),
+            )
+            .collect()
+        };
+
+        let curvature = approx_u
+            .into_iter()
+            .cartesian_product(approx_v)
+            .map(|(point_u, point_v)| Point::from([point_u.t, point_v.t]))
+            .collect();
+
+        SurfaceApprox {
+            curvature,
+            boundary,
         }
     }
 }
