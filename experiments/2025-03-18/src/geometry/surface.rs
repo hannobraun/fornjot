@@ -10,14 +10,6 @@ pub trait SurfaceGeometry: fmt::Debug {
     fn point_from_local(&self, point: Point<2>) -> Point<3>;
     fn flip(&self) -> Box<dyn SurfaceGeometry>;
     fn translate(&self, offset: Vector<3>) -> Box<dyn SurfaceGeometry>;
-
-    /// # Approximate the surface
-    ///
-    /// ## Implementation Note
-    ///
-    /// This method should take a tolerance parameter, to define how far the
-    /// approximation is allowed to deviate from the actual surface. So far,
-    /// this has not been necessary.
     fn approximate(
         &self,
         boundary: &Aabb<2>,
