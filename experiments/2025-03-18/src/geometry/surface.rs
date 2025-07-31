@@ -22,7 +22,7 @@ pub trait SurfaceGeometry: fmt::Debug {
         &self,
         boundary: &Aabb<2>,
         tolerance: Tolerance,
-    ) -> SurfaceApproximation;
+    ) -> SurfaceApprox;
 }
 
 impl SurfaceGeometry for SweptCurve {
@@ -42,7 +42,7 @@ impl SurfaceGeometry for SweptCurve {
         &self,
         boundary: &Aabb<2>,
         tolerance: Tolerance,
-    ) -> SurfaceApproximation {
+    ) -> SurfaceApprox {
         let [[min_u, min_v], [max_u, max_v]] =
             [boundary.min, boundary.max].map(|point| point.coords.components);
 
@@ -91,14 +91,14 @@ impl SurfaceGeometry for SweptCurve {
             .map(|(point_u, point_v)| Point::from([point_u.t, point_v.t]))
             .collect();
 
-        SurfaceApproximation {
+        SurfaceApprox {
             curvature,
             boundary,
         }
     }
 }
 
-pub struct SurfaceApproximation {
+pub struct SurfaceApprox {
     /// # The points that approximate the curvature of the surface
     pub curvature: Vec<Point<2>>,
 
