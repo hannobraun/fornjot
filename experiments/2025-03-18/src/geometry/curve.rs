@@ -145,30 +145,6 @@ pub trait CurveGeometry: fmt::Debug {
     ) -> Vec<Point<1>>;
 }
 
-impl CurveGeometry for Line {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
-        Box::new(*self)
-    }
-
-    fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
-        self.vector_from_local_point(point)
-    }
-
-    fn project_vector(&self, vector: Vector<3>) -> Point<1> {
-        self.project_vector(vector)
-    }
-
-    fn flip(&self) -> Box<dyn CurveGeometry> {
-        Box::new(Line {
-            direction: -self.direction,
-        })
-    }
-
-    fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> Vec<Point<1>> {
-        vec![]
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use fj_math::{Point, Vector};
