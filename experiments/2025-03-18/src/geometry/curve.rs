@@ -148,8 +148,7 @@ pub trait CurveGeometry: fmt::Debug {
 pub struct CurveApprox {
     /// # The points that approximate the curvature of the curve
     ///
-    /// This does not include the points that approximate the boundary of the
-    /// approximation.
+    /// This does not include the boundary of the approximation.
     pub curvature: Vec<Point<1>>,
 }
 
