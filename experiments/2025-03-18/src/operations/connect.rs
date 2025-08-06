@@ -249,7 +249,7 @@ fn check_that_connecting_curves_actually_connect_vertices(
             let approx = connecting_curve
                 .geometry
                 .approximate([[-TAU], [TAU]], tolerance);
-            dbg!(approx);
+            dbg!(approx.boundary);
 
             // We also need to check that `top_vertex` is on the curve.
             let _ = top_vertex;

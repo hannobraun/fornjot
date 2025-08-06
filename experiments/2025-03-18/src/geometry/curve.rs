@@ -151,6 +151,9 @@ pub struct CurveApprox {
     ///
     /// This does not include the boundary of the approximation.
     pub curvature: Vec<Point<1>>,
+
+    /// # The boundary of the approximation
+    pub boundary: [Point<1>; 2],
 }
 
 #[cfg(test)]

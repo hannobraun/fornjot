@@ -70,6 +70,9 @@ impl CurveGeometry for Circle {
             .approx_circle(boundary)
             .collect();
 
-        CurveApprox { curvature }
+        CurveApprox {
+            curvature,
+            boundary,
+        }
     }
 }
