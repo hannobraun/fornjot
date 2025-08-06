@@ -145,6 +145,7 @@ pub trait CurveGeometry: fmt::Debug {
     ) -> CurveApprox;
 }
 
+#[derive(Debug)]
 pub struct CurveApprox {
     /// # The points that approximate the curvature of the curve
     ///
