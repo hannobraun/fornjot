@@ -1,3 +1,5 @@
+use std::f64::consts::TAU;
+
 use fj_interop::Tolerance;
 use itertools::Itertools;
 
@@ -220,7 +222,7 @@ fn check_that_connecting_curves_are_shared(connecting_faces: &[Handle<Face>]) {
 fn check_that_connecting_curves_actually_connect_vertices(
     [bottom, top]: [&Face; 2],
     connecting_faces: &[Handle<Face>],
-    _: Tolerance,
+    tolerance: Tolerance,
 ) {
     let [bottom_vertices, top_vertices] = [bottom, top]
         .map(|face| face.half_edges.iter().map(|half_edge| &half_edge.start));
@@ -240,6 +242,14 @@ fn check_that_connecting_curves_actually_connect_vertices(
         .zip(connecting_curves)
         .for_each(|((bottom_vertex, top_vertex), connecting_curve)| {
             assert_eq!(bottom_vertex.point, connecting_curve.geometry.origin);
+
+            // This boundary happens to be enough for any curves in the current
+            // model. But we need a way to figure out a boundary here, that is
+            // definitely enough.
+            let approx = connecting_curve
+                .geometry
+                .approximate([[-TAU], [TAU]], tolerance);
+            dbg!(approx);
 
             // We also need to check that `top_vertex` is on the curve.
             let _ = top_vertex;
