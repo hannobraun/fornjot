@@ -1,5 +1,3 @@
-use std::f64::consts::TAU;
-
 use fj_interop::Tolerance;
 use itertools::Itertools;
 
@@ -242,14 +240,6 @@ fn check_that_connecting_curves_actually_connect_vertices(
         .zip(connecting_curves)
         .for_each(|((bottom_vertex, top_vertex), connecting_curve)| {
             assert_eq!(bottom_vertex.point, connecting_curve.geometry.origin);
-
-            // This boundary happens to be enough for any curves in the current
-            // model. But we need a way to figure out a boundary here, that is
-            // definitely enough.
-            let approx = connecting_curve
-                .geometry
-                .approximate([[-TAU], [TAU]], tolerance);
-            dbg!(approx.boundary);
 
             let projected =
                 connecting_curve.geometry.project_point(top_vertex.point);

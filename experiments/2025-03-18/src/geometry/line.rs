@@ -42,14 +42,7 @@ impl CurveGeometry for Line {
         })
     }
 
-    fn approximate(
-        &self,
-        boundary: [Point<1>; 2],
-        _: Tolerance,
-    ) -> CurveApprox {
-        CurveApprox {
-            curvature: vec![],
-            boundary,
-        }
+    fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> CurveApprox {
+        CurveApprox { curvature: vec![] }
     }
 }
