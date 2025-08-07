@@ -251,7 +251,13 @@ fn check_that_connecting_curves_actually_connect_vertices(
                 .approximate([[-TAU], [TAU]], tolerance);
             dbg!(approx.boundary);
 
-            // We also need to check that `top_vertex` is on the curve.
-            let _ = top_vertex;
+            let projected =
+                connecting_curve.geometry.project_point(top_vertex.point);
+            let projected =
+                connecting_curve.geometry.point_from_local(projected);
+
+            assert!(
+                (projected - top_vertex.point).magnitude() <= tolerance.inner()
+            );
         });
 }
