@@ -247,7 +247,7 @@ fn check_that_connecting_curves_actually_connect_vertices(
                 connecting_curve.geometry.point_from_local(projected);
 
             assert!(
-                (projected - top_vertex.point).magnitude() <= tolerance.inner()
+                (projected - top_vertex.point).magnitude() <= tolerance.inner(),
             );
         });
 }
