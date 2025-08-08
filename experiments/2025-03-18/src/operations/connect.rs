@@ -249,6 +249,29 @@ fn check_that_connecting_curves_actually_connect_vertices(
             let distance_curve_to_top_vertex =
                 (projected - top_vertex.point).magnitude();
 
-            assert!(distance_curve_to_top_vertex <= tolerance.inner(),);
+            assert!(
+                distance_curve_to_top_vertex <= tolerance.inner(),
+                "Built a connecting curve between the vertices of two faces. \
+                But it turns out that the curve does not actually connect \
+                those two vertices!\n\
+                \n\
+                This is the bottom vertex, which is the origin of the curve:\n\
+                \n\
+                {bottom_vertex:#?}\n\
+                \n\
+                And here's the top vertex, which the curve is supposed to \
+                connect to:\n\
+                \n\
+                {top_vertex:#?}\n\
+                \n\
+                The top vertex must be on the curve, with an allowable \
+                tolerance of {tolerance:?}. But the distance between curve and \
+                top vertex is {distance_curve_to_top_vertex}.\n\
+                \n\
+                Finally, this is the curve:\n\
+                \n\
+                {connecting_curve:#?}\n\
+                \n",
+            );
         });
 }
