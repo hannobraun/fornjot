@@ -246,8 +246,9 @@ fn check_that_connecting_curves_actually_connect_vertices(
             let projected =
                 connecting_curve.geometry.point_from_local(projected);
 
-            assert!(
-                (projected - top_vertex.point).magnitude() <= tolerance.inner(),
-            );
+            let distance_curve_to_top_vertex =
+                (projected - top_vertex.point).magnitude();
+
+            assert!(distance_curve_to_top_vertex <= tolerance.inner(),);
         });
 }
