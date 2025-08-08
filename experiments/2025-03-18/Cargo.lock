@@ -533,6 +533,7 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "approx",
  "fj-export",
  "fj-interop",
  "fj-math",
