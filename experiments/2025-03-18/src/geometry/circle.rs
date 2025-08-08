@@ -73,3 +73,57 @@ impl CurveGeometry for Circle {
         CurveApprox { curvature }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::f64::consts::{FRAC_PI_2, FRAC_PI_4, PI};
+
+    use approx::assert_abs_diff_eq;
+    use fj_math::Vector;
+
+    use crate::geometry::Circle;
+
+    #[test]
+    fn vector_from_local_point() {
+        let circle = Circle {
+            a: Vector::from([1., 0., 0.]),
+            b: Vector::from([0., 1., 0.]),
+        };
+
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([0.]),
+            Vector::from([0., 0., 0.]),
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_4]),
+            Vector::from([2_f64.sqrt() / 2., 2_f64.sqrt() / 2., 0.]) - circle.a,
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_2]),
+            Vector::from([-1., 1., 0.]),
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_4 * 3.]),
+            Vector::from([-2_f64.sqrt() / 2., 2_f64.sqrt() / 2., 0.])
+                - circle.a,
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([PI]),
+            Vector::from([-2., 0., 0.]),
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_4 * 5.]),
+            Vector::from([-2_f64.sqrt() / 2., -2_f64.sqrt() / 2., 0.])
+                - circle.a,
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_2 * 3.]),
+            Vector::from([-1., -1., 0.]),
+        );
+        assert_abs_diff_eq!(
+            circle.vector_from_local_point([FRAC_PI_4 * 7.]),
+            Vector::from([2_f64.sqrt() / 2., -2_f64.sqrt() / 2., 0.])
+                - circle.a,
+        );
+    }
+}
