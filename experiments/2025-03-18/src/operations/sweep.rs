@@ -36,7 +36,9 @@ impl SweepExt for Handle<Face> {
         to: impl Into<Point<1>>,
         tolerance: impl Into<Tolerance>,
     ) -> Solid {
-        let [from, to] = [Point::from([0.]), to.into()]
+        let to = to.into();
+
+        let [from, to] = [Point::from([0.]), to]
             .map(|point| along.vector_from_local_point(point));
 
         let bottom = self;
