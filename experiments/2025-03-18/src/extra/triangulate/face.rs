@@ -44,7 +44,14 @@ pub fn triangulate_face(
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
 
-    let triangles = triangles(points_from_half_edges, surface_mesh.points)
+    let surface_points = surface_mesh.points.into_iter().filter(|point| {
+        polygon_from_half_edges.contains(&Coord {
+            x: point.point_surface.u.into_f64(),
+            y: point.point_surface.v.into_f64(),
+        })
+    });
+
+    let triangles = triangles(points_from_half_edges, surface_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
