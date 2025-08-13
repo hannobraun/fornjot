@@ -1,5 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use fj_interop::Tolerance;
 use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
@@ -43,7 +44,7 @@ impl Sketch {
         self
     }
 
-    pub fn to_face(&self, surface: Handle<Surface>) -> Face {
+    pub fn to_face(&self, surface: Handle<Surface>, _: Tolerance) -> Face {
         let vertices = SegmentsWithStartVertex::new(&self.segments, &surface);
         let half_edges = make_half_edges(&vertices, &surface);
 

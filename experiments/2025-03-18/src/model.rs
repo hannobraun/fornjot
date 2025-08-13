@@ -38,7 +38,7 @@ pub fn model(viewer: &ViewerHandle) -> TriMesh {
             )),
         });
 
-        let face = sketch.to_face(surface);
+        let face = sketch.to_face(surface, tolerance);
         Handle::new(face)
     };
 
