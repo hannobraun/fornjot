@@ -157,13 +157,13 @@ fn make_half_edges(
                             * radius.sign().to_scalar();
 
                     let distance_from_midpoint_to_center = {
-                        // We're computing the required distance from a
-                        // right triangle:
+                        // We're computing the required distance from a right
+                        // triangle:
                         // - `a` (leg): `midpoint` to `end`
                         // - `b` (leg): `midpoint` to circle center (the
                         //   distance we're looking for)
-                        // - `c` (hypotenuse): `end` to circle center (which
-                        //   is `radius`)
+                        // - `c` (hypotenuse): `end` to circle center (which is
+                        //   `radius`)
 
                         let a = start_to_end.magnitude() / 2.;
                         let c = radius;
@@ -186,8 +186,8 @@ fn make_half_edges(
                         + midpoint_towards_center
                             * distance_from_midpoint_to_center;
 
-                    // This only works if `surface` is a plane, which
-                    // checks out for now.
+                    // This only works if `surface` is a plane, which checks out
+                    // for now.
                     let (origin, circle) = {
                         let a = start;
                         let b = center + (a - center).to_perpendicular();
