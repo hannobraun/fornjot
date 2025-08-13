@@ -172,10 +172,10 @@ fn make_half_edges(
 
                         if b_squared < Scalar::ZERO {
                             panic!(
-                                "Radius of arc (`{radius}`) is too small: \
-                                    Must be at least half the distance between \
-                                    start (`{start:?}`) and end (`{end:?}`) \
-                                    points, or the arc is not possible."
+                                "Radius of arc (`{radius}`) is too small: Must \
+                                be at least half the distance between start \
+                                (`{start:?}`) and end (`{end:?}`) points, or \
+                                the arc is not possible."
                             );
                         }
 
