@@ -44,9 +44,29 @@ impl Sketch {
         self
     }
 
-    pub fn to_face(&self, surface: Handle<Surface>, _: Tolerance) -> Face {
+    pub fn to_face(
+        &self,
+        surface: Handle<Surface>,
+        tolerance: Tolerance,
+    ) -> Face {
         let vertices = SegmentsWithStartVertex::new(&self.segments, &surface);
         let half_edges = make_half_edges(&vertices, &surface);
+
+        // This is doing some checks, to make sure that the half-edges have been
+        // connected correctly. There are other ways to do this. For now, this
+        // is probably the best one, based on the following considerations:
+        //
+        // 1. These checks could also be done in a unit test, but doing it here
+        //    provides a stronger guarantee. It makes sure that the invariants
+        //    are true for all data that comes through here, not just a simple
+        //    example that a unit test would construct.
+        // 2. The invariants that are checked here should, in a generalized
+        //    form, be true for all faces, not just the one constructed here.
+        //    But so far, there's no infrastructure for this kind of validation.
+        //
+        // Long-term, such validation infrastructure should exist, and then we
+        // can generalize these checks and move them there.
+        check_that_half_edges_are_connected(&half_edges, tolerance);
 
         Face::new(surface, half_edges, false)
     }
@@ -227,4 +247,22 @@ fn make_half_edges(
             })
         })
         .collect()
+}
+
+fn check_that_half_edges_are_connected(
+    half_edges: &[Handle<HalfEdge>],
+    tolerance: Tolerance,
+) {
+    for (a, b) in half_edges.iter().circular_tuple_windows() {
+        let b_start_on_a_curve = a.curve.geometry.project_point(b.start.point);
+        let b_start_from_projected =
+            a.curve.geometry.point_from_local(b_start_on_a_curve);
+
+        let distance_between_original_and_from_projected =
+            (b.start.point - b_start_from_projected).magnitude();
+
+        assert!(
+            distance_between_original_and_from_projected <= tolerance.inner(),
+        );
+    }
 }
