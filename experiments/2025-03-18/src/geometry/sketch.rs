@@ -45,91 +45,7 @@ impl Sketch {
 
     pub fn to_face(&self, surface: Handle<Surface>) -> Face {
         let vertices = SegmentsWithStartVertex::new(&self.segments, &surface);
-
-        let half_edges = vertices
-            .iter()
-            .map(|([segment, next_segment], is_internal)| {
-                let curve = match segment.segment {
-                    SketchSegment::Arc { start, radius } => {
-                        let end = next_segment.segment.start();
-
-                        let start_to_end = end - start;
-                        let midpoint = start + start_to_end * 0.5;
-
-                        let midpoint_towards_center =
-                            start_to_end.to_perpendicular().normalize()
-                                * radius.sign().to_scalar();
-
-                        let distance_from_midpoint_to_center = {
-                            // We're computing the required distance from a
-                            // right triangle:
-                            // - `a` (leg): `midpoint` to `end`
-                            // - `b` (leg): `midpoint` to circle center (the
-                            //   distance we're looking for)
-                            // - `c` (hypotenuse): `end` to circle center (which
-                            //   is `radius`)
-
-                            let a = start_to_end.magnitude() / 2.;
-                            let c = radius;
-
-                            let b_squared = c * c - a * a;
-
-                            if b_squared < Scalar::ZERO {
-                                panic!(
-                                    "Radius of arc (`{radius}`) is too small: \
-                                    Must be at least half the distance between \
-                                    start (`{start:?}`) and end (`{end:?}`) \
-                                    points, or the arc is not possible."
-                                );
-                            }
-
-                            b_squared.sqrt()
-                        };
-
-                        let center = midpoint
-                            + midpoint_towards_center
-                                * distance_from_midpoint_to_center;
-
-                        // This only works if `surface` is a plane, which
-                        // checks out for now.
-                        let (origin, circle) = {
-                            let a = start;
-                            let b = center + (a - center).to_perpendicular();
-
-                            let [center, a, b] = [center, a, b].map(|point| {
-                                surface.geometry.point_from_local(point)
-                            });
-
-                            let origin = a;
-                            let circle = Circle {
-                                a: a - center,
-                                b: b - center,
-                            };
-
-                            (origin, circle)
-                        };
-
-                        Handle::new(Curve {
-                            geometry: AnchoredCurve::from_origin_and_curve(
-                                origin, circle,
-                            ),
-                        })
-                    }
-                    SketchSegment::Line { .. } => {
-                        Handle::new(Curve::line_from_vertices([
-                            &segment.start,
-                            &next_segment.start,
-                        ]))
-                    }
-                };
-
-                Handle::new(HalfEdge {
-                    curve,
-                    start: segment.start,
-                    is_internal,
-                })
-            })
-            .collect::<Vec<_>>();
+        let half_edges = make_half_edges(&vertices, &surface);
 
         Face::new(surface, half_edges, false)
     }
@@ -220,4 +136,94 @@ impl SegmentsWithStartVertex {
 struct SegmentWithStartVertex {
     segment: SketchSegment,
     start: Handle<Vertex>,
+}
+
+fn make_half_edges(
+    vertices: &SegmentsWithStartVertex,
+    surface: &Handle<Surface>,
+) -> Vec<Handle<HalfEdge>> {
+    vertices
+        .iter()
+        .map(|([segment, next_segment], is_internal)| {
+            let curve = match segment.segment {
+                SketchSegment::Arc { start, radius } => {
+                    let end = next_segment.segment.start();
+
+                    let start_to_end = end - start;
+                    let midpoint = start + start_to_end * 0.5;
+
+                    let midpoint_towards_center =
+                        start_to_end.to_perpendicular().normalize()
+                            * radius.sign().to_scalar();
+
+                    let distance_from_midpoint_to_center = {
+                        // We're computing the required distance from a
+                        // right triangle:
+                        // - `a` (leg): `midpoint` to `end`
+                        // - `b` (leg): `midpoint` to circle center (the
+                        //   distance we're looking for)
+                        // - `c` (hypotenuse): `end` to circle center (which
+                        //   is `radius`)
+
+                        let a = start_to_end.magnitude() / 2.;
+                        let c = radius;
+
+                        let b_squared = c * c - a * a;
+
+                        if b_squared < Scalar::ZERO {
+                            panic!(
+                                "Radius of arc (`{radius}`) is too small: \
+                                    Must be at least half the distance between \
+                                    start (`{start:?}`) and end (`{end:?}`) \
+                                    points, or the arc is not possible."
+                            );
+                        }
+
+                        b_squared.sqrt()
+                    };
+
+                    let center = midpoint
+                        + midpoint_towards_center
+                            * distance_from_midpoint_to_center;
+
+                    // This only works if `surface` is a plane, which
+                    // checks out for now.
+                    let (origin, circle) = {
+                        let a = start;
+                        let b = center + (a - center).to_perpendicular();
+
+                        let [center, a, b] = [center, a, b].map(|point| {
+                            surface.geometry.point_from_local(point)
+                        });
+
+                        let origin = a;
+                        let circle = Circle {
+                            a: a - center,
+                            b: b - center,
+                        };
+
+                        (origin, circle)
+                    };
+
+                    Handle::new(Curve {
+                        geometry: AnchoredCurve::from_origin_and_curve(
+                            origin, circle,
+                        ),
+                    })
+                }
+                SketchSegment::Line { .. } => {
+                    Handle::new(Curve::line_from_vertices([
+                        &segment.start,
+                        &next_segment.start,
+                    ]))
+                }
+            };
+
+            Handle::new(HalfEdge {
+                curve,
+                start: segment.start,
+                is_internal,
+            })
+        })
+        .collect()
 }
