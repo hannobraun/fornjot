@@ -80,42 +80,36 @@ fn half_edges_to_points(
 ) -> Vec<TriangulationPoint> {
     let tolerance = tolerance.into();
 
-    let mut target = Vec::new();
+    face.half_edges_with_end_vertex()
+        .flat_map(|half_edge_with_end_vertex| {
+            approximate_half_edge(half_edge_with_end_vertex, tolerance)
+        })
+        .map(|point_global| {
+            // Here, we project a 3D point (from the vertex) into the face's
+            // surface, creating a 2D point. Through the surface, this 2D
+            // point has a position in 3D space.
+            //
+            // But this position isn't necessarily going to be the same as
+            // the position of the original 3D point, due to numerical
+            // inaccuracy.
+            //
+            // This doesn't matter. Neither does the fact, that other faces
+            // might share the same vertices and project them into their own
+            // surfaces, creating more redundancy.
+            //
+            // The reason that it doesn't, is that we're using the projected
+            // 2D points _only_ for this local triangulation. Once that
+            // tells us how the different 3D points must connect, we use the
+            // original 3D points to build those triangles. We never convert
+            // the 2D points back into 3D.
+            let point_surface = surface.project_point(point_global, tolerance);
 
-    target.extend(
-        face.half_edges_with_end_vertex()
-            .flat_map(|half_edge_with_end_vertex| {
-                approximate_half_edge(half_edge_with_end_vertex, tolerance)
-            })
-            .map(|point_global| {
-                // Here, we project a 3D point (from the vertex) into the face's
-                // surface, creating a 2D point. Through the surface, this 2D
-                // point has a position in 3D space.
-                //
-                // But this position isn't necessarily going to be the same as
-                // the position of the original 3D point, due to numerical
-                // inaccuracy.
-                //
-                // This doesn't matter. Neither does the fact, that other faces
-                // might share the same vertices and project them into their own
-                // surfaces, creating more redundancy.
-                //
-                // The reason that it doesn't, is that we're using the projected
-                // 2D points _only_ for this local triangulation. Once that
-                // tells us how the different 3D points must connect, we use the
-                // original 3D points to build those triangles. We never convert
-                // the 2D points back into 3D.
-                let point_surface =
-                    surface.project_point(point_global, tolerance);
-
-                TriangulationPoint {
-                    point_surface,
-                    point_global,
-                }
-            }),
-    );
-
-    target
+            TriangulationPoint {
+                point_surface,
+                point_global,
+            }
+        })
+        .collect()
 }
 
 /// # Approximate an half-edge
