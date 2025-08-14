@@ -127,13 +127,17 @@ pub struct MeshTriangle {
 }
 
 impl MeshTriangle {
+    pub fn to_surface_triangle(&self) -> Triangle<2> {
+        Triangle {
+            points: self.points.map(|point| point.point_surface),
+        }
+    }
+
     pub fn project_point(&self, point_global: Point<3>) -> (Point<2>, Scalar) {
         let triangle_global = Triangle {
             points: self.points.map(|point| point.point_global),
         };
-        let triangle_surface = Triangle {
-            points: self.points.map(|point| point.point_surface),
-        };
+        let triangle_surface = self.to_surface_triangle();
 
         let barycentric_coords =
             triangle_global.point_to_barycentric_coords(point_global);
