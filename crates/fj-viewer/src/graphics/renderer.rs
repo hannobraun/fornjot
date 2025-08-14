@@ -224,6 +224,10 @@ impl Renderer {
         ));
     }
 
+    pub fn clear_geometry(&mut self) {
+        self.geometries.clear();
+    }
+
     /// Resizes the render surface.
     ///
     /// # Arguments

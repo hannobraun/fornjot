@@ -56,6 +56,17 @@ impl DebugWindow {
 
         window.display_point(point);
     }
+
+    #[allow(unused)] // occasionally useful for debugging
+    pub fn clear(&self) {
+        let inner = self.inner.lock().unwrap();
+
+        let DebugWindowInner::Initialized { window } = inner.deref() else {
+            panic!("Debug window has not been initialized.");
+        };
+
+        window.clear();
+    }
 }
 
 enum DebugWindowInner {

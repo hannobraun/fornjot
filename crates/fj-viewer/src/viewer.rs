@@ -130,6 +130,12 @@ impl WindowHandle {
             window_id: self.id,
         });
     }
+
+    /// # Clear the contents of the window
+    pub fn clear(&self) {
+        self.event_loop
+            .send_event(EventLoopEvent::Clear { window_id: self.id });
+    }
 }
 
 #[derive(Clone)]
@@ -288,6 +294,22 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
 
                 window.add_displayable(displayable);
             }
+            EventLoopEvent::Clear { window_id } => {
+                let Some(winit_window_id) = self.id_map.get(&window_id) else {
+                    unreachable!(
+                        "Mappings for all window IDs are created when handling \
+                        the `Window` event."
+                    );
+                };
+                let Some(window) = self.windows.get_mut(winit_window_id) else {
+                    unreachable!(
+                        "We never remove any windows, so it's not possible to \
+                        have a mapping to an ID, but not a window with that ID."
+                    );
+                };
+
+                window.clear();
+            }
         }
     }
 }
@@ -298,6 +320,9 @@ enum EventLoopEvent {
     },
     Displayable {
         displayable: Displayable,
+        window_id: u64,
+    },
+    Clear {
         window_id: u64,
     },
 }

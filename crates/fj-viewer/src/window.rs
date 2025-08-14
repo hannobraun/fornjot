@@ -194,6 +194,11 @@ impl Window {
         self.should_render = true;
     }
 
+    /// # Clear the geometry displayed in the window
+    pub fn clear(&mut self) {
+        self.renderer.clear_geometry();
+    }
+
     /// # Draw the window
     pub fn draw(&mut self) -> bool {
         let size_is_invalid = {
