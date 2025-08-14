@@ -117,7 +117,7 @@ fn half_edges_to_points(
                     point_global,
                 }
             }),
-    )
+    );
 }
 
 /// # Approximate an half-edge
