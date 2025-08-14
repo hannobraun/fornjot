@@ -133,10 +133,14 @@ impl MeshTriangle {
         }
     }
 
-    pub fn project_point(&self, point_global: Point<3>) -> (Point<2>, Scalar) {
-        let triangle_global = Triangle {
+    pub fn to_global_triangle(&self) -> Triangle<3> {
+        Triangle {
             points: self.points.map(|point| point.point_global),
-        };
+        }
+    }
+
+    pub fn project_point(&self, point_global: Point<3>) -> (Point<2>, Scalar) {
+        let triangle_global = self.to_global_triangle();
         let triangle_surface = self.to_surface_triangle();
 
         let barycentric_coords =
