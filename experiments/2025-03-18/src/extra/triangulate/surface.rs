@@ -18,39 +18,7 @@ impl SurfaceMesh {
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let approx = surface.geometry.approximate(boundary, tolerance.into());
-
-        let curvature_points = approx
-            .curvature
-            .into_iter()
-            .map(|point_surface| {
-                TriangulationPoint::from_surface_point(
-                    point_surface,
-                    surface.geometry.as_ref(),
-                )
-            })
-            .collect::<Vec<_>>();
-
-        let boundary_points =
-            approx.boundary.into_iter().map(|point_surface| {
-                TriangulationPoint::from_surface_point(
-                    point_surface,
-                    surface.geometry.as_ref(),
-                )
-            });
-
-        let mut all_points = curvature_points.clone();
-        all_points.extend(boundary_points);
-
-        let triangles = triangles([], all_points)
-            .into_iter()
-            .map(|triangle| MeshTriangle { points: triangle })
-            .collect();
-
-        Self {
-            points: curvature_points,
-            triangles,
-        }
+        surface_to_mesh(surface, boundary, tolerance)
     }
 
     #[allow(unused)] // useful for occasional debugging
@@ -154,5 +122,44 @@ impl MeshTriangle {
         .magnitude();
 
         (point_surface, distance)
+    }
+}
+
+fn surface_to_mesh(
+    surface: &Surface,
+    boundary: &Aabb<2>,
+    tolerance: impl Into<Tolerance>,
+) -> SurfaceMesh {
+    let approx = surface.geometry.approximate(boundary, tolerance.into());
+
+    let curvature_points = approx
+        .curvature
+        .into_iter()
+        .map(|point_surface| {
+            TriangulationPoint::from_surface_point(
+                point_surface,
+                surface.geometry.as_ref(),
+            )
+        })
+        .collect::<Vec<_>>();
+
+    let boundary_points = approx.boundary.into_iter().map(|point_surface| {
+        TriangulationPoint::from_surface_point(
+            point_surface,
+            surface.geometry.as_ref(),
+        )
+    });
+
+    let mut all_points = curvature_points.clone();
+    all_points.extend(boundary_points);
+
+    let triangles = triangles([], all_points)
+        .into_iter()
+        .map(|triangle| MeshTriangle { points: triangle })
+        .collect();
+
+    SurfaceMesh {
+        points: curvature_points,
+        triangles,
     }
 }
