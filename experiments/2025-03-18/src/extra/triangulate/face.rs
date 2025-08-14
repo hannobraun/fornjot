@@ -33,13 +33,8 @@ pub fn triangulate_face(
         SurfaceMesh::new(&face.surface, &boundary, tolerance)
     };
 
-    let mut points_from_half_edges = Vec::new();
-    half_edges_to_points(
-        face,
-        &surface_mesh,
-        &mut points_from_half_edges,
-        tolerance,
-    );
+    let points_from_half_edges =
+        half_edges_to_points(face, &surface_mesh, tolerance);
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&points_from_half_edges);
@@ -81,10 +76,11 @@ pub fn triangulate_face(
 fn half_edges_to_points(
     face: &Face,
     surface: &SurfaceMesh,
-    target: &mut Vec<TriangulationPoint>,
     tolerance: impl Into<Tolerance>,
-) {
+) -> Vec<TriangulationPoint> {
     let tolerance = tolerance.into();
+
+    let mut target = Vec::new();
 
     target.extend(
         face.half_edges_with_end_vertex()
@@ -118,6 +114,8 @@ fn half_edges_to_points(
                 }
             }),
     );
+
+    target
 }
 
 /// # Approximate an half-edge
