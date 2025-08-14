@@ -13,7 +13,7 @@ pub struct SurfaceMesh {
 }
 
 impl SurfaceMesh {
-    pub fn from_surface(
+    pub fn new(
         surface: &Surface,
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,

@@ -30,7 +30,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        SurfaceMesh::from_surface(&face.surface, &boundary, tolerance)
+        SurfaceMesh::new(&face.surface, &boundary, tolerance)
     };
 
     let mut points_from_half_edges = Vec::new();
