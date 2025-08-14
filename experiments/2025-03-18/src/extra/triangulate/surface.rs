@@ -18,7 +18,10 @@ impl SurfaceMesh {
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        surface_to_mesh(surface, boundary, tolerance)
+        let surface_mesh = surface_to_mesh(surface, boundary, tolerance);
+        check_that_triangles_are_valid(&surface_mesh);
+
+        surface_mesh
     }
 
     #[allow(unused)] // useful for occasional debugging
@@ -161,5 +164,18 @@ fn surface_to_mesh(
     SurfaceMesh {
         points: curvature_points,
         triangles,
+    }
+}
+
+fn check_that_triangles_are_valid(surface_mesh: &SurfaceMesh) {
+    for triangle in &surface_mesh.triangles {
+        assert!(
+            triangle.to_surface_triangle().is_valid(),
+            "Triangle is degenerate in surface form: {triangle:#?}",
+        );
+        assert!(
+            triangle.to_global_triangle().is_valid(),
+            "Triangle is degenerate in global form: {triangle:#?}",
+        );
     }
 }
