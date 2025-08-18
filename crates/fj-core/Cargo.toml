@@ -19,10 +19,10 @@ fj-math.workspace = true
 itertools = "0.14.0"
 parking_lot = "0.12.4"
 robust = "1.2.0"
-spade = "2.14.0"
-thiserror = "2.0.12"
+spade = "2.15.0"
+thiserror = "2.0.15"
 type-map = "0.5.1"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-anyhow = "1.0.98"
+anyhow = "1.0.99"
