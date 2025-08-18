@@ -15,4 +15,4 @@ workspace = true
 
 [dependencies]
 fj-math.workspace = true
-thiserror = "2.0.12"
+thiserror = "2.0.15"
