@@ -1,5 +1,6 @@
 use std::{
     collections::{BTreeSet, VecDeque},
+    f64::consts::PI,
     mem,
 };
 
@@ -23,7 +24,7 @@ pub fn triangulate_face(
     let surface_mesh = {
         // This happens to be big enough for the current model. But
         // eventually, we need a solution here that works for _any_ model.
-        let size = 4.;
+        let size = PI;
 
         let boundary = Aabb {
             min: Point::from([-size, -size]),
