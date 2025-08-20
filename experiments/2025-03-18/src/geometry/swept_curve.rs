@@ -6,9 +6,18 @@ use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
 
 use super::{AnchoredCurve, Line, curve::FloatingCurve};
 
+/// # A curve that is swept along the path of another curve, forming a surface
 #[derive(Debug)]
 pub struct SweptCurve {
+    /// # The curve that is being swept
+    ///
+    /// Defines the u-axis of the resulting surface. This is an anchored curve,
+    /// so it also defines the surface's origin.
     pub u: AnchoredCurve,
+
+    /// # The curve along which the `u` curve is being swept
+    ///
+    /// Defines the v-axis of the resulting surface.
     pub v: FloatingCurve,
 }
 
