@@ -7,6 +7,28 @@ use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
 use super::{AnchoredCurve, Line, curve::FloatingCurve};
 
 /// # A curve that is swept along the path of another curve, forming a surface
+///
+/// ## Degenerate Case
+///
+/// There is one known degenerate case (and possibly many more that are hidden)
+/// that can happen when constructing a `SweptCurve`.
+///
+/// If the curves that define the `u` and `v` axis lie in the same surface, and
+/// at least one of them is curved by more than 180°, then a degenerate area is
+/// formed where the curved curve folds into itself. There, multiple distinct
+/// surface points can map to the same global point, creating degenerate
+/// triangles during meshing.
+///
+/// Defining such a curve is valid though, and there are legitimate use cases
+/// for it. For example, if a face is swept along a circular curve, then all of
+/// its half-edges are swept along that curve, and one of them might happen to
+/// be in the same plane as the circle.
+///
+/// This is generally fine, as long as you are careful when creating a mesh for
+/// that surface, by restricting the boundary of the mesh so that no ambiguous
+/// surface points are created. In the case of a circle, for example, this would
+/// mean that you restrict the boundary of the meshing along the circle's axis
+/// to an area of at most 2π (like -π..π or 0..2π).
 #[derive(Debug)]
 pub struct SweptCurve {
     /// # The curve that is being swept
