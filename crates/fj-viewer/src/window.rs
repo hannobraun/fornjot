@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use fj_interop::TriMesh;
-use fj_math::{Aabb, Point};
+use fj_math::{Aabb, Point, Scalar};
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
@@ -184,6 +184,19 @@ impl Window {
 
                 (render_mode, vertices, aabb)
             }
+            Displayable::PointSurface { point } => {
+                let point = Point::from([point.u, point.v, Scalar::ZERO]);
+
+                let render_mode = RenderMode::Point;
+                let vertices = Vertices::for_point(point);
+
+                let aabb = Aabb {
+                    min: point,
+                    max: point,
+                };
+
+                (render_mode, vertices, aabb)
+            }
         };
 
         self.renderer.add_geometry(render_mode, vertices);
@@ -243,6 +256,9 @@ pub enum Displayable {
     },
     PointGlobal {
         point: Point<3>,
+    },
+    PointSurface {
+        point: Point<2>,
     },
 }
 

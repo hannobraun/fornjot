@@ -58,6 +58,17 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
+    pub fn display_point_surface(&self, point: Point<2>) {
+        let inner = self.inner.lock().unwrap();
+
+        let DebugWindowInner::Initialized { window } = inner.deref() else {
+            panic!("Debug window has not been initialized.");
+        };
+
+        window.display_point_surface(point);
+    }
+
+    #[allow(unused)] // occasionally useful for debugging
     pub fn clear(&self) {
         let inner = self.inner.lock().unwrap();
 

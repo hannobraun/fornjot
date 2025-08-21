@@ -131,6 +131,18 @@ impl WindowHandle {
         });
     }
 
+    /// # Display a 2D point
+    ///
+    /// Please note that currently the point is only displayed as a single
+    /// pixel. Depending on your resolution, that might mean that it's barely
+    /// visible.
+    pub fn display_point_surface(&self, point: Point<2>) {
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::PointSurface { point },
+            window_id: self.id,
+        });
+    }
+
     /// # Clear the contents of the window
     pub fn clear(&self) {
         self.event_loop
