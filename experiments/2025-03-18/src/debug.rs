@@ -47,7 +47,7 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_point(&self, point: Point<3>) {
+    pub fn display_point_global(&self, point: Point<3>) {
         let inner = self.inner.lock().unwrap();
 
         let DebugWindowInner::Initialized { window } = inner.deref() else {
