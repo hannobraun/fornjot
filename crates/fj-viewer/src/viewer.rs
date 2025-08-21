@@ -124,7 +124,7 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point(&self, point: Point<3>) {
+    pub fn display_point_global(&self, point: Point<3>) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Point { point },
             window_id: self.id,

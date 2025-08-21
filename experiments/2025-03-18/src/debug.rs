@@ -54,7 +54,7 @@ impl DebugWindow {
             panic!("Debug window has not been initialized.");
         };
 
-        window.display_point(point);
+        window.display_point_global(point);
     }
 
     #[allow(unused)] // occasionally useful for debugging
