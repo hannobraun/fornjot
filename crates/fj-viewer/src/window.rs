@@ -173,7 +173,7 @@ impl Window {
 
                 (render_mode, vertices, aabb)
             }
-            Displayable::Point { point } => {
+            Displayable::PointGlobal { point } => {
                 let render_mode = RenderMode::Point;
                 let vertices = Vertices::for_point(point);
 
@@ -241,7 +241,7 @@ pub enum Displayable {
         tri_mesh: TriMesh,
         aabb: Aabb<3>,
     },
-    Point {
+    PointGlobal {
         point: Point<3>,
     },
 }

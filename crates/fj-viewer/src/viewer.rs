@@ -126,7 +126,7 @@ impl WindowHandle {
     /// visible.
     pub fn display_point_global(&self, point: Point<3>) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::Point { point },
+            displayable: Displayable::PointGlobal { point },
             window_id: self.id,
         });
     }
