@@ -17,5 +17,5 @@ mod window;
 
 pub use self::{
     graphics::RendererInitError,
-    viewer::{Error, ViewerHandle, WindowHandle, make_viewer_and_spawn_thread},
+    viewer::{ViewerHandle, WindowHandle, make_viewer_and_spawn_thread},
 };
