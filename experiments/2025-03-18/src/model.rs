@@ -1,12 +1,12 @@
 use fj_interop::{Tolerance, TriMesh};
 use fj_math::Vector;
-use fj_viewer::ViewerHandle;
 
 use crate::{
     geometry::{FloatingCurve, Line, Sketch, SweptCurve},
     handle::Handle,
     operations::sweep::SweepExt,
     topology::surface::Surface,
+    viewer::ViewerHandle,
 };
 
 pub fn model(viewer: &ViewerHandle) -> TriMesh {

@@ -2,7 +2,8 @@ use std::{ops::Deref, sync::Mutex};
 
 use fj_interop::TriMesh;
 use fj_math::Point;
-use fj_viewer::{ViewerHandle, WindowHandle};
+
+use crate::viewer::{ViewerHandle, WindowHandle};
 
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 

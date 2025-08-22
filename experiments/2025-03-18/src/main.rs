@@ -13,7 +13,7 @@ mod viewer;
 use debug::DEBUG_WINDOW;
 
 fn main() -> anyhow::Result<()> {
-    let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
+    let tri_mesh = viewer::make_viewer_and_spawn_thread(|viewer| {
         DEBUG_WINDOW.initialize(&viewer);
         model::model(&viewer)
     })?;
