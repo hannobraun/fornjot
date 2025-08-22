@@ -11,22 +11,20 @@ pub struct Assets<'a> {
 
 impl Assets<'_> {
     pub fn get_instance() -> Self {
-        let cube_obj: &[u8] =
-            include_bytes!("../assets/navigation_cube/cube.obj");
-        let cube_mtl: &[u8] =
-            include_bytes!("../assets/navigation_cube/cube.mtl");
+        let cube_obj: &[u8] = include_bytes!("assets/navigation_cube/cube.obj");
+        let cube_mtl: &[u8] = include_bytes!("assets/navigation_cube/cube.mtl");
         let front_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/front.png");
+            include_bytes!("assets/navigation_cube/front.png");
         let right_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/right.png");
+            include_bytes!("assets/navigation_cube/right.png");
         let rear_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/rear.png");
+            include_bytes!("assets/navigation_cube/rear.png");
         let left_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/left.png");
+            include_bytes!("assets/navigation_cube/left.png");
         let top_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/top.png");
+            include_bytes!("assets/navigation_cube/top.png");
         let bottom_texture: &[u8] =
-            include_bytes!("../assets/navigation_cube/bottom.png");
+            include_bytes!("assets/navigation_cube/bottom.png");
 
         Self {
             cube_obj,
