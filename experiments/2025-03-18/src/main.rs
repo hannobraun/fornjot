@@ -7,6 +7,8 @@ mod handle;
 mod model;
 mod operations;
 mod topology;
+#[allow(unused)]
+mod viewer;
 
 use debug::DEBUG_WINDOW;
 
