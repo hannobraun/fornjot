@@ -6,8 +6,17 @@ edition = "2024"
 
 [dependencies]
 anyhow = "*"
+bytemuck = "*"
+futures = "*"
+image = "*"
 itertools = "*"
+nalgebra = "*"
 spade = "*"
+thiserror = "*"
+tobj = "*"
+tracing = "*"
+wgpu = "*"
+winit = "*"
 
 [dependencies.fj-export]
 path = "../../crates/fj-export"
