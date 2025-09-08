@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.99"
-chrono = "0.4.41"
+chrono = "0.4.42"
 map-macro = "0.3.0"
 octocrab = "0.44.1"
 semver = "1.0.26"
@@ -19,7 +19,7 @@ url = "2.5.7"
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.5.45"
+version = "4.5.47"
 features = ["derive"]
 
 [dependencies.tokio]
