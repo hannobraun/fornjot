@@ -33,7 +33,7 @@ impl DebugWindow {
             panic!("Debug window has not been initialized.");
         };
 
-        window.display_face_2d(points);
+        window.display_face_surface(points);
     }
 
     #[allow(unused)] // occasionally useful for debugging

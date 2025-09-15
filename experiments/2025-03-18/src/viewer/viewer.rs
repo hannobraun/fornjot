@@ -104,7 +104,7 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a face in surface space
-    pub fn display_face_2d(&self, points: Vec<Point<2>>) {
+    pub fn display_face_surface(&self, points: Vec<Point<2>>) {
         let points = points
             .into_iter()
             .map(|point| point.to_xyz())
