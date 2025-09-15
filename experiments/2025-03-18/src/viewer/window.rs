@@ -159,9 +159,10 @@ impl Window {
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
         let (render_mode, vertices, aabb) = match displayable {
-            Displayable::Face { points, aabb } => {
+            Displayable::Face { points } => {
                 let render_mode = RenderMode::Face;
                 let vertices = Vertices::for_face(&points);
+                let aabb = Aabb::<3>::from_points(points.iter().copied());
 
                 (render_mode, vertices, aabb)
             }
@@ -246,20 +247,10 @@ impl Window {
 }
 
 pub enum Displayable {
-    Face {
-        points: Vec<Point<3>>,
-        aabb: Aabb<3>,
-    },
-    Mesh {
-        tri_mesh: TriMesh,
-        aabb: Aabb<3>,
-    },
-    PointGlobal {
-        point: Point<3>,
-    },
-    PointSurface {
-        point: Point<2>,
-    },
+    Face { points: Vec<Point<3>> },
+    Mesh { tri_mesh: TriMesh, aabb: Aabb<3> },
+    PointGlobal { point: Point<3> },
+    PointSurface { point: Point<2> },
 }
 
 impl Displayable {
@@ -268,8 +259,7 @@ impl Displayable {
             .into_iter()
             .map(|point| point.to_xyz())
             .collect::<Vec<_>>();
-        let aabb = Aabb::<3>::from_points(points.iter().copied());
-        Self::Face { points, aabb }
+        Self::Face { points }
     }
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
