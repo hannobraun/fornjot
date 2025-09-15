@@ -251,7 +251,7 @@ impl Window {
 
 pub enum Displayable {
     Face2d {
-        points: Vec<Point<2>>,
+        points: Vec<Point<3>>,
         aabb: Aabb<3>,
     },
     Mesh {
@@ -268,6 +268,10 @@ pub enum Displayable {
 
 impl Displayable {
     pub fn face_2d(points: Vec<Point<2>>) -> Self {
+        let points = points
+            .into_iter()
+            .map(|point| point.to_xyz())
+            .collect::<Vec<_>>();
         let aabb =
             Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
         Self::Face2d { points, aabb }
