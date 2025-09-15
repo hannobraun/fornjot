@@ -9,14 +9,14 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn for_face(points: &[Point<2>]) -> Self {
+    pub fn for_face(points: &[Point<3>]) -> Self {
         let vertices = points
             .iter()
             .map(|point| {
-                let [x, y] = point.coords.components.map(Scalar::into_f32);
+                let [x, y, z] = point.coords.components.map(Scalar::into_f32);
 
                 Vertex {
-                    position: [x, y, 0.],
+                    position: [x, y, z],
                     normal: [0., 0., 1.],
                     color: [0., 0., 0., 1.],
                 }

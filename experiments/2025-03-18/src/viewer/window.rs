@@ -161,6 +161,10 @@ impl Window {
         let (render_mode, vertices, aabb) = match displayable {
             Displayable::Face2d { points, aabb } => {
                 let render_mode = RenderMode::Face;
+                let points = points
+                    .into_iter()
+                    .map(|point| point.to_xyz())
+                    .collect::<Vec<_>>();
                 let vertices = Vertices::for_face(&points);
 
                 (render_mode, vertices, aabb)
