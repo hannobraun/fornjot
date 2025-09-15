@@ -69,23 +69,23 @@ pub trait SliceExt<T> {
     /// Stable replacement for `array_chunks`
     ///
     /// <https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks>
-    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N>;
+    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<'_, T, N>;
 
     /// Stable replacement for `array_windows`
     ///
     /// <https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows>
-    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<T, N>;
+    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<'_, T, N>;
 }
 
 impl<T> SliceExt<T> for &[T] {
-    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N> {
+    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<'_, T, N> {
         ArrayChunks {
             slice: self,
             index: 0,
         }
     }
 
-    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<T, N> {
+    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<'_, T, N> {
         ArrayWindows {
             slice: self,
             index: 0,

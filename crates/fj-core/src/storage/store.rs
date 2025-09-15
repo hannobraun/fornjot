@@ -89,7 +89,7 @@ impl<T> Store<T> {
     }
 
     /// Iterate over all objects in this store
-    pub fn iter(&self) -> Iter<T> {
+    pub fn iter(&self) -> Iter<'_, T> {
         Iter {
             store: self.inner.clone(),
             next_index: Index::zero(),

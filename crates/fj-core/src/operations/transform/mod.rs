@@ -120,7 +120,7 @@ impl TransformCache {
     fn entry<T: 'static>(
         &mut self,
         key: &Handle<T>,
-    ) -> btree_map::Entry<ObjectId, Handle<T>> {
+    ) -> btree_map::Entry<'_, ObjectId, Handle<T>> {
         let map = self
             .0
             .entry::<BTreeMap<ObjectId, Handle<T>>>()

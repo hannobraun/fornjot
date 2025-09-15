@@ -138,7 +138,7 @@ impl<T> ObjectSet<T> {
     }
 
     /// Access an iterator over the objects
-    pub fn iter(&self) -> ObjectSetIter<T> {
+    pub fn iter(&self) -> ObjectSetIter<'_, T> {
         self.inner.iter()
     }
 
