@@ -91,10 +91,10 @@ impl Pipelines {
                     self.mesh_triangles.draw(geometry, render_pass);
                 }
 
-                if let Some(pipeline) = self.mesh_lines.as_ref() {
-                    if config.draw_mesh_lines {
-                        pipeline.draw(geometry, render_pass);
-                    }
+                if let Some(pipeline) = self.mesh_lines.as_ref()
+                    && config.draw_mesh_lines
+                {
+                    pipeline.draw(geometry, render_pass);
                 };
             }
             RenderMode::Point => {
