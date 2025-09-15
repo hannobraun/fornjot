@@ -106,7 +106,7 @@ impl WindowHandle {
     /// # Display a 2D face
     pub fn display_face_2d(&self, points: Vec<Point<2>>) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::face(points),
+            displayable: Displayable::face_2d(points),
             window_id: self.id,
         });
     }

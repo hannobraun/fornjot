@@ -263,7 +263,7 @@ pub enum Displayable {
 }
 
 impl Displayable {
-    pub fn face(points: Vec<Point<2>>) -> Self {
+    pub fn face_2d(points: Vec<Point<2>>) -> Self {
         let aabb =
             Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
         Self::Face { points, aabb }
