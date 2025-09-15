@@ -159,7 +159,7 @@ impl Window {
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
         let (render_mode, vertices, aabb) = match displayable {
-            Displayable::Face2d { points, aabb } => {
+            Displayable::Face { points, aabb } => {
                 let render_mode = RenderMode::Face;
                 let points = points
                     .into_iter()
@@ -250,7 +250,7 @@ impl Window {
 }
 
 pub enum Displayable {
-    Face2d {
+    Face {
         points: Vec<Point<3>>,
         aabb: Aabb<3>,
     },
@@ -274,7 +274,7 @@ impl Displayable {
             .collect::<Vec<_>>();
         let aabb =
             Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
-        Self::Face2d { points, aabb }
+        Self::Face { points, aabb }
     }
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
