@@ -26,7 +26,7 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_face(&self, points: Vec<Point<2>>) {
+    pub fn display_face_2d(&self, points: Vec<Point<2>>) {
         let inner = self.inner.lock().unwrap();
 
         let DebugWindowInner::Initialized { window } = inner.deref() else {
