@@ -268,8 +268,7 @@ impl Displayable {
             .into_iter()
             .map(|point| point.to_xyz())
             .collect::<Vec<_>>();
-        let aabb =
-            Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
+        let aabb = Aabb::<3>::from_points(points.iter().copied());
         Self::Face { points, aabb }
     }
 
