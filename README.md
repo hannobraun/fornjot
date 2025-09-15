@@ -19,13 +19,11 @@ Fornjot is still in development and doesn't always live up to these ambitions. N
 
 For more information, [please check out the website](https://www.fornjot.app/).
 
-
 ## Sponsors
 
 Fornjot is supported by [**@reivilibre**](https://github.com/reivilibre), [**@thomasgarrison**](https://github.com/thomasgarrison), [**@seanjensengrey**](https://github.com/seanjensengrey), [**@lthiery**](https://github.com/lthiery), [**@ahdinosaur**](https://github.com/ahdinosaur), [**@martindederer**](https://github.com/martindederer), [**@MitchellHansen**](https://github.com/MitchellHansen), [**@bglw**](https://github.com/bglw), [**@Rahix**](https://github.com/Rahix), [**@JanBerktold**](https://github.com/JanBerktold), [**@darwin**](https://github.com/darwin), [**@nullstyle**](https://github.com/nullstyle), [**@HalfVoxel**](https://github.com/HalfVoxel), [**@jessebraham**](https://github.com/jessebraham), [**@jminer**](https://github.com/jminer), [**@U007D**](https://github.com/U007D), [**@guillaumechauvat**](https://github.com/guillaumechauvat), [**@mayfieldiv**](https://github.com/mayfieldiv), [**@refarb**](https://github.com/refarb), [**@hansihe**](https://github.com/hansihe), [**@romixlab**](https://github.com/romixlab), [**@justinmimbs**](https://github.com/justinmimbs), [**@yikesable**](https://github.com/yikesable), [**@hrgdavor**](https://github.com/hrgdavor), [**@ironchief**](https://github.com/ironchief), [**@kingsmountainlabs**](https://github.com/kingsmountainlabs), [**@epyintheshell**](https://github.com/epyintheshell), [**@jneem**](https://github.com/jneem), [**@starthal**](https://github.com/starthal), [**@ad-si**](https://github.com/ad-si), [**@twop**](https://github.com/twop), [**@2tefan**](https://github.com/2tefan), and [my other awesome sponsors](https://github.com/sponsors/hannobraun). Thank you!
 
 **Please consider [supporting me too](https://github.com/sponsors/hannobraun), to help make Fornjot sustainable long-term.**
-
 
 ## Table of Contents
 
@@ -36,7 +34,6 @@ Fornjot is supported by [**@reivilibre**](https://github.com/reivilibre), [**@th
 - [**Get Involved**](#get-involved)
 - [**License**](#license)
 
-
 ## Status
 
 Fornjot is usable for simple models (see [`models/` directory](models)), but currently lacks the features for anything more advanced. Work to change that is underway.
@@ -46,7 +43,6 @@ Despite this, there are some experimental projects that are build on top of Forn
 - [CommandCAD](https://github.com/IamTheCarl/CommandCAD)
 - [`fj-text`](https://github.com/samgoldman/fj-text)
 - [`bevy_mod_fornjot`](https://github.com/TotalKrill/bevy_mod_fornjot)
-
 
 ## Overview
 
@@ -68,7 +64,6 @@ Fornjot features a modular architecture, allowing you to pick and choose which p
 [`fj-viewer`]: https://crates.io/crates/fj-viewer
 [`fj-window`]: https://crates.io/crates/fj-window
 
-
 ## Usage
 
 Fornjot is a set of Rust libraries (see list above). The definitive documentation on how to use those is their reference documentation. The `crates.io` pages of each library (see list above) link to those.
@@ -79,13 +74,11 @@ If you want to use Fornjot to create a specific model in Rust, the best starting
 - To export a model, run `cargo run -p cuboid -- --export model.3mf` (replace `cuboid` with name of model you want to export; optionally replace `3mf` with another supported file format).
 - To see full set of CLI options, run `cargo run -p cuboid -- --help` (all models have the same CLI interface, so this shouldn't differ much between them).
 
-
 ## Community
 
 If you are interested in Fornjot, please consider joining the community. We'd love to have you!
 
 Please check out [the community page on the website](https://www.fornjot.app/community/) for information on where to find us!
-
 
 ## Get Involved
 
@@ -95,7 +88,6 @@ If you are interested in helping out, just fork one of the GitHub repositories a
 - [Website repository](https://github.com/hannobraun/www.fornjot.app)
 
 If you don't know what to work on, check out the [`good first issues`](https://github.com/hannobraun/Fornjot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), [or just ask](https://www.fornjot.app/community/)!
-
 
 ## License
 
