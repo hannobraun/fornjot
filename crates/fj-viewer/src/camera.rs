@@ -148,10 +148,10 @@ impl Camera {
                     .inner
                     .cast_local_ray(origin, dir, f64::INFINITY, true);
 
-            if let Some(t) = t {
-                if t <= min_t.unwrap_or(t) {
-                    min_t = Some(t);
-                }
+            if let Some(t) = t
+                && t <= min_t.unwrap_or(t)
+            {
+                min_t = Some(t);
             }
         }
 
