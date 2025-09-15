@@ -103,7 +103,7 @@ pub struct WindowHandle {
 }
 
 impl WindowHandle {
-    /// # Display a 2D face
+    /// # Display a face in surface space
     pub fn display_face_2d(&self, points: Vec<Point<2>>) {
         let points = points
             .into_iter()
