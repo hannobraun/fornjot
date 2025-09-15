@@ -255,7 +255,7 @@ pub enum Displayable {
 }
 
 impl Displayable {
-    pub fn face_2d(points: Vec<Point<3>>) -> Self {
+    pub fn face(points: Vec<Point<3>>) -> Self {
         Self::Face { points }
     }
 

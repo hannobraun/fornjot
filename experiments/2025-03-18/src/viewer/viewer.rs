@@ -111,7 +111,7 @@ impl WindowHandle {
             .collect::<Vec<_>>();
 
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::face_2d(points),
+            displayable: Displayable::face(points),
             window_id: self.id,
         });
     }
