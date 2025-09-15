@@ -116,6 +116,14 @@ impl WindowHandle {
         });
     }
 
+    /// # Display a face in global space
+    pub fn display_face_global(&self, points: Vec<Point<3>>) {
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::face(points),
+            window_id: self.id,
+        });
+    }
+
     /// # Display a 3D triangle mesh
     pub fn display_mesh(&self, tri_mesh: TriMesh) {
         self.event_loop.send_event(EventLoopEvent::Displayable {
