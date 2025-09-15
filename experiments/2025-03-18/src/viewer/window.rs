@@ -166,9 +166,10 @@ impl Window {
 
                 (render_mode, vertices, aabb)
             }
-            Displayable::Mesh { tri_mesh, aabb } => {
+            Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
+                let aabb = tri_mesh.aabb();
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
@@ -248,7 +249,7 @@ impl Window {
 
 pub enum Displayable {
     Face { points: Vec<Point<3>> },
-    Mesh { tri_mesh: TriMesh, aabb: Aabb<3> },
+    Mesh { tri_mesh: TriMesh },
     PointGlobal { point: Point<3> },
     PointSurface { point: Point<2> },
 }
@@ -263,8 +264,7 @@ impl Displayable {
     }
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
-        let aabb = tri_mesh.aabb();
-        Self::Mesh { tri_mesh, aabb }
+        Self::Mesh { tri_mesh }
     }
 }
 
