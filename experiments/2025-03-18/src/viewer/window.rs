@@ -255,11 +255,7 @@ pub enum Displayable {
 }
 
 impl Displayable {
-    pub fn face_2d(points: Vec<Point<2>>) -> Self {
-        let points = points
-            .into_iter()
-            .map(|point| point.to_xyz())
-            .collect::<Vec<_>>();
+    pub fn face_2d(points: Vec<Point<3>>) -> Self {
         Self::Face { points }
     }
 
