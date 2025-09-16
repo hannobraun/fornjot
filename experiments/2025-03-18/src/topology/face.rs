@@ -27,7 +27,7 @@ impl Face {
 
     pub fn half_edges_with_end_vertex(
         &self,
-    ) -> impl Iterator<Item = HalfEdgeWithEndVertex> {
+    ) -> impl Iterator<Item = HalfEdgeWithEndVertex<'_>> {
         self.half_edges
             .iter()
             .circular_tuple_windows()
