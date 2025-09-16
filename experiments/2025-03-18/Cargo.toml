@@ -15,7 +15,7 @@ spade = "*"
 thiserror = "*"
 tobj = "*"
 tracing = "*"
-wgpu = "*"
+wgpu = "25"
 winit = "*"
 
 [dependencies.fj-export]
