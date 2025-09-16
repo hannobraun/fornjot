@@ -16,7 +16,7 @@ spade = "*"
 thiserror = "*"
 tobj = "*"
 tracing = "*"
-wgpu = "25"
+wgpu = "25" # pinned, to keep compatible with `glyphon`
 winit = "*"
 
 [dependencies.fj-export]
