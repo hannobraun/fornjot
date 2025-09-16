@@ -95,7 +95,7 @@ impl Pipelines {
                     && config.draw_mesh_lines
                 {
                     pipeline.draw(geometry, render_pass);
-                };
+                }
             }
             RenderMode::Point => {
                 self.points.draw(geometry, render_pass);
