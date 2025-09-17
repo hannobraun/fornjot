@@ -9,7 +9,7 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    approx::half_edge::HalfEdgeApprox,
+    approx::{face::FaceApprox, half_edge::HalfEdgeApprox},
     extra::triangulate::{delaunay::triangles, surface::SurfaceMesh},
     topology::face::Face,
 };
@@ -79,7 +79,7 @@ fn half_edges_to_points(
     face: &Face,
     surface: &SurfaceMesh,
     tolerance: impl Into<Tolerance>,
-) -> Vec<TriangulationPoint> {
+) -> FaceApprox {
     let tolerance = tolerance.into();
 
     face.half_edges_with_end_vertex()
