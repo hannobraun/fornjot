@@ -9,7 +9,7 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    approx::{face::FaceApprox, half_edge::HalfEdgeApprox, point::ApproxPoint},
+    approx::{face::FaceApproxPoints, half_edge::HalfEdgeApprox, point::ApproxPoint},
     extra::triangulate::{delaunay::triangles, surface::SurfaceApprox},
     topology::face::Face,
 };
@@ -75,7 +75,7 @@ fn half_edges_to_points(
     face: &Face,
     surface: &SurfaceApprox,
     tolerance: impl Into<Tolerance>,
-) -> FaceApprox {
+) -> FaceApproxPoints {
     let tolerance = tolerance.into();
 
     let points = face
@@ -113,7 +113,7 @@ fn half_edges_to_points(
         })
         .collect();
 
-    FaceApprox { points }
+    FaceApproxPoints { points }
 }
 
 fn polygon_from_half_edges(points_from_half_edges: &[ApproxPoint]) -> Polygon {

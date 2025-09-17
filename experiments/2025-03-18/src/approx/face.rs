@@ -1,5 +1,5 @@
 use crate::approx::point::ApproxPoint;
 
-pub struct FaceApprox {
+pub struct FaceApproxPoints {
     pub points: Vec<ApproxPoint>,
 }
