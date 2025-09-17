@@ -9,7 +9,9 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    approx::half_edge::HalfEdgeApprox, extra::triangulate::{delaunay::triangles, surface::SurfaceMesh}, topology::face::{Face, HalfEdgeWithEndVertex}
+    approx::half_edge::HalfEdgeApprox,
+    extra::triangulate::{delaunay::triangles, surface::SurfaceMesh},
+    topology::face::{Face, HalfEdgeWithEndVertex},
 };
 
 use super::TriangulationPoint;
@@ -82,7 +84,7 @@ fn half_edges_to_points(
 
     face.half_edges_with_end_vertex()
         .flat_map(|half_edge_with_end_vertex| {
-            approximate_half_edge(half_edge_with_end_vertex, tolerance)
+            approximate_half_edge(half_edge_with_end_vertex, tolerance).points
         })
         .map(|point_global| {
             // Here, we project a 3D point (from the vertex) into the face's
@@ -143,7 +145,9 @@ fn approximate_half_edge(
         |point_local| half_edge.curve.geometry.point_from_local(point_local),
     ));
 
-    points_global
+    HalfEdgeApprox {
+        points: points_global,
+    }
 }
 
 fn polygon_from_half_edges(

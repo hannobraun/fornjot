@@ -1,3 +1,5 @@
 use fj_math::Point;
 
-pub type HalfEdgeApprox = Vec<Point<3>>;
+pub struct HalfEdgeApprox {
+    pub points: Vec<Point<3>>,
+}
