@@ -113,15 +113,6 @@ fn half_edges_to_points(
         .collect()
 }
 
-/// # Approximate an half-edge
-///
-/// The approximation of an half-edge is the approximation of its curve within
-/// the boundary defined by the half-edge's start and end vertices, plus the
-/// position of the start vertex.
-///
-/// By including the start vertex and not the end vertex, a whole chain of
-/// half-edges can be approximated by simply appending the approximations of
-/// each half-edge, without the necessity of any deduplication of points.
 fn approximate_half_edge(
     HalfEdgeWithEndVertex {
         half_edge,
