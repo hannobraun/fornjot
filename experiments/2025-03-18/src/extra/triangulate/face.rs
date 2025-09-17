@@ -11,9 +11,8 @@ use geo::{Contains, Coord, LineString, Polygon};
 use crate::{
     approx::{
         delaunay::triangles, face::FaceApproxPoints, half_edge::HalfEdgeApprox,
-        point::ApproxPoint,
+        point::ApproxPoint, surface::SurfaceApprox,
     },
-    extra::triangulate::surface::SurfaceApprox,
     topology::face::Face,
 };
 
