@@ -35,9 +35,11 @@ pub fn triangulate_face(
         SurfaceApprox::new(&face.surface, &boundary, tolerance)
     };
 
-    let face_approx = half_edges_to_points(face, &surface_mesh, tolerance);
+    let face_approx_points =
+        half_edges_to_points(face, &surface_mesh, tolerance);
 
-    let polygon_from_half_edges = polygon_from_half_edges(&face_approx.points);
+    let polygon_from_half_edges =
+        polygon_from_half_edges(&face_approx_points.points);
 
     let surface_points = surface_mesh.points.into_iter().filter(|point| {
         polygon_from_half_edges.contains(&Coord {
@@ -46,7 +48,7 @@ pub fn triangulate_face(
         })
     });
 
-    let triangles = triangles(face_approx.points, surface_points)
+    let triangles = triangles(face_approx_points.points, surface_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
