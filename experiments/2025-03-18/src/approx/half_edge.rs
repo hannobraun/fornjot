@@ -23,7 +23,7 @@ impl HalfEdgeApprox {
             end_vertex,
         }: HalfEdgeWithEndVertex,
         tolerance: Tolerance,
-    ) -> HalfEdgeApprox {
+    ) -> Self {
         let [start, end] =
             [&half_edge.start, end_vertex].map(|vertex| vertex.point);
 
@@ -42,7 +42,7 @@ impl HalfEdgeApprox {
             },
         ));
 
-        HalfEdgeApprox {
+        Self {
             points: points_global,
         }
     }
