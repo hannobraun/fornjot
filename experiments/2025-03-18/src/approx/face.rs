@@ -12,7 +12,7 @@ pub struct FaceApproxPoints {
 }
 
 impl FaceApproxPoints {
-    pub fn half_edges_to_points(
+    pub fn new(
         face: &Face,
         surface: &SurfaceApprox,
         tolerance: impl Into<Tolerance>,
