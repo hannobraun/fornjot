@@ -10,8 +10,8 @@ use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
     approx::{
-        delaunay::triangles, face::FaceApproxPoints, half_edge::HalfEdgeApprox,
-        point::ApproxPoint, surface::SurfaceApprox,
+        delaunay::triangles, face::FaceApproxPoints, point::ApproxPoint,
+        surface::SurfaceApprox,
     },
     topology::face::Face,
 };
@@ -36,7 +36,7 @@ pub fn triangulate_face(
     };
 
     let face_approx_points =
-        half_edges_to_points(face, &surface_mesh, tolerance);
+        FaceApproxPoints::half_edges_to_points(face, &surface_mesh, tolerance);
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&face_approx_points.points);
@@ -73,51 +73,6 @@ pub fn triangulate_face(
     mesh.triangles.extend(triangles);
 
     mesh
-}
-
-fn half_edges_to_points(
-    face: &Face,
-    surface: &SurfaceApprox,
-    tolerance: impl Into<Tolerance>,
-) -> FaceApproxPoints {
-    let tolerance = tolerance.into();
-
-    let points = face
-        .half_edges_with_end_vertex()
-        .flat_map(|half_edge_with_end_vertex| {
-            HalfEdgeApprox::from_half_edge_with_end_vertex(
-                half_edge_with_end_vertex,
-                tolerance,
-            )
-            .points
-        })
-        .map(|point_global| {
-            // Here, we project a 3D point (from the vertex) into the face's
-            // surface, creating a 2D point. Through the surface, this 2D point
-            // has a position in 3D space.
-            //
-            // But this position isn't necessarily going to be the same as the
-            // position of the original 3D point, due to numerical inaccuracy.
-            //
-            // This doesn't matter. Neither does the fact, that other faces
-            // might share the same vertices and project them into their own
-            // surfaces, creating more redundancy.
-            //
-            // The reason that it doesn't, is that we're using the projected 2D
-            // points _only_ for this local triangulation. Once that tells us
-            // how the different 3D points must connect, we use the original 3D
-            // points to build those triangles. We never convert the 2D points
-            // back into 3D.
-            let point_surface = surface.project_point(point_global, tolerance);
-
-            ApproxPoint {
-                point_surface,
-                point_global,
-            }
-        })
-        .collect();
-
-    FaceApproxPoints { points }
 }
 
 fn polygon_from_half_edges(points_from_half_edges: &[ApproxPoint]) -> Polygon {
