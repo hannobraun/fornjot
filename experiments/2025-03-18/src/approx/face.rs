@@ -1,10 +1,7 @@
 use fj_interop::Tolerance;
 
-use crate::{
-    approx::{
-        half_edge::HalfEdgeApprox, point::ApproxPoint, surface::SurfaceApprox,
-    },
-    topology::face::Face,
+use crate::approx::{
+    half_edge::HalfEdgeApprox, point::ApproxPoint, surface::SurfaceApprox,
 };
 
 pub struct FaceApproxPoints {
@@ -13,21 +10,15 @@ pub struct FaceApproxPoints {
 
 impl FaceApproxPoints {
     pub fn new(
-        face: &Face,
+        half_edges: impl IntoIterator<Item = HalfEdgeApprox>,
         surface: &SurfaceApprox,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
         let tolerance = tolerance.into();
 
-        let points = face
-            .half_edges_with_end_vertex()
-            .flat_map(|half_edge_with_end_vertex| {
-                HalfEdgeApprox::from_half_edge_with_end_vertex(
-                    half_edge_with_end_vertex,
-                    tolerance,
-                )
-                .points
-            })
+        let points = half_edges
+            .into_iter()
+            .flat_map(|approx| approx.points)
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D

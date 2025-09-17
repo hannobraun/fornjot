@@ -10,8 +10,8 @@ use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
     approx::{
-        delaunay::triangles, face::FaceApproxPoints, point::ApproxPoint,
-        surface::SurfaceApprox,
+        delaunay::triangles, face::FaceApproxPoints, half_edge::HalfEdgeApprox,
+        point::ApproxPoint, surface::SurfaceApprox,
     },
     topology::face::Face,
 };
@@ -35,8 +35,16 @@ pub fn triangulate_face(
         SurfaceApprox::new(&face.surface, &boundary, tolerance)
     };
 
+    let half_edges =
+        face.half_edges_with_end_vertex()
+            .map(|half_edge_with_end_vertex| {
+                HalfEdgeApprox::from_half_edge_with_end_vertex(
+                    half_edge_with_end_vertex,
+                    tolerance,
+                )
+            });
     let face_approx_points =
-        FaceApproxPoints::new(face, &surface_mesh, tolerance);
+        FaceApproxPoints::new(half_edges, &surface_mesh, tolerance);
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&face_approx_points.points);
