@@ -39,7 +39,7 @@ pub fn triangulate_face(
         half_edges_to_points(face, &surface_mesh, tolerance);
 
     let polygon_from_half_edges =
-        polygon_from_half_edges(&points_from_half_edges);
+        polygon_from_half_edges(&points_from_half_edges.points);
 
     let surface_points = surface_mesh.points.into_iter().filter(|point| {
         polygon_from_half_edges.contains(&Coord {
@@ -48,7 +48,7 @@ pub fn triangulate_face(
         })
     });
 
-    let triangles = triangles(points_from_half_edges, surface_points)
+    let triangles = triangles(points_from_half_edges.points, surface_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.point_surface);
@@ -82,7 +82,8 @@ fn half_edges_to_points(
 ) -> FaceApprox {
     let tolerance = tolerance.into();
 
-    face.half_edges_with_end_vertex()
+    let points = face
+        .half_edges_with_end_vertex()
         .flat_map(|half_edge_with_end_vertex| {
             HalfEdgeApprox::from_half_edge_with_end_vertex(
                 half_edge_with_end_vertex,
@@ -114,7 +115,9 @@ fn half_edges_to_points(
                 point_global,
             }
         })
-        .collect()
+        .collect();
+
+    FaceApprox { points }
 }
 
 fn polygon_from_half_edges(

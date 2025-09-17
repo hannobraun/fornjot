@@ -1,3 +1,5 @@
 use crate::extra::triangulate::TriangulationPoint;
 
-pub type FaceApprox = Vec<TriangulationPoint>;
+pub struct FaceApprox {
+    pub points: Vec<TriangulationPoint>,
+}
