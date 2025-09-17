@@ -3,6 +3,8 @@ use std::fmt;
 use fj_interop::Tolerance;
 use fj_math::{Point, Vector};
 
+use crate::approx::curve::CurveApprox;
+
 use super::Line;
 
 /// # Curve geometry that has a fixed position (is _anchored_) in space
@@ -143,14 +145,6 @@ pub trait CurveGeometry: fmt::Debug {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox;
-}
-
-#[derive(Debug)]
-pub struct CurveApprox {
-    /// # The points that approximate the curvature of the curve
-    ///
-    /// This does not include the boundary of the approximation.
-    pub curvature: Vec<Point<1>>,
 }
 
 #[cfg(test)]

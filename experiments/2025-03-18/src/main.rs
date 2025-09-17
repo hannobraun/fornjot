@@ -1,5 +1,6 @@
 #![allow(clippy::module_inception)]
 
+mod approx;
 mod debug;
 mod extra;
 mod geometry;

@@ -1,7 +1,7 @@
 use fj_interop::{CircleApproxParams, Tolerance};
 use fj_math::{Point, Scalar, Vector};
 
-use crate::geometry::curve::{CurveApprox, CurveGeometry};
+use crate::{approx::curve::CurveApprox, geometry::curve::CurveGeometry};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
