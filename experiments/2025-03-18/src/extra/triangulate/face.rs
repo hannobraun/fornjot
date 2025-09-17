@@ -11,7 +11,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 use crate::{
     approx::half_edge::HalfEdgeApprox,
     extra::triangulate::{delaunay::triangles, surface::SurfaceMesh},
-    topology::face::{Face, HalfEdgeWithEndVertex},
+    topology::face::Face,
 };
 
 use super::TriangulationPoint;
@@ -84,7 +84,11 @@ fn half_edges_to_points(
 
     face.half_edges_with_end_vertex()
         .flat_map(|half_edge_with_end_vertex| {
-            approximate_half_edge(half_edge_with_end_vertex, tolerance).points
+            HalfEdgeApprox::approximate_half_edge(
+                half_edge_with_end_vertex,
+                tolerance,
+            )
+            .points
         })
         .map(|point_global| {
             // Here, we project a 3D point (from the vertex) into the face's
@@ -111,34 +115,6 @@ fn half_edges_to_points(
             }
         })
         .collect()
-}
-
-fn approximate_half_edge(
-    HalfEdgeWithEndVertex {
-        half_edge,
-        end_vertex,
-    }: HalfEdgeWithEndVertex,
-    tolerance: Tolerance,
-) -> HalfEdgeApprox {
-    let [start, end] =
-        [&half_edge.start, end_vertex].map(|vertex| vertex.point);
-
-    let boundary_local = [start, end].map(|point_global| {
-        half_edge.curve.geometry.project_point(point_global)
-    });
-    let points_local = half_edge
-        .curve
-        .geometry
-        .approximate(boundary_local, tolerance);
-
-    let mut points_global = vec![start];
-    points_global.extend(points_local.curvature.into_iter().map(
-        |point_local| half_edge.curve.geometry.point_from_local(point_local),
-    ));
-
-    HalfEdgeApprox {
-        points: points_global,
-    }
 }
 
 fn polygon_from_half_edges(
