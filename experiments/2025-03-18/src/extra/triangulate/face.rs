@@ -84,7 +84,7 @@ fn half_edges_to_points(
 
     face.half_edges_with_end_vertex()
         .flat_map(|half_edge_with_end_vertex| {
-            HalfEdgeApprox::approximate_half_edge(
+            HalfEdgeApprox::from_half_edge_with_end_vertex(
                 half_edge_with_end_vertex,
                 tolerance,
             )

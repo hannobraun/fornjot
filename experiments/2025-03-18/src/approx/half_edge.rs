@@ -17,7 +17,7 @@ pub struct HalfEdgeApprox {
 }
 
 impl HalfEdgeApprox {
-    pub fn approximate_half_edge(
+    pub fn from_half_edge_with_end_vertex(
         HalfEdgeWithEndVertex {
             half_edge,
             end_vertex,
