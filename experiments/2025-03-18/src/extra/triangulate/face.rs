@@ -14,7 +14,7 @@ use crate::{
     topology::face::Face,
 };
 
-use super::TriangulationPoint;
+use super::ApproxPoint;
 
 pub fn triangulate_face(
     face: &Face,
@@ -108,7 +108,7 @@ fn half_edges_to_points(
             // back into 3D.
             let point_surface = surface.project_point(point_global, tolerance);
 
-            TriangulationPoint {
+            ApproxPoint {
                 point_surface,
                 point_global,
             }
@@ -119,7 +119,7 @@ fn half_edges_to_points(
 }
 
 fn polygon_from_half_edges(
-    points_from_half_edges: &[TriangulationPoint],
+    points_from_half_edges: &[ApproxPoint],
 ) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.

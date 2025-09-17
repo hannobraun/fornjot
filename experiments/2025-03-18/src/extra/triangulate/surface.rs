@@ -2,13 +2,13 @@ use fj_interop::{Tolerance, TriMesh};
 use fj_math::{Aabb, Point, Scalar, Triangle};
 
 use crate::{
-    extra::triangulate::{TriangulationPoint, delaunay::triangles},
+    extra::triangulate::{ApproxPoint, delaunay::triangles},
     topology::surface::Surface,
 };
 
 #[derive(Debug)]
 pub struct SurfaceApprox {
-    pub points: Vec<TriangulationPoint>,
+    pub points: Vec<ApproxPoint>,
     pub triangles: Vec<MeshTriangle>,
 }
 
@@ -94,7 +94,7 @@ impl SurfaceApprox {
 
 #[derive(Debug)]
 pub struct MeshTriangle {
-    pub points: [TriangulationPoint; 3],
+    pub points: [ApproxPoint; 3],
 }
 
 impl MeshTriangle {
@@ -139,7 +139,7 @@ fn surface_to_mesh(
         .curvature
         .into_iter()
         .map(|point_surface| {
-            TriangulationPoint::from_surface_point(
+            ApproxPoint::from_surface_point(
                 point_surface,
                 surface.geometry.as_ref(),
             )
@@ -147,7 +147,7 @@ fn surface_to_mesh(
         .collect::<Vec<_>>();
 
     let boundary_points = approx.boundary.into_iter().map(|point_surface| {
-        TriangulationPoint::from_surface_point(
+        ApproxPoint::from_surface_point(
             point_surface,
             surface.geometry.as_ref(),
         )
