@@ -10,7 +10,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
     approx::{face::FaceApprox, half_edge::HalfEdgeApprox},
-    extra::triangulate::{delaunay::triangles, surface::SurfaceMesh},
+    extra::triangulate::{delaunay::triangles, surface::SurfaceApprox},
     topology::face::Face,
 };
 
@@ -32,7 +32,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        SurfaceMesh::new(&face.surface, &boundary, tolerance)
+        SurfaceApprox::new(&face.surface, &boundary, tolerance)
     };
 
     let face_approx = half_edges_to_points(face, &surface_mesh, tolerance);
@@ -75,7 +75,7 @@ pub fn triangulate_face(
 
 fn half_edges_to_points(
     face: &Face,
-    surface: &SurfaceMesh,
+    surface: &SurfaceApprox,
     tolerance: impl Into<Tolerance>,
 ) -> FaceApprox {
     let tolerance = tolerance.into();
