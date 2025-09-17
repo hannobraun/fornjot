@@ -167,8 +167,8 @@ fn surface_to_mesh(
     }
 }
 
-fn check_that_triangles_are_valid(surface_mesh: &SurfaceApprox) {
-    for triangle in &surface_mesh.triangles {
+fn check_that_triangles_are_valid(surface_approx: &SurfaceApprox) {
+    for triangle in &surface_approx.triangles {
         assert!(
             triangle.to_surface_triangle().is_valid(),
             "Triangle is degenerate in surface form: {triangle:#?}",
