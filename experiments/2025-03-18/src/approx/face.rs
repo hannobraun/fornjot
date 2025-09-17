@@ -16,7 +16,7 @@ impl FaceApproxPoints {
         face: &Face,
         surface: &SurfaceApprox,
         tolerance: impl Into<Tolerance>,
-    ) -> FaceApproxPoints {
+    ) -> Self {
         let tolerance = tolerance.into();
 
         let points = face
@@ -56,6 +56,6 @@ impl FaceApproxPoints {
             })
             .collect();
 
-        FaceApproxPoints { points }
+        Self { points }
     }
 }
