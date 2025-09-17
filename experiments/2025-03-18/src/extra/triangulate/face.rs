@@ -9,12 +9,10 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    approx::{face::FaceApprox, half_edge::HalfEdgeApprox},
+    approx::{face::FaceApprox, half_edge::HalfEdgeApprox, point::ApproxPoint},
     extra::triangulate::{delaunay::triangles, surface::SurfaceApprox},
     topology::face::Face,
 };
-
-use super::ApproxPoint;
 
 pub fn triangulate_face(
     face: &Face,
@@ -118,9 +116,7 @@ fn half_edges_to_points(
     FaceApprox { points }
 }
 
-fn polygon_from_half_edges(
-    points_from_half_edges: &[ApproxPoint],
-) -> Polygon {
+fn polygon_from_half_edges(points_from_half_edges: &[ApproxPoint]) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.
 

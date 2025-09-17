@@ -2,7 +2,7 @@ use fj_interop::{Tolerance, TriMesh};
 use fj_math::{Aabb, Point, Scalar, Triangle};
 
 use crate::{
-    extra::triangulate::{ApproxPoint, delaunay::triangles},
+    approx::point::ApproxPoint, extra::triangulate::delaunay::triangles,
     topology::surface::Surface,
 };
 

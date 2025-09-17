@@ -1,6 +1,6 @@
 use spade::Triangulation;
 
-use crate::extra::triangulate::ApproxPoint;
+use crate::approx::point::ApproxPoint;
 
 pub fn triangles(
     points_from_half_edges: impl IntoIterator<Item = ApproxPoint>,
