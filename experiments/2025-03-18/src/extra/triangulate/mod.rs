@@ -1,4 +1,3 @@
-mod delaunay;
 mod face;
 mod surface;
 

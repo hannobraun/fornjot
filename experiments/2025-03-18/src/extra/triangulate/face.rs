@@ -9,8 +9,11 @@ use fj_math::{Aabb, Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 
 use crate::{
-    approx::{face::FaceApproxPoints, half_edge::HalfEdgeApprox, point::ApproxPoint},
-    extra::triangulate::{delaunay::triangles, surface::SurfaceApprox},
+    approx::{
+        delaunay::triangles, face::FaceApproxPoints, half_edge::HalfEdgeApprox,
+        point::ApproxPoint,
+    },
+    extra::triangulate::surface::SurfaceApprox,
     topology::face::Face,
 };
 
