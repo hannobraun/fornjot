@@ -121,7 +121,10 @@ impl WindowHandle {
     }
 
     /// # Display a face in global space
-    pub fn display_face_global(&self, points: Vec<Point<3>>) {
+    pub fn display_face_global(&self, face: &FaceApproxPoints) {
+        let points =
+            face.points.iter().map(|point| point.point_global).collect();
+
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
             window_id: self.id,

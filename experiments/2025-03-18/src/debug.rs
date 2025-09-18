@@ -47,10 +47,7 @@ impl DebugWindow {
             panic!("Debug window has not been initialized.");
         };
 
-        let points =
-            face.points.iter().map(|point| point.point_global).collect();
-
-        window.display_face_global(points);
+        window.display_face_global(face);
     }
 
     #[allow(unused)] // occasionally useful for debugging
