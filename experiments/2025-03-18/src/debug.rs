@@ -36,13 +36,7 @@ impl DebugWindow {
             panic!("Debug window has not been initialized.");
         };
 
-        let points = face
-            .points
-            .iter()
-            .map(|point| point.point_surface)
-            .collect();
-
-        window.display_face_surface(points);
+        window.display_face_surface(face);
     }
 
     #[allow(unused)] // occasionally useful for debugging

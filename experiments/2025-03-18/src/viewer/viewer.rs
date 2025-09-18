@@ -20,10 +20,13 @@ use winit::{
     window::WindowId,
 };
 
-use crate::viewer::{
-    RendererInitError,
-    input::DEFAULT_CAMERA_TUNING_CONFIG,
-    window::{Displayable, Window},
+use crate::{
+    approx::face::FaceApproxPoints,
+    viewer::{
+        RendererInitError,
+        input::DEFAULT_CAMERA_TUNING_CONFIG,
+        window::{Displayable, Window},
+    },
 };
 
 /// # Create a model viewer and spawn a new thread where to use it
@@ -104,10 +107,11 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a face in surface space
-    pub fn display_face_surface(&self, points: Vec<Point<2>>) {
-        let points = points
-            .into_iter()
-            .map(|point| point.to_xyz())
+    pub fn display_face_surface(&self, face: &FaceApproxPoints) {
+        let points = face
+            .points
+            .iter()
+            .map(|point| point.point_surface.to_xyz())
             .collect::<Vec<_>>();
 
         self.event_loop.send_event(EventLoopEvent::Displayable {
