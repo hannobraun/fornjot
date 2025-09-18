@@ -29,12 +29,18 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_face_surface(&self, points: Vec<Point<2>>) {
+    pub fn display_face_surface(&self, face: &FaceApproxPoints) {
         let inner = self.inner.lock().unwrap();
 
         let DebugWindowInner::Initialized { window } = inner.deref() else {
             panic!("Debug window has not been initialized.");
         };
+
+        let points = face
+            .points
+            .iter()
+            .map(|point| point.point_surface)
+            .collect();
 
         window.display_face_surface(points);
     }
