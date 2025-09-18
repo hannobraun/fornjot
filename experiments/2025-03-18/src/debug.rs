@@ -3,7 +3,10 @@ use std::{ops::Deref, sync::Mutex};
 use fj_interop::TriMesh;
 use fj_math::Point;
 
-use crate::viewer::{ViewerHandle, WindowHandle};
+use crate::{
+    approx::face::FaceApproxPoints,
+    viewer::{ViewerHandle, WindowHandle},
+};
 
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 
@@ -37,12 +40,15 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_face_global(&self, points: Vec<Point<3>>) {
+    pub fn display_face_global(&self, face: &FaceApproxPoints) {
         let inner = self.inner.lock().unwrap();
 
         let DebugWindowInner::Initialized { window } = inner.deref() else {
             panic!("Debug window has not been initialized.");
         };
+
+        let points =
+            face.points.iter().map(|point| point.point_global).collect();
 
         window.display_face_global(points);
     }
