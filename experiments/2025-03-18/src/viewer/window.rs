@@ -161,8 +161,15 @@ impl Window {
         let (render_mode, vertices, aabb) = match displayable {
             Displayable::Face { points } => {
                 let render_mode = RenderMode::Face;
-                let vertices = Vertices::for_face(&points);
-                let aabb = Aabb::<3>::from_points(points.iter().copied());
+                let vertices = Vertices::for_face(
+                    points.iter().map(|PointWithLabel { point, .. }| point),
+                );
+                let aabb = Aabb::<3>::from_points(
+                    points
+                        .iter()
+                        .map(|PointWithLabel { point, .. }| point)
+                        .copied(),
+                );
 
                 (render_mode, vertices, aabb)
             }
@@ -235,19 +242,28 @@ impl Window {
 }
 
 pub enum Displayable {
-    Face { points: Vec<Point<3>> },
+    Face { points: Vec<PointWithLabel> },
     Mesh { tri_mesh: TriMesh },
     Point { point: Point<3> },
 }
 
 impl Displayable {
     pub fn face(points: Vec<Point<3>>) -> Self {
+        let points = points
+            .into_iter()
+            .map(|point| PointWithLabel { point })
+            .collect();
+
         Self::Face { points }
     }
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
         Self::Mesh { tri_mesh }
     }
+}
+
+pub struct PointWithLabel {
+    pub point: Point<3>,
 }
 
 #[derive(Debug, thiserror::Error)]
