@@ -21,7 +21,7 @@ impl Vertices {
                     color: [0., 0., 0., 1.],
                 }
             })
-            .collect();
+            .collect::<Vec<_>>();
         let indices = (0..).take(points.len()).collect();
 
         Self { vertices, indices }
