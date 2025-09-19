@@ -128,9 +128,8 @@ impl WindowHandle {
         let points = face
             .points
             .iter()
-            .map(|point| {
-                let point = point.point_global;
-                PointWithLabel { point }
+            .map(|point| PointWithLabel {
+                point: point.point_global,
             })
             .collect();
 
