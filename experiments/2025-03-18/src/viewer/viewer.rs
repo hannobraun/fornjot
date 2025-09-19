@@ -111,9 +111,8 @@ impl WindowHandle {
         let points = face
             .points
             .iter()
-            .map(|point| {
-                let point = point.point_surface.to_xyz();
-                PointWithLabel { point }
+            .map(|point| PointWithLabel {
+                point: point.point_surface.to_xyz(),
             })
             .collect::<Vec<_>>();
 
