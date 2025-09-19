@@ -22,7 +22,7 @@ impl Vertices {
                 }
             })
             .collect::<Vec<_>>();
-        let indices = (0..).take(points.len()).collect();
+        let indices = (0..).take(vertices.len()).collect();
 
         Self { vertices, indices }
     }
