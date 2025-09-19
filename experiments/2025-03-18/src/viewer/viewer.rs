@@ -111,6 +111,7 @@ impl WindowHandle {
         let points = face
             .points
             .iter()
+            .copied()
             .map(|point| PointWithLabel {
                 point: point.point_surface.to_xyz(),
             })
@@ -127,6 +128,7 @@ impl WindowHandle {
         let points = face
             .points
             .iter()
+            .copied()
             .map(|point| PointWithLabel {
                 point: point.point_global,
             })
