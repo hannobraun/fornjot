@@ -248,12 +248,7 @@ pub enum Displayable {
 }
 
 impl Displayable {
-    pub fn face(points: Vec<Point<3>>) -> Self {
-        let points = points
-            .into_iter()
-            .map(|point| PointWithLabel { point })
-            .collect();
-
+    pub fn face(points: Vec<PointWithLabel>) -> Self {
         Self::Face { points }
     }
 

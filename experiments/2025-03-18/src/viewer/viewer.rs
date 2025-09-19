@@ -25,7 +25,7 @@ use crate::{
     viewer::{
         RendererInitError,
         input::DEFAULT_CAMERA_TUNING_CONFIG,
-        window::{Displayable, Window},
+        window::{Displayable, PointWithLabel, Window},
     },
 };
 
@@ -111,7 +111,10 @@ impl WindowHandle {
         let points = face
             .points
             .iter()
-            .map(|point| point.point_surface.to_xyz())
+            .map(|point| {
+                let point = point.point_surface.to_xyz();
+                PointWithLabel { point }
+            })
             .collect::<Vec<_>>();
 
         self.event_loop.send_event(EventLoopEvent::Displayable {
@@ -122,8 +125,14 @@ impl WindowHandle {
 
     /// # Display a face in global space
     pub fn display_face_global(&self, face: &FaceApproxPoints) {
-        let points =
-            face.points.iter().map(|point| point.point_global).collect();
+        let points = face
+            .points
+            .iter()
+            .map(|point| {
+                let point = point.point_global;
+                PointWithLabel { point }
+            })
+            .collect();
 
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::face(points),
