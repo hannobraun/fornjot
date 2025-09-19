@@ -9,9 +9,11 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn for_face(points: &[Point<3>]) -> Self {
+    pub fn for_face<'r>(
+        points: impl IntoIterator<Item = &'r Point<3>>,
+    ) -> Self {
         let vertices = points
-            .iter()
+            .into_iter()
             .map(|point| {
                 let [x, y, z] = point.coords.components.map(Scalar::into_f32);
 
