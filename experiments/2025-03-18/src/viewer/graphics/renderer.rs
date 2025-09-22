@@ -334,7 +334,7 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
-            self.text_renderer.draw(&mut render_pass);
+            self.text_renderer.draw(&mut render_pass)?;
         }
 
         self.navigation_cube_renderer.draw(
@@ -423,4 +423,7 @@ pub enum RendererInitError {
 pub enum DrawError {
     #[error("Error acquiring output surface: {0}")]
     Surface(#[from] wgpu::SurfaceError),
+
+    #[error("Error rendering text")]
+    Text(#[from] glyphon::RenderError),
 }

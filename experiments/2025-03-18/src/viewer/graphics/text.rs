@@ -9,5 +9,10 @@ impl TextRenderer {
         Self {}
     }
 
-    pub fn draw(&mut self, _: &mut wgpu::RenderPass) {}
+    pub fn draw(
+        &mut self,
+        _: &mut wgpu::RenderPass,
+    ) -> Result<(), glyphon::RenderError> {
+        Ok(())
+    }
 }
