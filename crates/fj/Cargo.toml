@@ -24,7 +24,7 @@ thiserror = "2.0.16"
 tracing = "0.1.41"
 
 [dependencies.clap]
-version = "4.5.45"
+version = "4.5.48"
 features = ["derive"]
 
 [dependencies.tracing-subscriber]
