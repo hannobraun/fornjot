@@ -1,7 +1,7 @@
 pub struct TextRenderer {}
 
 impl TextRenderer {
-    pub fn new(_: &wgpu::Device) -> Self {
+    pub fn new(_: &wgpu::Device, _: &wgpu::Queue) -> Self {
         Self {}
     }
 

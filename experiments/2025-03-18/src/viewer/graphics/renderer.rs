@@ -196,7 +196,7 @@ impl Renderer {
             &surface_config,
         );
 
-        let text_renderer = TextRenderer::new(&device.device);
+        let text_renderer = TextRenderer::new(&device.device, &device.queue);
 
         Ok(Self {
             surface,
