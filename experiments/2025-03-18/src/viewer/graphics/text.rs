@@ -1,7 +1,11 @@
 pub struct TextRenderer {}
 
 impl TextRenderer {
-    pub fn new(_: &wgpu::Device, _: &wgpu::Queue) -> Self {
+    pub fn new(
+        _: &wgpu::Device,
+        _: &wgpu::Queue,
+        _: wgpu::TextureFormat,
+    ) -> Self {
         Self {}
     }
 
