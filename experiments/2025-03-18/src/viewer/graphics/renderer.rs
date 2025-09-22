@@ -334,7 +334,7 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
-            self.text_renderer.draw();
+            self.text_renderer.draw(&mut render_pass);
         }
 
         self.navigation_cube_renderer.draw(

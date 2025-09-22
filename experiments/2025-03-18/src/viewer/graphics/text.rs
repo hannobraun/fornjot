@@ -6,5 +6,5 @@ impl TextRenderer {
         Self {}
     }
 
-    pub fn draw(&mut self) {}
+    pub fn draw(&mut self, _: &mut wgpu::RenderPass) {}
 }
