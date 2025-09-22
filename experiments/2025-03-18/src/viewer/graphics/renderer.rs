@@ -19,7 +19,6 @@ use super::{
 };
 
 /// Graphics rendering state and target abstraction
-#[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface<'static>,
     device: Device,

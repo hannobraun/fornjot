@@ -1,4 +1,3 @@
-#[derive(Debug)]
 pub struct TextRenderer {}
 
 impl TextRenderer {
