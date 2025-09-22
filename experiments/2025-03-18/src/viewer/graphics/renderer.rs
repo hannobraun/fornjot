@@ -5,7 +5,10 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::viewer::{camera::Camera, graphics::RenderMode};
+use crate::viewer::{
+    camera::Camera,
+    graphics::{RenderMode, text::TextRenderer},
+};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -32,6 +35,7 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
+    text_renderer: TextRenderer,
 }
 
 impl Renderer {
@@ -193,6 +197,8 @@ impl Renderer {
             &surface_config,
         );
 
+        let text_renderer = TextRenderer::new();
+
         Ok(Self {
             surface,
             device,
@@ -208,6 +214,7 @@ impl Renderer {
             pipelines,
 
             navigation_cube_renderer,
+            text_renderer,
         })
     }
 
@@ -326,6 +333,8 @@ impl Renderer {
             for geometry in &self.geometries {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
+
+            self.text_renderer.draw();
         }
 
         self.navigation_cube_renderer.draw(

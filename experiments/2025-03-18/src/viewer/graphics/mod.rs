@@ -8,6 +8,7 @@ mod navigation_cube;
 mod pipelines;
 mod renderer;
 mod shaders;
+mod text;
 mod texture;
 mod transform;
 mod uniforms;
