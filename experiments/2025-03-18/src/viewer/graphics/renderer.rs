@@ -420,5 +420,7 @@ pub enum RendererInitError {
 ///
 /// Returned by [`Renderer::draw`].
 #[derive(Error, Debug)]
-#[error("Error acquiring output surface: {0}")]
-pub struct DrawError(#[from] wgpu::SurfaceError);
+pub enum DrawError {
+    #[error("Error acquiring output surface: {0}")]
+    Surface(#[from] wgpu::SurfaceError),
+}
