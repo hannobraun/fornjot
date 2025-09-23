@@ -18,10 +18,6 @@ impl TextRenderer {
         let mut text_atlas =
             glyphon::TextAtlas::new(device, queue, &cache, color_format);
 
-        let font_system = FontSystem::new();
-        let viewport = glyphon::Viewport::new(device, &cache);
-        let swash_cache = glyphon::SwashCache::new();
-
         let multisample_state = wgpu::MultisampleState {
             count: 1,
             mask: !0,
@@ -34,6 +30,10 @@ impl TextRenderer {
             multisample_state,
             depth_stencil,
         );
+
+        let font_system = FontSystem::new();
+        let viewport = glyphon::Viewport::new(device, &cache);
+        let swash_cache = glyphon::SwashCache::new();
 
         Self {
             text_atlas,
