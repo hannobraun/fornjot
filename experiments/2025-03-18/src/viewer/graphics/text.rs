@@ -15,10 +15,10 @@ impl TextRenderer {
         color_format: wgpu::TextureFormat,
     ) -> Self {
         let cache = glyphon::Cache::new(device);
-
-        let font_system = FontSystem::new();
         let mut text_atlas =
             glyphon::TextAtlas::new(device, queue, &cache, color_format);
+
+        let font_system = FontSystem::new();
         let viewport = glyphon::Viewport::new(device, &cache);
         let swash_cache = glyphon::SwashCache::new();
 
