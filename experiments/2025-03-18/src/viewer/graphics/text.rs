@@ -14,7 +14,6 @@ impl TextRenderer {
 
         let mut text_atlas =
             glyphon::TextAtlas::new(device, queue, &cache, color_format);
-
         let viewport = glyphon::Viewport::new(device, &cache);
 
         let multisample_state = wgpu::MultisampleState {
