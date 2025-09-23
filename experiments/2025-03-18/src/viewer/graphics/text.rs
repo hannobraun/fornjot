@@ -69,9 +69,16 @@ impl TextRenderer {
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
-        _: &wgpu::SurfaceConfiguration,
+        surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), TextDrawError> {
+        self.viewport.update(
+            queue,
+            glyphon::Resolution {
+                width: surface_config.width,
+                height: surface_config.height,
+            },
+        );
         self.text_renderer.prepare(
             device,
             queue,
