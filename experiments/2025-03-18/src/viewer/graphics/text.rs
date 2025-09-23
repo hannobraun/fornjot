@@ -12,7 +12,7 @@ pub struct TextRenderer {
 
 impl TextRenderer {
     pub fn new(
-        _: PhysicalSize<u32>,
+        display_size: PhysicalSize<u32>,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         color_format: wgpu::TextureFormat,
@@ -36,10 +36,23 @@ impl TextRenderer {
 
         let mut font_system = FontSystem::new();
         let viewport = glyphon::Viewport::new(device, &cache);
-        let text_buffer = glyphon::Buffer::new(
+
+        let mut text_buffer = glyphon::Buffer::new(
             &mut font_system,
             glyphon::Metrics::new(32., 32.),
         );
+        text_buffer.set_size(
+            &mut font_system,
+            Some(display_size.width as f32),
+            Some(display_size.height as f32),
+        );
+        text_buffer.set_text(
+            &mut font_system,
+            "Hello, world!",
+            &glyphon::Attrs::new(),
+            glyphon::Shaping::Advanced,
+        );
+
         let swash_cache = glyphon::SwashCache::new();
 
         Self {
