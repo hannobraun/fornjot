@@ -88,7 +88,7 @@ impl TextRenderer {
                     right: 0,
                     bottom: 0,
                 },
-                default_color: glyphon::Color::rgb(255, 255, 255),
+                default_color: glyphon::Color::rgb(0, 0, 0),
                 custom_glyphs: &[],
             }],
             &mut self.swash_cache,
