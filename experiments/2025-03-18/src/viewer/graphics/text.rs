@@ -1,11 +1,11 @@
 use glyphon::FontSystem;
 
 pub struct TextRenderer {
-    font_system: glyphon::FontSystem,
     text_atlas: glyphon::TextAtlas,
+    text_renderer: glyphon::TextRenderer,
+    font_system: glyphon::FontSystem,
     viewport: glyphon::Viewport,
     swash_cache: glyphon::SwashCache,
-    text_renderer: glyphon::TextRenderer,
 }
 
 impl TextRenderer {
@@ -36,11 +36,11 @@ impl TextRenderer {
         );
 
         Self {
-            font_system,
             text_atlas,
+            text_renderer,
+            font_system,
             viewport,
             swash_cache,
-            text_renderer,
         }
     }
 
