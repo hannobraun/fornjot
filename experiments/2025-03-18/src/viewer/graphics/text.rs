@@ -39,6 +39,7 @@ impl TextRenderer {
 
     pub fn draw(
         &mut self,
+        _: &wgpu::Device,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), glyphon::RenderError> {
         self.text_renderer.render(
