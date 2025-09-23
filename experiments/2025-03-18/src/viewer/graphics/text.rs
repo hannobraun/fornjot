@@ -41,7 +41,7 @@ impl TextRenderer {
         _: &wgpu::Device,
         _: &wgpu::Queue,
         render_pass: &mut wgpu::RenderPass,
-    ) -> Result<(), glyphon::RenderError> {
+    ) -> Result<(), TextDrawError> {
         self.text_renderer.render(
             &self.text_atlas,
             &self.viewport,
@@ -50,4 +50,10 @@ impl TextRenderer {
 
         Ok(())
     }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum TextDrawError {
+    #[error(transparent)]
+    Render(#[from] glyphon::RenderError),
 }

@@ -7,7 +7,10 @@ use winit::dpi::PhysicalSize;
 
 use crate::viewer::{
     camera::Camera,
-    graphics::{RenderMode, text::TextRenderer},
+    graphics::{
+        RenderMode,
+        text::{TextDrawError, TextRenderer},
+    },
 };
 
 use super::{
@@ -429,5 +432,5 @@ pub enum DrawError {
     Surface(#[from] wgpu::SurfaceError),
 
     #[error("Error rendering text")]
-    Text(#[from] glyphon::RenderError),
+    Text(#[from] TextDrawError),
 }
