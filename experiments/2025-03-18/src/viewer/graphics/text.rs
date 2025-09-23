@@ -69,6 +69,7 @@ impl TextRenderer {
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
+        _: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), TextDrawError> {
         self.text_renderer.prepare(

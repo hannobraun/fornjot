@@ -344,6 +344,7 @@ impl Renderer {
             self.text_renderer.draw(
                 &self.device.device,
                 &self.device.queue,
+                &self.surface_config,
                 &mut render_pass,
             )?;
         }
