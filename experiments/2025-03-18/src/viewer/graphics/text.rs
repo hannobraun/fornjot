@@ -75,6 +75,21 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), TextDrawError> {
+        let text_areas = [TextArea {
+            buffer: &self.text_buffer,
+            left: 0.,
+            top: 0.,
+            scale: 1.,
+            bounds: TextBounds {
+                left: 0,
+                top: 0,
+                right: surface_config.width as i32,
+                bottom: surface_config.height as i32,
+            },
+            default_color: glyphon::Color::rgb(0, 0, 0),
+            custom_glyphs: &[],
+        }];
+
         self.viewport.update(
             queue,
             glyphon::Resolution {
@@ -88,20 +103,7 @@ impl TextRenderer {
             &mut self.font_system,
             &mut self.text_atlas,
             &self.viewport,
-            [TextArea {
-                buffer: &self.text_buffer,
-                left: 0.,
-                top: 0.,
-                scale: 1.,
-                bounds: TextBounds {
-                    left: 0,
-                    top: 0,
-                    right: surface_config.width as i32,
-                    bottom: surface_config.height as i32,
-                },
-                default_color: glyphon::Color::rgb(0, 0, 0),
-                custom_glyphs: &[],
-            }],
+            text_areas,
             &mut self.swash_cache,
         )?;
         self.text_renderer.render(
