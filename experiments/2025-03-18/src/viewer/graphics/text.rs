@@ -23,7 +23,6 @@ impl TextRenderer {
         let mut text_atlas =
             glyphon::TextAtlas::new(device, queue, &cache, color_format);
 
-        let multisample_state = MULTISAMPLE_STATE;
         let depth_stencil = wgpu::DepthStencilState {
             format: DEPTH_FORMAT,
             depth_write_enabled: false,
@@ -34,7 +33,7 @@ impl TextRenderer {
         let text_renderer = glyphon::TextRenderer::new(
             &mut text_atlas,
             device,
-            multisample_state,
+            MULTISAMPLE_STATE,
             Some(depth_stencil),
         );
 
