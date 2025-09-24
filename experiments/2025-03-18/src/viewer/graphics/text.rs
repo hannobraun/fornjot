@@ -7,7 +7,6 @@ pub struct TextRenderer {
     text_renderer: glyphon::TextRenderer,
     font_system: glyphon::FontSystem,
     viewport: glyphon::Viewport,
-    text_buffer: glyphon::Buffer,
     swash_cache: glyphon::SwashCache,
 }
 
@@ -35,19 +34,8 @@ impl TextRenderer {
             Some(depth_stencil),
         );
 
-        let mut font_system = FontSystem::new();
+        let font_system = FontSystem::new();
         let viewport = glyphon::Viewport::new(device, &cache);
-
-        let mut text_buffer = glyphon::Buffer::new(
-            &mut font_system,
-            glyphon::Metrics::new(32., 32.),
-        );
-        text_buffer.set_text(
-            &mut font_system,
-            "Hello, world!",
-            &glyphon::Attrs::new(),
-            glyphon::Shaping::Advanced,
-        );
 
         let swash_cache = glyphon::SwashCache::new();
 
@@ -56,7 +44,6 @@ impl TextRenderer {
             text_renderer,
             font_system,
             viewport,
-            text_buffer,
             swash_cache,
         }
     }
@@ -68,8 +55,19 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), TextDrawError> {
+        let mut text_buffer = glyphon::Buffer::new(
+            &mut self.font_system,
+            glyphon::Metrics::new(32., 32.),
+        );
+        text_buffer.set_text(
+            &mut self.font_system,
+            "Hello, world!",
+            &glyphon::Attrs::new(),
+            glyphon::Shaping::Advanced,
+        );
+
         let text_areas = [TextArea {
-            buffer: &self.text_buffer,
+            buffer: &text_buffer,
             left: 0.,
             top: 0.,
             scale: 1.,
