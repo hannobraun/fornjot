@@ -42,7 +42,6 @@ impl TextRenderer {
             &mut font_system,
             glyphon::Metrics::new(32., 32.),
         );
-        text_buffer.set_size(&mut font_system, None, None);
         text_buffer.set_text(
             &mut font_system,
             "Hello, world!",
