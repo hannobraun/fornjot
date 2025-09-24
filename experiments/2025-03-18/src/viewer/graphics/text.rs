@@ -55,11 +55,11 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> Result<(), TextDrawError> {
-        let mut text_buffer = glyphon::Buffer::new(
+        let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
             glyphon::Metrics::new(32., 32.),
         );
-        text_buffer.set_text(
+        buffer.set_text(
             &mut self.font_system,
             "Hello, world!",
             &glyphon::Attrs::new(),
@@ -67,7 +67,7 @@ impl TextRenderer {
         );
 
         let text_areas = [TextArea {
-            buffer: &text_buffer,
+            buffer: &buffer,
             left: 0.,
             top: 0.,
             scale: 1.,
