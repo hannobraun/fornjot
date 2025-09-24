@@ -1,6 +1,8 @@
 use glyphon::{FontSystem, TextArea, TextBounds};
 use winit::dpi::PhysicalSize;
 
+use crate::viewer::graphics::DEPTH_FORMAT;
+
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
     text_renderer: glyphon::TextRenderer,
@@ -26,12 +28,18 @@ impl TextRenderer {
             mask: !0,
             alpha_to_coverage_enabled: false,
         };
-        let depth_stencil = None;
+        let depth_stencil = wgpu::DepthStencilState {
+            format: DEPTH_FORMAT,
+            depth_write_enabled: false,
+            depth_compare: wgpu::CompareFunction::Never,
+            stencil: wgpu::StencilState::default(),
+            bias: wgpu::DepthBiasState::default(),
+        };
         let text_renderer = glyphon::TextRenderer::new(
             &mut text_atlas,
             device,
             multisample_state,
-            depth_stencil,
+            Some(depth_stencil),
         );
 
         let mut font_system = FontSystem::new();
