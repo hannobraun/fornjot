@@ -1,7 +1,9 @@
 use std::mem::size_of;
 
+use crate::viewer::graphics::MULTISAMPLE_STATE;
+
 use super::{
-    DEPTH_FORMAT, DrawConfig, SAMPLE_COUNT,
+    DEPTH_FORMAT, DrawConfig,
     geometry::Geometry,
     shaders::{Shader, Shaders},
     vertices::Vertex,
@@ -158,11 +160,7 @@ impl Pipeline {
                     },
                     bias: wgpu::DepthBiasState::default(),
                 }),
-                multisample: wgpu::MultisampleState {
-                    count: SAMPLE_COUNT,
-                    mask: !0,
-                    alpha_to_coverage_enabled: true,
-                },
+                multisample: MULTISAMPLE_STATE,
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
                     entry_point: Some(shader.frag_entry),

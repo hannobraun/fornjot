@@ -1,7 +1,7 @@
 use glyphon::{FontSystem, TextArea, TextBounds};
 use winit::dpi::PhysicalSize;
 
-use crate::viewer::graphics::{DEPTH_FORMAT, SAMPLE_COUNT};
+use crate::viewer::graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE};
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
@@ -23,11 +23,7 @@ impl TextRenderer {
         let mut text_atlas =
             glyphon::TextAtlas::new(device, queue, &cache, color_format);
 
-        let multisample_state = wgpu::MultisampleState {
-            count: SAMPLE_COUNT,
-            mask: !0,
-            alpha_to_coverage_enabled: false,
-        };
+        let multisample_state = MULTISAMPLE_STATE;
         let depth_stencil = wgpu::DepthStencilState {
             format: DEPTH_FORMAT,
             depth_write_enabled: false,
