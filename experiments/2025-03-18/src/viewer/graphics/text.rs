@@ -96,8 +96,8 @@ impl TextRenderer {
                 bounds: TextBounds {
                     left: 0,
                     top: 0,
-                    right: 0,
-                    bottom: 0,
+                    right: surface_config.width as i32,
+                    bottom: surface_config.height as i32,
                 },
                 default_color: glyphon::Color::rgb(0, 0, 0),
                 custom_glyphs: &[],
