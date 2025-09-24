@@ -14,7 +14,7 @@ pub struct TextRenderer {
 
 impl TextRenderer {
     pub fn new(
-        display_size: PhysicalSize<u32>,
+        _: PhysicalSize<u32>,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         color_format: wgpu::TextureFormat,
@@ -44,11 +44,7 @@ impl TextRenderer {
             &mut font_system,
             glyphon::Metrics::new(32., 32.),
         );
-        text_buffer.set_size(
-            &mut font_system,
-            Some(display_size.width as f32),
-            Some(display_size.height as f32),
-        );
+        text_buffer.set_size(&mut font_system, None, None);
         text_buffer.set_text(
             &mut font_system,
             "Hello, world!",
