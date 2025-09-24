@@ -1,5 +1,4 @@
 use glyphon::{FontSystem, TextArea, TextBounds};
-use winit::dpi::PhysicalSize;
 
 use crate::viewer::graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE};
 
@@ -14,7 +13,6 @@ pub struct TextRenderer {
 
 impl TextRenderer {
     pub fn new(
-        _: PhysicalSize<u32>,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         color_format: wgpu::TextureFormat,

@@ -199,12 +199,8 @@ impl Renderer {
             &surface_config,
         );
 
-        let text_renderer = TextRenderer::new(
-            window_size,
-            &device.device,
-            &device.queue,
-            color_format,
-        );
+        let text_renderer =
+            TextRenderer::new(&device.device, &device.queue, color_format);
 
         Ok(Self {
             surface,
