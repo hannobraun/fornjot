@@ -6,7 +6,7 @@ use crate::viewer::camera::Camera;
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
 pub struct Transform {
-    inner: [f32; 16],
+    inner: NativeTransform,
 }
 
 impl Transform {
@@ -65,3 +65,5 @@ impl From<&fj_math::Transform> for Transform {
         }
     }
 }
+
+pub type NativeTransform = [f32; 16];
