@@ -1,9 +1,8 @@
-use bytemuck::{Pod, Zeroable};
 use nalgebra::Perspective3;
 
 use crate::viewer::camera::Camera;
 
-#[derive(Clone, Copy, Pod, Zeroable)]
+#[derive(Clone, Copy)]
 #[repr(transparent)]
 pub struct Transform {
     inner: NativeTransform,
