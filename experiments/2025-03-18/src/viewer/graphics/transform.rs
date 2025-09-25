@@ -5,7 +5,9 @@ use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
-pub struct Transform([f32; 16]);
+pub struct Transform {
+    inner: [f32; 16],
+}
 
 impl Transform {
     pub fn identity() -> Self {
@@ -37,7 +39,9 @@ impl Transform {
             array
         };
 
-        Self(transform.map(|scalar| scalar as f32))
+        Self {
+            inner: transform.map(|scalar| scalar as f32),
+        }
     }
 
     /// Compute transform used for normals
@@ -56,6 +60,8 @@ impl From<&fj_math::Transform> for Transform {
         let mut native = [0.; 16];
         native.copy_from_slice(transform.data());
 
-        Self(native.map(|val| val as f32))
+        Self {
+            inner: native.map(|val| val as f32),
+        }
     }
 }
