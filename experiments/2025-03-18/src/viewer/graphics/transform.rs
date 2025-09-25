@@ -53,6 +53,10 @@ impl Transform {
 
         Self::from(&transform)
     }
+
+    pub fn to_native(self) -> [f32; 16] {
+        self.inner
+    }
 }
 
 impl From<&fj_math::Transform> for Transform {

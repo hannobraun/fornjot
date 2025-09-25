@@ -268,7 +268,8 @@ impl Renderer {
         let aspect_ratio = f64::from(self.surface_config.width)
             / f64::from(self.surface_config.height);
         let uniforms = Uniforms {
-            transform: Transform::for_vertices(camera, aspect_ratio),
+            transform: Transform::for_vertices(camera, aspect_ratio)
+                .to_native(),
             transform_normals: Transform::for_normals(camera),
         };
 
