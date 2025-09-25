@@ -3,7 +3,6 @@ use nalgebra::Perspective3;
 use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy)]
-#[repr(transparent)]
 pub struct Transform {
     inner: NativeTransform,
 }
