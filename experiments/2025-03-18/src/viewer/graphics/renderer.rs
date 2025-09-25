@@ -270,7 +270,7 @@ impl Renderer {
         let uniforms = Uniforms {
             transform: Transform::for_vertices(camera, aspect_ratio)
                 .to_native(),
-            transform_normals: Transform::for_normals(camera),
+            transform_normals: Transform::for_normals(camera).to_native(),
         };
 
         self.device.queue.write_buffer(
