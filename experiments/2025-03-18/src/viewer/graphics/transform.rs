@@ -5,7 +5,7 @@ use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy, Pod, Zeroable)]
 #[repr(transparent)]
-pub struct Transform(pub [f32; 16]);
+pub struct Transform([f32; 16]);
 
 impl Transform {
     pub fn identity() -> Self {
