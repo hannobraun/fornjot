@@ -53,7 +53,7 @@ impl Transform {
 
 impl From<&fj_math::Transform> for Transform {
     fn from(transform: &fj_math::Transform) -> Self {
-        let mut native = [0.0; 16];
+        let mut native = [0.; 16];
         native.copy_from_slice(transform.data());
 
         Self(native.map(|val| val as f32))
