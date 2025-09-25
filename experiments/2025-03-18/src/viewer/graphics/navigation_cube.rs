@@ -54,7 +54,7 @@ impl NavigationCubeRenderer {
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: Some("Model Matrix Buffer"),
                 contents: bytemuck::cast_slice(&[
-                    transform::Transform::identity(),
+                    transform::Transform::identity().to_native(),
                 ]),
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
