@@ -46,10 +46,10 @@ impl Transform {
     }
 
     /// Construct a scaling
-    pub fn scale(scaling_factor: f64) -> Self {
+    pub fn scale(s: f64) -> Self {
         Self {
             inner: nalgebra::Transform::from_matrix_unchecked(
-                nalgebra::OMatrix::new_scaling(scaling_factor),
+                nalgebra::OMatrix::new_scaling(s),
             ),
         }
     }
