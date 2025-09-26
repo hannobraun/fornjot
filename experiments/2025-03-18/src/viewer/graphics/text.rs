@@ -1,8 +1,9 @@
 use fj_math::Point;
 use glyphon::{FontSystem, TextArea, TextBounds};
 
-use crate::viewer::graphics::{
-    DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform,
+use crate::viewer::{
+    camera::Camera,
+    graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE},
 };
 
 pub struct TextRenderer {
@@ -57,7 +58,7 @@ impl TextRenderer {
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
-        _: &Transform,
+        _: &Camera,
     ) -> Result<(), TextDrawError> {
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
