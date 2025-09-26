@@ -1,6 +1,8 @@
 use glyphon::{FontSystem, TextArea, TextBounds};
 
-use crate::viewer::graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE};
+use crate::viewer::graphics::{
+    DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform,
+};
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
@@ -54,6 +56,7 @@ impl TextRenderer {
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
+        _: &Transform,
     ) -> Result<(), TextDrawError> {
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
