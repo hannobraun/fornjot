@@ -49,7 +49,9 @@ impl Transform {
     pub fn scale(s: f64) -> Self {
         Self {
             inner: nalgebra::Transform::from_matrix_unchecked(
-                nalgebra::OMatrix::new_scaling(s),
+                nalgebra::OMatrix::new_nonuniform_scaling(
+                    &nalgebra::Vector3::new(s, s, s),
+                ),
             ),
         }
     }
