@@ -20,7 +20,7 @@ impl Transform {
             * ((camera.field_of_view_in_x() / 2.).tan() / aspect_ratio).atan();
 
         let transform = {
-            let projection = Perspective3::new(
+            let perspective = Perspective3::new(
                 aspect_ratio,
                 field_of_view_in_y,
                 camera.near_plane(),
@@ -28,7 +28,7 @@ impl Transform {
             );
 
             fj_math::Transform {
-                inner: projection.to_projective()
+                inner: perspective.to_projective()
                     * camera.camera_to_model().inner,
             }
         };
