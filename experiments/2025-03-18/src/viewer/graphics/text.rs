@@ -1,3 +1,4 @@
+use fj_math::Point;
 use glyphon::{FontSystem, TextArea, TextBounds};
 
 use crate::viewer::graphics::{
@@ -69,10 +70,12 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
+        let screen_position = Point::from([0., 0., 0.]);
+
         let text_areas = [TextArea {
             buffer: &buffer,
-            left: 0.,
-            top: 0.,
+            left: screen_position.x.into_f32(),
+            top: screen_position.y.into_f32(),
             scale: 1.,
             bounds: TextBounds {
                 left: 0,
