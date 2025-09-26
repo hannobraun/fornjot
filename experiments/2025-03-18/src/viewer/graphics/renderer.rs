@@ -267,10 +267,9 @@ impl Renderer {
     ) -> Result<(), DrawError> {
         let aspect_ratio = f64::from(self.surface_config.width)
             / f64::from(self.surface_config.height);
-        let transform = Transform::for_vertices(camera, aspect_ratio);
-
         let uniforms = Uniforms {
-            transform: transform.to_native(),
+            transform: Transform::for_vertices(camera, aspect_ratio)
+                .to_native(),
             transform_normals: Transform::for_normals(camera).to_native(),
         };
 
