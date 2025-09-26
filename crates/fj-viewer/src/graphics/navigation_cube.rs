@@ -195,7 +195,7 @@ impl NavigationCubeRenderer {
     }
 
     fn get_mvp_matrix(rotation: Transform, aspect_ratio: f64) -> [f32; 16] {
-        let scale = Transform::scale(SCALE_FACTOR);
+        let scale = Transform::scale([SCALE_FACTOR; 3]);
         let world_translation = Transform::translation([0.0, 0.0, -1.0]);
 
         let mut model_matrix = Transform::identity();

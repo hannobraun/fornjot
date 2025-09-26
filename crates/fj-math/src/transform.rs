@@ -46,12 +46,10 @@ impl Transform {
     }
 
     /// Construct a scaling
-    pub fn scale(s: f64) -> Self {
+    pub fn scale(s: impl Into<Vector<3>>) -> Self {
         Self {
             inner: nalgebra::Transform::from_matrix_unchecked(
-                nalgebra::OMatrix::new_nonuniform_scaling(
-                    &nalgebra::Vector3::new(s, s, s),
-                ),
+                nalgebra::OMatrix::new_nonuniform_scaling(&s.into().to_na()),
             ),
         }
     }
