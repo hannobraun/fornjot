@@ -4,7 +4,7 @@ use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy)]
 pub struct Transform {
-    inner: NativeTransform,
+    inner: fj_math::Transform,
 }
 
 impl Transform {
@@ -27,19 +27,13 @@ impl Transform {
                 camera.far_plane(),
             );
 
-            let mut array = [0.; 16];
-            array.copy_from_slice(
-                (projection.to_projective() * camera.camera_to_model().inner)
-                    .matrix()
-                    .as_slice(),
-            );
-
-            array
+            fj_math::Transform {
+                inner: projection.to_projective()
+                    * camera.camera_to_model().inner,
+            }
         };
 
-        Self {
-            inner: transform.map(|scalar| scalar as f32),
-        }
+        Self { inner: transform }
     }
 
     /// Compute transform used for normals
@@ -53,18 +47,16 @@ impl Transform {
     }
 
     pub fn to_native(self) -> [f32; 16] {
-        self.inner
+        let mut native = [0.; 16];
+        native.copy_from_slice(self.inner.data());
+
+        native.map(|v| v as f32)
     }
 }
 
 impl From<&fj_math::Transform> for Transform {
     fn from(transform: &fj_math::Transform) -> Self {
-        let mut native = [0.; 16];
-        native.copy_from_slice(transform.data());
-
-        Self {
-            inner: native.map(|val| val as f32),
-        }
+        Self { inner: *transform }
     }
 }
 
