@@ -245,12 +245,12 @@ impl Camera {
         focus_point: FocusPoint,
     ) {
         let previous = self.cursor_to_model_space(previous);
-        let cursor = self.cursor_to_model_space(current);
+        let current = self.cursor_to_model_space(current);
 
-        let d1 = Point::distance_to(&self.position(), &cursor);
+        let d1 = Point::distance_to(&self.position(), &current);
         let d2 = Point::distance_to(&self.position(), &focus_point.0);
 
-        let diff = (cursor - previous) * d2 / d1;
+        let diff = (current - previous) * d2 / d1;
         let offset = self.camera_to_model().transform_vector(&diff);
 
         self.translation = self.translation
