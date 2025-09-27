@@ -105,7 +105,7 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
-    /// Returns the position of the camera in world space.
+    /// # Compute the position of the camera in model space
     pub fn position(&self) -> Point<3> {
         self.camera_to_model()
             .inverse_transform_point(&Point::<3>::origin())
