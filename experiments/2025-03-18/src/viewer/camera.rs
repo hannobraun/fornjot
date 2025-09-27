@@ -21,7 +21,7 @@ pub struct Camera {
     far_plane: f64,
 
     /// The rotational part of the transform
-    pub rotation: Transform,
+    rotation: Transform,
 
     /// The locational part of the transform
     pub translation: Transform,
