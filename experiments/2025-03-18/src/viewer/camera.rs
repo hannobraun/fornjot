@@ -163,7 +163,7 @@ impl Camera {
         Some(FocusPoint(origin + dir * min_t?))
     }
 
-    /// Access the transform from camera to model space.
+    /// # Compute the transform from model space to camera space
     pub fn model_to_camera(&self) -> Transform {
         self.translation * self.rotation
     }
