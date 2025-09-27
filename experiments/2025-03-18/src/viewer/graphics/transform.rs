@@ -29,7 +29,7 @@ impl Transform {
 
             fj_math::Transform {
                 inner: perspective.to_projective()
-                    * camera.camera_to_model().inner,
+                    * camera.model_to_camera().inner,
             }
         };
 
@@ -41,7 +41,7 @@ impl Transform {
     /// This method is only relevant for the graphics code. The returned
     /// transform is used for transforming normals on the GPU.
     pub fn for_normals(camera: &Camera) -> Self {
-        let transform = camera.camera_to_model().inverse().transpose();
+        let transform = camera.model_to_camera().inverse().transpose();
 
         Self::from(transform)
     }

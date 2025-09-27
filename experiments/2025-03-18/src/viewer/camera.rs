@@ -107,7 +107,7 @@ impl Camera {
 
     /// # Compute the position of the camera in model space
     pub fn position(&self) -> Point<3> {
-        self.camera_to_model()
+        self.model_to_camera()
             .inverse_transform_point(&Point::<3>::origin())
     }
 
@@ -121,7 +121,7 @@ impl Camera {
         let cursor = Point::origin()
             + Vector::from([cursor.x * f, cursor.y * f, -self.near_plane()]);
 
-        self.camera_to_model().inverse_transform_point(&cursor)
+        self.model_to_camera().inverse_transform_point(&cursor)
     }
 
     /// # Compute the point on the model that the cursor currently points to
@@ -164,13 +164,13 @@ impl Camera {
     }
 
     /// Access the transform from camera to model space.
-    pub fn camera_to_model(&self) -> Transform {
+    pub fn model_to_camera(&self) -> Transform {
         self.translation * self.rotation
     }
 
     /// Update the max and minimum rendering distance for this camera.
     pub fn update_planes(&mut self, aabb: &Aabb<3>) {
-        let view_transform = self.camera_to_model();
+        let view_transform = self.model_to_camera();
         let view_direction = Vector::from([0., 0., -1.]);
 
         let mut dist_min = f64::INFINITY;
@@ -228,7 +228,7 @@ impl Camera {
         let rotation = Transform::rotation(camera_rotation.right() * angle_x)
             * Transform::rotation(camera_rotation.up() * angle_y);
 
-        let transform = self.camera_to_model()
+        let transform = self.model_to_camera()
             * rotate_around
             * rotation
             * rotate_around.inverse();
@@ -251,7 +251,7 @@ impl Camera {
         let d2 = Point::distance_to(&self.position(), &focus_point.0);
 
         let diff = (current - previous) * d2 / d1;
-        let offset = self.camera_to_model().transform_vector(&diff);
+        let offset = self.model_to_camera().transform_vector(&diff);
 
         self.translation = self.translation
             * Transform::translation(Vector::from([
