@@ -24,7 +24,7 @@ pub struct Camera {
     rotation: Transform,
 
     /// The locational part of the transform
-    pub translation: Transform,
+    translation: Transform,
 }
 
 impl Camera {
