@@ -165,14 +165,7 @@ impl Camera {
 
     /// Access the transform from camera to model space.
     pub fn camera_to_model(&self) -> Transform {
-        // Using a mutable variable cleanly takes care of any type inference
-        // problems that this operation would otherwise have.
-        let mut transform = Transform::identity();
-
-        transform = transform * self.translation;
-        transform = transform * self.rotation;
-
-        transform
+        self.translation * self.rotation
     }
 
     /// Update the max and minimum rendering distance for this camera.
