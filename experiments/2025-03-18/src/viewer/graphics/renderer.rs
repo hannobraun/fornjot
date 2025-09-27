@@ -352,7 +352,7 @@ impl Renderer {
             &mut encoder,
             &self.device.queue,
             aspect_ratio,
-            camera.rotation,
+            *camera.rotation(),
         );
 
         let command_buffer = encoder.finish();

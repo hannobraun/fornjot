@@ -95,6 +95,11 @@ impl Camera {
         self.far_plane
     }
 
+    /// # Access the camera rotation
+    pub fn rotation(&self) -> &Transform {
+        &self.rotation
+    }
+
     /// Returns the horizontal field of view of the camera.
     pub fn field_of_view_in_x(&self) -> f64 {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
