@@ -338,7 +338,7 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
-            let label = self.text_renderer.make_label();
+            let label = self.text_renderer.make_label("Hello, world!");
 
             self.text_renderer.draw(
                 &self.device.device,

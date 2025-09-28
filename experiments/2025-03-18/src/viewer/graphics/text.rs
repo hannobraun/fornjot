@@ -52,14 +52,14 @@ impl TextRenderer {
         }
     }
 
-    pub fn make_label(&mut self) -> Label {
+    pub fn make_label(&mut self, text: &str) -> Label {
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
             glyphon::Metrics::new(32., 32.),
         );
         buffer.set_text(
             &mut self.font_system,
-            "Hello, world!",
+            text,
             &glyphon::Attrs::new(),
             glyphon::Shaping::Advanced,
         );
