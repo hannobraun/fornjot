@@ -73,10 +73,12 @@ impl TextRenderer {
 
         let position = Point::from([0., 0., 0.]);
 
-        let screen_position = position;
+        let label = Label { buffer, position };
+
+        let screen_position = label.position;
 
         let text_areas = [TextArea {
-            buffer: &buffer,
+            buffer: &label.buffer,
             left: screen_position.x.into_f32(),
             top: screen_position.y.into_f32(),
             scale: 1.,
@@ -114,6 +116,11 @@ impl TextRenderer {
 
         Ok(())
     }
+}
+
+pub struct Label {
+    position: Point<3>,
+    buffer: glyphon::Buffer,
 }
 
 #[derive(Debug, thiserror::Error)]
