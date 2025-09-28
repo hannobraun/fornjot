@@ -71,7 +71,9 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
-        let screen_position = Point::from([0., 0., 0.]);
+        let position = Point::from([0., 0., 0.]);
+
+        let screen_position = position;
 
         let text_areas = [TextArea {
             buffer: &buffer,
