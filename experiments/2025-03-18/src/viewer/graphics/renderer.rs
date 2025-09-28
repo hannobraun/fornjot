@@ -338,12 +338,15 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
+            let label = self.text_renderer.make_label();
+
             self.text_renderer.draw(
                 &self.device.device,
                 &self.device.queue,
                 &self.surface_config,
                 &mut render_pass,
                 camera,
+                &label,
             )?;
         }
 

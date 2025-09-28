@@ -52,14 +52,7 @@ impl TextRenderer {
         }
     }
 
-    pub fn draw(
-        &mut self,
-        device: &wgpu::Device,
-        queue: &wgpu::Queue,
-        surface_config: &wgpu::SurfaceConfiguration,
-        render_pass: &mut wgpu::RenderPass,
-        _: &Camera,
-    ) -> Result<(), TextDrawError> {
+    pub fn make_label(&mut self) -> Label {
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
             glyphon::Metrics::new(32., 32.),
@@ -73,8 +66,18 @@ impl TextRenderer {
 
         let position = Point::from([0., 0., 0.]);
 
-        let label = Label { buffer, position };
+        Label { buffer, position }
+    }
 
+    pub fn draw(
+        &mut self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        surface_config: &wgpu::SurfaceConfiguration,
+        render_pass: &mut wgpu::RenderPass,
+        _: &Camera,
+        label: &Label,
+    ) -> Result<(), TextDrawError> {
         let screen_position = label.position;
 
         let text_areas = [TextArea {
