@@ -21,7 +21,7 @@ futures = "0.3.31"
 nalgebra = "0.34.1"
 tobj = "4.0.3"
 raw-window-handle = "0.6.0"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 tracing = "0.1.41"
 winit = "0.30.12"
 

@@ -20,7 +20,7 @@ fj-export.workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 tracing = "0.1.41"
 
 [dependencies.clap]
