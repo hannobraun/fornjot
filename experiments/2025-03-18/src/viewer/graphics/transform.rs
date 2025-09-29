@@ -23,11 +23,12 @@ impl Transform {
             camera.far_plane(),
         );
 
-        let transform = fj_math::Transform {
-            inner: perspective.to_projective() * camera.model_to_camera().inner,
-        };
-
-        Self { inner: transform }
+        Self {
+            inner: fj_math::Transform {
+                inner: perspective.to_projective()
+                    * camera.model_to_camera().inner,
+            },
+        }
     }
 
     /// Compute transform used for normals
