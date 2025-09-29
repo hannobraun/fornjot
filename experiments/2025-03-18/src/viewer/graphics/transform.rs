@@ -16,12 +16,10 @@ impl Transform {
     ///
     /// The returned transform is used for transforming vertices on the GPU.
     pub fn for_vertices(camera: &Camera, aspect_ratio: f64) -> Self {
-        let field_of_view_in_y = camera.field_of_view_in_y(aspect_ratio);
-
         let transform = {
             let perspective = Perspective3::new(
                 aspect_ratio,
-                field_of_view_in_y,
+                camera.field_of_view_in_y(aspect_ratio),
                 camera.near_plane(),
                 camera.far_plane(),
             );
