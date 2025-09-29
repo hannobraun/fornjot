@@ -105,6 +105,11 @@ impl Camera {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
+    /// # Compute the camera's vertical field of view
+    pub fn field_of_view_in_y(&self, aspect_ratio: f64) -> f64 {
+        2. * ((self.field_of_view_in_x() / 2.).tan() / aspect_ratio).atan()
+    }
+
     /// # Compute the position of the camera in model space
     pub fn position(&self) -> Point<3> {
         self.model_to_camera()
