@@ -347,7 +347,7 @@ impl Renderer {
                 &self.surface_config,
                 &mut render_pass,
                 &label,
-                camera,
+                &transform,
             )?;
         }
 

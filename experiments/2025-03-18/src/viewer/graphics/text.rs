@@ -1,9 +1,8 @@
 use fj_math::Point;
 use glyphon::{FontSystem, TextArea, TextBounds};
 
-use crate::viewer::{
-    camera::Camera,
-    graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE},
+use crate::viewer::graphics::{
+    DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform,
 };
 
 pub struct TextRenderer {
@@ -76,7 +75,7 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
         label: &Label,
-        _: &Camera,
+        _: &Transform,
     ) -> Result<(), TextDrawError> {
         let screen_position = label.position;
 
