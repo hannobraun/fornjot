@@ -75,8 +75,8 @@ impl TextRenderer {
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
-        _: &Camera,
         label: &Label,
+        _: &Camera,
     ) -> Result<(), TextDrawError> {
         let screen_position = label.position;
 

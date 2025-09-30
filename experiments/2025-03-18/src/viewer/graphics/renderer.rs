@@ -346,8 +346,8 @@ impl Renderer {
                 &self.device.queue,
                 &self.surface_config,
                 &mut render_pass,
-                camera,
                 &label,
+                camera,
             )?;
         }
 
