@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj_math::{Point, Vector};
 use glyphon::{FontSystem, TextArea, TextBounds};
 
 use crate::viewer::graphics::{
@@ -75,9 +75,15 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
         label: &Label,
-        _: &Transform,
+        transform: &Transform,
     ) -> Result<(), TextDrawError> {
-        let screen_position = label.position;
+        let mut screen_position =
+            transform.inner().transform_point(&label.position);
+
+        screen_position += Vector::from([1., -1., 0.]);
+
+        screen_position.x *= surface_config.width as f64 / 2.;
+        screen_position.y *= -(surface_config.height as f64) / 2.;
 
         let text_areas = [TextArea {
             buffer: &label.buffer,

@@ -41,6 +41,10 @@ impl Transform {
         Self::from(transform)
     }
 
+    pub fn inner(&self) -> &fj_math::Transform {
+        &self.inner
+    }
+
     pub fn to_native(self) -> [f32; 16] {
         let mut native = [0.; 16];
         native.copy_from_slice(self.inner.data());
