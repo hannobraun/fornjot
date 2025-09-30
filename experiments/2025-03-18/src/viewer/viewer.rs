@@ -107,7 +107,7 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a face in surface space
-    pub fn display_face_surface(&self, face: &FaceApproxPoints) {
+    pub fn display_face_surface(&self, face: &FaceApproxPoints) -> &Self {
         let points = face
             .points
             .iter()
@@ -121,10 +121,12 @@ impl WindowHandle {
             displayable: Displayable::face(points),
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Display a face in global space
-    pub fn display_face_global(&self, face: &FaceApproxPoints) {
+    pub fn display_face_global(&self, face: &FaceApproxPoints) -> &Self {
         let points = face
             .points
             .iter()
@@ -138,14 +140,18 @@ impl WindowHandle {
             displayable: Displayable::face(points),
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Display a 3D triangle mesh
-    pub fn display_mesh(&self, tri_mesh: TriMesh) {
+    pub fn display_mesh(&self, tri_mesh: TriMesh) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::mesh(tri_mesh),
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Display a 2D point
@@ -153,13 +159,15 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point_surface(&self, point: Point<2>) {
+    pub fn display_point_surface(&self, point: Point<2>) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Point {
                 point: point.to_xyz(),
             },
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Display a 3D point
@@ -167,17 +175,21 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point_global(&self, point: Point<3>) {
+    pub fn display_point_global(&self, point: Point<3>) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Point { point },
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Clear the contents of the window
-    pub fn clear(&self) {
+    pub fn clear(&self) -> &Self {
         self.event_loop
             .send_event(EventLoopEvent::Clear { window_id: self.id });
+
+        self
     }
 }
 
