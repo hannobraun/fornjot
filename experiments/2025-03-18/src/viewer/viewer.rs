@@ -159,10 +159,10 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point_surface(&self, point: Point<2>) -> &Self {
+    pub fn display_point_surface(&self, point: impl Into<Point<2>>) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Point {
-                point: point.to_xyz(),
+                point: point.into().to_xyz(),
             },
             window_id: self.id,
         });
