@@ -80,8 +80,11 @@ impl TextRenderer {
 
         screen_position += Vector::from([1., -1., 0.]);
 
-        screen_position.x *= surface_config.width as f64 / 2.;
-        screen_position.y *= -(surface_config.height as f64) / 2.;
+        screen_position.x *= 0.5;
+        screen_position.y *= -0.5;
+
+        screen_position.x *= surface_config.width as f64;
+        screen_position.y *= surface_config.height as f64;
 
         let text_areas = [TextArea {
             buffer: &label.buffer,
