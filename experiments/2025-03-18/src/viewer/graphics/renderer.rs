@@ -1,5 +1,6 @@
 use std::{io, mem::size_of, sync::Arc, vec};
 
+use fj_math::Point;
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
@@ -231,7 +232,10 @@ impl Renderer {
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
-            &mut self.text_renderer,
+            vec![
+                self.text_renderer
+                    .make_label("Hello, world!", Point::from([0., 0., 0.])),
+            ],
         ));
     }
 

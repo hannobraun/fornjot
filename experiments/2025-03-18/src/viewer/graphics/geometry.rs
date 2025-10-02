@@ -1,12 +1,8 @@
 use std::convert::TryInto;
 
-use fj_math::Point;
 use wgpu::util::DeviceExt;
 
-use crate::viewer::graphics::{
-    RenderMode,
-    text::{Label, TextRenderer},
-};
+use crate::viewer::graphics::{RenderMode, text::Label};
 
 use super::vertices::Vertex;
 
@@ -25,7 +21,7 @@ impl Geometry {
         device: &wgpu::Device,
         vertices: &[Vertex],
         indices: &[u32],
-        text_renderer: &mut TextRenderer,
+        labels: Vec<Label>,
     ) -> Self {
         Self {
             render_mode,
@@ -47,10 +43,7 @@ impl Geometry {
                 .len()
                 .try_into()
                 .expect("`usize` couldn't be cast to `u32`"),
-            labels: vec![
-                text_renderer
-                    .make_label("Hello, world!", Point::from([0., 0., 0.])),
-            ],
+            labels,
         }
     }
 }
