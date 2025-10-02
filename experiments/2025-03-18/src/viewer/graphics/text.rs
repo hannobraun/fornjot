@@ -142,6 +142,7 @@ impl TextRenderer {
     }
 }
 
+#[derive(Debug)]
 pub struct Label {
     position: Point<3>,
     buffer: glyphon::Buffer,
