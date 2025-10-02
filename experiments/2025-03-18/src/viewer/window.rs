@@ -158,12 +158,13 @@ impl Window {
     }
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
-        let (render_mode, vertices, aabb) = match displayable {
+        let (render_mode, vertices, labels, aabb) = match displayable {
             Displayable::Face { points } => {
                 let render_mode = RenderMode::Face;
                 let vertices = Vertices::for_face(
                     points.iter().map(|PointWithLabel { point, .. }| point),
                 );
+                let labels = vec![("Hello, world!", Point::from([0., 0., 0.]))];
                 let aabb = Aabb::<3>::from_points(
                     points
                         .iter()
@@ -171,35 +172,33 @@ impl Window {
                         .copied(),
                 );
 
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, labels, aabb)
             }
             Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
+                let labels = vec![];
                 let aabb = tri_mesh.aabb();
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, labels, aabb)
             }
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
                 let vertices = Vertices::for_point(point);
+                let labels = vec![];
 
                 let aabb = Aabb {
                     min: point,
                     max: point,
                 };
 
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, labels, aabb)
             }
         };
 
-        self.renderer.add_geometry(
-            render_mode,
-            vertices,
-            [("Hello, world!", Point::from([0., 0., 0.]))],
-        );
+        self.renderer.add_geometry(render_mode, vertices, labels);
 
         self.aabb = self.aabb.merged(&aabb);
         self.camera = Camera::new(&self.aabb);
