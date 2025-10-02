@@ -222,15 +222,18 @@ impl Renderer {
         })
     }
 
-    pub fn add_geometry(
+    pub fn add_geometry<'r>(
         &mut self,
         render_mode: RenderMode,
         vertices: Vertices,
+        labels: impl IntoIterator<Item = (&'r str, Point<3>)>,
     ) {
-        let labels = vec![
-            self.text_renderer
-                .make_label("Hello, world!", Point::from([0., 0., 0.])),
-        ];
+        let labels = labels
+            .into_iter()
+            .map(|(text, position)| {
+                self.text_renderer.make_label(text, position)
+            })
+            .collect();
 
         self.geometries.push(Geometry::new(
             render_mode,

@@ -195,7 +195,11 @@ impl Window {
             }
         };
 
-        self.renderer.add_geometry(render_mode, vertices);
+        self.renderer.add_geometry(
+            render_mode,
+            vertices,
+            [("Hello, world!", Point::from([0., 0., 0.]))],
+        );
 
         self.aabb = self.aabb.merged(&aabb);
         self.camera = Camera::new(&self.aabb);
