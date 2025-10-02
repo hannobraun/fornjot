@@ -232,6 +232,7 @@ impl Renderer {
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
+            &mut self.text_renderer,
         ));
     }
 

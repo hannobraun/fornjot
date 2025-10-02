@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
-use crate::viewer::graphics::RenderMode;
+use crate::viewer::graphics::{RenderMode, text::TextRenderer};
 
 use super::vertices::Vertex;
 
@@ -20,6 +20,7 @@ impl Geometry {
         device: &wgpu::Device,
         vertices: &[Vertex],
         indices: &[u32],
+        _: &mut TextRenderer,
     ) -> Self {
         Self {
             render_mode,
