@@ -227,15 +227,17 @@ impl Renderer {
         render_mode: RenderMode,
         vertices: Vertices,
     ) {
+        let labels = vec![
+            self.text_renderer
+                .make_label("Hello, world!", Point::from([0., 0., 0.])),
+        ];
+
         self.geometries.push(Geometry::new(
             render_mode,
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
-            vec![
-                self.text_renderer
-                    .make_label("Hello, world!", Point::from([0., 0., 0.])),
-            ],
+            labels,
         ));
     }
 
