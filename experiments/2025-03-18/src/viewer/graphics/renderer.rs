@@ -1,6 +1,5 @@
 use std::{io, mem::size_of, sync::Arc, vec};
 
-use fj_math::Point;
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
@@ -341,18 +340,18 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
-            let label = self
-                .text_renderer
-                .make_label("Hello, world!", Point::from([0., 0., 0.]));
-
-            self.text_renderer.draw(
-                &self.device.device,
-                &self.device.queue,
-                &self.surface_config,
-                &mut render_pass,
-                &label,
-                &transform,
-            )?;
+            for geometry in &self.geometries {
+                for label in &geometry.labels {
+                    self.text_renderer.draw(
+                        &self.device.device,
+                        &self.device.queue,
+                        &self.surface_config,
+                        &mut render_pass,
+                        label,
+                        &transform,
+                    )?;
+                }
+            }
         }
 
         self.navigation_cube_renderer.draw(
