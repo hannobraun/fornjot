@@ -5,11 +5,14 @@ use fj_math::{Aabb, Point};
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
-use crate::viewer::{
-    RendererInitError,
-    camera::{Camera, FocusPoint},
-    graphics::{DrawConfig, RenderMode, Renderer, Vertices},
-    input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+use crate::{
+    approx::point::ApproxPoint,
+    viewer::{
+        RendererInitError,
+        camera::{Camera, FocusPoint},
+        graphics::{DrawConfig, RenderMode, Renderer, Vertices},
+        input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+    },
 };
 
 pub struct Window {
@@ -164,10 +167,19 @@ impl Window {
                 let vertices = Vertices::for_face(
                     points.iter().map(|PointWithLabel { point, .. }| point),
                 );
-                let labels = vec![(
-                    "Hello, world!".to_string(),
-                    Point::from([0., 0., 0.]),
-                )];
+                let labels = points
+                    .iter()
+                    .map(|PointWithLabel { point, label }| {
+                        (
+                            format!(
+                                "{point_surface:.3?} / {point_global:.3?}",
+                                point_surface = label.point_surface,
+                                point_global = label.point_global,
+                            ),
+                            *point,
+                        )
+                    })
+                    .collect();
                 let aabb = Aabb::<3>::from_points(
                     points
                         .iter()
@@ -265,6 +277,7 @@ impl Displayable {
 
 pub struct PointWithLabel {
     pub point: Point<3>,
+    pub label: ApproxPoint,
 }
 
 #[derive(Debug, thiserror::Error)]
