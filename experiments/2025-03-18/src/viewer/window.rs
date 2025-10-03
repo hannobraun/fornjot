@@ -164,7 +164,10 @@ impl Window {
                 let vertices = Vertices::for_face(
                     points.iter().map(|PointWithLabel { point, .. }| point),
                 );
-                let labels = vec![("Hello, world!", Point::from([0., 0., 0.]))];
+                let labels = vec![(
+                    "Hello, world!".to_string(),
+                    Point::from([0., 0., 0.]),
+                )];
                 let aabb = Aabb::<3>::from_points(
                     points
                         .iter()

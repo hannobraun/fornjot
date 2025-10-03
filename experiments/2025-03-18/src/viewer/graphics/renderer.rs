@@ -222,16 +222,16 @@ impl Renderer {
         })
     }
 
-    pub fn add_geometry<'r>(
+    pub fn add_geometry(
         &mut self,
         render_mode: RenderMode,
         vertices: Vertices,
-        labels: impl IntoIterator<Item = (&'r str, Point<3>)>,
+        labels: impl IntoIterator<Item = (String, Point<3>)>,
     ) {
         let labels = labels
             .into_iter()
             .map(|(text, position)| {
-                self.text_renderer.make_label(text, position)
+                self.text_renderer.make_label(&text, position)
             })
             .collect();
 
