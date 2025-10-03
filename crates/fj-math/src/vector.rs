@@ -398,7 +398,7 @@ where
 
 impl<const D: usize> fmt::Debug for Vector<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.components.fmt(f)
+        <[Scalar; D] as fmt::Debug>::fmt(&self.components, f)
     }
 }
 
