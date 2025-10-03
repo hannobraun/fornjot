@@ -611,13 +611,13 @@ impl num_traits::Float for Scalar {
 
 impl fmt::Debug for Scalar {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.value.fmt(f)
+        <f64 as fmt::Debug>::fmt(&self.value, f)
     }
 }
 
 impl fmt::Display for Scalar {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.value.fmt(f)
+        <f64 as fmt::Display>::fmt(&self.value, f)
     }
 }
 
