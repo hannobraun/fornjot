@@ -51,6 +51,7 @@ impl TextRenderer {
         }
     }
 
+    #[must_use]
     pub fn make_label(
         &mut self,
         text: &str,
