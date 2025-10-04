@@ -51,7 +51,13 @@ impl TextRenderer {
         }
     }
 
-    pub fn make_label(&mut self, text: &str, position: Point<3>) -> Label {
+    pub fn make_label(
+        &mut self,
+        text: &str,
+        position: impl Into<Point<3>>,
+    ) -> Label {
+        let position = position.into();
+
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
             glyphon::Metrics::new(32., 32.),
