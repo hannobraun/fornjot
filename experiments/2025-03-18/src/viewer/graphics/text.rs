@@ -88,22 +88,22 @@ impl TextRenderer {
                     transform.inner().transform_point(&label.position);
 
                 // The transform above has transformed the point into normalized
-                // device coordinates, but we need pixel coordinates. Let's start
-                // with moving the coordinate system origin to the upper-left
-                // corner.
+                // device coordinates, but we need pixel coordinates. Let's
+                // start with moving the coordinate system origin to the upper-
+                // left corner.
                 point += Vector::from([1., -1., 0.]);
 
                 // Normalized device coordinates cover the range from -1 to 1.
-                // Before we can multiply that with the screen size, we need to get
-                // a range from 0 to 1. While we're at that, also invert the y-axis,
-                // to match the pixel coordinate system that we need.
+                // Before we can multiply that with the screen size, we need to
+                // get a range from 0 to 1. While we're at that, also invert the
+                // y-axis, to match the pixel coordinate system that we need.
                 point.x *= 0.5;
                 point.y *= -0.5;
 
-                // At this point, we've transformed the position into a normalized
-                // coordinate system (with range 0 to 1) with the origin in the
-                // upper- left corner. All that's left is to multiply by the screen
-                // size, and we have pixel coordinates.
+                // At this point, we've transformed the position into a
+                // normalized coordinate system (with range 0 to 1) with the
+                // origin in the upper-left corner. All that's left is to
+                // multiply by the screen size, and we have pixel coordinates.
                 point.x *= surface_config.width as f64;
                 point.y *= surface_config.height as f64;
 
