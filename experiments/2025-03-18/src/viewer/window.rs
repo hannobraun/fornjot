@@ -142,7 +142,7 @@ impl Window {
         self.add_focus_point();
     }
 
-    /// # Handle a mouse button being pressed
+    /// # Handle a mouse button release
     pub fn on_mouse_button_released(&mut self, button: MouseButton) {
         if self.most_recent_mouse_button == Some(button) {
             self.most_recent_mouse_button = None;
