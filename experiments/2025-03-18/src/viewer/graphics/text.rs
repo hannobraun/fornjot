@@ -73,55 +73,58 @@ impl TextRenderer {
         Label { buffer, position }
     }
 
-    pub fn draw(
+    pub fn draw<'r>(
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
-        label: &Label,
+        labels: impl IntoIterator<Item = &'r Label>,
         transform: &Transform,
     ) -> Result<(), TextDrawError> {
-        let screen_position = {
-            let mut point = transform.inner().transform_point(&label.position);
+        let text_areas = labels.into_iter().map(|label| {
+            let screen_position = {
+                let mut point =
+                    transform.inner().transform_point(&label.position);
 
-            // The transform above has transformed the point into normalized
-            // device coordinates, but we need pixel coordinates. Let's start
-            // with moving the coordinate system origin to the upper-left
-            // corner.
-            point += Vector::from([1., -1., 0.]);
+                // The transform above has transformed the point into normalized
+                // device coordinates, but we need pixel coordinates. Let's start
+                // with moving the coordinate system origin to the upper-left
+                // corner.
+                point += Vector::from([1., -1., 0.]);
 
-            // Normalized device coordinates cover the range from -1 to 1.
-            // Before we can multiply that with the screen size, we need to get
-            // a range from 0 to 1. While we're at that, also invert the y-axis,
-            // to match the pixel coordinate system that we need.
-            point.x *= 0.5;
-            point.y *= -0.5;
+                // Normalized device coordinates cover the range from -1 to 1.
+                // Before we can multiply that with the screen size, we need to get
+                // a range from 0 to 1. While we're at that, also invert the y-axis,
+                // to match the pixel coordinate system that we need.
+                point.x *= 0.5;
+                point.y *= -0.5;
 
-            // At this point, we've transformed the position into a normalized
-            // coordinate system (with range 0 to 1) with the origin in the
-            // upper- left corner. All that's left is to multiply by the screen
-            // size, and we have pixel coordinates.
-            point.x *= surface_config.width as f64;
-            point.y *= surface_config.height as f64;
+                // At this point, we've transformed the position into a normalized
+                // coordinate system (with range 0 to 1) with the origin in the
+                // upper- left corner. All that's left is to multiply by the screen
+                // size, and we have pixel coordinates.
+                point.x *= surface_config.width as f64;
+                point.y *= surface_config.height as f64;
 
-            point
-        };
+                point
+            };
 
-        let text_areas = [TextArea {
-            buffer: &label.buffer,
-            left: screen_position.x.into_f32(),
-            top: screen_position.y.into_f32(),
-            scale: 1.,
-            bounds: TextBounds {
-                left: 0,
-                top: 0,
-                right: surface_config.width as i32,
-                bottom: surface_config.height as i32,
-            },
-            default_color: glyphon::Color::rgb(0, 0, 0),
-            custom_glyphs: &[],
-        }];
+            TextArea {
+                buffer: &label.buffer,
+                left: screen_position.x.into_f32(),
+                top: screen_position.y.into_f32(),
+                scale: 1.,
+                bounds: TextBounds {
+                    left: 0,
+                    top: 0,
+                    right: surface_config.width as i32,
+                    bottom: surface_config.height as i32,
+                },
+                default_color: glyphon::Color::rgb(0, 0, 0),
+                custom_glyphs: &[],
+            }
+        });
 
         self.viewport.update(
             queue,

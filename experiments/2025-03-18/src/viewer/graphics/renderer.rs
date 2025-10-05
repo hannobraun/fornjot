@@ -350,16 +350,14 @@ impl Renderer {
             }
 
             for geometry in &self.geometries {
-                for label in &geometry.labels {
-                    self.text_renderer.draw(
-                        &self.device.device,
-                        &self.device.queue,
-                        &self.surface_config,
-                        &mut render_pass,
-                        label,
-                        &transform,
-                    )?;
-                }
+                self.text_renderer.draw(
+                    &self.device.device,
+                    &self.device.queue,
+                    &self.surface_config,
+                    &mut render_pass,
+                    &geometry.labels,
+                    &transform,
+                )?;
             }
         }
 
