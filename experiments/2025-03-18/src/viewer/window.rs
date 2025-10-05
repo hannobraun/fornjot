@@ -67,13 +67,13 @@ impl Window {
         &self.window
     }
 
-    /// # Toggle whether the triangles of meshes are drawn
+    /// # Toggle whether to draw mesh triangles
     pub fn toggle_draw_mesh_triangles(&mut self) {
         self.draw_config.draw_mesh_triangles =
             !self.draw_config.draw_mesh_triangles;
     }
 
-    /// # Toggle whether the lines of meshes are drawn
+    /// # Toggle whether to draw mesh lines
     pub fn toggle_draw_mesh_lines(&mut self) {
         self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
     }
@@ -89,7 +89,7 @@ impl Window {
         }
     }
 
-    /// # Handle the screen being resized
+    /// # Handle a screen resize
     pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
         self.new_screen_size = Some(new_size);
     }
@@ -136,7 +136,7 @@ impl Window {
         self.cursor = Some(cursor_new);
     }
 
-    /// # Handle a mouse button being pressed
+    /// # Handle a mouse button press
     pub fn on_mouse_button_pressed(&mut self, button: MouseButton) {
         self.most_recent_mouse_button = Some(button);
         self.add_focus_point();
