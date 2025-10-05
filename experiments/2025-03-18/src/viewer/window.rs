@@ -63,7 +63,7 @@ impl Window {
         })
     }
 
-    pub fn winit_window(&self) -> &winit::window::Window {
+    pub fn inner(&self) -> &winit::window::Window {
         &self.window
     }
 

@@ -319,7 +319,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         }
 
         if !drawn {
-            window.winit_window().request_redraw();
+            window.inner().request_redraw();
         }
     }
 
@@ -331,7 +331,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         match event {
             EventLoopEvent::Window { id: window_id } => {
                 let window = block_on(Window::new(event_loop)).unwrap();
-                let winit_window_id = window.winit_window().id();
+                let winit_window_id = window.inner().id();
 
                 self.windows.insert(winit_window_id, window);
                 self.id_map.insert(window_id, winit_window_id);
