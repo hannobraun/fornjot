@@ -165,7 +165,10 @@ impl Window {
             Displayable::Face { points } => {
                 let render_mode = RenderMode::Face;
                 let vertices = Vertices::for_face(
-                    points.iter().map(|PointWithLabel { point, .. }| point),
+                    points
+                        .iter()
+                        .chain(points.first())
+                        .map(|PointWithLabel { point, .. }| point),
                 );
                 let labels = points
                     .iter()
