@@ -61,7 +61,7 @@ impl TextRenderer {
 
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
-            glyphon::Metrics::new(32., 32.),
+            glyphon::Metrics::new(24., 24.),
         );
         buffer.set_text(
             &mut self.font_system,
