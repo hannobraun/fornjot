@@ -107,6 +107,7 @@ impl Device {
                 label: None,
                 required_features,
                 required_limits,
+                experimental_features: wgpu::ExperimentalFeatures::disabled(),
 
                 // Here we give a memory hint to preserve memory usage. This
                 // should allow us to run in as much devices as possible.
