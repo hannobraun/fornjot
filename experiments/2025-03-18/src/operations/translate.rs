@@ -8,18 +8,18 @@ use crate::{
     },
 };
 
-pub trait TranslateExt {
+pub trait Translate {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self;
 }
 
-impl TranslateExt for Curve {
+impl Translate for Curve {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let geometry = self.geometry.translate(offset);
         Curve { geometry }
     }
 }
 
-impl TranslateExt for Face {
+impl Translate for Face {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
@@ -33,7 +33,7 @@ impl TranslateExt for Face {
     }
 }
 
-impl TranslateExt for HalfEdge {
+impl Translate for HalfEdge {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
 
@@ -48,7 +48,7 @@ impl TranslateExt for HalfEdge {
     }
 }
 
-impl TranslateExt for Surface {
+impl Translate for Surface {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
         let geometry = self.geometry.translate(offset);
@@ -56,7 +56,7 @@ impl TranslateExt for Surface {
     }
 }
 
-impl TranslateExt for Vertex {
+impl Translate for Vertex {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
         Vertex::new(self.point + offset)
