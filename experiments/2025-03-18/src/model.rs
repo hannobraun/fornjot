@@ -4,7 +4,7 @@ use fj_math::Vector;
 use crate::{
     geometry::{FloatingCurve, Line, Sketch, SweptCurve},
     handle::Handle,
-    operations::sweep::SweepExt,
+    operations::sweep::Sweep,
     topology::surface::Surface,
     viewer::ViewerHandle,
 };

@@ -9,7 +9,7 @@ use crate::{
 
 use super::{connect::ConnectExt, flip::FlipExt, translate::TranslateExt};
 
-pub trait SweepExt {
+pub trait Sweep {
     /// # Sweep a face along a curve, creating a solid
     ///
     /// ## Implementation Note
@@ -29,7 +29,7 @@ pub trait SweepExt {
     ) -> Solid;
 }
 
-impl SweepExt for Handle<Face> {
+impl Sweep for Handle<Face> {
     fn sweep(
         self,
         along: FloatingCurve,
