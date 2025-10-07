@@ -3,11 +3,11 @@ use crate::{
     topology::{face::Face, surface::Surface},
 };
 
-pub trait FlipExt {
+pub trait Flip {
     fn flip(&self) -> Self;
 }
 
-impl FlipExt for Face {
+impl Flip for Face {
     fn flip(&self) -> Self {
         Face::new(
             Handle::new(self.surface.flip()),
@@ -17,7 +17,7 @@ impl FlipExt for Face {
     }
 }
 
-impl FlipExt for Surface {
+impl Flip for Surface {
     fn flip(&self) -> Self {
         let geometry = self.geometry.flip();
         Self { geometry }
