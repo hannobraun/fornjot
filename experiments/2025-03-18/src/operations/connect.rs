@@ -13,7 +13,7 @@ use crate::{
     },
 };
 
-pub trait ConnectExt {
+pub trait Connect {
     /// # Connect two faces by creating a side wall of faces from their vertices
     ///
     /// ## Panics
@@ -41,7 +41,7 @@ pub trait ConnectExt {
     ) -> Solid;
 }
 
-impl ConnectExt for Handle<Face> {
+impl Connect for Handle<Face> {
     fn connect(
         self,
         other: Self,

@@ -7,7 +7,7 @@ use crate::{
     topology::{face::Face, solid::Solid},
 };
 
-use super::{connect::ConnectExt, flip::FlipExt, translate::TranslateExt};
+use super::{connect::Connect, flip::FlipExt, translate::TranslateExt};
 
 pub trait Sweep {
     /// # Sweep a face along a curve, creating a solid
