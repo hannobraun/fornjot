@@ -78,6 +78,11 @@ impl Window {
         self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
     }
 
+    /// # Toggle whether to draw labels
+    pub fn toggle_draw_labels(&mut self) {
+        self.draw_config.draw_labels = !self.draw_config.draw_labels;
+    }
+
     /// # Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
         if self.focus_point.is_none() {

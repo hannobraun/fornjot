@@ -268,6 +268,9 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                 Key::Character("2") => {
                     window.toggle_draw_mesh_lines();
                 }
+                Key::Character("3") => {
+                    window.toggle_draw_labels();
+                }
                 _ => {}
             },
             WindowEvent::CursorMoved { position, .. } => {
