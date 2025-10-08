@@ -349,15 +349,17 @@ impl Renderer {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
 
-            for geometry in &self.geometries {
-                self.text_renderer.draw(
-                    &self.device.device,
-                    &self.device.queue,
-                    &self.surface_config,
-                    &mut render_pass,
-                    &geometry.labels,
-                    &transform,
-                )?;
+            if config.draw_labels {
+                for geometry in &self.geometries {
+                    self.text_renderer.draw(
+                        &self.device.device,
+                        &self.device.queue,
+                        &self.surface_config,
+                        &mut render_pass,
+                        &geometry.labels,
+                        &transform,
+                    )?;
+                }
             }
         }
 

@@ -2,6 +2,7 @@
 pub struct DrawConfig {
     pub draw_mesh_triangles: bool,
     pub draw_mesh_lines: bool,
+    pub draw_labels: bool,
 }
 
 impl Default for DrawConfig {
@@ -9,6 +10,7 @@ impl Default for DrawConfig {
         Self {
             draw_mesh_triangles: true,
             draw_mesh_lines: false,
+            draw_labels: true,
         }
     }
 }
