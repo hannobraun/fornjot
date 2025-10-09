@@ -66,7 +66,7 @@ impl SurfaceApprox {
             }
         }
 
-        let Some((point_surface, _, distance)) = projection else {
+        let Some((point_surface, closest_point, distance)) = projection else {
             unreachable!(
                 "Surface mesh can't be empty. At the very least, there must be \
                 two triangles from the AABB. This means that the loop above \
@@ -82,6 +82,7 @@ impl SurfaceApprox {
             \n\
             Original point: {point_global:?}\n\
             Projected point: {point_surface:?}\n\
+            Closest point on surface mesh: {closest_point:?}\n\
             \n\
             Distance to surface: {distance}\n\
             \n\
