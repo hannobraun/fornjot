@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use fj_interop::TriMesh;
 use fj_math::{Aabb, Point};
+use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
@@ -200,7 +201,13 @@ impl Window {
             Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
-                let labels = vec![];
+                let labels = tri_mesh
+                    .all_triangles()
+                    .flat_map(|triangle| triangle.points)
+                    .sorted()
+                    .dedup()
+                    .map(|point| (format!("{point:.3?}"), point))
+                    .collect();
                 let aabb = tri_mesh.aabb();
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
