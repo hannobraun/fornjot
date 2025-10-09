@@ -120,9 +120,8 @@ impl MeshTriangle {
         let point_surface =
             triangle_surface.point_from_barycentric_coords(barycentric_coords);
 
-        let distance = (point_global
-            - triangle_global.closest_point(point_global))
-        .magnitude();
+        let closest_point = triangle_global.closest_point(point_global);
+        let distance = (point_global - closest_point).magnitude();
 
         (point_surface, distance)
     }
