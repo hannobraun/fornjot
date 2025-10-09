@@ -53,20 +53,20 @@ impl SurfaceApprox {
         let mut projection = None;
 
         for triangle in &self.triangles {
-            let (point_surface, _, distance) =
+            let (point_surface, closest_point, distance) =
                 triangle.project_point(point_global);
 
-            let Some((_, min_distance)) = projection else {
-                projection = Some((point_surface, distance));
+            let Some((_, _, min_distance)) = projection else {
+                projection = Some((point_surface, closest_point, distance));
                 continue;
             };
 
             if distance < min_distance {
-                projection = Some((point_surface, distance));
+                projection = Some((point_surface, closest_point, distance));
             }
         }
 
-        let Some((point_surface, distance)) = projection else {
+        let Some((point_surface, _, distance)) = projection else {
             unreachable!(
                 "Surface mesh can't be empty. At the very least, there must be \
                 two triangles from the AABB. This means that the loop above \
