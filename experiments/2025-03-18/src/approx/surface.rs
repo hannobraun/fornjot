@@ -53,7 +53,7 @@ impl SurfaceApprox {
         let mut projection = None;
 
         for triangle in &self.triangles {
-            let (point_surface, distance) =
+            let (point_surface, _, distance) =
                 triangle.project_point(point_global);
 
             let Some((_, min_distance)) = projection else {
@@ -110,7 +110,10 @@ impl MeshTriangle {
         }
     }
 
-    pub fn project_point(&self, point_global: Point<3>) -> (Point<2>, Scalar) {
+    pub fn project_point(
+        &self,
+        point_global: Point<3>,
+    ) -> (Point<2>, Point<3>, Scalar) {
         let triangle_global = self.to_global_triangle();
         let triangle_surface = self.to_surface_triangle();
 
@@ -123,7 +126,7 @@ impl MeshTriangle {
         let closest_point = triangle_global.closest_point(point_global);
         let distance = (point_global - closest_point).magnitude();
 
-        (point_surface, distance)
+        (point_surface, closest_point, distance)
     }
 }
 
