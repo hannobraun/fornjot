@@ -10,7 +10,7 @@ impl Default for DrawConfig {
         Self {
             draw_mesh_triangles: true,
             draw_mesh_lines: false,
-            draw_labels: true,
+            draw_labels: false,
         }
     }
 }
