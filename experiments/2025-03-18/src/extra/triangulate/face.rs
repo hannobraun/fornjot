@@ -50,8 +50,7 @@ pub fn triangulate_face(
         polygon_from_half_edges(&face_approx_points.points);
 
     let surface_points = surface_approx
-        .points
-        .iter()
+        .points()
         .filter(|point| {
             polygon_from_half_edges.contains(&Coord {
                 x: point.point_surface.u.into_f64(),

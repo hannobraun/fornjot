@@ -24,6 +24,10 @@ impl SurfaceApprox {
         surface_mesh
     }
 
+    pub fn points(&self) -> impl Iterator<Item = &ApproxPoint> {
+        self.points.iter()
+    }
+
     #[allow(unused)] // occasionally useful for debugging
     pub fn to_tri_mesh(&self) -> TriMesh {
         let triangles = self
