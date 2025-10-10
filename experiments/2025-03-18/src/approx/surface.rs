@@ -28,27 +28,6 @@ impl SurfaceApprox {
         self.points.iter()
     }
 
-    #[allow(unused)] // occasionally useful for debugging
-    pub fn to_tri_mesh(&self) -> TriMesh {
-        let triangles = self
-            .triangles
-            .iter()
-            .map(|triangle| {
-                let triangle = Triangle {
-                    points: triangle.points.map(|point| point.point_global),
-                };
-
-                fj_interop::MeshTriangle {
-                    inner: triangle,
-                    is_internal: false,
-                    color: fj_interop::Color([0, 0, 255, 255]),
-                }
-            })
-            .collect();
-
-        TriMesh { triangles }
-    }
-
     pub fn project_point(
         &self,
         point_global: Point<3>,
@@ -94,6 +73,27 @@ impl SurfaceApprox {
         );
 
         point_surface
+    }
+
+    #[allow(unused)] // occasionally useful for debugging
+    pub fn to_tri_mesh(&self) -> TriMesh {
+        let triangles = self
+            .triangles
+            .iter()
+            .map(|triangle| {
+                let triangle = Triangle {
+                    points: triangle.points.map(|point| point.point_global),
+                };
+
+                fj_interop::MeshTriangle {
+                    inner: triangle,
+                    is_internal: false,
+                    color: fj_interop::Color([0, 0, 255, 255]),
+                }
+            })
+            .collect();
+
+        TriMesh { triangles }
     }
 }
 
