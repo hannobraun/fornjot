@@ -29,7 +29,7 @@ impl SurfaceApprox {
     }
 
     pub fn project_point(
-        &self,
+        &mut self,
         point_global: Point<3>,
         tolerance: Tolerance,
     ) -> Point<2> {
