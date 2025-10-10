@@ -8,8 +8,8 @@ use crate::{
 
 #[derive(Debug)]
 pub struct SurfaceApprox {
-    pub points: Vec<ApproxPoint>,
-    pub triangles: Vec<MeshTriangle>,
+    points: Vec<ApproxPoint>,
+    triangles: Vec<MeshTriangle>,
 }
 
 impl SurfaceApprox {
