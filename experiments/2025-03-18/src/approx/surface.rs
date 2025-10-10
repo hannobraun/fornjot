@@ -31,7 +31,7 @@ impl SurfaceApprox {
     pub fn project_point(
         &mut self,
         point_global: Point<3>,
-        tolerance: Tolerance,
+        tolerance: Scalar,
     ) -> Point<2> {
         let mut projection = None;
 
@@ -59,7 +59,7 @@ impl SurfaceApprox {
         };
 
         assert!(
-            distance < tolerance.inner(),
+            distance < tolerance,
             "Expected to project a global point that is coincident with the \
             surface.\n\
             \n\

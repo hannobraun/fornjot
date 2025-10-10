@@ -38,7 +38,7 @@ impl FaceApproxPoints {
                 // original 3D points to build those triangles. We never convert
                 // the 2D points back into 3D.
                 let point_surface =
-                    surface.project_point(point_global, tolerance);
+                    surface.project_point(point_global, tolerance.inner());
 
                 ApproxPoint {
                     point_surface,
