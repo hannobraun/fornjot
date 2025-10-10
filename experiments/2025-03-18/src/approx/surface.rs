@@ -24,7 +24,7 @@ impl SurfaceApprox {
         surface_mesh
     }
 
-    #[allow(unused)] // useful for occasional debugging
+    #[allow(unused)] // occasionally useful for debugging
     pub fn to_tri_mesh(&self) -> TriMesh {
         let triangles = self
             .triangles
