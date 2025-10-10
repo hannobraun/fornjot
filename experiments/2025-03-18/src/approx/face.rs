@@ -11,7 +11,7 @@ pub struct FaceApproxPoints {
 impl FaceApproxPoints {
     pub fn new(
         half_edges: impl IntoIterator<Item = HalfEdgeApprox>,
-        surface: &SurfaceApprox,
+        surface: &mut SurfaceApprox,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
         let tolerance = tolerance.into();

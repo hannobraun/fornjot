@@ -22,7 +22,7 @@ pub fn triangulate_face(
 ) -> TriMesh {
     let tolerance = tolerance.into();
 
-    let surface_approx = {
+    let mut surface_approx = {
         // This happens to be big enough for the current model. But
         // eventually, we need a solution here that works for _any_ model.
         let size = PI;
@@ -44,7 +44,7 @@ pub fn triangulate_face(
                 )
             });
     let face_approx_points =
-        FaceApproxPoints::new(half_edges, &surface_approx, tolerance);
+        FaceApproxPoints::new(half_edges, &mut surface_approx, tolerance);
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&face_approx_points.points);
