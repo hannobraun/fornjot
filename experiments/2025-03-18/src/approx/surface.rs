@@ -19,10 +19,10 @@ impl<'r> SurfaceApprox<'r> {
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let surface_mesh = surface_to_mesh(surface, boundary, tolerance);
-        check_that_triangles_are_valid(&surface_mesh);
+        let surface_approx = surface_to_mesh(surface, boundary, tolerance);
+        check_that_triangles_are_valid(&surface_approx);
 
-        surface_mesh
+        surface_approx
     }
 
     pub fn points(&self) -> impl Iterator<Item = &ApproxPoint> {
