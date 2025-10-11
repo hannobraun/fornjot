@@ -19,7 +19,7 @@ impl<'r> SurfaceApprox<'r> {
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
-        let surface_approx = surface_to_mesh(surface, boundary, tolerance);
+        let surface_approx = approximate_surface(surface, boundary, tolerance);
         check_that_triangles_are_valid(&surface_approx);
 
         surface_approx
@@ -136,7 +136,7 @@ impl MeshTriangle {
     }
 }
 
-fn surface_to_mesh<'r>(
+fn approximate_surface<'r>(
     surface: &'r Surface,
     boundary: &Aabb<2>,
     tolerance: impl Into<Tolerance>,
