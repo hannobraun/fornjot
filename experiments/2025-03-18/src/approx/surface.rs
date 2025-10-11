@@ -7,14 +7,15 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub struct SurfaceApprox {
+pub struct SurfaceApprox<'r> {
+    _surface: &'r Surface,
     points: Vec<ApproxPoint>,
     triangles: Vec<MeshTriangle>,
 }
 
-impl SurfaceApprox {
+impl<'r> SurfaceApprox<'r> {
     pub fn new(
-        surface: &Surface,
+        surface: &'r Surface,
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
@@ -135,11 +136,11 @@ impl MeshTriangle {
     }
 }
 
-fn surface_to_mesh(
-    surface: &Surface,
+fn surface_to_mesh<'r>(
+    surface: &'r Surface,
     boundary: &Aabb<2>,
     tolerance: impl Into<Tolerance>,
-) -> SurfaceApprox {
+) -> SurfaceApprox<'r> {
     let approx = surface.geometry.approximate(boundary, tolerance.into());
 
     let curvature_points = approx
@@ -169,6 +170,7 @@ fn surface_to_mesh(
         .collect();
 
     SurfaceApprox {
+        _surface: surface,
         points: curvature_points,
         triangles,
     }
