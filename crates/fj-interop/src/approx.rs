@@ -38,7 +38,9 @@ impl CircleApproxParams {
         &self,
         boundary: [Point<1>; 2],
     ) -> impl Iterator<Item = Point<1>> + '_ {
+        // The boundary, in units of the increment.
         let [a, b] = boundary.map(|point| point.t / self.increment);
+
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 
