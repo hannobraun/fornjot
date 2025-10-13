@@ -48,7 +48,7 @@ impl CircleApproxParams {
         // part of the approximation. Make sure we stay inside the range.
         //
         // `min` and `max` are in units of the increment, so adding or
-        // subtracting `1` adds or substracts one increment.
+        // subtracting `1` adds or subtracts one increment.
         let min = min.floor() + 1.;
         let max = max.ceil() - 1.;
 
