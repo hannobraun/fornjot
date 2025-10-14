@@ -649,6 +649,11 @@ pub enum Sign {
 }
 
 impl Sign {
+    /// # Indicate whether the sign is negative
+    pub fn is_negative(&self) -> bool {
+        matches!(self, Self::Negative)
+    }
+
     /// # Convert this sign back to a scalar
     ///
     /// Returns `-Scalar::ONE`, if the sign is negative; `Scalar::ONE`, if it is
