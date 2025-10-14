@@ -659,6 +659,11 @@ impl Sign {
         matches!(self, Self::Positive)
     }
 
+    /// # Indicate whether the sign is zero
+    pub fn is_zero(&self) -> bool {
+        matches!(self, Self::Zero)
+    }
+
     /// # Convert this sign back to a scalar
     ///
     /// Returns `-Scalar::ONE`, if the sign is negative; `Scalar::ONE`, if it is
