@@ -83,7 +83,44 @@ impl CurveGeometry for Circle {
             CircleApproxParams { increment }
         };
 
-        let curvature = params.approx_circle(boundary);
+        let curvature = {
+            // The boundary, in units of the increment.
+            let [a, b] = boundary.map(|point| point.t / params.increment.t);
+
+            let direction = (b - a).sign();
+            let [min, max] = if a < b { [a, b] } else { [b, a] };
+
+            // We can't generate a point exactly at the boundaries of the range
+            // as part of the approximation. Make sure we stay inside the range.
+            //
+            // `min` and `max` are in units of the increment, so adding or
+            // subtracting `1` adds or subtracts one increment.
+            let min = min.floor() + 1.;
+            let max = max.ceil() - 1.;
+
+            let [start, end] = match direction {
+                Sign::Negative => [max, min],
+                Sign::Positive | Sign::Zero => [min, max],
+            };
+
+            let mut i = start;
+            iter::from_fn(move || {
+                let is_finished = match direction {
+                    Sign::Negative => i < end,
+                    Sign::Positive | Sign::Zero => i > end,
+                };
+
+                if is_finished {
+                    return None;
+                }
+
+                let t = params.increment.t * i;
+                i += direction.to_scalar();
+
+                Some(Point::from([t]))
+            })
+            .collect()
+        };
 
         CurveApprox { curvature }
     }
@@ -93,48 +130,6 @@ impl CurveGeometry for Circle {
 #[derive(Debug)]
 pub struct CircleApproxParams {
     increment: Vector<1>,
-}
-
-impl CircleApproxParams {
-    /// # Generate points to approximate the circle within a given boundary
-    pub fn approx_circle(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>> {
-        // The boundary, in units of the increment.
-        let [a, b] = boundary.map(|point| point.t / self.increment.t);
-
-        let direction = (b - a).sign();
-        let [min, max] = if a < b { [a, b] } else { [b, a] };
-
-        // We can't generate a point exactly at the boundaries of the range as
-        // part of the approximation. Make sure we stay inside the range.
-        //
-        // `min` and `max` are in units of the increment, so adding or
-        // subtracting `1` adds or subtracts one increment.
-        let min = min.floor() + 1.;
-        let max = max.ceil() - 1.;
-
-        let [start, end] = match direction {
-            Sign::Negative => [max, min],
-            Sign::Positive | Sign::Zero => [min, max],
-        };
-
-        let mut i = start;
-        iter::from_fn(move || {
-            let is_finished = match direction {
-                Sign::Negative => i < end,
-                Sign::Positive | Sign::Zero => i > end,
-            };
-
-            if is_finished {
-                return None;
-            }
-
-            let t = self.increment.t * i;
-            i += direction.to_scalar();
-
-            Some(Point::from([t]))
-        })
-        .collect()
-    }
 }
 
 #[cfg(test)]
