@@ -68,7 +68,7 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox {
-        let params = {
+        let increment = {
             let num_vertices_to_approx_full_circle = Scalar::max(
                 Scalar::PI
                     / (Scalar::ONE - (tolerance.inner() / self.radius()))
@@ -78,14 +78,12 @@ impl CurveGeometry for Circle {
             .ceil();
 
             let t = Scalar::TAU / num_vertices_to_approx_full_circle;
-            let increment = Vector::from([t]);
-
-            CircleApproxParams { increment }
+            Vector::from([t])
         };
 
         let curvature = {
             // The boundary, in units of the increment.
-            let [a, b] = boundary.map(|point| point.t / params.increment.t);
+            let [a, b] = boundary.map(|point| point.t / increment.t);
 
             let direction = (b - a).sign();
             let [min, max] = if a < b { [a, b] } else { [b, a] };
@@ -114,7 +112,7 @@ impl CurveGeometry for Circle {
                     return None;
                 }
 
-                let t = params.increment.t * i;
+                let t = increment.t * i;
                 i += direction.to_scalar();
 
                 Some(Point::from([t]))
@@ -124,12 +122,6 @@ impl CurveGeometry for Circle {
 
         CurveApprox { curvature }
     }
-}
-
-/// # Approximation parameters for a circle
-#[derive(Debug)]
-pub struct CircleApproxParams {
-    increment: Vector<1>,
 }
 
 #[cfg(test)]
