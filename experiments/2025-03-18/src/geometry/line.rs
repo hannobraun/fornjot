@@ -1,5 +1,5 @@
 use fj_interop::Tolerance;
-use fj_math::{Point, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{approx::curve::CurveApprox, geometry::curve::CurveGeometry};
 
@@ -44,5 +44,9 @@ impl CurveGeometry for Line {
 
     fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> CurveApprox {
         CurveApprox { curvature: vec![] }
+    }
+
+    fn increment(&self, _: Tolerance, size_hint: Scalar) -> Vector<1> {
+        Vector::from([size_hint])
     }
 }

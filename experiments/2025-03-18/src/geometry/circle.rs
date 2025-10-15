@@ -68,18 +68,7 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox {
-        let increment = {
-            let num_vertices_to_approx_full_circle = Scalar::max(
-                Scalar::PI
-                    / (Scalar::ONE - (tolerance.inner() / self.radius()))
-                        .acos(),
-                3.,
-            )
-            .ceil();
-
-            let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
-            Vector::from([increment])
-        };
+        let increment = self.increment(tolerance, tolerance.inner());
 
         let curvature = {
             // The boundary, in units of the increment.
@@ -121,6 +110,18 @@ impl CurveGeometry for Circle {
         };
 
         CurveApprox { curvature }
+    }
+
+    fn increment(&self, tolerance: Tolerance, _: Scalar) -> Vector<1> {
+        let num_vertices_to_approx_full_circle = Scalar::max(
+            Scalar::PI
+                / (Scalar::ONE - (tolerance.inner() / self.radius())).acos(),
+            3.,
+        )
+        .ceil();
+
+        let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
+        Vector::from([increment])
     }
 }
 

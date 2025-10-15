@@ -1,7 +1,7 @@
 use std::fmt;
 
 use fj_interop::Tolerance;
-use fj_math::{Point, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::approx::curve::CurveApprox;
 
@@ -144,6 +144,8 @@ pub trait CurveGeometry: fmt::Debug {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox;
+
+    fn increment(&self, tolerance: Tolerance, size_hint: Scalar) -> Vector<1>;
 }
 
 #[cfg(test)]
