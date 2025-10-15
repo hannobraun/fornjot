@@ -68,7 +68,21 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox {
-        let params = CircleApproxParams::new(self.radius(), tolerance);
+        let params = {
+            let num_vertices_to_approx_full_circle = Scalar::max(
+                Scalar::PI
+                    / (Scalar::ONE - (tolerance.inner() / self.radius()))
+                        .acos(),
+                3.,
+            )
+            .ceil();
+
+            let t = Scalar::TAU / num_vertices_to_approx_full_circle;
+            let increment = Vector::from([t]);
+
+            CircleApproxParams { increment }
+        };
+
         let curvature = params.approx_circle(boundary);
 
         CurveApprox { curvature }
@@ -82,24 +96,6 @@ pub struct CircleApproxParams {
 }
 
 impl CircleApproxParams {
-    /// # Compute the approximation parameters for a given circle and tolerance
-    pub fn new(
-        radius: impl Into<Scalar>,
-        tolerance: impl Into<Tolerance>,
-    ) -> Self {
-        let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI
-                / (Scalar::ONE - (tolerance.into().inner() / radius)).acos(),
-            3.,
-        )
-        .ceil();
-
-        let t = Scalar::TAU / num_vertices_to_approx_full_circle;
-        let increment = Vector::from([t]);
-
-        Self { increment }
-    }
-
     /// # Generate points to approximate the circle within a given boundary
     pub fn approx_circle(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>> {
         // The boundary, in units of the increment.
