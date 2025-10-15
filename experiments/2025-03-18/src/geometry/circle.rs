@@ -79,7 +79,7 @@ impl CurveGeometry for Circle {
 /// # Approximation parameters for a circle
 #[derive(Debug)]
 pub struct CircleApproxParams {
-    increment: Scalar,
+    increment: Vector<1>,
 }
 
 impl CircleApproxParams {
@@ -95,7 +95,8 @@ impl CircleApproxParams {
         )
         .ceil();
 
-        let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
+        let t = Scalar::TAU / num_vertices_to_approx_full_circle;
+        let increment = Vector::from([t]);
 
         Self { increment }
     }
@@ -106,7 +107,7 @@ impl CircleApproxParams {
         boundary: [Point<1>; 2],
     ) -> impl Iterator<Item = Point<1>> + '_ {
         // The boundary, in units of the increment.
-        let [a, b] = boundary.map(|point| point.t / self.increment);
+        let [a, b] = boundary.map(|point| point.t / self.increment.t);
 
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
@@ -135,7 +136,7 @@ impl CircleApproxParams {
                 return None;
             }
 
-            let t = self.increment * i;
+            let t = self.increment.t * i;
             i += direction.to_scalar();
 
             Some(Point::from([t]))
