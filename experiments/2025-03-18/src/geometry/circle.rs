@@ -68,8 +68,8 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox {
-        let curvature = CircleApproxParams::new(self.radius(), tolerance)
-            .approx_circle(boundary);
+        let params = CircleApproxParams::new(self.radius(), tolerance);
+        let curvature = params.approx_circle(boundary);
 
         CurveApprox { curvature }
     }
