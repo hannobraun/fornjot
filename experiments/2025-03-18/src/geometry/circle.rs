@@ -69,8 +69,7 @@ impl CurveGeometry for Circle {
         tolerance: Tolerance,
     ) -> CurveApprox {
         let curvature = CircleApproxParams::new(self.radius(), tolerance)
-            .approx_circle(boundary)
-            .collect();
+            .approx_circle(boundary);
 
         CurveApprox { curvature }
     }
@@ -102,10 +101,7 @@ impl CircleApproxParams {
     }
 
     /// # Generate points to approximate the circle within a given boundary
-    pub fn approx_circle(
-        &self,
-        boundary: [Point<1>; 2],
-    ) -> impl Iterator<Item = Point<1>> + '_ {
+    pub fn approx_circle(&self, boundary: [Point<1>; 2]) -> Vec<Point<1>> {
         // The boundary, in units of the increment.
         let [a, b] = boundary.map(|point| point.t / self.increment.t);
 
@@ -141,6 +137,7 @@ impl CircleApproxParams {
 
             Some(Point::from([t]))
         })
+        .collect()
     }
 }
 
