@@ -77,8 +77,8 @@ impl CurveGeometry for Circle {
             )
             .ceil();
 
-            let t = Scalar::TAU / num_vertices_to_approx_full_circle;
-            Vector::from([t])
+            let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
+            Vector::from([increment])
         };
 
         let curvature = {
