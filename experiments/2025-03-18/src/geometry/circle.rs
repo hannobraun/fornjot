@@ -85,9 +85,9 @@ impl CurveGeometry for Circle {
                 (min.t / increment.t).floor() * increment.t + increment.t;
             while i / increment.t <= (max.t / increment.t).ceil() - 1. {
                 let t = i;
-                i += increment.t;
 
                 curvature.push(Point::from([t]));
+                i += increment.t;
             }
 
             curvature
