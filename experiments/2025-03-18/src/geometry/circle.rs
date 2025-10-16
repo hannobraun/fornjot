@@ -68,7 +68,8 @@ impl CurveGeometry for Circle {
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
     ) -> CurveApprox {
-        let increment = self.increment(tolerance, tolerance.inner());
+        let size_hint = tolerance.inner();
+        let increment = self.increment(tolerance, size_hint);
 
         let curvature = {
             // The boundary, in units of the increment.
