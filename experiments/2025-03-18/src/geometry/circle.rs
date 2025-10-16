@@ -80,15 +80,8 @@ impl CurveGeometry for Circle {
 
         let mut curvature = {
             // The boundary, in units of the increment.
-            let [min, max] = [min, max].map(|point| point.t / increment.t);
-
-            // We can't generate a point exactly at the boundaries of the range
-            // as part of the approximation. Make sure we stay inside the range.
-            //
-            // `min` and `max` are in units of the increment, so adding or
-            // subtracting `1` adds or subtracts one increment.
-            let min = min.floor() + 1.;
-            let max = max.ceil() - 1.;
+            let min = (min.t / increment.t).floor() + 1.;
+            let max = (max.t / increment.t).ceil() - 1.;
 
             let mut curvature = Vec::new();
 
