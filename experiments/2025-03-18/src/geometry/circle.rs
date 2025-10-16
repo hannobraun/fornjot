@@ -80,12 +80,11 @@ impl CurveGeometry for Circle {
 
         let mut curvature = {
             // The boundary, in units of the increment.
-            let min = (min.t / increment.t).floor() + 1.;
             let max = (max.t / increment.t).ceil() - 1.;
 
             let mut curvature = Vec::new();
 
-            let mut i = min;
+            let mut i = (min.t / increment.t).floor() + 1.;
             while i <= max {
                 let t = increment.t * i;
                 i += 1.;
