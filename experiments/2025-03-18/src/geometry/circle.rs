@@ -1,5 +1,5 @@
 use fj_interop::Tolerance;
-use fj_math::{Point, Scalar, Sign, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{approx::curve::CurveApprox, geometry::curve::CurveGeometry};
 
@@ -78,7 +78,7 @@ impl CurveGeometry for Circle {
         let size_hint = max.t - min.t;
         let increment = self.increment(tolerance, size_hint);
 
-        let curvature = {
+        let mut curvature = {
             // The boundary, in units of the increment.
             let [min, max] = [min, max].map(|point| point.t / increment.t);
 
@@ -90,32 +90,28 @@ impl CurveGeometry for Circle {
             let min = min.floor() + 1.;
             let max = max.ceil() - 1.;
 
-            let [start, end] = match direction {
-                Sign::Negative => [max, min],
-                Sign::Positive | Sign::Zero => [min, max],
-            };
-
             let mut curvature = Vec::new();
 
-            let mut i = start;
+            let mut i = min;
             loop {
-                let is_finished = match direction {
-                    Sign::Negative => i < end,
-                    Sign::Positive | Sign::Zero => i > end,
-                };
+                let is_finished = i > max;
 
                 if is_finished {
                     break;
                 }
 
                 let t = increment.t * i;
-                i += direction.to_scalar();
+                i += 1.;
 
                 curvature.push(Point::from([t]));
             }
 
             curvature
         };
+
+        if direction.is_negative() {
+            curvature.reverse();
+        }
 
         CurveApprox { curvature }
     }
