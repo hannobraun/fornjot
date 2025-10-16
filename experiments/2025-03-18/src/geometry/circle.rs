@@ -93,11 +93,7 @@ impl CurveGeometry for Circle {
             let mut curvature = Vec::new();
 
             let mut i = min;
-            loop {
-                if i > max {
-                    break;
-                }
-
+            while i <= max {
                 let t = increment.t * i;
                 i += 1.;
 
