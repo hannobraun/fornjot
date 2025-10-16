@@ -69,8 +69,15 @@ impl CurveGeometry for Circle {
         tolerance: Tolerance,
     ) -> CurveApprox {
         let [a, b] = boundary;
+        let direction = (b.t - a.t).sign();
 
-        let size_hint = (b.t - a.t).abs();
+        let [min, max] = if direction.is_positive() {
+            [a, b]
+        } else {
+            [b, a]
+        };
+
+        let size_hint = max.t - min.t;
         let increment = self.increment(tolerance, size_hint);
 
         let curvature = {
