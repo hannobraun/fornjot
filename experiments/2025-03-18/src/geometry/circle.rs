@@ -1,5 +1,3 @@
-use std::iter;
-
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Sign, Vector};
 
@@ -97,23 +95,26 @@ impl CurveGeometry for Circle {
                 Sign::Positive | Sign::Zero => [min, max],
             };
 
+            let mut curvature = Vec::new();
+
             let mut i = start;
-            iter::from_fn(move || {
+            loop {
                 let is_finished = match direction {
                     Sign::Negative => i < end,
                     Sign::Positive | Sign::Zero => i > end,
                 };
 
                 if is_finished {
-                    return None;
+                    break;
                 }
 
                 let t = increment.t * i;
                 i += direction.to_scalar();
 
-                Some(Point::from([t]))
-            })
-            .collect()
+                curvature.push(Point::from([t]));
+            }
+
+            curvature
         };
 
         CurveApprox { curvature }
