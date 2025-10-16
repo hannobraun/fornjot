@@ -94,9 +94,7 @@ impl CurveGeometry for Circle {
 
             let mut i = min;
             loop {
-                let is_finished = i > max;
-
-                if is_finished {
+                if i > max {
                     break;
                 }
 
