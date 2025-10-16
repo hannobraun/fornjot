@@ -82,10 +82,7 @@ impl CurveGeometry for Circle {
 
         let curvature = {
             // The boundary, in units of the increment.
-            let [a, b] = boundary.map(|point| point.t / increment.t);
-
-            let direction = (b - a).sign();
-            let [min, max] = if a < b { [a, b] } else { [b, a] };
+            let [min, max] = [min, max].map(|point| point.t / increment.t);
 
             // We can't generate a point exactly at the boundaries of the range
             // as part of the approximation. Make sure we stay inside the range.
