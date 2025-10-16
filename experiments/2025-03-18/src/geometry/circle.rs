@@ -76,14 +76,14 @@ impl CurveGeometry for Circle {
         };
 
         let size_hint = max.t - min.t;
-        let increment = self.increment(tolerance, size_hint);
+        let increment = self.increment(tolerance, size_hint).t;
 
         let mut curvature = Vec::new();
 
-        let mut t = (min.t / increment.t).floor() * increment.t + increment.t;
-        while t / increment.t <= (max.t / increment.t).ceil() - 1. {
+        let mut t = (min.t / increment).floor() * increment + increment;
+        while t / increment <= (max.t / increment).ceil() - 1. {
             curvature.push(Point::from([t]));
-            t += increment.t;
+            t += increment;
         }
 
         if direction.is_negative() {
