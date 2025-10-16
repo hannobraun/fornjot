@@ -81,10 +81,11 @@ impl CurveGeometry for Circle {
         let mut curvature = {
             let mut curvature = Vec::new();
 
-            let mut i = (min.t / increment.t).floor() + 1.;
-            while i <= (max.t / increment.t).ceil() - 1. {
-                let t = increment.t * i;
-                i += 1.;
+            let mut i =
+                (min.t / increment.t).floor() * increment.t + increment.t;
+            while i / increment.t <= (max.t / increment.t).ceil() - 1. {
+                let t = i;
+                i += increment.t;
 
                 curvature.push(Point::from([t]));
             }
