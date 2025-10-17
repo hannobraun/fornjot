@@ -199,7 +199,7 @@ impl Pipeline {
 
 #[derive(Clone, Copy, Debug)]
 pub enum RenderMode {
-    Polyline,
     Mesh,
     Point,
+    Polyline,
 }
