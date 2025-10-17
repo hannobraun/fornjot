@@ -58,7 +58,7 @@ impl CurveAnchored {
     }
 
     pub fn project_point(&self, point: Point<3>) -> Point<1> {
-        self.floating.inner.project_vector(point - self.origin)
+        self.floating.geometry.project_vector(point - self.origin)
     }
 
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
@@ -79,19 +79,19 @@ impl CurveAnchored {
     ) -> CurveApproxAnchored {
         self.floating
             .approximate(boundary, tolerance)
-            .into_anchored(self.origin, &*self.floating.inner)
+            .into_anchored(self.origin, &*self.floating.geometry)
     }
 }
 
 #[derive(Debug)]
 pub struct CurveFloating {
-    pub inner: Box<dyn CurveGeometry>,
+    pub geometry: Box<dyn CurveGeometry>,
 }
 
 impl CurveFloating {
     pub fn new(curve: impl CurveGeometry + 'static) -> Self {
         Self {
-            inner: Box::new(curve),
+            geometry: Box::new(curve),
         }
     }
 
@@ -99,12 +99,12 @@ impl CurveFloating {
         &self,
         point: impl Into<Point<1>>,
     ) -> Vector<3> {
-        self.inner.vector_from_local_point(point.into())
+        self.geometry.vector_from_local_point(point.into())
     }
 
     pub fn flip(&self) -> Self {
         Self {
-            inner: self.inner.flip(),
+            geometry: self.geometry.flip(),
         }
     }
 
@@ -118,14 +118,14 @@ impl CurveFloating {
         tolerance: Tolerance,
     ) -> CurveApproxFloating {
         let boundary = boundary.map(Into::into);
-        self.inner.approximate(boundary, tolerance)
+        self.geometry.approximate(boundary, tolerance)
     }
 }
 
 impl Clone for CurveFloating {
     fn clone(&self) -> Self {
         Self {
-            inner: self.inner.clone_curve_geometry(),
+            geometry: self.geometry.clone_curve_geometry(),
         }
     }
 }
