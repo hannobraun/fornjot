@@ -2,7 +2,7 @@ use fj_interop::Tolerance;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{AnchoredCurve, FloatingCurve, SweptCurve},
+    geometry::{AnchoredCurve, CurveFloating, SweptCurve},
     handle::Handle,
     topology::{
         curve::Curve,
@@ -36,7 +36,7 @@ pub trait Connect {
     fn connect(
         self,
         other: Self,
-        with: FloatingCurve,
+        with: CurveFloating,
         tolerance: impl Into<Tolerance>,
     ) -> Solid;
 }
@@ -45,7 +45,7 @@ impl Connect for Handle<Face> {
     fn connect(
         self,
         other: Self,
-        with: FloatingCurve,
+        with: CurveFloating,
         tolerance: impl Into<Tolerance>,
     ) -> Solid {
         let tolerance = tolerance.into();
@@ -98,7 +98,7 @@ impl Connect for Handle<Face> {
 
 fn build_connecting_faces(
     [bottom, top]: [&Face; 2],
-    connecting_curve: FloatingCurve,
+    connecting_curve: CurveFloating,
 ) -> Vec<Handle<Face>> {
     let connecting_curves = build_connecting_curves(bottom, connecting_curve);
 
@@ -115,7 +115,7 @@ fn build_connecting_faces(
 
 fn build_connecting_curves(
     bottom: &Face,
-    connecting_curve: FloatingCurve,
+    connecting_curve: CurveFloating,
 ) -> Vec<Handle<Curve>> {
     let bottom_vertices =
         bottom.half_edges.iter().map(|half_edge| &half_edge.start);

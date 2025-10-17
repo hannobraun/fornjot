@@ -24,7 +24,7 @@ pub struct AnchoredCurve {
     pub origin: Point<3>,
 
     /// # The floating part of the curve geometry
-    pub floating: FloatingCurve,
+    pub floating: CurveFloating,
 }
 
 impl AnchoredCurve {
@@ -34,7 +34,7 @@ impl AnchoredCurve {
     ) -> Self {
         Self {
             origin,
-            floating: FloatingCurve::new(curve),
+            floating: CurveFloating::new(curve),
         }
     }
 
@@ -82,11 +82,11 @@ impl AnchoredCurve {
 }
 
 #[derive(Debug)]
-pub struct FloatingCurve {
+pub struct CurveFloating {
     pub inner: Box<dyn CurveGeometry>,
 }
 
-impl FloatingCurve {
+impl CurveFloating {
     pub fn new(curve: impl CurveGeometry + 'static) -> Self {
         Self {
             inner: Box::new(curve),
@@ -120,7 +120,7 @@ impl FloatingCurve {
     }
 }
 
-impl Clone for FloatingCurve {
+impl Clone for CurveFloating {
     fn clone(&self) -> Self {
         Self {
             inner: self.inner.clone_curve_geometry(),

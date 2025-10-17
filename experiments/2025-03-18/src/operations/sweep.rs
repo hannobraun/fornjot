@@ -2,7 +2,7 @@ use fj_interop::Tolerance;
 use fj_math::Point;
 
 use crate::{
-    geometry::FloatingCurve,
+    geometry::CurveFloating,
     handle::Handle,
     topology::{face::Face, solid::Solid},
 };
@@ -23,7 +23,7 @@ pub trait Sweep {
     /// this operation.
     fn sweep(
         self,
-        along: FloatingCurve,
+        along: CurveFloating,
         to: impl Into<Point<1>>,
         tolerance: impl Into<Tolerance>,
     ) -> Solid;
@@ -32,7 +32,7 @@ pub trait Sweep {
 impl Sweep for Handle<Face> {
     fn sweep(
         self,
-        along: FloatingCurve,
+        along: CurveFloating,
         to: impl Into<Point<1>>,
         tolerance: impl Into<Tolerance>,
     ) -> Solid {
