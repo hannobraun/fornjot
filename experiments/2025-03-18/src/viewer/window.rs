@@ -168,7 +168,7 @@ impl Window {
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
         let (render_mode, vertices, labels, aabb) = match displayable {
-            Displayable::Face { points } => {
+            Displayable::Polyline { points } => {
                 let render_mode = RenderMode::Face;
                 let vertices = Vertices::for_polyline(
                     points
@@ -275,14 +275,14 @@ impl Window {
 }
 
 pub enum Displayable {
-    Face { points: Vec<PointWithLabel> },
+    Polyline { points: Vec<PointWithLabel> },
     Mesh { tri_mesh: TriMesh },
     Point { point: Point<3> },
 }
 
 impl Displayable {
     pub fn face(points: Vec<PointWithLabel>) -> Self {
-        Self::Face { points }
+        Self::Polyline { points }
     }
 
     pub fn mesh(tri_mesh: TriMesh) -> Self {
