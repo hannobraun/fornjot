@@ -275,9 +275,9 @@ impl Window {
 }
 
 pub enum Displayable {
-    Polyline { points: Vec<PointWithLabel> },
     Mesh { tri_mesh: TriMesh },
     Point { point: Point<3> },
+    Polyline { points: Vec<PointWithLabel> },
 }
 
 impl Displayable {
