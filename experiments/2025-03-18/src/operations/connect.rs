@@ -2,7 +2,7 @@ use fj_interop::Tolerance;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{AnchoredCurve, CurveFloating, SweptCurve},
+    geometry::{CurveAnchored, CurveFloating, SweptCurve},
     handle::Handle,
     topology::{
         curve::Curve,
@@ -123,7 +123,7 @@ fn build_connecting_curves(
     bottom_vertices
         .map(|bottom| {
             let curve = Curve {
-                geometry: AnchoredCurve {
+                geometry: CurveAnchored {
                     origin: bottom.point,
                     floating: connecting_curve.clone(),
                 },

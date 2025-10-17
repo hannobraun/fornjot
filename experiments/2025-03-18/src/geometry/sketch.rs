@@ -12,7 +12,7 @@ use crate::{
     },
 };
 
-use super::{AnchoredCurve, Circle};
+use super::{Circle, CurveAnchored};
 
 pub struct Sketch {
     segments: Vec<SketchSegment>,
@@ -227,7 +227,7 @@ fn make_half_edges(
                     };
 
                     Handle::new(Curve {
-                        geometry: AnchoredCurve::from_origin_and_curve(
+                        geometry: CurveAnchored::from_origin_and_curve(
                             origin, circle,
                         ),
                     })

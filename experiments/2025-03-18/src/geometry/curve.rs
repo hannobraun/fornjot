@@ -16,7 +16,7 @@ use super::Line;
 /// origin and a direction (a point and a vector). The floating version is just
 /// the direction (a vector).
 #[derive(Clone, Debug)]
-pub struct AnchoredCurve {
+pub struct CurveAnchored {
     /// # The origin point of the curve, which anchors it in 3D space
     ///
     /// This _must always_ be the origin point of the curve's coordinate system.
@@ -27,7 +27,7 @@ pub struct AnchoredCurve {
     pub floating: CurveFloating,
 }
 
-impl AnchoredCurve {
+impl CurveAnchored {
     pub fn from_origin_and_curve(
         origin: Point<3>,
         curve: impl CurveGeometry + 'static,

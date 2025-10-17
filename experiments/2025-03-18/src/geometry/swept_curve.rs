@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
 
-use super::{AnchoredCurve, Line, curve::CurveFloating};
+use super::{CurveAnchored, Line, curve::CurveFloating};
 
 /// # A curve that is swept along the path of another curve, forming a surface
 ///
@@ -35,7 +35,7 @@ pub struct SweptCurve {
     ///
     /// Defines the u-axis of the resulting surface. This is an anchored curve,
     /// so it also defines the surface's origin.
-    pub u: AnchoredCurve,
+    pub u: CurveAnchored,
 
     /// # The curve along which the `u` curve is being swept
     ///
@@ -52,7 +52,7 @@ impl SweptCurve {
         let [u, v] = axes.map(Into::into).map(|direction| Line { direction });
 
         Self {
-            u: AnchoredCurve::from_origin_and_curve(origin, u),
+            u: CurveAnchored::from_origin_and_curve(origin, u),
             v: CurveFloating::new(v),
         }
     }
