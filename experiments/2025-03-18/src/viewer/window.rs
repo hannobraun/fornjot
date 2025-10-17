@@ -281,10 +281,6 @@ pub enum Displayable {
 }
 
 impl Displayable {
-    pub fn face(points: Vec<PointWithLabel>) -> Self {
-        Self::Polyline { points }
-    }
-
     pub fn mesh(tri_mesh: TriMesh) -> Self {
         Self::Mesh { tri_mesh }
     }
