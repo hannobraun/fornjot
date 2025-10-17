@@ -280,12 +280,6 @@ pub enum Displayable {
     Polyline { points: Vec<PointWithLabel> },
 }
 
-impl Displayable {
-    pub fn mesh(tri_mesh: TriMesh) -> Self {
-        Self::Mesh { tri_mesh }
-    }
-}
-
 pub struct PointWithLabel {
     pub point: Point<3>,
     pub label: ApproxPoint<2>,

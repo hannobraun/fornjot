@@ -149,7 +149,7 @@ impl WindowHandle {
     /// # Display a 3D triangle mesh
     pub fn display_mesh(&self, tri_mesh: TriMesh) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::mesh(tri_mesh),
+            displayable: Displayable::Mesh { tri_mesh },
             window_id: self.id,
         });
 
