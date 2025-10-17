@@ -168,6 +168,34 @@ impl Window {
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
         let (render_mode, vertices, labels, aabb) = match displayable {
+            Displayable::Mesh { tri_mesh } => {
+                let render_mode = RenderMode::Mesh;
+                let vertices = Vertices::for_mesh(&tri_mesh);
+                let labels = tri_mesh
+                    .all_triangles()
+                    .flat_map(|triangle| triangle.points)
+                    .sorted()
+                    .dedup()
+                    .map(|point| (format!("{point:.3?}"), point))
+                    .collect();
+                let aabb = tri_mesh.aabb();
+
+                self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
+
+                (render_mode, vertices, labels, aabb)
+            }
+            Displayable::Point { point } => {
+                let render_mode = RenderMode::Point;
+                let vertices = Vertices::for_point(point);
+                let labels = vec![];
+
+                let aabb = Aabb {
+                    min: point,
+                    max: point,
+                };
+
+                (render_mode, vertices, labels, aabb)
+            }
             Displayable::Polyline { points } => {
                 let render_mode = RenderMode::Face;
                 let vertices = Vertices::for_polyline(
@@ -195,34 +223,6 @@ impl Window {
                         .map(|PointWithLabel { point, .. }| point)
                         .copied(),
                 );
-
-                (render_mode, vertices, labels, aabb)
-            }
-            Displayable::Mesh { tri_mesh } => {
-                let render_mode = RenderMode::Mesh;
-                let vertices = Vertices::for_mesh(&tri_mesh);
-                let labels = tri_mesh
-                    .all_triangles()
-                    .flat_map(|triangle| triangle.points)
-                    .sorted()
-                    .dedup()
-                    .map(|point| (format!("{point:.3?}"), point))
-                    .collect();
-                let aabb = tri_mesh.aabb();
-
-                self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
-
-                (render_mode, vertices, labels, aabb)
-            }
-            Displayable::Point { point } => {
-                let render_mode = RenderMode::Point;
-                let vertices = Vertices::for_point(point);
-                let labels = vec![];
-
-                let aabb = Aabb {
-                    min: point,
-                    max: point,
-                };
 
                 (render_mode, vertices, labels, aabb)
             }
