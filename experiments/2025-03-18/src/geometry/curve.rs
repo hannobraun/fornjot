@@ -3,7 +3,7 @@ use std::fmt;
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::approx::curve::CurveApprox;
+use crate::approx::curve::CurveApproxFloating;
 
 use super::Line;
 
@@ -76,7 +76,7 @@ impl AnchoredCurve {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> CurveApprox {
+    ) -> CurveApproxFloating {
         self.floating.approximate(boundary, tolerance)
     }
 }
@@ -114,7 +114,7 @@ impl FloatingCurve {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> CurveApprox {
+    ) -> CurveApproxFloating {
         let boundary = boundary.map(Into::into);
         self.inner.approximate(boundary, tolerance)
     }
@@ -143,7 +143,7 @@ pub trait CurveGeometry: fmt::Debug {
         &self,
         boundary: [Point<1>; 2],
         tolerance: Tolerance,
-    ) -> CurveApprox;
+    ) -> CurveApproxFloating;
 
     fn increment(&self, tolerance: Tolerance, size_hint: Scalar) -> Vector<1>;
 }
