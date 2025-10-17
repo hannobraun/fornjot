@@ -3,9 +3,9 @@ use spade::Triangulation;
 use crate::approx::point::ApproxPoint;
 
 pub fn triangles(
-    points_from_half_edges: impl IntoIterator<Item = ApproxPoint>,
-    points_from_surface: impl IntoIterator<Item = ApproxPoint>,
-) -> Vec<[ApproxPoint; 3]> {
+    points_from_half_edges: impl IntoIterator<Item = ApproxPoint<2>>,
+    points_from_surface: impl IntoIterator<Item = ApproxPoint<2>>,
+) -> Vec<[ApproxPoint<2>; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     // We're passing duplicate points to the triangulation here. It doesn't seem

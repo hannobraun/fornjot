@@ -292,7 +292,7 @@ impl Displayable {
 
 pub struct PointWithLabel {
     pub point: Point<3>,
-    pub label: ApproxPoint,
+    pub label: ApproxPoint<2>,
 }
 
 #[derive(Debug, thiserror::Error)]

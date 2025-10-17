@@ -5,7 +5,7 @@ use crate::approx::{
 };
 
 pub struct FaceApproxPoints {
-    pub points: Vec<ApproxPoint>,
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 impl FaceApproxPoints {

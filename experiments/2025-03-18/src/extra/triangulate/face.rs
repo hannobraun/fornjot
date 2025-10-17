@@ -89,7 +89,9 @@ pub fn triangulate_face(
     mesh
 }
 
-fn polygon_from_half_edges(points_from_half_edges: &[ApproxPoint]) -> Polygon {
+fn polygon_from_half_edges(
+    points_from_half_edges: &[ApproxPoint<2>],
+) -> Polygon {
     // This is a placeholder implementation that is not well-tested and probably
     // doesn't support polygons with multiple holes.
 

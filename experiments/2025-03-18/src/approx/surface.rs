@@ -9,7 +9,7 @@ use crate::{
 #[derive(Debug)]
 pub struct SurfaceApprox<'r> {
     _surface: &'r Surface,
-    points: Vec<ApproxPoint>,
+    points: Vec<ApproxPoint<2>>,
     triangles: Vec<MeshTriangle>,
 }
 
@@ -25,7 +25,7 @@ impl<'r> SurfaceApprox<'r> {
         surface_approx
     }
 
-    pub fn points(&self) -> impl Iterator<Item = &ApproxPoint> {
+    pub fn points(&self) -> impl Iterator<Item = &ApproxPoint<2>> {
         self.points.iter()
     }
 
@@ -100,7 +100,7 @@ impl<'r> SurfaceApprox<'r> {
 
 #[derive(Debug)]
 pub struct MeshTriangle {
-    pub points: [ApproxPoint; 3],
+    pub points: [ApproxPoint<2>; 3],
 }
 
 impl MeshTriangle {
