@@ -106,7 +106,7 @@ pub struct MeshTriangle {
 impl MeshTriangle {
     pub fn to_surface_triangle(&self) -> Triangle<2> {
         Triangle {
-            points: self.points.map(|point| point.point_surface),
+            points: self.points.map(|point| point.local),
         }
     }
 

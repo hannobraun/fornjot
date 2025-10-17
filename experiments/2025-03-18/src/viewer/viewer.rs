@@ -113,7 +113,7 @@ impl WindowHandle {
             .iter()
             .copied()
             .map(|point| PointWithLabel {
-                point: point.point_surface.to_xyz(),
+                point: point.local.to_xyz(),
                 label: point,
             })
             .collect::<Vec<_>>();

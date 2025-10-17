@@ -182,7 +182,7 @@ impl Window {
                         (
                             format!(
                                 "{point_surface:.3?} / {point_global:.3?}",
-                                point_surface = label.point_surface,
+                                point_surface = label.local,
                                 point_global = label.global,
                             ),
                             *point,

@@ -56,8 +56,8 @@ pub fn triangulate_face(
         .points()
         .filter(|point| {
             polygon_from_half_edges.contains(&Coord {
-                x: point.point_surface.u.into_f64(),
-                y: point.point_surface.v.into_f64(),
+                x: point.local.u.into_f64(),
+                y: point.local.v.into_f64(),
             })
         })
         .copied();
@@ -65,7 +65,7 @@ pub fn triangulate_face(
     let triangles = triangles(face_approx_points.points, surface_points)
         .into_iter()
         .filter(|triangle| {
-            let points = triangle.map(|point| point.point_surface);
+            let points = triangle.map(|point| point.local);
             let triangle = Triangle { points };
 
             let [x, y] =
@@ -106,7 +106,7 @@ fn polygon_from_half_edges(
         }
 
         let [x, y] =
-            point.point_surface.coords.components.map(|s| s.into_f64());
+            point.local.coords.components.map(|s| s.into_f64());
         current_line_string.push(Coord { x, y });
         visited_points.insert(point);
     }

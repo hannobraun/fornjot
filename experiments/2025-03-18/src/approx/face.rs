@@ -41,7 +41,7 @@ impl FaceApproxPoints {
                     surface.project_point(point_global, tolerance.inner());
 
                 ApproxPoint {
-                    point_surface,
+                    local: point_surface,
                     global: point_global,
                 }
             })
