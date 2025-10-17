@@ -85,9 +85,6 @@ impl Pipelines {
         render_pass: &mut wgpu::RenderPass,
     ) {
         match geometry.render_mode {
-            RenderMode::Polyline => {
-                self.lines.draw(geometry, render_pass);
-            }
             RenderMode::Mesh => {
                 if config.draw_mesh_triangles {
                     self.mesh_triangles.draw(geometry, render_pass);
@@ -101,6 +98,9 @@ impl Pipelines {
             }
             RenderMode::Point => {
                 self.points.draw(geometry, render_pass);
+            }
+            RenderMode::Polyline => {
+                self.lines.draw(geometry, render_pass);
             }
         }
     }
