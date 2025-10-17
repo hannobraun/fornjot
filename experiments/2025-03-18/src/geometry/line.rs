@@ -1,7 +1,9 @@
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::{approx::curve::CurveApproxFloating, geometry::curve::CurveGeometry};
+use crate::{
+    approx::curve::CurveApproxFloating, geometry::curve::CurveGeometry,
+};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
@@ -42,7 +44,11 @@ impl CurveGeometry for Line {
         })
     }
 
-    fn approximate(&self, _: [Point<1>; 2], _: Tolerance) -> CurveApproxFloating {
+    fn approximate(
+        &self,
+        _: [Point<1>; 2],
+        _: Tolerance,
+    ) -> CurveApproxFloating {
         CurveApproxFloating { curvature: vec![] }
     }
 

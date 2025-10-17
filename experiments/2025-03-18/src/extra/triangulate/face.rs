@@ -105,8 +105,7 @@ fn polygon_from_half_edges(
             continue;
         }
 
-        let [x, y] =
-            point.local.coords.components.map(|s| s.into_f64());
+        let [x, y] = point.local.coords.components.map(|s| s.into_f64());
         current_line_string.push(Coord { x, y });
         visited_points.insert(point);
     }
