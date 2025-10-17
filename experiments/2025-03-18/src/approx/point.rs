@@ -5,7 +5,7 @@ use crate::geometry::SurfaceGeometry;
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct ApproxPoint<const D: usize> {
     pub point_surface: Point<D>,
-    pub point_global: Point<3>,
+    pub global: Point<3>,
 }
 
 impl ApproxPoint<2> {
@@ -17,7 +17,7 @@ impl ApproxPoint<2> {
 
         Self {
             point_surface,
-            point_global,
+            global: point_global,
         }
     }
 }

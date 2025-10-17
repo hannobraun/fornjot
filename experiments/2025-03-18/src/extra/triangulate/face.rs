@@ -74,7 +74,7 @@ pub fn triangulate_face(
             polygon_from_half_edges.contains(&Coord { x, y })
         })
         .map(|triangle| {
-            let points = triangle.map(|point| point.point_global);
+            let points = triangle.map(|point| point.global);
 
             MeshTriangle {
                 inner: Triangle { points },

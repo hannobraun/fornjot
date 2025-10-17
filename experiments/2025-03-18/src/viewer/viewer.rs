@@ -133,7 +133,7 @@ impl WindowHandle {
             .iter()
             .copied()
             .map(|point| PointWithLabel {
-                point: point.point_global,
+                point: point.global,
                 label: point,
             })
             .collect();

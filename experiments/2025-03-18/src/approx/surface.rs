@@ -83,7 +83,7 @@ impl<'r> SurfaceApprox<'r> {
             .iter()
             .map(|triangle| {
                 let triangle = Triangle {
-                    points: triangle.points.map(|point| point.point_global),
+                    points: triangle.points.map(|point| point.global),
                 };
 
                 fj_interop::MeshTriangle {
@@ -112,7 +112,7 @@ impl MeshTriangle {
 
     pub fn to_global_triangle(&self) -> Triangle<3> {
         Triangle {
-            points: self.points.map(|point| point.point_global),
+            points: self.points.map(|point| point.global),
         }
     }
 

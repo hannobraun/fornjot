@@ -42,7 +42,7 @@ impl FaceApproxPoints {
 
                 ApproxPoint {
                     point_surface,
-                    point_global,
+                    global: point_global,
                 }
             })
             .collect();
