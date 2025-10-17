@@ -11,26 +11,28 @@ use crate::{
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 
 pub struct DebugWindow {
-    mutex: Mutex<DebugWindowState>,
+    mutex: DebugWindowMutex,
 }
 
 impl DebugWindow {
     pub const fn new() -> Self {
         Self {
-            mutex: Mutex::new(DebugWindowState::Uninitialized),
+            mutex: DebugWindowMutex {
+                inner: Mutex::new(DebugWindowState::Uninitialized),
+            },
         }
     }
 
     pub fn initialize(&self, viewer: &ViewerHandle) {
         let window = viewer.open_window();
 
-        let mut inner = self.mutex.lock().unwrap();
+        let mut inner = self.mutex.inner.lock().unwrap();
         *inner = DebugWindowState::Initialized { window };
     }
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_face_surface(&self, face: &FaceApproxPoints) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_face_surface(face);
@@ -38,7 +40,7 @@ impl DebugWindow {
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_face_global(&self, face: &FaceApproxPoints) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_face_global(face);
@@ -46,7 +48,7 @@ impl DebugWindow {
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_mesh(&self, tri_mesh: TriMesh) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_mesh(tri_mesh);
@@ -54,7 +56,7 @@ impl DebugWindow {
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_point_global(&self, point: Point<3>) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_point_global(point);
@@ -62,7 +64,7 @@ impl DebugWindow {
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_point_surface(&self, point: Point<2>) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_point_surface(point);
@@ -70,11 +72,15 @@ impl DebugWindow {
 
     #[allow(unused)] // occasionally useful for debugging
     pub fn clear(&self) {
-        let inner = self.mutex.lock().unwrap();
+        let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.clear();
     }
+}
+
+struct DebugWindowMutex {
+    inner: Mutex<DebugWindowState>,
 }
 
 enum DebugWindowState {
