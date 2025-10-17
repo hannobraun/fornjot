@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
 
-use super::{CurveAnchored, Line, curve::CurveFloating};
+use super::{CurveAnchored, CurveFloating, Line};
 
 /// # A curve that is swept along the path of another curve, forming a surface
 ///
