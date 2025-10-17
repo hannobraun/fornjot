@@ -31,10 +31,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_face_surface(&self, face: &FaceApproxPoints) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.display_face_surface(face);
     }
@@ -42,10 +39,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_face_global(&self, face: &FaceApproxPoints) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.display_face_global(face);
     }
@@ -53,10 +47,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_mesh(&self, tri_mesh: TriMesh) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.display_mesh(tri_mesh);
     }
@@ -64,10 +55,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_point_global(&self, point: Point<3>) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.display_point_global(point);
     }
@@ -75,10 +63,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn display_point_surface(&self, point: Point<2>) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.display_point_surface(point);
     }
@@ -86,10 +71,7 @@ impl DebugWindow {
     #[allow(unused)] // occasionally useful for debugging
     pub fn clear(&self) {
         let inner = self.inner.lock().unwrap();
-
-        let DebugWindowInner::Initialized { window } = inner.deref() else {
-            panic!("Debug window has not been initialized.");
-        };
+        let window = inner.deref().expect_initialized();
 
         window.clear();
     }
@@ -98,4 +80,14 @@ impl DebugWindow {
 enum DebugWindowInner {
     Uninitialized,
     Initialized { window: WindowHandle },
+}
+
+impl DebugWindowInner {
+    pub fn expect_initialized(&self) -> &WindowHandle {
+        let DebugWindowInner::Initialized { window } = self else {
+            panic!("Debug window has not been initialized.");
+        };
+
+        window
+    }
 }
