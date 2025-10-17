@@ -43,8 +43,11 @@ pub fn triangulate_face(
                     tolerance,
                 )
             });
-    let face_approx_points =
-        FaceApproxPoints::new(half_edges, &mut surface_approx, tolerance);
+    let face_approx_points = FaceApproxPoints::from_half_edge_approx(
+        half_edges,
+        &mut surface_approx,
+        tolerance,
+    );
 
     let polygon_from_half_edges =
         polygon_from_half_edges(&face_approx_points.points);
