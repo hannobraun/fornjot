@@ -197,7 +197,7 @@ impl Window {
                 (render_mode, vertices, labels, aabb)
             }
             Displayable::Polyline { points } => {
-                let render_mode = RenderMode::Face;
+                let render_mode = RenderMode::Polyline;
                 let vertices = Vertices::for_polyline(
                     points
                         .iter()

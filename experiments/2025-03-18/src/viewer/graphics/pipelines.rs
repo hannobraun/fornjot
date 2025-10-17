@@ -85,7 +85,7 @@ impl Pipelines {
         render_pass: &mut wgpu::RenderPass,
     ) {
         match geometry.render_mode {
-            RenderMode::Face => {
+            RenderMode::Polyline => {
                 self.lines.draw(geometry, render_pass);
             }
             RenderMode::Mesh => {
@@ -199,7 +199,7 @@ impl Pipeline {
 
 #[derive(Clone, Copy, Debug)]
 pub enum RenderMode {
-    Face,
+    Polyline,
     Mesh,
     Point,
 }
