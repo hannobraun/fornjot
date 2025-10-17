@@ -9,7 +9,7 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn for_face<'r>(
+    pub fn for_polyline<'r>(
         points: impl IntoIterator<Item = &'r Point<3>>,
     ) -> Self {
         let vertices = points

@@ -170,7 +170,7 @@ impl Window {
         let (render_mode, vertices, labels, aabb) = match displayable {
             Displayable::Face { points } => {
                 let render_mode = RenderMode::Face;
-                let vertices = Vertices::for_face(
+                let vertices = Vertices::for_polyline(
                     points
                         .iter()
                         .chain(points.first())
