@@ -3,7 +3,7 @@ use std::fmt;
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::approx::curve::CurveApproxFloating;
+use crate::approx::curve::{CurveApproxAnchored, CurveApproxFloating};
 
 use super::Line;
 
@@ -76,8 +76,10 @@ impl CurveAnchored {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> CurveApproxFloating {
-        self.floating.approximate(boundary, tolerance)
+    ) -> CurveApproxAnchored {
+        self.floating
+            .approximate(boundary, tolerance)
+            .into_anchored(self.origin, &*self.floating.inner)
     }
 }
 

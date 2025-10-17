@@ -1,11 +1,27 @@
 use fj_math::Point;
 
-use crate::geometry::SurfaceGeometry;
+use crate::geometry::{CurveGeometry, SurfaceGeometry};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct ApproxPoint<const D: usize> {
     pub local: Point<D>,
     pub global: Point<3>,
+}
+
+impl ApproxPoint<1> {
+    pub fn from_curve_point(
+        origin: Point<3>,
+        point_curve: Point<1>,
+        curve: &dyn CurveGeometry,
+    ) -> Self {
+        let vector_global = curve.vector_from_local_point(point_curve);
+        let point_global = origin + vector_global;
+
+        Self {
+            local: point_curve,
+            global: point_global,
+        }
+    }
 }
 
 impl ApproxPoint<2> {
