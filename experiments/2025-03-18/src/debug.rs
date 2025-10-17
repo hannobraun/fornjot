@@ -11,13 +11,13 @@ use crate::{
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 
 pub struct DebugWindow {
-    inner: Mutex<DebugWindowInner>,
+    inner: Mutex<DebugWindowState>,
 }
 
 impl DebugWindow {
     pub const fn new() -> Self {
         Self {
-            inner: Mutex::new(DebugWindowInner::Uninitialized),
+            inner: Mutex::new(DebugWindowState::Uninitialized),
         }
     }
 
@@ -25,7 +25,7 @@ impl DebugWindow {
         let window = viewer.open_window();
 
         let mut inner = self.inner.lock().unwrap();
-        *inner = DebugWindowInner::Initialized { window };
+        *inner = DebugWindowState::Initialized { window };
     }
 
     #[allow(unused)] // occasionally useful for debugging
@@ -77,14 +77,14 @@ impl DebugWindow {
     }
 }
 
-enum DebugWindowInner {
+enum DebugWindowState {
     Uninitialized,
     Initialized { window: WindowHandle },
 }
 
-impl DebugWindowInner {
+impl DebugWindowState {
     pub fn expect_initialized(&self) -> &WindowHandle {
-        let DebugWindowInner::Initialized { window } = self else {
+        let DebugWindowState::Initialized { window } = self else {
             panic!("Debug window has not been initialized.");
         };
 
