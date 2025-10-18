@@ -1,3 +1,5 @@
+use std::fmt;
+
 use fj_math::Point;
 
 use crate::geometry::{CurveGeometry, SurfaceGeometry};
@@ -35,6 +37,17 @@ impl ApproxPoint<2> {
             local: point_surface,
             global: point_global,
         }
+    }
+}
+
+impl<const D: usize> fmt::Display for ApproxPoint<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{local:.3?} / {global:.3?}",
+            local = self.local,
+            global = self.global,
+        )
     }
 }
 

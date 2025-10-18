@@ -208,11 +208,7 @@ impl Window {
                     .iter()
                     .map(|PointWithLabel { point, label }| {
                         (
-                            format!(
-                                "{point_surface:.3?} / {point_global:.3?}",
-                                point_surface = label.local,
-                                point_global = label.global,
-                            ),
+                            label.to_string(),
                             *point,
                         )
                     })
