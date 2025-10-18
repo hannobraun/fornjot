@@ -1366,9 +1366,9 @@ checksum = "e7c5cedc30da3a610cac6b4ba17597bdf7152cf974e8aab3afb3d54455e371c8"
 
 [[package]]
 name = "indexmap"
-version = "2.11.4"
+version = "2.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b0f83760fb341a774ed326568e19f5a863af4a952def8c39f9ab92fd95b88e5"
+checksum = "6717a8d2a5a929a1a2eb43a12812498ed141a0bcfb7e8f7844fbdbe4303bba9f"
 dependencies = [
  "equivalent",
  "hashbrown 0.16.0",
@@ -2140,9 +2140,9 @@ dependencies = [
 
 [[package]]
 name = "parry2d-f64"
-version = "0.25.0"
+version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7be0b2668c528d5655e47dccfe0c87e608d9f514259ca15727deabd7c8da71fe"
+checksum = "42b191499f688cbddf4d513bed80e3d2f09a3df37a82d3b6b1babe10f2d0e9b2"
 dependencies = [
  "approx",
  "arrayvec",
@@ -2166,9 +2166,9 @@ dependencies = [
 
 [[package]]
 name = "parry3d-f64"
-version = "0.25.0"
+version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "003e47e8173eb6fca6427a14e29f835b5aacfa5ba89bc5632641cf4748985e7c"
+checksum = "37165b1c4e8969f9013d6c21825fb80529aba893d455386d3ce78c9593babf8e"
 dependencies = [
  "approx",
  "arrayvec",
