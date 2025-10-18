@@ -168,6 +168,7 @@ impl Window {
             Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
+                let aabb = tri_mesh.aabb();
                 let labels = tri_mesh
                     .all_triangles()
                     .flat_map(|triangle| triangle.points)
@@ -175,7 +176,6 @@ impl Window {
                     .dedup()
                     .map(|point| (format!("{point:.3?}"), point))
                     .collect();
-                let aabb = tri_mesh.aabb();
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
@@ -184,12 +184,11 @@ impl Window {
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
                 let vertices = Vertices::for_point(point);
-                let labels = vec![];
-
                 let aabb = Aabb {
                     min: point,
                     max: point,
                 };
+                let labels = vec![];
 
                 (render_mode, vertices, labels, aabb)
             }
