@@ -164,7 +164,7 @@ impl Window {
     }
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
-        let (render_mode, vertices, labels, aabb) = match displayable {
+        let (render_mode, vertices, aabb, labels) = match displayable {
             Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
@@ -179,7 +179,7 @@ impl Window {
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
-                (render_mode, vertices, labels, aabb)
+                (render_mode, vertices, aabb, labels)
             }
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
@@ -190,7 +190,7 @@ impl Window {
                 };
                 let labels = vec![];
 
-                (render_mode, vertices, labels, aabb)
+                (render_mode, vertices, aabb, labels)
             }
             Displayable::Polyline { points } => {
                 let render_mode = RenderMode::Polyline;
@@ -211,7 +211,7 @@ impl Window {
                     .map(|PointWithLabel { point, label }| (label, point))
                     .collect();
 
-                (render_mode, vertices, labels, aabb)
+                (render_mode, vertices, aabb, labels)
             }
         };
 
