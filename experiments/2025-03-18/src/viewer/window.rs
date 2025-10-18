@@ -201,18 +201,18 @@ impl Window {
                         .chain(points.first())
                         .map(|PointWithLabel { point, .. }| point),
                 );
-                let labels = points
-                    .iter()
-                    .map(|PointWithLabel { point, label }| {
-                        (label.clone(), *point)
-                    })
-                    .collect();
                 let aabb = Aabb::<3>::from_points(
                     points
                         .iter()
                         .map(|PointWithLabel { point, .. }| point)
                         .copied(),
                 );
+                let labels = points
+                    .iter()
+                    .map(|PointWithLabel { point, label }| {
+                        (label.clone(), *point)
+                    })
+                    .collect();
 
                 (render_mode, vertices, labels, aabb)
             }
