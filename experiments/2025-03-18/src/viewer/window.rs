@@ -208,10 +208,8 @@ impl Window {
                         .copied(),
                 );
                 let labels = points
-                    .iter()
-                    .map(|PointWithLabel { point, label }| {
-                        (label.clone(), *point)
-                    })
+                    .into_iter()
+                    .map(|PointWithLabel { point, label }| (label, point))
                     .collect();
 
                 (render_mode, vertices, labels, aabb)
