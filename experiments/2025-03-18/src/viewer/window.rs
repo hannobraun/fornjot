@@ -6,14 +6,11 @@ use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
-use crate::{
-    approx::point::ApproxPoint,
-    viewer::{
-        RendererInitError,
-        camera::{Camera, FocusPoint},
-        graphics::{DrawConfig, RenderMode, Renderer, Vertices},
-        input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
-    },
+use crate::viewer::{
+    RendererInitError,
+    camera::{Camera, FocusPoint},
+    graphics::{DrawConfig, RenderMode, Renderer, Vertices},
+    input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
 };
 
 pub struct Window {
@@ -207,10 +204,7 @@ impl Window {
                 let labels = points
                     .iter()
                     .map(|PointWithLabel { point, label }| {
-                        (
-                            label.to_string(),
-                            *point,
-                        )
+                        (label.clone(), *point)
                     })
                     .collect();
                 let aabb = Aabb::<3>::from_points(
@@ -278,7 +272,7 @@ pub enum Displayable {
 
 pub struct PointWithLabel {
     pub point: Point<3>,
-    pub label: ApproxPoint<2>,
+    pub label: String,
 }
 
 #[derive(Debug, thiserror::Error)]

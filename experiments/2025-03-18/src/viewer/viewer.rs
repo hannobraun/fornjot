@@ -114,7 +114,7 @@ impl WindowHandle {
             .copied()
             .map(|point| PointWithLabel {
                 point: point.local.to_xyz(),
-                label: point,
+                label: point.to_string(),
             })
             .collect::<Vec<_>>();
 
@@ -134,7 +134,7 @@ impl WindowHandle {
             .copied()
             .map(|point| PointWithLabel {
                 point: point.global,
-                label: point,
+                label: point.to_string(),
             })
             .collect();
 
