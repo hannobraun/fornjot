@@ -82,8 +82,8 @@ impl CurveGeometry for Circle {
 
         let mut curvature = Vec::new();
 
-        let mut t = (min.t / increment).floor() * increment + increment;
-        while t <= (max.t / increment).floor() * increment {
+        let mut t = snap_to_increment(min.t, increment) + increment;
+        while t <= snap_to_increment(max.t, increment) {
             curvature.push(Point::from([t]));
             t += increment;
         }
@@ -106,6 +106,10 @@ impl CurveGeometry for Circle {
         let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
         Vector::from([increment])
     }
+}
+
+fn snap_to_increment(t: Scalar, increment: Scalar) -> Scalar {
+    (t / increment).floor() * increment
 }
 
 #[cfg(test)]
