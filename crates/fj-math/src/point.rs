@@ -154,6 +154,19 @@ impl<const D: usize> ops::Sub<Self> for Point<D> {
     }
 }
 
+impl<S, const D: usize> ops::Mul<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn mul(self, s: S) -> Self::Output {
+        Self {
+            coords: self.coords * s.into(),
+        }
+    }
+}
+
 impl<V, const D: usize> ops::Add<V> for Point<D>
 where
     V: Into<Vector<D>>,
