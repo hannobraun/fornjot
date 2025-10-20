@@ -32,8 +32,6 @@ fn main() -> anyhow::Result<()> {
     ];
 
     for target in targets {
-        let rust_flags = "-D warnings";
-
         for crate_ in target.crates {
             let mut command = Command::new("cargo");
             command
@@ -41,7 +39,7 @@ fn main() -> anyhow::Result<()> {
                 .arg("--all-features")
                 .args(["--target", target.triple])
                 .args(["-p", crate_])
-                .env("RUSTFLAGS", rust_flags);
+                .env("RUSTFLAGS", "-D warnings");
 
             println!("Running {command:?}");
             let status = command.status()?;
