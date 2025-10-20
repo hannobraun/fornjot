@@ -368,8 +368,8 @@ where
     type Output = Self;
 
     fn mul(self, s: S) -> Self::Output {
-        let scalar = s.into();
-        let components = self.components.map(|v| v * scalar);
+        let s = s.into();
+        let components = self.components.map(|v| v * s);
         Self { components }
     }
 }
@@ -390,8 +390,8 @@ where
     type Output = Self;
 
     fn div(self, s: S) -> Self::Output {
-        let scalar = s.into();
-        let components = self.components.map(|component| component / scalar);
+        let s = s.into();
+        let components = self.components.map(|component| component / s);
         Self { components }
     }
 }
