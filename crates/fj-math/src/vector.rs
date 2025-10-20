@@ -420,6 +420,12 @@ impl<const D: usize> ops::Mul<Self> for Vector<D> {
     }
 }
 
+impl<const D: usize> ops::MulAssign<Self> for Vector<D> {
+    fn mul_assign(&mut self, v: Self) {
+        *self = *self * v;
+    }
+}
+
 impl<const D: usize> ops::Div<Self> for Vector<D> {
     type Output = Self;
 
