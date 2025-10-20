@@ -35,25 +35,6 @@ fn main() -> anyhow::Result<()> {
         let mut rust_flags = String::new();
         rust_flags.push_str("-D warnings");
 
-        // This is part of a workaround to make `getrandom` build when compiling
-        // for WASM. See comment in `fj-viewer`'s `Cargo.toml` for more
-        // information.
-        //
-        // Setting the flag like this might not be appropriate, as it might
-        // require a similar workaround from users of `fj-viewer`. However, as
-        // of this writing (2025-05-08), `fj-viewer doesn't support the WASM
-        // target in any meaningful way. It is only compiled to that target
-        // during the CI build, to prevent regressions that would inhibit adding
-        // support harder from slipping in.
-        //
-        // So given this context, the following workaround is probably fine.
-        // Once real support for `fj-viewer` in WASM environments is added, we
-        // probably have to come up with a different solution. (And then, we'll
-        // be in a better position to actually test these different solutions.)
-        if target.triple == "wasm32-unknown-unknown" {
-            rust_flags.push_str(" --cfg getrandom_backend=\"wasm_js\"");
-        }
-
         for crate_ in target.crates {
             let mut command = Command::new("cargo");
             command

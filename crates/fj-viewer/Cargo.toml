@@ -41,10 +41,6 @@ features = ["webgl"]
 # We don't depend on `getrandom` directly, but we need this to enable the
 # `wasm_js` feature when cross-compiling to WASM. Otherwise, `getrandom` will
 # not build.
-#
-# Please note that this alone is not enough to make this workaround work. To
-# make the selected backend available, `--cfg` flag needs to be passed to rustc.
-# We do this in `tools/cross-compiler/src/main.rs`.
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 version = "0.3.4"
 features = ["wasm_js"]
