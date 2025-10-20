@@ -441,6 +441,12 @@ impl<const D: usize> ops::Div<Self> for Vector<D> {
     }
 }
 
+impl<const D: usize> ops::DivAssign<Self> for Vector<D> {
+    fn div_assign(&mut self, v: Self) {
+        *self = *self / v;
+    }
+}
+
 impl<const D: usize> fmt::Debug for Vector<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         <[Scalar; D] as fmt::Debug>::fmt(&self.components, f)
