@@ -167,6 +167,19 @@ where
     }
 }
 
+impl<S, const D: usize> ops::Div<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn div(self, s: S) -> Self::Output {
+        Self {
+            coords: self.coords / s.into(),
+        }
+    }
+}
+
 impl<V, const D: usize> ops::Add<V> for Point<D>
 where
     V: Into<Vector<D>>,
