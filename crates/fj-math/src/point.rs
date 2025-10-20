@@ -248,6 +248,12 @@ impl<const D: usize> ops::Mul<Vector<D>> for Point<D> {
     }
 }
 
+impl<const D: usize> ops::MulAssign<Vector<D>> for Point<D> {
+    fn mul_assign(&mut self, v: Vector<D>) {
+        *self = *self * v
+    }
+}
+
 impl<const D: usize> ops::Div<Vector<D>> for Point<D> {
     type Output = Self;
 
