@@ -189,6 +189,15 @@ where
     }
 }
 
+impl<S, const D: usize> ops::DivAssign<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    fn div_assign(&mut self, s: S) {
+        *self = *self / s.into()
+    }
+}
+
 impl<V, const D: usize> ops::Add<V> for Point<D>
 where
     V: Into<Vector<D>>,
