@@ -238,6 +238,16 @@ where
     }
 }
 
+impl<const D: usize> ops::Mul<Vector<D>> for Point<D> {
+    type Output = Self;
+
+    fn mul(self, v: Vector<D>) -> Self::Output {
+        Self {
+            coords: self.coords * v,
+        }
+    }
+}
+
 impl<const D: usize> fmt::Debug for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.coords.fmt(f)
