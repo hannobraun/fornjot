@@ -396,6 +396,15 @@ where
     }
 }
 
+impl<S, const D: usize> ops::DivAssign<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
+    fn div_assign(&mut self, s: S) {
+        *self = *self / s;
+    }
+}
+
 impl<const D: usize> fmt::Debug for Vector<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         <[Scalar; D] as fmt::Debug>::fmt(&self.components, f)
