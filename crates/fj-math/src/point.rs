@@ -264,6 +264,12 @@ impl<const D: usize> ops::Div<Vector<D>> for Point<D> {
     }
 }
 
+impl<const D: usize> ops::DivAssign<Vector<D>> for Point<D> {
+    fn div_assign(&mut self, v: Vector<D>) {
+        *self = *self / v
+    }
+}
+
 impl<const D: usize> fmt::Debug for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.coords.fmt(f)
