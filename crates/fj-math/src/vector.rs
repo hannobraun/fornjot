@@ -367,8 +367,8 @@ where
 {
     type Output = Self;
 
-    fn mul(self, scalar: S) -> Self::Output {
-        let scalar = scalar.into();
+    fn mul(self, s: S) -> Self::Output {
+        let scalar = s.into();
         let components = self.components.map(|v| v * scalar);
         Self { components }
     }
@@ -378,8 +378,8 @@ impl<S, const D: usize> ops::MulAssign<S> for Vector<D>
 where
     S: Into<Scalar>,
 {
-    fn mul_assign(&mut self, rhs: S) {
-        *self = *self * rhs;
+    fn mul_assign(&mut self, s: S) {
+        *self = *self * s;
     }
 }
 
@@ -389,8 +389,8 @@ where
 {
     type Output = Self;
 
-    fn div(self, scalar: S) -> Self::Output {
-        let scalar = scalar.into();
+    fn div(self, s: S) -> Self::Output {
+        let scalar = s.into();
         let components = self.components.map(|component| component / scalar);
         Self { components }
     }
