@@ -420,6 +420,21 @@ impl<const D: usize> ops::Mul<Self> for Vector<D> {
     }
 }
 
+impl<const D: usize> ops::Div<Self> for Vector<D> {
+    type Output = Self;
+
+    fn div(self, v: Self) -> Self::Output {
+        Self {
+            components: self
+                .components
+                .into_iter_fixed()
+                .zip(v.components)
+                .map(|(a, b)| a / b)
+                .collect(),
+        }
+    }
+}
+
 impl<const D: usize> fmt::Debug for Vector<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         <[Scalar; D] as fmt::Debug>::fmt(&self.components, f)
