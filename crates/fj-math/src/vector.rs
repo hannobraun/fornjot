@@ -127,6 +127,13 @@ impl<const D: usize> Vector<D> {
 
         self.dot(&other.normalize())
     }
+
+    /// # Transform the vector by calling [`Scalar::floor`] on its components
+    pub fn floor(self) -> Self {
+        Self {
+            components: self.components.map(|s| s.floor()),
+        }
+    }
 }
 
 impl Vector<1> {
