@@ -56,6 +56,13 @@ impl<const D: usize> Point<D> {
     pub fn distance_to(&self, other: &Self) -> Scalar {
         (self.coords - other.coords).magnitude()
     }
+
+    /// # Transform the point by calling [`Scalar::floor`] on its components
+    pub fn floor(self) -> Self {
+        Self {
+            coords: self.coords.floor(),
+        }
+    }
 }
 
 impl ops::Deref for Point<1> {
