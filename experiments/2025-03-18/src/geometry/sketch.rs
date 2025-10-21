@@ -170,7 +170,7 @@ fn make_half_edges(
                 SketchSegment::Arc { start, radius } => {
                     let end = next_segment.segment.start();
 
-                    let start_to_end = end - start;
+                    let start_to_end = *end - start;
                     let midpoint = start + start_to_end * 0.5;
 
                     let midpoint_towards_center =
