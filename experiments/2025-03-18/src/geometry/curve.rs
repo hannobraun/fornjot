@@ -157,6 +157,12 @@ pub struct Increment {
     pub inner: Vector<1>,
 }
 
+impl Increment {
+    pub fn snap_to_multiple(&self, t: Scalar) -> Scalar {
+        (t / self.inner.t).floor() * self.inner.t
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use fj_math::{Point, Vector};
