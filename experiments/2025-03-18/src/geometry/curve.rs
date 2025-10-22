@@ -147,7 +147,14 @@ pub trait CurveGeometry: fmt::Debug {
         tolerance: Tolerance,
     ) -> CurveApproxFloating;
 
-    fn increment(&self, tolerance: Tolerance, size_hint: Scalar) -> Vector<1>;
+    fn increment(&self, tolerance: Tolerance, size_hint: Scalar) -> Increment;
+}
+
+/// # The increment of a curve approximation, in curve space
+///
+/// See [`CurveGeometry::increment`].
+pub struct Increment {
+    pub inner: Vector<1>,
 }
 
 #[cfg(test)]

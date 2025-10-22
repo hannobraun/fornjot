@@ -2,7 +2,8 @@ use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    approx::curve::CurveApproxFloating, geometry::curve::CurveGeometry,
+    approx::curve::CurveApproxFloating,
+    geometry::curve::{CurveGeometry, Increment},
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -52,7 +53,9 @@ impl CurveGeometry for Line {
         CurveApproxFloating { curvature: vec![] }
     }
 
-    fn increment(&self, _: Tolerance, size_hint: Scalar) -> Vector<1> {
-        Vector::from([size_hint])
+    fn increment(&self, _: Tolerance, size_hint: Scalar) -> Increment {
+        Increment {
+            inner: Vector::from([size_hint]),
+        }
     }
 }

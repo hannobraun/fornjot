@@ -2,7 +2,8 @@ use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    approx::curve::CurveApproxFloating, geometry::curve::CurveGeometry,
+    approx::curve::CurveApproxFloating,
+    geometry::curve::{CurveGeometry, Increment},
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -78,7 +79,7 @@ impl CurveGeometry for Circle {
         };
 
         let size_hint = max.t - min.t;
-        let increment = self.increment(tolerance, size_hint).t;
+        let increment = self.increment(tolerance, size_hint).inner.t;
 
         let mut curvature = Vec::new();
 
@@ -95,7 +96,7 @@ impl CurveGeometry for Circle {
         CurveApproxFloating { curvature }
     }
 
-    fn increment(&self, tolerance: Tolerance, _: Scalar) -> Vector<1> {
+    fn increment(&self, tolerance: Tolerance, _: Scalar) -> Increment {
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
                 / (Scalar::ONE - (tolerance.inner() / self.radius())).acos(),
@@ -104,7 +105,9 @@ impl CurveGeometry for Circle {
         .ceil();
 
         let increment = Scalar::TAU / num_vertices_to_approx_full_circle;
-        Vector::from([increment])
+        Increment {
+            inner: Vector::from([increment]),
+        }
     }
 }
 
