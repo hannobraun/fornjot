@@ -83,10 +83,10 @@ impl CurveGeometry for Circle {
 
         let mut curvature = Vec::new();
 
-        let mut t = increment.snap_to_multiple(min.t) + increment.inner.t;
-        while t <= increment.snap_to_multiple(max.t) {
-            curvature.push(Point::from([t]));
-            t += increment.inner.t;
+        let mut t = increment.snap_to_multiple(min) + increment.inner;
+        while t <= increment.snap_to_multiple(max) {
+            curvature.push(t);
+            t += increment.inner;
         }
 
         if direction.is_negative() {

@@ -158,8 +158,8 @@ pub struct Increment {
 }
 
 impl Increment {
-    pub fn snap_to_multiple(&self, t: Scalar) -> Scalar {
-        (t / self.inner.t).floor() * self.inner.t
+    pub fn snap_to_multiple(&self, point: Point<1>) -> Point<1> {
+        (point / self.inner).floor() * self.inner
     }
 }
 
