@@ -21,7 +21,7 @@ use winit::{
 };
 
 use crate::{
-    approx::face::FaceApproxPoints,
+    approx::{curve::CurveApproxAnchored, face::FaceApproxPoints},
     viewer::{
         RendererInitError,
         input::DEFAULT_CAMERA_TUNING_CONFIG,
@@ -106,6 +106,26 @@ pub struct WindowHandle {
 }
 
 impl WindowHandle {
+    /// # Display a curve in global space
+    pub fn display_curve_global(&self, curve: &CurveApproxAnchored) -> &Self {
+        let points = curve
+            .curvature
+            .iter()
+            .copied()
+            .map(|point| PointWithLabel {
+                point: point.global,
+                label: point.to_string(),
+            })
+            .collect();
+
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::Polyline { points },
+            window_id: self.id,
+        });
+
+        self
+    }
+
     /// # Display a face in surface space
     pub fn display_face_surface(&self, face: &FaceApproxPoints) -> &Self {
         let points = face
