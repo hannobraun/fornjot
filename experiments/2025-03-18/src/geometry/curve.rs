@@ -153,6 +153,7 @@ pub trait CurveGeometry: fmt::Debug {
 /// # The increment of a curve approximation, in curve space
 ///
 /// See [`CurveGeometry::increment`].
+#[derive(Clone, Copy)]
 pub struct Increment {
     pub inner: Vector<1>,
 }
