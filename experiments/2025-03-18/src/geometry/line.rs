@@ -47,10 +47,12 @@ impl CurveGeometry for Line {
 
     fn approximate(
         &self,
-        _: [Point<1>; 2],
+        boundary: [Point<1>; 2],
         _: Tolerance,
     ) -> CurveApproxFloating {
-        CurveApproxFloating { curvature: vec![] }
+        CurveApproxFloating {
+            curvature: boundary.into(),
+        }
     }
 
     fn increment(&self, _: Tolerance, size_hint: Scalar) -> Increment {

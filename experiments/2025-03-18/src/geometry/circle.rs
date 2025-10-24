@@ -83,8 +83,8 @@ impl CurveGeometry for Circle {
 
         let mut curvature = Vec::new();
 
-        let mut t = increment.snap_to_multiple(min) + increment.inner;
-        while t <= increment.snap_to_multiple(max) {
+        let mut t = increment.snap_to_multiple(min);
+        while t <= increment.snap_to_multiple(max) + increment.inner {
             curvature.push(t);
             t += increment.inner;
         }

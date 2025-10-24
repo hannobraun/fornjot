@@ -35,7 +35,7 @@ impl HalfEdgeApprox {
             .geometry
             .approximate(boundary_local, tolerance);
 
-        let mut points_global = vec![start];
+        let mut points_global = vec![];
         points_global.extend(points_local.curvature.into_iter().map(|point| {
             half_edge.curve.geometry.point_from_local(point.local)
         }));

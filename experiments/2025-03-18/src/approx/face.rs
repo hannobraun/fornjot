@@ -18,7 +18,12 @@ impl FaceApproxPoints {
 
         let points = half_edges
             .into_iter()
-            .flat_map(|approx| approx.points)
+            .flat_map(|approx| {
+                // The last point of a half-edge is the first point of the next
+                // half-edge. So we need to ignore that to prevent duplicates.
+                let n = approx.points.len().saturating_sub(1);
+                approx.points.into_iter().take(n)
+            })
             .map(|point_global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
