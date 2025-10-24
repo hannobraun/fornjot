@@ -139,8 +139,7 @@ pub trait CurveGeometry: fmt::Debug {
     /// # Approximate the curve
     ///
     /// Returns a list of points, in curve coordinates, that approximate the
-    /// curve. The points must be within the provided boundary. Not outside of
-    /// it, and not on it.
+    /// curve. Those points must always include the provided boundary.
     fn approximate(
         &self,
         boundary: [Point<1>; 2],
