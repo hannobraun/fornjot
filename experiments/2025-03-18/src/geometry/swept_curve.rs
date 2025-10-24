@@ -101,45 +101,43 @@ impl SurfaceGeometry for SweptCurve {
         let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
         let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
 
-        let boundary = {
-            [
-                [min_u, min_v],
-                [min_u, max_v],
-                [max_u, min_v],
-                [max_u, max_v],
-            ]
-            .map(Point::from)
-            .into_iter()
-            .chain(
-                approx_u
-                    .curvature
-                    .iter()
-                    .copied()
-                    .map(|point_u| Point::from([point_u.local.t, min_v])),
-            )
-            .chain(
-                approx_u
-                    .curvature
-                    .iter()
-                    .copied()
-                    .map(|point_u| Point::from([point_u.local.t, max_v])),
-            )
-            .chain(
-                approx_v
-                    .curvature
-                    .iter()
-                    .copied()
-                    .map(|point_v| Point::from([min_u, point_v.t])),
-            )
-            .chain(
-                approx_v
-                    .curvature
-                    .iter()
-                    .copied()
-                    .map(|point_v| Point::from([max_u, point_v.t])),
-            )
-            .collect()
-        };
+        let boundary = [
+            [min_u, min_v],
+            [min_u, max_v],
+            [max_u, min_v],
+            [max_u, max_v],
+        ]
+        .map(Point::from)
+        .into_iter()
+        .chain(
+            approx_u
+                .curvature
+                .iter()
+                .copied()
+                .map(|point_u| Point::from([point_u.local.t, min_v])),
+        )
+        .chain(
+            approx_u
+                .curvature
+                .iter()
+                .copied()
+                .map(|point_u| Point::from([point_u.local.t, max_v])),
+        )
+        .chain(
+            approx_v
+                .curvature
+                .iter()
+                .copied()
+                .map(|point_v| Point::from([min_u, point_v.t])),
+        )
+        .chain(
+            approx_v
+                .curvature
+                .iter()
+                .copied()
+                .map(|point_v| Point::from([max_u, point_v.t])),
+        )
+        .collect();
 
         let curvature = approx_u
             .curvature
