@@ -2,7 +2,7 @@ use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    approx::curve::CurveApproxFloating,
+    approx::curve::{CurveApprox, CurveApproxFloating},
     geometry::curve::{CurveGeometry, Increment},
 };
 
@@ -81,13 +81,11 @@ impl CurveGeometry for Circle {
         let size_hint = max.t - min.t;
         let increment = self.increment(tolerance, size_hint);
 
-        let mut curvature = Vec::new();
+        let mut approx = CurveApprox::start(increment);
+        approx.expand_to_include(min);
+        approx.expand_to_include(max);
 
-        let mut t = increment.snap_to_multiple(min);
-        while t <= increment.snap_to_multiple(max) + increment.inner {
-            curvature.push(t);
-            t += increment.inner;
-        }
+        let mut curvature = approx.into_points();
 
         if direction.is_negative() {
             curvature.reverse();

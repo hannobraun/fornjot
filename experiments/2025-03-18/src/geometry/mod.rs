@@ -7,7 +7,7 @@ mod swept_curve;
 
 pub use self::{
     circle::Circle,
-    curve::{CurveAnchored, CurveFloating, CurveGeometry},
+    curve::{CurveAnchored, CurveFloating, CurveGeometry, Increment},
     line::Line,
     sketch::Sketch,
     surface::SurfaceGeometry,
