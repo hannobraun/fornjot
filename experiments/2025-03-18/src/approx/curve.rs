@@ -13,7 +13,7 @@ pub struct CurveApprox<'r> {
 }
 
 impl<'r> CurveApprox<'r> {
-    pub fn start(
+    pub fn new(
         geometry: &'r dyn CurveGeometry,
         tolerance: Tolerance,
         size_hint: Scalar,
