@@ -79,9 +79,8 @@ impl CurveGeometry for Circle {
         };
 
         let size_hint = max.t - min.t;
-        let increment = self.increment(tolerance, size_hint);
 
-        let mut approx = CurveApprox::start(increment);
+        let mut approx = CurveApprox::start(self, tolerance, size_hint);
         approx.expand_to_include(min);
         approx.expand_to_include(max);
 

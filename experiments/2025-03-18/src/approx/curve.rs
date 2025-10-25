@@ -1,27 +1,33 @@
 use std::collections::VecDeque;
 
-use fj_math::Point;
+use fj_interop::Tolerance;
+use fj_math::{Point, Scalar};
 
-use crate::{
-    approx::point::ApproxPoint,
-    geometry::{CurveGeometry, Increment},
-};
+use crate::{approx::point::ApproxPoint, geometry::CurveGeometry};
 
-pub struct CurveApprox {
-    increment: Increment,
+pub struct CurveApprox<'r> {
+    geometry: &'r dyn CurveGeometry,
+    tolerance: Tolerance,
+    size_hint: Scalar,
     points: VecDeque<Point<1>>,
 }
 
-impl CurveApprox {
-    pub fn start(increment: Increment) -> Self {
+impl<'r> CurveApprox<'r> {
+    pub fn start(
+        geometry: &'r dyn CurveGeometry,
+        tolerance: Tolerance,
+        size_hint: Scalar,
+    ) -> Self {
         Self {
-            increment,
+            geometry,
+            tolerance,
+            size_hint,
             points: VecDeque::new(),
         }
     }
 
     pub fn expand_to_include(&mut self, point: Point<1>) -> bool {
-        let increment = self.increment;
+        let increment = self.geometry.increment(self.tolerance, self.size_hint);
 
         let mut expanded_approximation = false;
 
