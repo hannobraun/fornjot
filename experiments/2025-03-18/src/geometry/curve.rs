@@ -146,7 +146,7 @@ pub trait CurveGeometry: fmt::Debug {
         tolerance: Tolerance,
     ) -> CurveApproxFloating;
 
-    fn increment(
+    fn increment_at(
         &self,
         point: Point<1>,
         tolerance: Tolerance,

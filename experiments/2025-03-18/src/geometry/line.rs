@@ -55,7 +55,7 @@ impl CurveGeometry for Line {
         }
     }
 
-    fn increment(
+    fn increment_at(
         &self,
         _: Point<1>,
         _: Tolerance,

@@ -93,7 +93,7 @@ impl CurveGeometry for Circle {
         CurveApproxFloating { curvature }
     }
 
-    fn increment(
+    fn increment_at(
         &self,
         _: Point<1>,
         tolerance: Tolerance,
