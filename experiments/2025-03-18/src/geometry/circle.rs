@@ -93,7 +93,12 @@ impl CurveGeometry for Circle {
         CurveApproxFloating { curvature }
     }
 
-    fn increment(&self, tolerance: Tolerance, _: Scalar) -> Increment {
+    fn increment(
+        &self,
+        _: Point<1>,
+        tolerance: Tolerance,
+        _: Scalar,
+    ) -> Increment {
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
                 / (Scalar::ONE - (tolerance.inner() / self.radius())).acos(),

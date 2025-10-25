@@ -27,7 +27,9 @@ impl<'r> CurveApprox<'r> {
     }
 
     pub fn expand_to_include(&mut self, point: Point<1>) -> bool {
-        let increment = self.geometry.increment(self.tolerance, self.size_hint);
+        let increment =
+            self.geometry
+                .increment(point, self.tolerance, self.size_hint);
 
         let mut expanded_approximation = false;
 
