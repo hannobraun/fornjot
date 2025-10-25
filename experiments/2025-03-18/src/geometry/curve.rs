@@ -146,6 +146,28 @@ pub trait CurveGeometry: fmt::Debug {
         tolerance: Tolerance,
     ) -> CurveApproxFloating;
 
+    /// # Compute the increment for approximating the curve, at the given point
+    ///
+    /// Curves are approximated as polylines. To build a polyline from a curve,
+    /// you need to know at which points on the curve a segment of the polyline
+    /// begins/ends.
+    ///
+    /// This is defined by the increment. The increment defines a distance on
+    /// the curve, which is the length of a segment of the polyline.
+    ///
+    /// The increment can vary along the curve, as parts of it can be curved
+    /// more tightly than others, requiring more line segments to approximate
+    /// while keeping the same precisions. For other curves, like circles or
+    /// lines, the increment is constant throughout.
+    ///
+    /// Aside from the point at which to compute the increment, this method
+    /// takes two more parameters: The tolerance, which is the maximum deviation
+    /// between the curve and its approximation, and a size hint.
+    ///
+    /// In many cases, the tolerance is enough to compute the increment. Where a
+    /// curve is flat though, the approximation will be perfectly accurate, and
+    /// the tolerance has no meaning. For this case, a size hint is provided,
+    /// which an implementation can use as the size of the increment.
     fn increment_at(
         &self,
         point: Point<1>,
