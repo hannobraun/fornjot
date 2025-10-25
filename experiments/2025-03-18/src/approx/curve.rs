@@ -21,27 +21,27 @@ impl CurveApprox {
     }
 
     pub fn expand_to_include(&mut self, point: Point<1>) -> bool {
+        let increment = self.increment;
+
         let mut expanded_approximation = false;
 
         loop {
             let Some(front) = self.points.front().copied() else {
-                self.points
-                    .push_front(self.increment.snap_to_multiple(point));
+                self.points.push_front(increment.snap_to_multiple(point));
                 continue;
             };
             let Some(back) = self.points.back().copied() else {
-                self.points
-                    .push_back(self.increment.snap_to_multiple(point));
+                self.points.push_back(increment.snap_to_multiple(point));
                 continue;
             };
 
             if point < front {
-                self.points.push_front(front - self.increment.inner);
+                self.points.push_front(front - increment.inner);
                 expanded_approximation = true;
                 continue;
             }
             if point > back {
-                self.points.push_back(back + self.increment.inner);
+                self.points.push_back(back + increment.inner);
                 expanded_approximation = true;
                 continue;
             }
