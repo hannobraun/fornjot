@@ -3,7 +3,9 @@ use std::fmt;
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::approx::curve::{CurveApproxAnchored, CurveApproxFloating};
+use crate::approx::curve::{
+    CurveApprox, CurveApproxAnchored, CurveApproxFloating,
+};
 
 use super::Line;
 
@@ -118,7 +120,30 @@ impl CurveFloating {
         tolerance: Tolerance,
     ) -> CurveApproxFloating {
         let boundary = boundary.map(Into::into);
-        self.geometry.approximate(boundary, tolerance)
+
+        let [a, b] = boundary;
+        let direction = (b.t - a.t).sign();
+
+        let [min, max] = if direction.is_positive() {
+            [a, b]
+        } else {
+            [b, a]
+        };
+
+        let size_hint = max.t - min.t;
+
+        let mut approx =
+            CurveApprox::new(self.geometry.as_ref(), tolerance, size_hint);
+        approx.expand_to_include(min);
+        approx.expand_to_include(max);
+
+        let mut curvature = approx.into_points();
+
+        if direction.is_negative() {
+            curvature.reverse();
+        }
+
+        CurveApproxFloating { curvature }
     }
 }
 
@@ -135,16 +160,6 @@ pub trait CurveGeometry: fmt::Debug {
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
     fn flip(&self) -> Box<dyn CurveGeometry>;
-
-    /// # Approximate the curve
-    ///
-    /// Returns a list of points, in curve coordinates, that approximate the
-    /// curve. Those points must always include the provided boundary.
-    fn approximate(
-        &self,
-        boundary: [Point<1>; 2],
-        tolerance: Tolerance,
-    ) -> CurveApproxFloating;
 
     /// # Compute the increment for approximating the curve, at the given point
     ///

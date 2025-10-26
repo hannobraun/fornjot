@@ -1,10 +1,7 @@
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::{
-    approx::curve::CurveApproxFloating,
-    geometry::curve::{CurveGeometry, Increment},
-};
+use crate::geometry::curve::{CurveGeometry, Increment};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
@@ -43,16 +40,6 @@ impl CurveGeometry for Line {
         Box::new(Line {
             direction: -self.direction,
         })
-    }
-
-    fn approximate(
-        &self,
-        boundary: [Point<1>; 2],
-        _: Tolerance,
-    ) -> CurveApproxFloating {
-        CurveApproxFloating {
-            curvature: boundary.into(),
-        }
     }
 
     fn increment_at(

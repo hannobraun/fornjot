@@ -1,10 +1,7 @@
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::{
-    approx::curve::{CurveApprox, CurveApproxFloating},
-    geometry::curve::{CurveGeometry, Increment},
-};
+use crate::geometry::curve::{CurveGeometry, Increment};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
@@ -62,35 +59,6 @@ impl CurveGeometry for Circle {
             a: self.a,
             b: -self.b,
         })
-    }
-
-    fn approximate(
-        &self,
-        boundary: [Point<1>; 2],
-        tolerance: Tolerance,
-    ) -> CurveApproxFloating {
-        let [a, b] = boundary;
-        let direction = (b.t - a.t).sign();
-
-        let [min, max] = if direction.is_positive() {
-            [a, b]
-        } else {
-            [b, a]
-        };
-
-        let size_hint = max.t - min.t;
-
-        let mut approx = CurveApprox::new(self, tolerance, size_hint);
-        approx.expand_to_include(min);
-        approx.expand_to_include(max);
-
-        let mut curvature = approx.into_points();
-
-        if direction.is_negative() {
-            curvature.reverse();
-        }
-
-        CurveApproxFloating { curvature }
     }
 
     fn increment_at(
