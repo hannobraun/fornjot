@@ -63,19 +63,19 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_point_global(&self, point: Point<3>) {
-        let inner = self.mutex.inner.lock().unwrap();
-        let window = inner.deref().expect_initialized();
-
-        window.display_point_global(point);
-    }
-
-    #[allow(unused)] // occasionally useful for debugging
     pub fn display_point_surface(&self, point: Point<2>) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
         window.display_point_surface(point);
+    }
+
+    #[allow(unused)] // occasionally useful for debugging
+    pub fn display_point_global(&self, point: Point<3>) {
+        let inner = self.mutex.inner.lock().unwrap();
+        let window = inner.deref().expect_initialized();
+
+        window.display_point_global(point);
     }
 
     #[allow(unused)] // occasionally useful for debugging
