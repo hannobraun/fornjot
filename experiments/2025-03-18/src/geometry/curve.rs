@@ -4,7 +4,7 @@ use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::approx::curve::{
-    CurveApprox, CurveApproxFloating, PartialAnchoredCurveApprox,
+    CurveApprox, PartialAnchoredCurveApprox, PartialFloatingCurveApprox,
 };
 
 use super::Line;
@@ -118,7 +118,7 @@ impl CurveFloating {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> CurveApproxFloating {
+    ) -> PartialFloatingCurveApprox {
         let boundary = boundary.map(Into::into);
 
         let [a, b] = boundary;
@@ -143,7 +143,7 @@ impl CurveFloating {
             curvature.reverse();
         }
 
-        CurveApproxFloating { curvature }
+        PartialFloatingCurveApprox { curvature }
     }
 }
 
