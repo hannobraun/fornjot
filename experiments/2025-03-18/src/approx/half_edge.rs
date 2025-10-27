@@ -36,7 +36,7 @@ impl HalfEdgeApprox {
             .approximate(boundary_local, tolerance);
 
         let points_global = points_local
-            .curvature
+            .points
             .into_iter()
             .map(|point| half_edge.curve.geometry.point_from_local(point.local))
             .collect();

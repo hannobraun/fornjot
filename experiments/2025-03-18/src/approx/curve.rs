@@ -66,7 +66,7 @@ impl<'r> CurveApprox<'r> {
 }
 
 pub struct PartialCurveAnchoredApprox {
-    pub curvature: Vec<ApproxPoint<1>>,
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 #[derive(Debug)]
@@ -86,6 +86,6 @@ impl PartialCurveFloatingApprox {
             .map(|point| ApproxPoint::from_curve_point(origin, point, curve))
             .collect();
 
-        PartialCurveAnchoredApprox { curvature }
+        PartialCurveAnchoredApprox { points: curvature }
     }
 }

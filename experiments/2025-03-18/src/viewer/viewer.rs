@@ -112,7 +112,7 @@ impl WindowHandle {
         curve: &PartialCurveAnchoredApprox,
     ) -> &Self {
         let points = curve
-            .curvature
+            .points
             .iter()
             .copied()
             .map(|point| PointWithLabel {
