@@ -12,9 +12,9 @@ pub struct SurfaceApprox {
     triangles: Vec<MeshTriangle>,
 }
 
-impl<'r> SurfaceApprox {
+impl SurfaceApprox {
     pub fn new(
-        surface: &'r Surface,
+        surface: &Surface,
         boundary: &Aabb<2>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
