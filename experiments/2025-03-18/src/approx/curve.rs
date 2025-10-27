@@ -80,12 +80,12 @@ impl PartialCurveFloatingApprox {
         origin: Point<3>,
         curve: &dyn CurveGeometry,
     ) -> PartialCurveAnchoredApprox {
-        let curvature = self
+        let points = self
             .curvature
             .into_iter()
             .map(|point| ApproxPoint::from_curve_point(origin, point, curve))
             .collect();
 
-        PartialCurveAnchoredApprox { points: curvature }
+        PartialCurveAnchoredApprox { points }
     }
 }
