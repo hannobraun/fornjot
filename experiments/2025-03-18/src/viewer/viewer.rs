@@ -21,7 +21,7 @@ use winit::{
 };
 
 use crate::{
-    approx::{curve::CurveApproxAnchored, face::FaceApproxPoints},
+    approx::{curve::PartialAnchoredCurveApprox, face::FaceApproxPoints},
     viewer::{
         RendererInitError,
         input::DEFAULT_CAMERA_TUNING_CONFIG,
@@ -107,7 +107,10 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a curve in global space
-    pub fn display_curve_global(&self, curve: &CurveApproxAnchored) -> &Self {
+    pub fn display_curve_global(
+        &self,
+        curve: &PartialAnchoredCurveApprox,
+    ) -> &Self {
         let points = curve
             .curvature
             .iter()
