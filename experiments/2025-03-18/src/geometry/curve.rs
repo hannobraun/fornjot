@@ -143,7 +143,7 @@ impl CurveFloating {
             curvature.reverse();
         }
 
-        PartialCurveFloatingApprox { curvature }
+        PartialCurveFloatingApprox { points: curvature }
     }
 }
 

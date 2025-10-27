@@ -71,7 +71,7 @@ pub struct PartialCurveAnchoredApprox {
 
 #[derive(Debug)]
 pub struct PartialCurveFloatingApprox {
-    pub curvature: Vec<Point<1>>,
+    pub points: Vec<Point<1>>,
 }
 
 impl PartialCurveFloatingApprox {
@@ -81,7 +81,7 @@ impl PartialCurveFloatingApprox {
         curve: &dyn CurveGeometry,
     ) -> PartialCurveAnchoredApprox {
         let points = self
-            .curvature
+            .points
             .into_iter()
             .map(|point| ApproxPoint::from_curve_point(origin, point, curve))
             .collect();
