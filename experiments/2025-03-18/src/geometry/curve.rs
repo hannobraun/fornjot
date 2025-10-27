@@ -137,13 +137,13 @@ impl CurveFloating {
         approx.expand_to_include(min);
         approx.expand_to_include(max);
 
-        let mut curvature = approx.into_points();
+        let mut points = approx.into_points();
 
         if direction.is_negative() {
-            curvature.reverse();
+            points.reverse();
         }
 
-        PartialCurveFloatingApprox { points: curvature }
+        PartialCurveFloatingApprox { points }
     }
 }
 
