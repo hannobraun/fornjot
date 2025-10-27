@@ -73,14 +73,14 @@ pub struct PartialAnchoredCurveApprox {
 }
 
 #[derive(Debug)]
-pub struct PartialFloatingCurveApprox {
+pub struct PartialCurveFloatingApprox {
     /// # The points that approximate the curvature of the curve
     ///
     /// This does not include the boundary of the approximation.
     pub curvature: Vec<Point<1>>,
 }
 
-impl PartialFloatingCurveApprox {
+impl PartialCurveFloatingApprox {
     pub fn into_anchored(
         self,
         origin: Point<3>,
