@@ -4,7 +4,7 @@ use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
 use crate::approx::curve::{
-    CurveApprox, PartialAnchoredCurveApprox, PartialCurveFloatingApprox,
+    CurveApprox, PartialCurveAnchoredApprox, PartialCurveFloatingApprox,
 };
 
 use super::Line;
@@ -78,7 +78,7 @@ impl CurveAnchored {
         &self,
         boundary: [impl Into<Point<1>>; 2],
         tolerance: Tolerance,
-    ) -> PartialAnchoredCurveApprox {
+    ) -> PartialCurveAnchoredApprox {
         self.floating
             .approximate(boundary, tolerance)
             .into_anchored(self.origin, &*self.floating.geometry)

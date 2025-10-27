@@ -65,7 +65,7 @@ impl<'r> CurveApprox<'r> {
     }
 }
 
-pub struct PartialAnchoredCurveApprox {
+pub struct PartialCurveAnchoredApprox {
     /// # The points that approximate the curvature of the curve
     ///
     /// This does not include the boundary of the approximation.
@@ -85,13 +85,13 @@ impl PartialCurveFloatingApprox {
         self,
         origin: Point<3>,
         curve: &dyn CurveGeometry,
-    ) -> PartialAnchoredCurveApprox {
+    ) -> PartialCurveAnchoredApprox {
         let curvature = self
             .curvature
             .into_iter()
             .map(|point| ApproxPoint::from_curve_point(origin, point, curve))
             .collect();
 
-        PartialAnchoredCurveApprox { curvature }
+        PartialCurveAnchoredApprox { curvature }
     }
 }

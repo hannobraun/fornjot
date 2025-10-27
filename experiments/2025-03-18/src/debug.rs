@@ -4,7 +4,7 @@ use fj_interop::TriMesh;
 use fj_math::Point;
 
 use crate::{
-    approx::{curve::PartialAnchoredCurveApprox, face::FaceApproxPoints},
+    approx::{curve::PartialCurveAnchoredApprox, face::FaceApproxPoints},
     viewer::{ViewerHandle, WindowHandle},
 };
 
@@ -31,7 +31,7 @@ impl DebugWindow {
     }
 
     #[allow(unused)] // occasionally useful for debugging
-    pub fn display_curve_global(&self, curve: &PartialAnchoredCurveApprox) {
+    pub fn display_curve_global(&self, curve: &PartialCurveAnchoredApprox) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
 
