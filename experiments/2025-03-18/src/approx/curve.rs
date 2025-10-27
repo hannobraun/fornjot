@@ -66,17 +66,11 @@ impl<'r> CurveApprox<'r> {
 }
 
 pub struct PartialCurveAnchoredApprox {
-    /// # The points that approximate the curvature of the curve
-    ///
-    /// This does not include the boundary of the approximation.
     pub curvature: Vec<ApproxPoint<1>>,
 }
 
 #[derive(Debug)]
 pub struct PartialCurveFloatingApprox {
-    /// # The points that approximate the curvature of the curve
-    ///
-    /// This does not include the boundary of the approximation.
     pub curvature: Vec<Point<1>>,
 }
 
