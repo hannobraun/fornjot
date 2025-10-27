@@ -26,12 +26,10 @@ impl<'r> CurveApprox<'r> {
         }
     }
 
-    pub fn expand_to_include(&mut self, point: Point<1>) -> bool {
+    pub fn expand_to_include(&mut self, point: Point<1>) {
         let increment =
             self.geometry
                 .increment_at(point, self.tolerance, self.size_hint);
-
-        let mut expanded_approximation = false;
 
         loop {
             let Some(front) = self.points.front().copied() else {
@@ -45,19 +43,15 @@ impl<'r> CurveApprox<'r> {
 
             if point < front {
                 self.points.push_front(front - increment.inner);
-                expanded_approximation = true;
                 continue;
             }
             if point > back {
                 self.points.push_back(back + increment.inner);
-                expanded_approximation = true;
                 continue;
             }
 
             break;
         }
-
-        expanded_approximation
     }
 
     pub fn into_points(self) -> Vec<Point<1>> {
