@@ -1,7 +1,8 @@
 use fj_interop::Tolerance;
 
 use crate::approx::{
-    half_edge::HalfEdgeApprox, point::ApproxPoint, surface::SurfaceApprox,
+    half_edge::HalfEdgeApprox, point::ApproxPoint,
+    surface::PartialSurfaceApprox,
 };
 
 pub struct FaceApproxPoints {
@@ -11,7 +12,7 @@ pub struct FaceApproxPoints {
 impl FaceApproxPoints {
     pub fn from_half_edge_approx(
         half_edges: impl IntoIterator<Item = HalfEdgeApprox>,
-        surface: &mut SurfaceApprox,
+        surface: &mut PartialSurfaceApprox,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
         let tolerance = tolerance.into();

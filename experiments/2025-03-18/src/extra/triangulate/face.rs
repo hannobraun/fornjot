@@ -11,7 +11,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 use crate::{
     approx::{
         delaunay::triangles, face::FaceApproxPoints, half_edge::HalfEdgeApprox,
-        point::ApproxPoint, surface::SurfaceApprox,
+        point::ApproxPoint, surface::PartialSurfaceApprox,
     },
     topology::face::Face,
 };
@@ -32,7 +32,7 @@ pub fn triangulate_face(
             max: Point::from([size, size]),
         };
 
-        SurfaceApprox::new(&face.surface, &boundary, tolerance)
+        PartialSurfaceApprox::new(&face.surface, &boundary, tolerance)
     };
 
     let half_edges =
