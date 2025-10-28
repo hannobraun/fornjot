@@ -15,9 +15,5 @@ pub trait SurfaceGeometry: fmt::Debug {
 }
 
 pub struct SurfaceApprox {
-    /// # The points that approximate the curvature of the surface
-    ///
-    /// This does not include the points that approximate the boundary of the
-    /// approximation.
     pub curvature: Vec<Point<2>>,
 }
