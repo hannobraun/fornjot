@@ -142,7 +142,7 @@ fn approximate_surface(
 ) -> PartialSurfaceApprox {
     let approx = surface.geometry.approximate(boundary, tolerance.into());
 
-    let curvature_points = approx
+    let points = approx
         .curvature
         .into_iter()
         .map(|point_surface| {
@@ -153,15 +153,12 @@ fn approximate_surface(
         })
         .collect::<Vec<_>>();
 
-    let triangles = triangles([], curvature_points.iter().copied())
+    let triangles = triangles([], points.iter().copied())
         .into_iter()
         .map(|triangle| MeshTriangle { points: triangle })
         .collect();
 
-    PartialSurfaceApprox {
-        points: curvature_points,
-        triangles,
-    }
+    PartialSurfaceApprox { points, triangles }
 }
 
 fn check_that_triangles_are_valid(surface_approx: &PartialSurfaceApprox) {
