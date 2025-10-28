@@ -5,8 +5,8 @@ pub struct Increment<const D: usize> {
     pub inner: Vector<D>,
 }
 
-impl Increment<1> {
-    pub fn snap_to_multiple(&self, point: Point<1>) -> Point<1> {
+impl<const D: usize> Increment<D> {
+    pub fn snap_to_multiple(&self, point: Point<D>) -> Point<D> {
         (point / self.inner).floor() * self.inner
     }
 }
