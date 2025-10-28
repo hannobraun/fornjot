@@ -4,11 +4,11 @@ use fj_math::{Point, Vector};
 ///
 /// See [`CurveGeometry::increment`].
 #[derive(Clone, Copy)]
-pub struct Increment {
-    pub inner: Vector<1>,
+pub struct Increment<const D: usize> {
+    pub inner: Vector<D>,
 }
 
-impl Increment {
+impl Increment<1> {
     pub fn snap_to_multiple(&self, point: Point<1>) -> Point<1> {
         (point / self.inner).floor() * self.inner
     }

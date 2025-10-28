@@ -191,7 +191,7 @@ pub trait CurveGeometry: fmt::Debug {
         point: Point<1>,
         tolerance: Tolerance,
         size_hint: Scalar,
-    ) -> Increment;
+    ) -> Increment<1>;
 }
 
 #[cfg(test)]

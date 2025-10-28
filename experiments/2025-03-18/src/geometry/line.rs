@@ -47,7 +47,7 @@ impl CurveGeometry for Line {
         _: Point<1>,
         _: Tolerance,
         size_hint: Scalar,
-    ) -> Increment {
+    ) -> Increment<1> {
         Increment {
             inner: Vector::from([size_hint]),
         }

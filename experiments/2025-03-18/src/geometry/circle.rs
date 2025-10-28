@@ -66,7 +66,7 @@ impl CurveGeometry for Circle {
         _: Point<1>,
         tolerance: Tolerance,
         _: Scalar,
-    ) -> Increment {
+    ) -> Increment<1> {
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
                 / (Scalar::ONE - (tolerance.inner() / self.radius())).acos(),
