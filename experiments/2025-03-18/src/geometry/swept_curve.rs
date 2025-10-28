@@ -101,13 +101,13 @@ impl SurfaceGeometry for SweptCurve {
         let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
         let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
 
-        let curvature = approx_u
+        let points = approx_u
             .points
             .into_iter()
             .cartesian_product(approx_v.points)
             .map(|(point_u, point_v)| Point::from([point_u.local.t, point_v.t]))
             .collect();
 
-        SurfaceApprox { points: curvature }
+        SurfaceApprox { points }
     }
 }
