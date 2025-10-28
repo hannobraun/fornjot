@@ -153,9 +153,7 @@ fn approximate_surface(
         })
         .collect::<Vec<_>>();
 
-    let all_points = curvature_points.clone();
-
-    let triangles = triangles([], all_points)
+    let triangles = triangles([], curvature_points.iter().copied())
         .into_iter()
         .map(|triangle| MeshTriangle { points: triangle })
         .collect();
