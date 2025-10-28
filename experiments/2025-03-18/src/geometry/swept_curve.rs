@@ -102,12 +102,12 @@ impl SurfaceGeometry for SweptCurve {
             .map(|point| point.coords.components.map(|s| Point::from([s])));
 
         let approx_u = {
-            let size_hint = (max_u - min_u).magnitude();
+            let size_hint_u = (max_u - min_u).magnitude();
 
             let mut approx = CurveApprox::new(
                 self.u.floating.geometry.as_ref(),
                 tolerance,
-                size_hint,
+                size_hint_u,
             );
 
             approx.expand_to_include(min_u);
