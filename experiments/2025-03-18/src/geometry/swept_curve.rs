@@ -2,7 +2,10 @@ use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Vector};
 use itertools::Itertools;
 
-use crate::geometry::{SurfaceGeometry, surface::SurfaceApprox};
+use crate::{
+    approx::curve::CurveApprox,
+    geometry::{SurfaceGeometry, surface::SurfaceApprox},
+};
 
 use super::{CurveAnchored, CurveFloating, Line};
 
@@ -95,17 +98,42 @@ impl SurfaceGeometry for SweptCurve {
         boundary: &Aabb<2>,
         tolerance: Tolerance,
     ) -> SurfaceApprox {
-        let [[min_u, min_v], [max_u, max_v]] =
-            [boundary.min, boundary.max].map(|point| point.coords.components);
+        let [[min_u, min_v], [max_u, max_v]] = [boundary.min, boundary.max]
+            .map(|point| point.coords.components.map(|s| Point::from([s])));
 
-        let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
-        let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
+        let approx_u = {
+            let size_hint = (max_u - min_u).magnitude();
+
+            let mut approx = CurveApprox::new(
+                self.u.floating.geometry.as_ref(),
+                tolerance,
+                size_hint,
+            );
+
+            approx.expand_to_include(min_u);
+            approx.expand_to_include(max_u);
+
+            approx.into_points()
+        };
+        let approx_v = {
+            let size_hint = (max_v - min_v).magnitude();
+
+            let mut approx = CurveApprox::new(
+                self.v.geometry.as_ref(),
+                tolerance,
+                size_hint,
+            );
+
+            approx.expand_to_include(min_v);
+            approx.expand_to_include(max_v);
+
+            approx.into_points()
+        };
 
         let points = approx_u
-            .points
             .into_iter()
-            .cartesian_product(approx_v.points)
-            .map(|(point_u, point_v)| Point::from([point_u.local.t, point_v.t]))
+            .cartesian_product(approx_v)
+            .map(|(point_u, point_v)| Point::from([point_u.t, point_v.t]))
             .collect();
 
         SurfaceApprox { points }
