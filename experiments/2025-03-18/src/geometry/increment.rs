@@ -1,8 +1,5 @@
 use fj_math::{Point, Vector};
 
-/// # The increment of a curve approximation, in curve space
-///
-/// See [`CurveGeometry::increment`].
 #[derive(Clone, Copy)]
 pub struct Increment<const D: usize> {
     pub inner: Vector<D>,
