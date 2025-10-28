@@ -101,8 +101,6 @@ impl SurfaceGeometry for SweptCurve {
         let approx_u = self.u.approximate([[min_u], [max_u]], tolerance);
         let approx_v = self.v.approximate([[min_v], [max_v]], tolerance);
 
-        let boundary = Vec::new();
-
         let curvature = approx_u
             .points
             .into_iter()
@@ -110,9 +108,6 @@ impl SurfaceGeometry for SweptCurve {
             .map(|(point_u, point_v)| Point::from([point_u.local.t, point_v.t]))
             .collect();
 
-        SurfaceApprox {
-            curvature,
-            boundary,
-        }
+        SurfaceApprox { curvature }
     }
 }

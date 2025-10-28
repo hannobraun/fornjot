@@ -153,15 +153,7 @@ fn approximate_surface(
         })
         .collect::<Vec<_>>();
 
-    let boundary_points = approx.boundary.into_iter().map(|point_surface| {
-        ApproxPoint::from_surface_point(
-            point_surface,
-            surface.geometry.as_ref(),
-        )
-    });
-
-    let mut all_points = curvature_points.clone();
-    all_points.extend(boundary_points);
+    let all_points = curvature_points.clone();
 
     let triangles = triangles([], all_points)
         .into_iter()

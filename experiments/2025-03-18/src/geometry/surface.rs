@@ -20,7 +20,4 @@ pub struct SurfaceApprox {
     /// This does not include the points that approximate the boundary of the
     /// approximation.
     pub curvature: Vec<Point<2>>,
-
-    /// # The points that approximate the boundary of the approximation
-    pub boundary: Vec<Point<2>>,
 }
