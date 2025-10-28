@@ -1,5 +1,6 @@
 mod circle;
 mod curve;
+mod increment;
 mod line;
 mod sketch;
 mod surface;

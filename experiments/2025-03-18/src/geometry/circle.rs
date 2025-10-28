@@ -1,7 +1,7 @@
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
-use crate::geometry::curve::{CurveGeometry, Increment};
+use crate::geometry::{curve::CurveGeometry, increment::Increment};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
