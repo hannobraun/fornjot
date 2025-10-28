@@ -143,7 +143,7 @@ fn approximate_surface(
     let approx = surface.geometry.approximate(boundary, tolerance.into());
 
     let points = approx
-        .curvature
+        .points
         .into_iter()
         .map(|point_surface| {
             ApproxPoint::from_surface_point(

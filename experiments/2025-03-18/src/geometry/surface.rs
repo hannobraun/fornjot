@@ -15,5 +15,5 @@ pub trait SurfaceGeometry: fmt::Debug {
 }
 
 pub struct SurfaceApprox {
-    pub curvature: Vec<Point<2>>,
+    pub points: Vec<Point<2>>,
 }

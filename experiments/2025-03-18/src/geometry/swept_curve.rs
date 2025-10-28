@@ -108,6 +108,6 @@ impl SurfaceGeometry for SweptCurve {
             .map(|(point_u, point_v)| Point::from([point_u.local.t, point_v.t]))
             .collect();
 
-        SurfaceApprox { curvature }
+        SurfaceApprox { points: curvature }
     }
 }
