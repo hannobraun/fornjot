@@ -27,7 +27,7 @@ impl<'r> CurveApprox<'r> {
     }
 
     #[must_use]
-    pub fn expand_to_include(&mut self, point: Point<1>) -> Option<()> {
+    pub fn expand_to_include(&mut self, point: Point<1>) -> Option<Point<1>> {
         let increment =
             self.geometry
                 .increment_at(point, self.tolerance, self.size_hint);
@@ -35,23 +35,23 @@ impl<'r> CurveApprox<'r> {
         let Some(front) = self.points.front().copied() else {
             let new_point = increment.snap_to_multiple(point);
             self.points.push_front(new_point);
-            return Some(());
+            return Some(new_point);
         };
         let Some(back) = self.points.back().copied() else {
             let new_point = increment.snap_to_multiple(point);
             self.points.push_back(new_point);
-            return Some(());
+            return Some(new_point);
         };
 
         if point < front {
             let new_point = front - increment.inner;
             self.points.push_front(new_point);
-            return Some(());
+            return Some(new_point);
         }
         if point > back {
             let new_point = back + increment.inner;
             self.points.push_back(new_point);
-            return Some(());
+            return Some(new_point);
         }
 
         None
