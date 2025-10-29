@@ -137,8 +137,8 @@ impl CurveFloating {
 
         let mut approx =
             CurveApprox::new(self.geometry.as_ref(), tolerance, size_hint);
-        while approx.expand_to_include(min) {}
-        while approx.expand_to_include(max) {}
+        while approx.expand_to_include(min).is_some() {}
+        while approx.expand_to_include(max).is_some() {}
 
         let mut points = approx.into_points();
 

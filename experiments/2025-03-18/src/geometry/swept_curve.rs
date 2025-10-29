@@ -111,8 +111,8 @@ impl SurfaceGeometry for SweptCurve {
                 size_hint_u,
             );
 
-            while approx.expand_to_include(min_u) {}
-            while approx.expand_to_include(max_u) {}
+            while approx.expand_to_include(min_u).is_some() {}
+            while approx.expand_to_include(max_u).is_some() {}
 
             approx.into_points()
         };
@@ -123,8 +123,8 @@ impl SurfaceGeometry for SweptCurve {
                 size_hint_v,
             );
 
-            while approx.expand_to_include(min_v) {}
-            while approx.expand_to_include(max_v) {}
+            while approx.expand_to_include(min_v).is_some() {}
+            while approx.expand_to_include(max_v).is_some() {}
 
             approx.into_points()
         };

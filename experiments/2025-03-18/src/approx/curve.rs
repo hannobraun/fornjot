@@ -27,30 +27,30 @@ impl<'r> CurveApprox<'r> {
     }
 
     #[must_use]
-    pub fn expand_to_include(&mut self, point: Point<1>) -> bool {
+    pub fn expand_to_include(&mut self, point: Point<1>) -> Option<()> {
         let increment =
             self.geometry
                 .increment_at(point, self.tolerance, self.size_hint);
 
         let Some(front) = self.points.front().copied() else {
             self.points.push_front(increment.snap_to_multiple(point));
-            return true;
+            return Some(());
         };
         let Some(back) = self.points.back().copied() else {
             self.points.push_back(increment.snap_to_multiple(point));
-            return true;
+            return Some(());
         };
 
         if point < front {
             self.points.push_front(front - increment.inner);
-            return true;
+            return Some(());
         }
         if point > back {
             self.points.push_back(back + increment.inner);
-            return true;
+            return Some(());
         }
 
-        false
+        None
     }
 
     pub fn into_points(self) -> Vec<Point<1>> {
