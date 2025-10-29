@@ -31,7 +31,7 @@ impl HalfEdgeApprox {
             half_edge.curve.geometry.project_point(point_global)
         });
 
-        let points_global = half_edge
+        let points = half_edge
             .curve
             .geometry
             .approximate(boundary_local, tolerance)
@@ -40,8 +40,6 @@ impl HalfEdgeApprox {
             .map(|point| half_edge.curve.geometry.point_from_local(point.local))
             .collect();
 
-        Self {
-            points: points_global,
-        }
+        Self { points }
     }
 }
