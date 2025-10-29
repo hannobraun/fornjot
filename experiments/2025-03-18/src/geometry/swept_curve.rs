@@ -117,16 +117,16 @@ impl SurfaceGeometry for SweptCurve {
             approx_u.into_points()
         };
         let approx_v = {
-            let mut approx = CurveApprox::new(
+            let mut approx_v = CurveApprox::new(
                 self.v.geometry.as_ref(),
                 tolerance,
                 size_hint_v,
             );
 
-            while approx.expand_to_include(min_v).is_some() {}
-            while approx.expand_to_include(max_v).is_some() {}
+            while approx_v.expand_to_include(min_v).is_some() {}
+            while approx_v.expand_to_include(max_v).is_some() {}
 
-            approx.into_points()
+            approx_v.into_points()
         };
 
         let points = approx_u
