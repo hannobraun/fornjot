@@ -25,7 +25,7 @@ impl FaceApproxPoints {
                 let n = approx.points.len().saturating_sub(1);
                 approx.points.into_iter().take(n)
             })
-            .map(|point_global| {
+            .map(|global| {
                 // Here, we project a 3D point (from the vertex) into the face's
                 // surface, creating a 2D point. Through the surface, this 2D
                 // point has a position in 3D space.
@@ -43,11 +43,11 @@ impl FaceApproxPoints {
                 // must connect, we use the original 3D points to build those
                 // triangles. We never convert the 2D points back into 3D.
                 let point_surface =
-                    surface.project_point(point_global, tolerance.inner());
+                    surface.project_point(global, tolerance.inner());
 
                 ApproxPoint {
                     local: point_surface,
-                    global: point_global,
+                    global,
                 }
             })
             .collect();
