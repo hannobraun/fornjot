@@ -26,6 +26,12 @@ impl<'r> CurveApprox<'r> {
         }
     }
 
+    /// # Expand the curve approximation to include the provided point
+    ///
+    /// Only add one new point to the approximation and return that. The caller
+    /// may need to call this method repeatedly, until it returns `None`, to
+    /// make sure that the provided point has been included in the
+    /// approximation.
     #[must_use]
     pub fn expand_to_include(&mut self, point: Point<1>) -> Option<Point<1>> {
         let increment =
