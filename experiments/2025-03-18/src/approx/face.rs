@@ -42,13 +42,9 @@ impl FaceApproxPoints {
                 // triangulation. Once that tells us how the different 3D points
                 // must connect, we use the original 3D points to build those
                 // triangles. We never convert the 2D points back into 3D.
-                let point_surface =
-                    surface.project_point(global, tolerance.inner());
+                let local = surface.project_point(global, tolerance.inner());
 
-                ApproxPoint {
-                    local: point_surface,
-                    global,
-                }
+                ApproxPoint { local, global }
             })
             .collect();
 
