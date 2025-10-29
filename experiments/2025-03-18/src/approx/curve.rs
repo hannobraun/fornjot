@@ -49,7 +49,8 @@ impl<'r> CurveApprox<'r> {
             return Some(());
         }
         if point > back {
-            self.points.push_back(back + increment.inner);
+            let new_point = back + increment.inner;
+            self.points.push_back(new_point);
             return Some(());
         }
 
