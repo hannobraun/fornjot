@@ -38,7 +38,8 @@ impl<'r> CurveApprox<'r> {
             return Some(());
         };
         let Some(back) = self.points.back().copied() else {
-            self.points.push_back(increment.snap_to_multiple(point));
+            let new_point = increment.snap_to_multiple(point);
+            self.points.push_back(new_point);
             return Some(());
         };
 
