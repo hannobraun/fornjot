@@ -122,11 +122,16 @@ impl SurfaceGeometry for SweptCurve {
 
             break;
         }
-        while approx_v
-            .expand_to_include(min_v)
-            .or_else(|| approx_v.expand_to_include(max_v))
-            .is_some()
-        {}
+        loop {
+            if approx_v.expand_to_include(min_v).is_some() {
+                continue;
+            }
+            if approx_v.expand_to_include(max_v).is_some() {
+                continue;
+            }
+
+            break;
+        }
 
         let approx_u = approx_u.into_points();
         let approx_v = approx_v.into_points();
