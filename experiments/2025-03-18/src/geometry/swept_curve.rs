@@ -120,9 +120,6 @@ impl SurfaceGeometry for SweptCurve {
                 continue;
             }
 
-            break;
-        }
-        loop {
             if approx_v.expand_to_include(min_v).is_some() {
                 continue;
             }
