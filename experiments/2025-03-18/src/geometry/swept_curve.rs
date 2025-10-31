@@ -113,10 +113,11 @@ impl SurfaceGeometry for SweptCurve {
             .map(|point| point.coords.components.map(|s| Point::from([s])));
 
         loop {
-            if approx_u.expand_to_include(min_u).is_some() {
-                continue;
-            }
-            if approx_u.expand_to_include(max_u).is_some() {
+            if approx_u
+                .expand_to_include(min_u)
+                .or_else(|| approx_u.expand_to_include(max_u))
+                .is_some()
+            {
                 continue;
             }
 
