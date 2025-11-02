@@ -112,24 +112,33 @@ impl SurfaceGeometry for SweptCurve {
         let [[min_u, min_v], [max_u, max_v]] = [boundary.min, boundary.max]
             .map(|point| point.coords.components.map(|s| Point::from([s])));
 
+        let mut current_u = min_u;
+        let mut current_v = min_v;
+
         loop {
-            if approx_u
-                .expand_to_include(min_u)
-                .or_else(|| approx_u.expand_to_include(max_u))
-                .is_some()
-            {
-                continue;
+            loop {
+                if approx_u.expand_to_include(current_u).is_some() {
+                    continue;
+                }
+
+                if approx_v.expand_to_include(current_v).is_some() {
+                    continue;
+                }
+
+                break;
             }
 
-            if approx_v
-                .expand_to_include(min_v)
-                .or_else(|| approx_v.expand_to_include(max_v))
-                .is_some()
-            {
-                continue;
-            }
+            current_v +=
+                v.increment_at(current_v, tolerance, size_hint_v).inner;
 
-            break;
+            if current_v > max_v {
+                current_u +=
+                    u.increment_at(current_u, tolerance, size_hint_u).inner;
+                current_v = min_v;
+            }
+            if current_u > max_u {
+                break;
+            }
         }
 
         let approx_u = approx_u.into_points();
