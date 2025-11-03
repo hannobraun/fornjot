@@ -1,5 +1,26 @@
 use std::{any::type_name_of_val, cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
+/// # A handle to a topological object
+///
+/// What a handle provides over just owning the object, is to provide the object
+/// with an identity that is distinct from any other objects, even between
+/// objects that are equal.
+///
+/// This was important in the old architecture, where geometry was only defined
+/// locally. With local geometry (a point being defined as a one-dimensional
+/// coordinate on a curve, for example), multiple points that are supposed to be
+/// coincident might not actually come out the same when converted to 3D.
+///
+/// In that case, knowing the identity of a vertex allows you to only convert
+/// only one of the local representations, then reuse the result for all others,
+/// avoiding any problems from numerical inaccuracy.
+///
+/// However, in this experiment, all geometry is stored in 3D and converted back
+/// to local representations as necessary, identity irrelevant in that case.
+///
+/// Maybe knowing the identity of a topological object provides some other
+/// advantage that I'm not aware of right now. If not, then this could possibly
+/// be removed.
 pub struct Handle<T> {
     inner: Rc<T>,
 }
