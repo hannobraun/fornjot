@@ -2,25 +2,22 @@ use std::{any::type_name_of_val, cmp::Ordering, fmt, ops::Deref, rc::Rc};
 
 /// # A handle to a topological object
 ///
-/// What a handle provides over just owning the object, is to provide the object
-/// with an identity that is distinct from any other objects, even between
-/// objects that are equal.
+/// Topological objects form a graph. There may exist multiple references to a
+/// given object, none of which is privileged over the others in any way. There
+/// is no clear owner.
 ///
-/// This was important in the old architecture, where geometry was only defined
-/// locally. With local geometry (a point being defined as a one-dimensional
-/// coordinate on a curve, for example), multiple points that are supposed to be
-/// coincident might not actually come out the same when converted to 3D.
+/// Referring to these objects via a handle allows them to be shared. On top of
+/// that, `Handle` gives a clear identity to such an object. This provides a
+/// cheap and unambiguous way to distinguish it from other objects, whether
+/// those are equal or not.
 ///
-/// In that case, knowing the identity of a vertex allows you to only convert
-/// only one of the local representations, then reuse the result for all others,
-/// avoiding any problems from numerical inaccuracy.
+/// Having such an unambiguous identity is useful in multiple ways:
 ///
-/// However, in this experiment, all geometry is stored in 3D and converted back
-/// to local representations as necessary, identity irrelevant in that case.
-///
-/// Maybe knowing the identity of a topological object provides some other
-/// advantage that I'm not aware of right now. If not, then this could possibly
-/// be removed.
+/// - It can be used to express intent, for example that a shared vertex is
+///   actually meant to be one object, as opposed to multiple that happen to be
+///   coincident.
+/// - It makes it straight-forward to associate other data with an object, for
+///   example a cached approximation that can later be reused.
 pub struct Handle<T> {
     inner: Rc<T>,
 }
