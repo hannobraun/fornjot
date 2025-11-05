@@ -20,5 +20,17 @@ use super::{curve::Curve, vertex::Vertex};
 pub struct HalfEdge {
     pub curve: Handle<Curve>,
     pub start: Handle<Vertex>,
+
+    /// # Indicate whether the half-edge is internal to the face it bounds
+    ///
+    /// Faces only have one single boundary. This means that a face with holes
+    /// must have half-edges connecting the outer part of its boundary to those
+    /// holes. These half-edges are called "internal".
+    ///
+    /// Whether a half-edge is internal or not could be inferred more easily, if
+    /// `Handle<Edge>` was a thing. Then all half-edges within a face that refer
+    /// to the same edge would be internal.
+    ///
+    /// If that were the case, then this flag would no longer be needed.
     pub is_internal: bool,
 }
