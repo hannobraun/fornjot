@@ -13,7 +13,7 @@ pub struct Face {
     ///
     /// Half-edges are specific to one face. They are never shared with another
     /// one. Hence, we don't need a [`Handle`] here. We could instead own the
-    /// `HalfEdge`s directly.
+    /// `HalfEdge`s here directly.
     ///
     /// This is probably a good idea, as it would simplify the object graph.
     /// Though there's also another consideration to make here: while half-edges
