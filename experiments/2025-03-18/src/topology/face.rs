@@ -13,22 +13,7 @@ pub struct Face {
     ///
     /// Half-edges are specific to one face. They are never shared with another
     /// one. Hence, we don't need a [`Handle`] here. We could instead own the
-    /// `HalfEdge`s here directly.
-    ///
-    /// This is probably a good idea, as it would simplify the object graph.
-    /// Though there's also another consideration to make here: while half-edges
-    /// are unique to a face, there is a (so far) implicit concept of "edges"
-    /// which are shared between faces.
-    ///
-    /// It might be advantageous to make this explicit, by having an `Edge`
-    /// struct that is referred to as `Handle<Edge>`. Not only would this better
-    /// communicate the intent of the design, it would also allow for easier
-    /// caching of approximations, or inferring if a half-edge is internal.
-    ///
-    /// `Edge` could refer to its two bounding vertices (as `Handle<Vertex>`),
-    /// and the curve (as `Handle<Curve>`). Then `HalfEdge` would be reduced to
-    /// a `Handle<Edge>`, a field to specify the direction of the half-edge, and
-    /// possibly its current `is_internal` field.
+    /// `HalfEdge`s here directly. This would simplify the object graph.
     pub half_edges: Vec<Handle<HalfEdge>>,
 
     /// # Indicate whether the face is internal to the solid it bounds
