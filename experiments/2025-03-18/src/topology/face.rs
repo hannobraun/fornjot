@@ -12,7 +12,7 @@ pub struct Face {
     /// # The half-edges that bound the face on the surface
     ///
     /// Half-edges are specific to one face. They are never shared with another
-    /// one. Hence, we don't need a [`Handle`] here.We could instead own the
+    /// one. Hence, we don't need a [`Handle`] here. We could instead own the
     /// `HalfEdge`s directly.
     ///
     /// This is probably a good idea, as it would simplify the object graph.
