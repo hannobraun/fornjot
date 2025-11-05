@@ -31,6 +31,60 @@ pub struct Face {
     /// possibly its current `is_internal` field.
     pub half_edges: Vec<Handle<HalfEdge>>,
 
+    /// # Indicate whether the face is internal to the solid it bounds
+    ///
+    /// Solids are constructed such that they have a single boundary of properly
+    /// connected faces. That means that a solid with internal cavities needs
+    /// faces that connect its outer boundary with these inner cavities.
+    ///
+    /// A different way to view that is that such a solid does not have an outer
+    /// shell, and inner cavities with separate shells. Instead, it has just one
+    /// single shell that happens to touch itself in certain locations.
+    ///
+    /// This simplifies the representation of solids. They don't need multiple
+    /// boundaries, just one. And the rules that need to be enforced for that
+    /// one boundary are simpler. That comes at the cost at making the
+    /// construction more complicated, but so far this seems like a good trade.
+    ///
+    /// Where the solid touches itself, the touching faces must be congruent.
+    /// Such congruent faces are called internal. This flag tracks whether a
+    /// face is internal or not.
+    ///
+    /// ## Alternative approach: faces and half-faces
+    ///
+    /// This approach is actually similar to how faces work. They too have only
+    /// one single boundary, and have half-edges connecting the outer part of
+    /// their boundary to any holes. In that case, I have the idea of explicitly
+    /// distinguishing between owned half-edges that reference shared edges.
+    ///
+    /// The same concept would apply to faces. A solid would no longer be bound
+    /// by faces, but by half-faces.
+    ///
+    /// Like half-edges, half-faces would be oriented (with defined front and
+    /// back sides), they would reference an non-oriented full face, and they
+    /// might or might not have a sibling of opposite orientation that
+    /// references the same face.
+    ///
+    /// This would confer a number a number of advantages:
+    ///
+    /// - The structure of the topological graph would clearly communicate the
+    ///   intent of its construction.
+    /// - That would allow for strict validation of this aspect of the graph,
+    ///   making sure that mistakes, like unintended coincidence of half-faces,
+    ///   would be caught.
+    /// - Unambiguously identifying faces would enable caching of their
+    ///   approximations.
+    ///
+    /// There is one open question though: How would the coordinate systems of
+    /// sibling half-faces relate to each other?
+    ///
+    /// - They could be set up so that a face has a single coordinate system.
+    ///   That would simplify the sharing of approximations and possibly other
+    ///   aspects.
+    /// - The half-faces could have separate coordinate systems, so that the
+    ///   x-axis always goes to the right and the y-axis to the top when viewing
+    ///   the face from the front. That would simplify defining what the front
+    ///   is for each half-face.
     pub is_internal: bool,
 }
 
