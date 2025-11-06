@@ -20,7 +20,7 @@ consistent and self-reinforcing. Whenever I try to simplify one aspect, I run
 into the problem that it's there for a reason; that other aspects of the
 architecture depend on it being the way it is.
 
-And while I haven't figured out yet, how to break out of this situation, I do
+And while I haven't figured out yet how to break out of this situation, I do
 have quite a few unproven ideas on how an improved architecture would look like,
 redesigned from the ground up using the experience I've gained over the last few
 years.
