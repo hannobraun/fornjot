@@ -39,6 +39,6 @@ objectives:
   with other means of providing required debug information.
 - Expand the existing b-rep primitives, adding support for curved surfaces.
 
-## Result
+## Results
 
 The experiment is still ongoing.
