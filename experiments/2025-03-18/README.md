@@ -41,4 +41,34 @@ objectives:
 
 ## Results
 
-The experiment is still ongoing.
+The experiment is still ongoing, but I already have some ideas that a possible next experiment might or might not pick up.
+
+### Possible Return to Locally Defined Geometry
+
+#### Locally Defined Geometry
+
+The current mainline code defines geometry locally. For example, a vertex is defined as a 1-dimensional object on a curve. That curve is defined as a 2-dimensional object on a surface.
+
+Since vertices are shared between edges and edges are shared between faces, multiple redundant definitions might exist for any single object. This causes complexity in the object graph, hence complexity in the code constructing it, and requires intelligent caching when approximating those shared objects.
+
+Caching probably makes sense anyway, for performance reasons alone. And I believe that, aside from its effect on construction, the drawbacks of the additional graph complexity are negligible. This leaves the complexity of graph construction as the only argument against this approach.
+
+#### Globally Defined Geometry
+
+This experiment went with the ostensibly simpler approach of storing all geometry in 3D, making object graph constructions _much_ simpler, at least within the scope of what this experiment has explored so far. However, this came at a cost.
+
+These local definitions are still needed in some situations, and getting them has turned out to be a problem. It requires additional infrastructure, namely the capability of projecting into a curve/surface. I don't want to overstate this though, as it's exceedingly likely this capability is needed anyway.
+
+The bigger problem is conceptual. By constructing all geometry in 3D, we're throwing away information about local coordinates that would be available at the time of construction. This information can't be reconstructed reliably, as there are degenerate cases where a 3D coordinate maps to multiple 2D ones.
+
+It is possible to work around this. But I am concerned that this is just one example of a whole class of problem, and that the need for more workarounds awaits in the future.
+
+#### The Case for Going Local
+
+Neither approach is perfect. So the question is how to weigh their respective advantages and disadvantages. I think that giving locally defined geometry another try might be worth it, for two reasons.
+
+First, I'd like to revisit the problem of constructing the more complicated object graph. I haven't worked with the mainline code in over a year, and I'd be curious to see how I'd approach this with a fresh perspective, and benefiting from the improvements made in these experiments.
+
+Maybe I'm simply managing to fool myself into believing I could do better today, because the memories of the pain are no longer that fresh. But it might be worth to give it a try and actually confirm that this is the case, instead of giving up prematurely.
+
+Second, I think that throwing away information that you can't reliably reconstruct later is a very foundational problem. My instincts tell me that this will keep causing problems down the line, that might be hard or impossible to work around. The problem of redundant, local geometry seems more manageable.
