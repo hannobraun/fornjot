@@ -1,4 +1,8 @@
+pub mod math;
+
 use std::marker::PhantomData;
+
+use crate::math::Point;
 
 /// # A solid body
 ///
@@ -189,14 +193,4 @@ pub enum Orientation {
 /// measures like tolerance values.
 pub struct Handle<T> {
     _t: PhantomData<T>,
-}
-
-/// # A point
-pub struct Point<const N: usize> {
-    pub coordinates: [Scalar; N],
-}
-
-/// # A scalar value
-pub struct Scalar {
-    pub value: f64,
 }
