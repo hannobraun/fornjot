@@ -1,7 +1,8 @@
+pub mod helpers;
 pub mod math;
 pub mod storage;
 
-use crate::{math::Point, storage::Handle};
+use crate::{helpers::Orientation, math::Point, storage::Handle};
 
 /// # A solid body
 ///
@@ -168,10 +169,4 @@ pub struct Curve {}
 pub struct Surface {
     /// # A placeholder for the surface geometry
     pub geometry: (),
-}
-
-/// # The orientation of an object in relation to the a nominal orientation
-pub enum Orientation {
-    Nominal,
-    AntiNominal,
 }
