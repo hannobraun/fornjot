@@ -88,7 +88,7 @@ impl CurveAnchored {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct CurveFloating {
     pub geometry: Rc<dyn CurveGeometry>,
 }
@@ -147,14 +147,6 @@ impl CurveFloating {
         }
 
         PartialCurveFloatingApprox { points }
-    }
-}
-
-impl Clone for CurveFloating {
-    fn clone(&self) -> Self {
-        Self {
-            geometry: self.geometry.clone(),
-        }
     }
 }
 
