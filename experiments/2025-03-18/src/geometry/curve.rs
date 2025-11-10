@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, rc::Rc};
 
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
@@ -90,13 +90,13 @@ impl CurveAnchored {
 
 #[derive(Debug)]
 pub struct CurveFloating {
-    pub geometry: Box<dyn CurveGeometry>,
+    pub geometry: Rc<dyn CurveGeometry>,
 }
 
 impl CurveFloating {
     pub fn new(curve: impl CurveGeometry + 'static) -> Self {
         Self {
-            geometry: Box::new(curve),
+            geometry: Rc::new(curve),
         }
     }
 
@@ -159,10 +159,10 @@ impl Clone for CurveFloating {
 }
 
 pub trait CurveGeometry: fmt::Debug {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry>;
+    fn clone_curve_geometry(&self) -> Rc<dyn CurveGeometry>;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
-    fn flip(&self) -> Box<dyn CurveGeometry>;
+    fn flip(&self) -> Rc<dyn CurveGeometry>;
 
     /// # Compute the increment for approximating the curve, at the given point
     ///

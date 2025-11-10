@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
@@ -42,8 +44,8 @@ impl Circle {
 }
 
 impl CurveGeometry for Circle {
-    fn clone_curve_geometry(&self) -> Box<dyn CurveGeometry> {
-        Box::new(*self)
+    fn clone_curve_geometry(&self) -> Rc<dyn CurveGeometry> {
+        Rc::new(*self)
     }
 
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
@@ -54,8 +56,8 @@ impl CurveGeometry for Circle {
         self.project_vector(vector)
     }
 
-    fn flip(&self) -> Box<dyn CurveGeometry> {
-        Box::new(Circle {
+    fn flip(&self) -> Rc<dyn CurveGeometry> {
+        Rc::new(Circle {
             a: self.a,
             b: -self.b,
         })
