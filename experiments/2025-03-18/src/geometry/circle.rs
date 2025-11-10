@@ -44,10 +44,6 @@ impl Circle {
 }
 
 impl CurveGeometry for Circle {
-    fn clone_curve_geometry(&self) -> Rc<dyn CurveGeometry> {
-        Rc::new(*self)
-    }
-
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
         self.vector_from_local_point(point)
     }

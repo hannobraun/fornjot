@@ -153,13 +153,12 @@ impl CurveFloating {
 impl Clone for CurveFloating {
     fn clone(&self) -> Self {
         Self {
-            geometry: self.geometry.clone_curve_geometry(),
+            geometry: self.geometry.clone(),
         }
     }
 }
 
 pub trait CurveGeometry: fmt::Debug {
-    fn clone_curve_geometry(&self) -> Rc<dyn CurveGeometry>;
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
     fn flip(&self) -> Rc<dyn CurveGeometry>;
