@@ -54,11 +54,12 @@ impl Translate for HalfEdge {
 
 impl Translate for Surface {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
-        let geometry = Rc::new(TranslatedSurface {
-            original: self.geometry.clone(),
-            offset: offset.into(),
-        });
-        Self { geometry }
+        Self {
+            geometry: Rc::new(TranslatedSurface {
+                original: self.geometry.clone(),
+                offset: offset.into(),
+            }),
+        }
     }
 }
 
