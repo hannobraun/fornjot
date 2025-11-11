@@ -49,12 +49,6 @@ impl SurfaceGeometry for FlippedSurface {
         boundary: &Aabb<2>,
         tolerance: Tolerance,
     ) -> SurfaceApprox {
-        let mut approx = self.original.approximate(boundary, tolerance);
-
-        for point in &mut approx.points {
-            point.u = -point.u;
-        }
-
-        approx
+        self.original.approximate(boundary, tolerance)
     }
 }
