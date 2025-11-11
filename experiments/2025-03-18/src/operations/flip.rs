@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use fj_interop::Tolerance;
-use fj_math::{Aabb, Point, Vector};
+use fj_math::{Aabb, Point};
 
 use crate::{
     geometry::{SurfaceApprox, SurfaceGeometry},
@@ -41,12 +41,6 @@ impl SurfaceGeometry for FlippedSurface {
     fn point_from_local(&self, mut point: Point<2>) -> Point<3> {
         point.u = -point.u;
         self.original.point_from_local(point)
-    }
-
-    fn translate(&self, offset: Vector<3>) -> Rc<dyn SurfaceGeometry> {
-        Rc::new(Self {
-            original: self.original.translate(offset),
-        })
     }
 
     fn approximate(

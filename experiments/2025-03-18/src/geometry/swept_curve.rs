@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Vector};
 use itertools::Itertools;
@@ -66,22 +64,11 @@ impl SweptCurve {
         let [u, v] = point.into().coords.components;
         self.u.point_from_local([u]) + self.v.vector_from_local_point([v])
     }
-
-    pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
-        Self {
-            u: self.u.translate(offset),
-            v: self.v.clone(),
-        }
-    }
 }
 
 impl SurfaceGeometry for SweptCurve {
     fn point_from_local(&self, point: Point<2>) -> Point<3> {
         self.point_from_local(point)
-    }
-
-    fn translate(&self, offset: Vector<3>) -> Rc<dyn SurfaceGeometry> {
-        Rc::new((*self).translate(offset))
     }
 
     fn approximate(

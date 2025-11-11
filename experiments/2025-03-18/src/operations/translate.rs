@@ -1,6 +1,10 @@
-use fj_math::Vector;
+use std::rc::Rc;
+
+use fj_interop::Tolerance;
+use fj_math::{Aabb, Point, Vector};
 
 use crate::{
+    geometry::{SurfaceApprox, SurfaceGeometry},
     handle::Handle,
     topology::{
         curve::Curve, face::Face, half_edge::HalfEdge, surface::Surface,
@@ -51,7 +55,10 @@ impl Translate for HalfEdge {
 impl Translate for Surface {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
-        let geometry = self.geometry.translate(offset);
+        let geometry = Rc::new(TranslatedSurface {
+            original: self.geometry.clone(),
+            offset,
+        });
         Self { geometry }
     }
 }
@@ -60,5 +67,26 @@ impl Translate for Vertex {
     fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         let offset = offset.into();
         Vertex::new(self.point + offset)
+    }
+}
+
+#[derive(Debug)]
+pub struct TranslatedSurface {
+    pub original: Rc<dyn SurfaceGeometry>,
+    pub offset: Vector<3>,
+}
+
+impl SurfaceGeometry for TranslatedSurface {
+    fn point_from_local(&self, point: Point<2>) -> Point<3> {
+        let point = self.original.point_from_local(point);
+        point + self.offset
+    }
+
+    fn approximate(
+        &self,
+        boundary: &Aabb<2>,
+        tolerance: Tolerance,
+    ) -> SurfaceApprox {
+        self.original.approximate(boundary, tolerance)
     }
 }
