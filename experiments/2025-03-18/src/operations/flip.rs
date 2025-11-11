@@ -40,7 +40,7 @@ pub struct FlippedSurface {
 
 impl SurfaceGeometry for FlippedSurface {
     fn point_from_local(&self, mut point: Point<2>) -> Point<3> {
-        point.u = -point.u;
+        point.v = -point.v;
         self.original.point_from_local(point)
     }
 
