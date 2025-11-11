@@ -25,10 +25,11 @@ impl Flip for Face {
 
 impl Flip for Surface {
     fn flip(&self) -> Self {
-        let geometry = Rc::new(FlippedSurface {
-            original: self.geometry.clone(),
-        });
-        Self { geometry }
+        Self {
+            geometry: Rc::new(FlippedSurface {
+                original: self.geometry.clone(),
+            }),
+        }
     }
 }
 
