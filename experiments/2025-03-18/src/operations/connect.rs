@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use fj_interop::Tolerance;
 use itertools::Itertools;
 
@@ -151,7 +153,7 @@ fn build_single_connecting_face(
         };
 
     let surface = Handle::new(Surface {
-        geometry: Box::new(SweptCurve {
+        geometry: Rc::new(SweptCurve {
             u: bottom.half_edge.curve.geometry.clone(),
             v: curve_up.geometry.floating.flip(),
         }),

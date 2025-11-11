@@ -1,6 +1,8 @@
+use std::rc::Rc;
+
 use crate::geometry::SurfaceGeometry;
 
 #[derive(Debug)]
 pub struct Surface {
-    pub geometry: Box<dyn SurfaceGeometry>,
+    pub geometry: Rc<dyn SurfaceGeometry>,
 }

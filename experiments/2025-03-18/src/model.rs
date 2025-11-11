@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use fj_interop::{Tolerance, TriMesh};
 use fj_math::Vector;
 
@@ -32,7 +34,7 @@ pub fn model(viewer: &ViewerHandle) -> TriMesh {
         // we're done here.
 
         let surface = Handle::new(Surface {
-            geometry: Box::new(SweptCurve::plane_from_coord_system(
+            geometry: Rc::new(SweptCurve::plane_from_coord_system(
                 [0., 0., 1.],
                 [[1., 0., 0.], [0., 1., 0.]],
             )),

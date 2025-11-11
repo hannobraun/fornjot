@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Vector};
 use itertools::Itertools;
@@ -85,12 +87,12 @@ impl SurfaceGeometry for SweptCurve {
         self.point_from_local(point)
     }
 
-    fn flip(&self) -> Box<dyn SurfaceGeometry> {
-        Box::new((*self).flip())
+    fn flip(&self) -> Rc<dyn SurfaceGeometry> {
+        Rc::new((*self).flip())
     }
 
-    fn translate(&self, offset: Vector<3>) -> Box<dyn SurfaceGeometry> {
-        Box::new((*self).translate(offset))
+    fn translate(&self, offset: Vector<3>) -> Rc<dyn SurfaceGeometry> {
+        Rc::new((*self).translate(offset))
     }
 
     fn approximate(
