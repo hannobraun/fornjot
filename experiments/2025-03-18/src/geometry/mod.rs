@@ -11,6 +11,6 @@ pub use self::{
     curve::{CurveAnchored, CurveFloating, CurveGeometry},
     line::Line,
     sketch::Sketch,
-    surface::SurfaceGeometry,
+    surface::{SurfaceApprox, SurfaceGeometry},
     swept_curve::SweptCurve,
 };

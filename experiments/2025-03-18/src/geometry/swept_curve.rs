@@ -67,13 +67,6 @@ impl SweptCurve {
         self.u.point_from_local([u]) + self.v.vector_from_local_point([v])
     }
 
-    pub fn flip(&self) -> Self {
-        Self {
-            u: self.u.clone(),
-            v: self.v.flip(),
-        }
-    }
-
     pub fn translate(&self, offset: impl Into<Vector<3>>) -> Self {
         Self {
             u: self.u.translate(offset),
@@ -85,10 +78,6 @@ impl SweptCurve {
 impl SurfaceGeometry for SweptCurve {
     fn point_from_local(&self, point: Point<2>) -> Point<3> {
         self.point_from_local(point)
-    }
-
-    fn flip(&self) -> Rc<dyn SurfaceGeometry> {
-        Rc::new((*self).flip())
     }
 
     fn translate(&self, offset: Vector<3>) -> Rc<dyn SurfaceGeometry> {
