@@ -1,6 +1,11 @@
 /// # A point
 pub struct Point<const N: usize> {
-    pub coordinates: [Scalar; N],
+    pub coordinates: Vector<N>,
+}
+
+/// # A vector
+pub struct Vector<const N: usize> {
+    pub components: [Scalar; N],
 }
 
 /// # A scalar value
