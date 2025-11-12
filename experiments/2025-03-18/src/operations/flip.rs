@@ -1,10 +1,10 @@
 use std::rc::Rc;
 
 use fj_interop::Tolerance;
-use fj_math::{Aabb, Point};
+use fj_math::{Aabb, Point, Scalar, Vector};
 
 use crate::{
-    geometry::{SurfaceApprox, SurfaceGeometry},
+    geometry::{CurveGeometry, Increment, SurfaceApprox, SurfaceGeometry},
     handle::Handle,
     topology::{face::Face, surface::Surface},
 };
@@ -30,6 +30,30 @@ impl Flip for Surface {
                 original: self.geometry.clone(),
             }),
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct FlippedCurve {
+    pub original: Rc<dyn CurveGeometry>,
+}
+
+impl CurveGeometry for FlippedCurve {
+    fn vector_from_local_point(&self, point: Point<1>) -> Vector<3> {
+        self.original.vector_from_local_point(-point)
+    }
+
+    fn project_vector(&self, vector: Vector<3>) -> Point<1> {
+        -self.original.project_vector(vector)
+    }
+
+    fn increment_at(
+        &self,
+        point: Point<1>,
+        tolerance: Tolerance,
+        size_hint: Scalar,
+    ) -> Increment<1> {
+        self.original.increment_at(point, tolerance, size_hint)
     }
 }
 

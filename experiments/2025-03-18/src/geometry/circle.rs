@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use fj_interop::Tolerance;
 use fj_math::{Point, Scalar, Vector};
 
@@ -50,13 +48,6 @@ impl CurveGeometry for Circle {
 
     fn project_vector(&self, vector: Vector<3>) -> Point<1> {
         self.project_vector(vector)
-    }
-
-    fn flip(&self) -> Rc<dyn CurveGeometry> {
-        Rc::new(Circle {
-            a: self.a,
-            b: -self.b,
-        })
     }
 
     fn increment_at(

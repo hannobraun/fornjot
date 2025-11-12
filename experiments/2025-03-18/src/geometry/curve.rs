@@ -8,6 +8,7 @@ use crate::{
         CurveApprox, PartialCurveAnchoredApprox, PartialCurveFloatingApprox,
     },
     geometry::increment::Increment,
+    operations::flip::FlippedCurve,
 };
 
 use super::Line;
@@ -109,7 +110,9 @@ impl CurveFloating {
 
     pub fn flip(&self) -> Self {
         Self {
-            geometry: self.geometry.flip(),
+            geometry: Rc::new(FlippedCurve {
+                original: self.geometry.clone(),
+            }),
         }
     }
 
@@ -153,7 +156,6 @@ impl CurveFloating {
 pub trait CurveGeometry: fmt::Debug {
     fn vector_from_local_point(&self, point: Point<1>) -> Vector<3>;
     fn project_vector(&self, vector: Vector<3>) -> Point<1>;
-    fn flip(&self) -> Rc<dyn CurveGeometry>;
 
     /// # Compute the increment for approximating the curve, at the given point
     ///
@@ -183,40 +185,4 @@ pub trait CurveGeometry: fmt::Debug {
         tolerance: Tolerance,
         size_hint: Scalar,
     ) -> Increment<1>;
-}
-
-#[cfg(test)]
-mod tests {
-    use fj_math::{Point, Vector};
-
-    use crate::geometry::{Circle, Line, curve::CurveGeometry};
-
-    #[test]
-    fn flip() {
-        let circle = Circle {
-            a: Vector::from([1., 0., 0.]),
-            b: Vector::from([0., 1., 0.]),
-        };
-        let line = Line {
-            direction: Vector::from([1., 0., 0.]),
-        };
-
-        check(circle);
-        check(line);
-
-        fn check(curve: impl CurveGeometry) {
-            for i in 0..8 {
-                let point = Point::from([i as f64]);
-
-                assert_eq!(
-                    curve.vector_from_local_point(point),
-                    curve.flip().vector_from_local_point(-point)
-                );
-                assert_eq!(
-                    curve.vector_from_local_point(-point),
-                    curve.flip().vector_from_local_point(point)
-                );
-            }
-        }
-    }
 }
