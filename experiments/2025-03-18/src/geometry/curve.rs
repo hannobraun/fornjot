@@ -91,6 +91,22 @@ impl CurveAnchored {
 
 #[derive(Clone, Debug)]
 pub struct CurveFloating {
+    /// # A reference to the curve geometry
+    ///
+    /// We could actually use `Handle` here instead of `Rc`. That would give us
+    /// the identity semantics of `Handle`, which would allow us to cache curve
+    /// geometry approximations easily.
+    ///
+    /// This would be stronger than the current capability of caching `Curve`
+    /// approximations, since multiple `Curve` approximations might be
+    /// translated variants of one `CurveGeometry` approximation. If caching
+    /// happens only at the `Curve` level, the `CurveGeometry` approximation
+    /// would have to get recomputed for every translated version.
+    ///
+    /// This would require modifications to `Handle` though, as it currently
+    /// doesn't support unsized types (`dyn CurveGeometry`). Part of that would
+    /// be an implementation of `CoerceUnsized`, which is currently (2025-11-13)
+    /// not stable.
     pub geometry: Rc<dyn CurveGeometry>,
 }
 
