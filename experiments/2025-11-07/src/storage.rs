@@ -14,6 +14,6 @@ use std::marker::PhantomData;
 /// inaccuracy. In fact, they resolve those issues unambiguously, through the
 /// semantic information in the object graph, instead of relying on inaccurate
 /// measures like tolerance values.
-pub struct Handle<T> {
+pub struct Handle<T: ?Sized> {
     _t: PhantomData<T>,
 }
