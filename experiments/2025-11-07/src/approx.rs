@@ -40,15 +40,21 @@ impl Approx {
     // out.
 }
 
+/// # The partial approximation of a curve
 pub struct Polyline {
     pub points: ApproxPoint<1>,
 }
 
+/// # The partial approximation of a surface
 pub struct TriMesh {
     pub triangles: ApproxPoint<2>,
 }
 
+/// # A point that is part of an approximation
 pub struct ApproxPoint<const D: usize> {
+    /// # The local representation of the point
     pub local: Point<D>,
+
+    /// # The point in global space
     pub global: Point<3>,
 }
