@@ -1,4 +1,9 @@
-use crate::{helpers::Orientation, math::Point, storage::Handle};
+use crate::{
+    geometry::{CurveGeometry, SurfaceGeometry},
+    helpers::Orientation,
+    math::Point,
+    storage::Handle,
+};
 
 /// # A solid body
 ///
@@ -148,8 +153,11 @@ pub struct LocalCurve {
     /// # The curve that this `LocalCurve` is the local representation of
     pub curve: Handle<Curve>,
 
-    /// # A placeholder for the curve geometry
-    pub geometry: (),
+    /// # The origin of the curve
+    pub origin: Point<2>,
+
+    /// # The local curve geometry
+    pub geometry: Handle<dyn CurveGeometry>,
 }
 
 /// # A curve
@@ -163,6 +171,9 @@ pub struct Curve {}
 
 /// # A surface
 pub struct Surface {
-    /// # A placeholder for the surface geometry
-    pub geometry: (),
+    /// # The origin of the surface
+    pub origin: Point<3>,
+
+    /// # The surface geometry
+    pub geometry: Handle<dyn SurfaceGeometry>,
 }
