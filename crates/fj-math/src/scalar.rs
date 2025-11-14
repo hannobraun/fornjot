@@ -341,6 +341,18 @@ impl fmt::Display for Scalar {
     }
 }
 
+impl approx::AbsDiffEq for Scalar {
+    type Epsilon = Self;
+
+    fn default_epsilon() -> Self::Epsilon {
+        f64::default_epsilon().into()
+    }
+
+    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+        self.value.abs_diff_eq(&other.value, epsilon.value)
+    }
+}
+
 impl num_traits::Zero for Scalar {
     fn zero() -> Self {
         Self::ZERO
@@ -622,18 +634,6 @@ impl num_traits::Float for Scalar {
 
     fn integer_decode(self) -> (u64, i16, i8) {
         self.value.integer_decode()
-    }
-}
-
-impl approx::AbsDiffEq for Scalar {
-    type Epsilon = Self;
-
-    fn default_epsilon() -> Self::Epsilon {
-        f64::default_epsilon().into()
-    }
-
-    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.value.abs_diff_eq(&other.value, epsilon.value)
     }
 }
 
