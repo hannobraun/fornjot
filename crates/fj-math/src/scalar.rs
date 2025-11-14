@@ -30,6 +30,9 @@ impl Scalar {
     /// # The `Scalar` instance that represents two
     pub const TWO: Self = Self { value: 2. };
 
+    /// # The smallest `Scalar` value
+    pub const MIN: Self = Self { value: f64::MIN };
+
     /// # The largest `Scalar` value
     pub const MAX: Self = Self { value: f64::MAX };
 
