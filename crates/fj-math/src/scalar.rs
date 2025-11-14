@@ -161,6 +161,24 @@ impl Scalar {
     }
 }
 
+impl From<f32> for Scalar {
+    fn from(value: f32) -> Self {
+        Self::from_f64(value.into())
+    }
+}
+
+impl From<f64> for Scalar {
+    fn from(value: f64) -> Self {
+        Self::from_f64(value)
+    }
+}
+
+impl From<Scalar> for f64 {
+    fn from(scalar: Scalar) -> Self {
+        scalar.into_f64()
+    }
+}
+
 impl PartialEq for Scalar {
     fn eq(&self, other: &Self) -> bool {
         // Using `R64` here to make sure that this matches the `Eq`/`PartialEq`
@@ -195,24 +213,6 @@ impl Hash for Scalar {
         // The `Eq`/`PartialEq` implementation is also using `R64`. So these
         // implementations match, as required by `Hash`.
         R64::<OrPanic>::new(self.value).hash(state);
-    }
-}
-
-impl From<f32> for Scalar {
-    fn from(value: f32) -> Self {
-        Self::from_f64(value.into())
-    }
-}
-
-impl From<f64> for Scalar {
-    fn from(value: f64) -> Self {
-        Self::from_f64(value)
-    }
-}
-
-impl From<Scalar> for f64 {
-    fn from(scalar: Scalar) -> Self {
-        scalar.into_f64()
     }
 }
 
