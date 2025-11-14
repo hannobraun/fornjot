@@ -3,3 +3,6 @@
 [package]
 name = "fj"
 edition = "2024"
+
+[dependencies]
+decorum = "*"
