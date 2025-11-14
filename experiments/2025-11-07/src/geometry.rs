@@ -7,7 +7,7 @@ pub trait CurveGeometry {
     /// # Convert a point on the curve into a vector on the surface
     fn local_point_to_vector(&self, point: Point<1>) -> Vector<2>;
 
-    /// # Compute the increment of approximation at the given point
+    /// # Compute the increment of approximation from the given point
     fn increment_at(
         &self,
         point: Point<1>,
@@ -21,7 +21,7 @@ pub trait SurfaceGeometry {
     /// # Convert a point on the surface into a vector in space
     fn local_point_to_vector(&self, point: Point<2>) -> Vector<3>;
 
-    /// # Compute the increment of approximation at the given point
+    /// # Compute the increment of approximation from the given point
     fn increment_at(
         &self,
         point: Point<2>,
