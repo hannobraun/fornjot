@@ -5,4 +5,5 @@ name = "fj"
 edition = "2024"
 
 [dependencies]
+approx = "*"
 decorum = "*"
