@@ -50,7 +50,7 @@ impl Scalar {
     /// Panics, if the value provided is `NaN` or infinite.
     pub fn from_f64(value: f64) -> Self {
         if value.is_nan() {
-            panic!("`Scalar` value must not be NaN");
+            panic!("`Scalar` value must not be `NaN`");
         }
         if value.is_infinite() {
             panic!("`Scalar` value must not be infinite. Value: `{value}`");
@@ -396,7 +396,7 @@ impl num_traits::ToPrimitive for Scalar {
 
 impl num_traits::Float for Scalar {
     fn nan() -> Self {
-        panic!("`Scalar` can not represent NaN")
+        panic!("`Scalar` can not represent `NaN`")
     }
 
     fn infinity() -> Self {
