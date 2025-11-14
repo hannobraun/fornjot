@@ -329,6 +329,18 @@ where
     }
 }
 
+impl fmt::Debug for Scalar {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        <f64 as fmt::Debug>::fmt(&self.value, f)
+    }
+}
+
+impl fmt::Display for Scalar {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        <f64 as fmt::Display>::fmt(&self.value, f)
+    }
+}
+
 impl num_traits::Zero for Scalar {
     fn zero() -> Self {
         Self::ZERO
@@ -610,18 +622,6 @@ impl num_traits::Float for Scalar {
 
     fn integer_decode(self) -> (u64, i16, i8) {
         self.value.integer_decode()
-    }
-}
-
-impl fmt::Debug for Scalar {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        <f64 as fmt::Debug>::fmt(&self.value, f)
-    }
-}
-
-impl fmt::Display for Scalar {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        <f64 as fmt::Display>::fmt(&self.value, f)
     }
 }
 
