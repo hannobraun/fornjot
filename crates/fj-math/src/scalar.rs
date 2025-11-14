@@ -10,10 +10,10 @@ use decorum::{R64, divergence::OrPanic};
 
 /// # A rational, finite scalar value
 ///
-/// This is a wrapper around `f64`. On construction, it checks that the `f64`
-/// value is not NaN. This allows `Scalar` to provide implementations of [`Eq`],
-/// [`Ord`], and [`Hash`]; enabling `Scalar` (and types built on top of it), to
-/// be used as keys in various types of sets and maps.
+/// `Scalar` is a wrapper around `f64` which guarantees that the contained value
+/// is both rational and finite. This allows `Scalar` to provide
+/// implementations of [`Eq`], [`Ord`], and [`Hash`]; enabling `Scalar` (and
+/// types built on top of it), to be used as keys in various sets and maps.
 #[derive(Clone, Copy, Default)]
 #[repr(C)]
 pub struct Scalar {
@@ -33,17 +33,17 @@ impl Scalar {
     /// # The largest `Scalar` value
     pub const MAX: Self = Self { value: f64::MAX };
 
-    /// # The `Scalar` instance that represents pi
+    /// # The `Scalar` instance that represents π (pi)
     pub const PI: Self = Self { value: PI };
 
-    /// # The `Scalar` instance that represents tau
+    /// # The `Scalar` instance that represents τ (tau)
     pub const TAU: Self = Self { value: TAU };
 
     /// # Construct a `Scalar` from an `f64`
     ///
     /// ## Panics
     ///
-    /// Panics, if the value provided is NaN.
+    /// Panics, if the value provided is `NaN` or infinite.
     pub fn from_f64(value: f64) -> Self {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
