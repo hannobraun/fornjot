@@ -37,6 +37,7 @@ version = "0.0.0"
 dependencies = [
  "approx",
  "decorum",
+ "num-traits",
 ]
 
 [[package]]
