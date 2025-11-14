@@ -16,7 +16,7 @@ use decorum::{R64, divergence::OrPanic};
 /// implementations of [`Eq`], [`Ord`], and [`Hash`]; enabling `Scalar` (and
 /// types built on top of it), to be used as keys in various sets and maps.
 #[derive(Clone, Copy, Default)]
-#[repr(C)]
+#[repr(transparent)]
 pub struct Scalar {
     value: f64,
 }
