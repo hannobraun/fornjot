@@ -199,14 +199,14 @@ impl Hash for Scalar {
 }
 
 impl From<f32> for Scalar {
-    fn from(scalar: f32) -> Self {
-        Self::from_f64(scalar.into())
+    fn from(value: f32) -> Self {
+        Self::from_f64(value.into())
     }
 }
 
 impl From<f64> for Scalar {
-    fn from(scalar: f64) -> Self {
-        Self::from_f64(scalar)
+    fn from(value: f64) -> Self {
+        Self::from_f64(value)
     }
 }
 
