@@ -3,6 +3,7 @@ use std::{
     f64::consts::{PI, TAU},
     fmt,
     hash::{Hash, Hasher},
+    num::FpCategory,
     ops,
 };
 
@@ -438,7 +439,7 @@ impl num_traits::Float for Scalar {
         self.value.is_normal()
     }
 
-    fn classify(self) -> std::num::FpCategory {
+    fn classify(self) -> FpCategory {
         self.value.classify()
     }
 
