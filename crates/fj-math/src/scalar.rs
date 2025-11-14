@@ -400,11 +400,11 @@ impl num_traits::Float for Scalar {
     }
 
     fn infinity() -> Self {
-        Self::from_f64(f64::infinity())
+        panic!("`Scalar` can not represent infinity")
     }
 
     fn neg_infinity() -> Self {
-        Self::from_f64(f64::neg_infinity())
+        panic!("`Scalar` can not represent negative infinity")
     }
 
     fn neg_zero() -> Self {
