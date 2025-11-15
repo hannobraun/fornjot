@@ -34,6 +34,9 @@ impl<const D: usize> Vector<D> {
     }
 
     /// # Convert the vector to a 1-dimensional vector
+    ///
+    /// Initialize any missing components to zero. Drop any superfluous
+    /// components.
     pub fn to_t(self) -> Vector<1> {
         Vector {
             components: [self.components[0]],
@@ -42,11 +45,8 @@ impl<const D: usize> Vector<D> {
 
     /// # Convert the vector into a 2-dimensional vector
     ///
-    /// If the vector is 0-, or 1-dimensional, the missing components will be
-    /// initialized to zero.
-    ///
-    /// If the vector has higher dimensionality than two, the superfluous
-    /// components will be discarded.
+    /// Initialize any missing components to zero. Drop any superfluous
+    /// components.
     pub fn to_uv(self) -> Vector<2> {
         let zero = Scalar::ZERO;
 
@@ -61,11 +61,8 @@ impl<const D: usize> Vector<D> {
 
     /// # Convert the vector into a 3-dimensional vector
     ///
-    /// If the vector is 0-, 1-, or 2-dimensional, the missing components will
-    /// be initialized to zero.
-    ///
-    /// If the vector has higher dimensionality than three, the superfluous
-    /// components will be discarded.
+    /// Initialize any missing components to zero. Drop any superfluous
+    /// components.
     pub fn to_xyz(self) -> Vector<3> {
         let zero = Scalar::ZERO;
 
