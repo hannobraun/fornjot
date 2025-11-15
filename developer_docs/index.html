@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fornjot Developer Documentation">
+    <title>Fornjot Docs</title>
+    <link rel="stylesheet" href="static.files/normalize-9960930a.css">
+    <link rel="stylesheet" href="static.files/rustdoc-84e720fa.css">
+    <link rel="icon" type="image/svg+xml" href="static.files/favicon-044be391.svg">
+    <link rel="alternate icon" type="image/png" href="static.files/favicon-32x32-6580c154.png">
+    <style>
+        body { padding: 0; }
+        main { padding: 2rem 0; }
+        .version-badge {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.3rem;
+            background: #e7ecf3;
+            color: #42536d;
+            font-size: 0.65em;
+            vertical-align: middle;
+        }
+        .crate-groups {
+            margin-top: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+        .crate-group h2 {
+            margin-bottom: 0.5rem;
+        }
+        .crate-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            list-style: none;
+            padding-left: 0;
+        }
+        .crate-list li {
+            min-width: 10rem;
+        }
+        .crate-list a {
+            font-weight: 600;
+        }
+        .notice {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1rem;
+            border-left: 0.3rem solid #5c95ff;
+            background: #f5f7fb;
+        }
+    </style>
+</head>
+<body class="rustdoc">
+    <main>
+        <div class="width-limiter">
+            <section id="main-content" class="content">
+                <div class="main-heading">
+                    <h1>Fornjot Developer Docs <span class="version-badge">0.49</span></h1>
+                </div>
+                <p>
+                    These static docs bundle the public API for the Fornjot crates, tools, and models.
+                    Pick a crate below to jump straight into its rustdoc-rendered pages. All links
+                    stay relative to this directory, so the theme assets keep working whether you open
+                    the files locally or host them on a static site.
+                </p>
+                <div class="notice">
+                    Tip: once you are inside a crate page, use the sidebar search to jump around the APIs.
+                </div>
+                <div class="crate-groups">
+                    <div class="crate-group">
+                        <h2>Primary Crates</h2>
+                        <ul class="crate-list">
+                            <li><a href="fj/index.html">fj</a></li>
+                            <li><a href="fj_core/index.html">fj_core</a></li>
+                            <li><a href="fj_math/index.html">fj_math</a></li>
+                            <li><a href="fj_export/index.html">fj_export</a></li>
+                            <li><a href="fj_interop/index.html">fj_interop</a></li>
+                            <li><a href="fj_viewer/index.html">fj_viewer</a></li>
+                            <li><a href="fj_window/index.html">fj_window</a></li>
+                        </ul>
+                    </div>
+                    <div class="crate-group">
+                        <h2>Tools</h2>
+                        <ul class="crate-list">
+                            <li><a href="automator/index.html">automator</a></li>
+                            <li><a href="autolib/index.html">autolib</a></li>
+                            <li><a href="cross_compiler/index.html">cross_compiler</a></li>
+                            <li><a href="export_validator/index.html">export_validator</a></li>
+                            <li><a href="release_operator/index.html">release_operator</a></li>
+                        </ul>
+                    </div>
+                    <div class="crate-group">
+                        <h2>Models &amp; Examples</h2>
+                        <ul class="crate-list">
+                            <li><a href="all/index.html">all</a></li>
+                            <li><a href="color/index.html">color</a></li>
+                            <li><a href="cuboid/index.html">cuboid</a></li>
+                            <li><a href="holes/index.html">holes</a></li>
+                            <li><a href="spacer/index.html">spacer</a></li>
+                            <li><a href="split/index.html">split</a></li>
+                            <li><a href="star/index.html">star</a></li>
+                            <li><a href="vertices_indices/index.html">vertices_indices</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
