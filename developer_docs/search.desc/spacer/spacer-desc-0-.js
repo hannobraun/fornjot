@@ -1,1 +1,0 @@
-searchState.loadedDescShard("spacer", 0, "")

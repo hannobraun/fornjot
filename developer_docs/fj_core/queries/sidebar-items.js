@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Sibling"],"trait":["AllHalfEdgesWithSurface","BoundingVerticesOfHalfEdge","CycleOfHalfEdge","SiblingOfHalfEdge"]};

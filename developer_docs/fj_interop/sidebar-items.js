@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["vertices_to_indexed_vertices"],"mod":["ext"],"struct":["CircleApproxParams","Color","InvalidTolerance","MeshTriangle","Tolerance","TriMesh"],"type":["Index"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["create_blog_post_file","now_ymd"]};

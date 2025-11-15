@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Polygon","Tetrahedron","TetrahedronShell"],"trait":["BuildCurve","BuildCycle","BuildFace","BuildHalfEdge","BuildRegion","BuildShell","BuildSketch","BuildSolid","BuildSurface"]};

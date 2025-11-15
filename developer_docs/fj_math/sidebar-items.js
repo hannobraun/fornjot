@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Sign","Winding"],"struct":["Aabb","Arc","Bivector","Circle","Line","LineSegment","Point","PolyChain","Scalar","T","Transform","Triangle","Uv","Vector","Xyz"]};

@@ -1,1 +1,0 @@
-searchState.loadedDescShard("color", 0, "")

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["LineSegmentIntersection"],"mod":["ray_segment"],"struct":["HorizontalRayToTheRight"],"trait":["Intersect"]};

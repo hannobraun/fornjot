@@ -1,1 +1,0 @@
-searchState.loadedDescShard("fj_window", 0, "Fornjot Window Abstraction")

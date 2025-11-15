@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["create_release_announcement","generate_announcement"]};

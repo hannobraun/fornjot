@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["find_version_in_str"]};

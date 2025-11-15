@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["Actions","GitHub","Label","Labels","PullRequest"]};

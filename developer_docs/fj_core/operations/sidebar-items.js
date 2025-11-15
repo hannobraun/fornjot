@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["build","derive","geometry","holes","insert","join","merge","presentation","replace","reverse","split","sweep","transform","update"]};

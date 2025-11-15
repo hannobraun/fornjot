@@ -1,2 +1,0 @@
-window.ALL_CRATES = ["all","autolib","automator","color","cross_compiler","cuboid","export_validator","fj","fj_core","fj_export","fj_interop","fj_math","fj_viewer","fj_window","holes","release_operator","spacer","split","star","vertices_indices"];
-//{"start":21,"fragment_lengths":[5,10,12,8,17,9,19,5,10,12,13,10,12,12,8,19,9,8,7,19]}

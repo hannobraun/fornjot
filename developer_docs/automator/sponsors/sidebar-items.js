@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["QueryResultSponsorshipPrivacy"],"struct":["QueryResult","QueryResultData","QueryResultSponsorable","QueryResultSponsorableTier","QueryResultSponsorsNode","QueryResultSponsorsNodes","QueryResultViewer","Sponsor","Sponsors"]};

@@ -1,1 +1,0 @@
-searchState.loadedDescShard("holes", 0, "")

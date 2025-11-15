@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Error","RendererInitError"],"fn":["make_viewer_and_spawn_thread"],"struct":["ViewerHandle","WindowHandle"]};

@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["ShellExtendedBySweep","SweepCache","SweptCycle","SweptHalfEdge","SweptRegion"],"trait":["SweepCycle","SweepFace","SweepFaceOfShell","SweepHalfEdge","SweepRegion","SweepSketch","SweepSurfacePath","SweepVertex"]};

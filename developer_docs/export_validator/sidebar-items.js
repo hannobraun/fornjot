@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["handle_model","main","validate_model"],"mod":["ffi"]};

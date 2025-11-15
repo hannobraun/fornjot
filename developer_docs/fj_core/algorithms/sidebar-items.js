@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["approx","bounding_volume","intersect","triangulate"]};

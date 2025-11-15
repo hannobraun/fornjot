@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["main"],"mod":["args","blog","pull_requests","run","sponsors"]};

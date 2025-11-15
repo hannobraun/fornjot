@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["convert_from_curve_point","surface_aabb_from_bounded_curve"],"struct":["Polyline"]};
