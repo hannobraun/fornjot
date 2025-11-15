@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"macro":["assert_contains_err"],"mod":["algorithms","geometry","layers","operations","presentation","queries","storage","topology","validate","validation"],"struct":["Core"]};

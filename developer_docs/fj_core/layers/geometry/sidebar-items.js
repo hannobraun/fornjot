@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["DefineCurve","DefineCurve2","DefineSurface","DefineSurface2","DefineVertex"]};

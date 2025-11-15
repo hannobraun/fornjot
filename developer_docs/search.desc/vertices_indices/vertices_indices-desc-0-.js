@@ -1,0 +1,1 @@
+searchState.loadedDescShard("vertices_indices", 0, "")

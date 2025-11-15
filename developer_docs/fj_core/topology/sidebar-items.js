@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["AnyObject","Handedness"],"struct":["AboutToBeStored","Bare","Curve","Cycle","Face","HalfEdge","ObjectSet","Region","Shell","Sketch","Solid","Stored","Surface","Surfaces","Topology","Vertex"],"trait":["Form","IsObject"],"type":["ObjectSetIntoIter","ObjectSetIter"]};

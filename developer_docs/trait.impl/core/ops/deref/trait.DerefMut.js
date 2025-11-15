@@ -1,0 +1,9 @@
+(function() {
+    var implementors = Object.fromEntries([["fj_math",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Point.html\" title=\"struct fj_math::Point\">Point</a>&lt;1&gt;"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Point.html\" title=\"struct fj_math::Point\">Point</a>&lt;2&gt;"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Point.html\" title=\"struct fj_math::Point\">Point</a>&lt;3&gt;"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Vector.html\" title=\"struct fj_math::Vector\">Vector</a>&lt;1&gt;"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Vector.html\" title=\"struct fj_math::Vector\">Vector</a>&lt;2&gt;"],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/1.89.0/core/ops/deref/trait.DerefMut.html\" title=\"trait core::ops::deref::DerefMut\">DerefMut</a> for <a class=\"struct\" href=\"fj_math/struct.Vector.html\" title=\"struct fj_math::Vector\">Vector</a>&lt;3&gt;"]]]]);
+    if (window.register_implementors) {
+        window.register_implementors(implementors);
+    } else {
+        window.pending_implementors = implementors;
+    }
+})()
+//{"start":57,"fragment_lengths":[1648]}

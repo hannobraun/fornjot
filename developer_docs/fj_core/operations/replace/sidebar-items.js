@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ReplaceOutput"],"trait":["ReplaceCurve","ReplaceHalfEdge","ReplaceVertex"]};

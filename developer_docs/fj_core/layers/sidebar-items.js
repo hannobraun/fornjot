@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["geometry","presentation","topology","validation"],"struct":["Layer","Layers"],"trait":["Command","Event"]};

@@ -1,0 +1,1 @@
+searchState.loadedDescShard("cross_compiler", 0, "Cross-compiler for the Fornjot build\nThe crates that are supported on this target\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.\nThe target triple")

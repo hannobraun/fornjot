@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["ArrayChunks","ArrayWindows"],"trait":["ArrayExt","SliceExt"]};

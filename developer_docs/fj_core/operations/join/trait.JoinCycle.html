@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Join a `Cycle` to another"><title>JoinCycle in fj_core::operations::join - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="fj_core" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0 (29483883e 2025-08-04)" data-channel="1.89.0" data-search-js="search-92309212.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../../fj_core/index.html">fj_core</a><span class="version">0.49.0</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Join<wbr>Cycle</a></h2><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.add_joined_half_edges" title="add_joined_half_edges">add_joined_half_edges</a></li><li><a href="#tymethod.join_to" title="join_to">join_to</a></li></ul><h3><a href="#dyn-compatibility">Dyn Compatibility</a></h3><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In fj_<wbr>core::<wbr>operations::<wbr>join</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../../index.html">fj_core</a>::<wbr><a href="../index.html">operations</a>::<wbr><a href="index.html">join</a></div><h1>Trait <span class="trait">JoinCycle</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../../src/fj_core/operations/join/cycle.rs.html#18-93">Source</a> </span></div><pre class="rust item-decl"><code>pub trait JoinCycle {
+    // Required methods
+    fn <a href="#tymethod.add_joined_half_edges" class="fn">add_joined_half_edges</a>&lt;Es&gt;(
+        &amp;self,
+        half_edges: Es,
+        surface: <a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.Surface.html" title="struct fj_core::topology::Surface">Surface</a>&gt;,
+        core: &amp;mut <a class="struct" href="../../struct.Core.html" title="struct fj_core::Core">Core</a>,
+    ) -&gt; Self
+       <span class="where">where Es: <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = (<a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.HalfEdge.html" title="struct fj_core::topology::HalfEdge">HalfEdge</a>&gt;, <a class="struct" href="../../geometry/struct.LocalCurveGeom.html" title="struct fj_core::geometry::LocalCurveGeom">LocalCurveGeom</a>)&gt;,
+             Es::<a class="associatedtype" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/collect/trait.IntoIterator.html#associatedtype.IntoIter" title="type core::iter::traits::collect::IntoIterator::IntoIter">IntoIter</a>: <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/exact_size/trait.ExactSizeIterator.html" title="trait core::iter::traits::exact_size::ExactSizeIterator">ExactSizeIterator</a></span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.join_to" class="fn">join_to</a>(
+        &amp;self,
+        other: &amp;<a class="struct" href="../../topology/struct.Cycle.html" title="struct fj_core::topology::Cycle">Cycle</a>,
+        range: <a class="struct" href="https://doc.rust-lang.org/1.89.0/core/ops/range/struct.RangeInclusive.html" title="struct core::ops::range::RangeInclusive">RangeInclusive</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.89.0/std/primitive.usize.html">usize</a>&gt;,
+        other_range: <a class="struct" href="https://doc.rust-lang.org/1.89.0/core/ops/range/struct.RangeInclusive.html" title="struct core::ops::range::RangeInclusive">RangeInclusive</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.89.0/std/primitive.usize.html">usize</a>&gt;,
+        surface_self: <a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.Surface.html" title="struct fj_core::topology::Surface">Surface</a>&gt;,
+        core: &amp;mut <a class="struct" href="../../struct.Core.html" title="struct fj_core::Core">Core</a>,
+    ) -&gt; Self;
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Join a <a href="../../topology/struct.Cycle.html" title="struct fj_core::topology::Cycle"><code>Cycle</code></a> to another</p>
+</div></details><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.add_joined_half_edges" class="method"><a class="src rightside" href="../../../src/fj_core/operations/join/cycle.rs.html#33-41">Source</a><h4 class="code-header">fn <a href="#tymethod.add_joined_half_edges" class="fn">add_joined_half_edges</a>&lt;Es&gt;(
+    &amp;self,
+    half_edges: Es,
+    surface: <a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.Surface.html" title="struct fj_core::topology::Surface">Surface</a>&gt;,
+    core: &amp;mut <a class="struct" href="../../struct.Core.html" title="struct fj_core::Core">Core</a>,
+) -&gt; Self<div class="where">where
+    Es: <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/collect/trait.IntoIterator.html" title="trait core::iter::traits::collect::IntoIterator">IntoIterator</a>&lt;Item = (<a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.HalfEdge.html" title="struct fj_core::topology::HalfEdge">HalfEdge</a>&gt;, <a class="struct" href="../../geometry/struct.LocalCurveGeom.html" title="struct fj_core::geometry::LocalCurveGeom">LocalCurveGeom</a>)&gt;,
+    Es::<a class="associatedtype" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/collect/trait.IntoIterator.html#associatedtype.IntoIter" title="type core::iter::traits::collect::IntoIterator::IntoIter">IntoIter</a>: <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> + <a class="trait" href="https://doc.rust-lang.org/1.89.0/core/iter/traits/exact_size/trait.ExactSizeIterator.html" title="trait core::iter::traits::exact_size::ExactSizeIterator">ExactSizeIterator</a>,</div></h4></section></summary><div class="docblock"><p>Add new half-edges to the cycle that are joined to the provided ones</p>
+<p>This method creates a new half-edge for each half-edge that is provided,
+joins the new half-edge to the provided one, and adds the new half-edge
+to the cycle.</p>
+<p>Expects the provided half-edges to be in an unnatural order:</p>
+<ul>
+<li>This is the opposite order that they would appear in, in a cycle.</li>
+<li>Meaning each half-edge ends where the <em>previous</em> one starts.</li>
+</ul>
+<p>The geometry for each new half-edge needs to be provided as well. Also
+requires the surface that the cycle is defined in.</p>
+</div></details><details class="toggle method-toggle" open><summary><section id="tymethod.join_to" class="method"><a class="src rightside" href="../../../src/fj_core/operations/join/cycle.rs.html#85-92">Source</a><h4 class="code-header">fn <a href="#tymethod.join_to" class="fn">join_to</a>(
+    &amp;self,
+    other: &amp;<a class="struct" href="../../topology/struct.Cycle.html" title="struct fj_core::topology::Cycle">Cycle</a>,
+    range: <a class="struct" href="https://doc.rust-lang.org/1.89.0/core/ops/range/struct.RangeInclusive.html" title="struct core::ops::range::RangeInclusive">RangeInclusive</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.89.0/std/primitive.usize.html">usize</a>&gt;,
+    other_range: <a class="struct" href="https://doc.rust-lang.org/1.89.0/core/ops/range/struct.RangeInclusive.html" title="struct core::ops::range::RangeInclusive">RangeInclusive</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.89.0/std/primitive.usize.html">usize</a>&gt;,
+    surface_self: <a class="struct" href="../../storage/struct.Handle.html" title="struct fj_core::storage::Handle">Handle</a>&lt;<a class="struct" href="../../topology/struct.Surface.html" title="struct fj_core::topology::Surface">Surface</a>&gt;,
+    core: &amp;mut <a class="struct" href="../../struct.Core.html" title="struct fj_core::Core">Core</a>,
+) -&gt; Self</h4></section></summary><div class="docblock"><p>Join the cycle to another</p>
+<p>Joins the cycle to the other at the provided ranges. The ranges specify
+the indices of the edges that are joined together.</p>
+<p>A modulo operation is applied to all indices before use, so in a cycle
+of 3 edges, indices <code>0</code> and <code>3</code> refer to the same edge. This allows for
+specifying a range that crosses the “seam” of the cycle.</p>
+<h5 id="panics"><a class="doc-anchor" href="#panics">§</a>Panics</h5>
+<p>Panics, if the ranges have different lengths.</p>
+<h5 id="assumptions"><a class="doc-anchor" href="#assumptions">§</a>Assumptions</h5>
+<p>This method makes some assumptions that need to be met, if the operation
+is to result in a valid shape:</p>
+<ul>
+<li><strong>The joined edges must be coincident.</strong></li>
+<li><strong>The locally defined curve coordinate systems of the edges must
+match.</strong></li>
+</ul>
+<p>If either of those assumptions are not met, this will result in a
+validation error down the line.</p>
+<h5 id="implementation-note"><a class="doc-anchor" href="#implementation-note">§</a>Implementation Note</h5>
+<p>The use of the <code>RangeInclusive</code> type might be a bit limiting, as other
+range types might be more convenient in a given use case. This
+implementation was chosen for now, as it wasn’t clear whether the
+additional complexity of using <code>RangeBounds</code> would be worth it.</p>
+<p>A solution based on <code>SliceIndex</code> could theoretically be used, but that
+trait is partially unstable. In addition, it’s not clear how it could be
+used generically, as it could yield a range (which can be iterated over)
+or a single item (which can not). This is not a hard problem in
+principle (a single item could just be an iterator of length 1), but I
+don’t see it how to address this in Rust in a reasonable way.</p>
+<p>Maybe a custom trait that is implemented for <code>usize</code> and all range types
+would be the best solution.</p>
+</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/1.89.0/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety", so this trait is not object safe.</i></p></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><section id="impl-JoinCycle-for-Cycle" class="impl"><a class="src rightside" href="../../../src/fj_core/operations/join/cycle.rs.html#95-296">Source</a><a href="#impl-JoinCycle-for-Cycle" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.JoinCycle.html" title="trait fj_core::operations::join::JoinCycle">JoinCycle</a> for <a class="struct" href="../../topology/struct.Cycle.html" title="struct fj_core::topology::Cycle">Cycle</a></h3></section></div><script src="../../../trait.impl/fj_core/operations/join/cycle/trait.JoinCycle.js" async></script></section></div></main></body></html>

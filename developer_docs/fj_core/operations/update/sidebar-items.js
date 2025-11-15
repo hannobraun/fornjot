@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":["UpdateCycle","UpdateFace","UpdateHalfEdge","UpdateRegion","UpdateShell","UpdateSketch","UpdateSolid"]};

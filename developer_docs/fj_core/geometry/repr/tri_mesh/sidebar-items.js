@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["convert_point_surface_to_global","convert_vector_surface_to_global"],"struct":["TriMesh"]};

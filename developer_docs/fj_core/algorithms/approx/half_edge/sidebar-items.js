@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["approx_half_edge"],"struct":["HalfEdgeApprox"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["CurveGeom2","Path"],"mod":["curves","repr","surfaces","traits"],"struct":["CurveBoundary","CurveGeom","Geometry","LocalCurveGeom","LocalVertexGeom","SurfaceGeom","VertexGeom"],"trait":["CurveBoundaryElement"]};

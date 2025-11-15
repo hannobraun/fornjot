@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Commands"],"fn":["main"],"mod":["github","registry","release"],"struct":["Cli","DetectArgs","PublishArgs"]};

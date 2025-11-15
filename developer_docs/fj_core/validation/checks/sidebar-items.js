@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["AdjacentHalfEdgesNotConnected","CoincidentHalfEdgesAreNotSiblings","FaceHasNoBoundary","HalfEdgeHasNoSibling","InteriorCycleHasInvalidWinding","MultipleReferencesToObject"]};

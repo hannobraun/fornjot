@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["cycle","face","half_edge","shell","sketch","solid"],"struct":["ApproxCache","ApproxPoint"],"trait":["Approx"]};
