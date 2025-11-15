@@ -11,38 +11,54 @@
     <link rel="alternate icon" type="image/png" href="static.files/favicon-32x32-6580c154.png">
     <style>
         :root {
-            --landing-bg: #f4f6fb;
-            --landing-card-bg: #fff;
-            --landing-border: #d9deea;
+            --slate-900: #11131f;
+            --slate-800: #181d2c;
+            --slate-500: #7e889f;
+            --linen: #f4eee4;
+            --linen-dark: #c8b89b;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: var(--landing-bg);
+            background: var(--slate-900);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: #fff;
+            font-weight: 400;
         }
 
         main {
             flex: 1;
-            padding: 3rem 1.5rem 4rem;
+            padding: 4rem 1.5rem 6rem;
             display: flex;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .width-limiter {
-            width: min(960px, 100%);
+            width: min(1100px, 100%);
+            margin: 0 auto;
         }
 
         .landing-card {
             margin: 0 auto;
-            background: var(--landing-card-bg);
-            border: 1px solid var(--landing-border);
-            border-radius: 0.5rem;
-            box-shadow: 0 15px 40px rgba(24, 48, 96, 0.08);
-            padding: 2.5rem 2.75rem;
+            background: var(--slate-800);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.06), transparent 55%);
+            pointer-events: none;
         }
 
         .landing-hero {
@@ -52,19 +68,24 @@
             gap: 1.5rem;
             align-items: baseline;
         }
+        .landing-hero small {
+            color: var(--slate-500);
+            letter-spacing: 0.05em;
+        }
 
         .version-badge {
             display: inline-block;
             margin-left: 0.5rem;
             padding: 0.15rem 0.5rem;
-            border-radius: 0.3rem;
-            background: #e7ecf3;
-            color: #42536d;
+            border-radius: 999px;
+            background: rgba(244, 238, 228, 0.15);
+            color: var(--linen);
             font-size: 0.65em;
             vertical-align: middle;
+            letter-spacing: 0.05em;
         }
         .landing-copy {
-            color: #141c2e;
+            color: rgba(255, 255, 255, 0.85);
             line-height: 1.5;
             max-width: 48rem;
             margin-top: 1rem;
@@ -90,6 +111,10 @@
 
         .crate-group h2 {
             margin-bottom: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--linen-dark);
         }
         .crate-list {
             display: flex;
@@ -103,12 +128,26 @@
         }
         .crate-list a {
             font-weight: 600;
+            color: var(--linen);
+            text-decoration: none;
+        }
+        .crate-list a:hover {
+            color: #fff;
+            text-decoration: underline;
         }
         .notice {
             margin-top: 1.5rem;
             padding: 0.75rem 1rem;
-            border-left: 0.3rem solid #5c95ff;
-            background: #f5f7fb;
+            border-left: 0.3rem solid var(--linen-dark);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            color: var(--linen);
         }
     </style>
 </head>
