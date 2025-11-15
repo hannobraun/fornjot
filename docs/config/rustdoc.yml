@@ -1,0 +1,12 @@
+# Configuration for building Fornjot developer documentation
+build:
+  tool: cargo doc
+  args:
+    - --workspace
+    - --all-features
+    - --no-deps
+  output_dir: target/doc
+  entrypoint: index.html
+  description: >-
+    The docs mirror the workspace crates (core, tools, and example models). Output is
+    published via GitHub Pages.

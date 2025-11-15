@@ -1,6 +1,14 @@
 # Cargo
 /target
 
+# Generated documentation
+developer_docs/
+docs/book/
+docs/build/
+docs/dist/
+public/
+site/
+
 # IDE Configurations
 **/.vs/ # Visual Studio
 **/.idea/ # Intellij
