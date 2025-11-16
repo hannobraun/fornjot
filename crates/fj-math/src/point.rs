@@ -149,7 +149,9 @@ impl<const D: usize> ops::Neg for Point<D> {
     type Output = Self;
 
     fn neg(self) -> Self::Output {
-        self.to_na().neg().into()
+        Self {
+            coords: self.coords.neg(),
+        }
     }
 }
 
@@ -157,7 +159,7 @@ impl<const D: usize> ops::Sub<Self> for Point<D> {
     type Output = Vector<D>;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        self.to_na().sub(rhs.to_na()).into()
+        self.coords.sub(rhs.coords)
     }
 }
 
@@ -212,7 +214,9 @@ where
     type Output = Self;
 
     fn add(self, rhs: V) -> Self::Output {
-        self.to_na().add(rhs.into().to_na()).into()
+        Self {
+            coords: self.coords.add(rhs),
+        }
     }
 }
 
@@ -232,7 +236,9 @@ where
     type Output = Self;
 
     fn sub(self, rhs: V) -> Self::Output {
-        self.to_na().sub(rhs.into().to_na()).into()
+        Self {
+            coords: self.coords.sub(rhs),
+        }
     }
 }
 
