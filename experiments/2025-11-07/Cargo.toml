@@ -7,4 +7,5 @@ edition = "2024"
 [dependencies]
 approx = "*"
 decorum = "*"
+iter_fixed = "*"
 num-traits = "*"

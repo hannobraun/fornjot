@@ -37,8 +37,15 @@ version = "0.0.0"
 dependencies = [
  "approx",
  "decorum",
+ "iter_fixed",
  "num-traits",
 ]
+
+[[package]]
+name = "iter_fixed"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "592ff74cdc6a923b2ae357dad7db2f5dcbf5d4ace9afcf3ab7c7f20b209fd949"
 
 [[package]]
 name = "num-traits"
