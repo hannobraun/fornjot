@@ -14,7 +14,7 @@ use super::{
 /// The dimensionality of the vector is defined by the const generic `D`
 /// parameter.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
-#[repr(C)]
+#[repr(transparent)]
 pub struct Vector<const D: usize> {
     /// # The components of the vector
     pub components: [Scalar; D],
