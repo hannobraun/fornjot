@@ -1,5 +1,1 @@
-mod aabb;
-
-pub use fj_math::{Point, Scalar, Vector};
-
-pub use self::aabb::Aabb;
+pub use fj_math::{Aabb, Point, Scalar, Vector};
