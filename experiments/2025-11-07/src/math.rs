@@ -1,1 +1,1 @@
-pub use fj_math::{Scalar, Vector};
+pub use fj_math::Scalar;
