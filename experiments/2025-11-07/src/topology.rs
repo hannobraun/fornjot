@@ -1,7 +1,8 @@
+use fj_math::Point;
+
 use crate::{
     geometry::{CurveGeometry, SurfaceGeometry},
     helpers::Orientation,
-    math::Point,
     storage::Handle,
 };
 

@@ -1,9 +1,6 @@
-use fj_math::Aabb;
+use fj_math::{Aabb, Point};
 
-use crate::{
-    math::Point,
-    topology::{LocalCurve, Surface},
-};
+use crate::topology::{LocalCurve, Surface};
 
 /// # An ongoing approximation
 pub struct Approx {

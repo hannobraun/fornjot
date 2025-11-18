@@ -1,4 +1,6 @@
-use crate::math::{Point, Scalar, Vector};
+use fj_math::Point;
+
+use crate::math::{Scalar, Vector};
 
 /// # A kind of curve geometry
 ///
