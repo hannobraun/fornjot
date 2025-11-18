@@ -1,5 +1,7 @@
+use fj_math::Aabb;
+
 use crate::{
-    math::{Aabb, Point},
+    math::Point,
     topology::{LocalCurve, Surface},
 };
 

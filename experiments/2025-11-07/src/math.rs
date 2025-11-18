@@ -1,1 +1,1 @@
-pub use fj_math::{Aabb, Point, Scalar, Vector};
+pub use fj_math::{Point, Scalar, Vector};
