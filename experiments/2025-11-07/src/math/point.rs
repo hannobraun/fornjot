@@ -1,6 +1,1 @@
-use crate::math::Vector;
-
-/// # A point
-pub struct Point<const N: usize> {
-    pub coordinates: Vector<N>,
-}
+pub use fj_math::Point;
