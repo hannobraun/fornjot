@@ -10,3 +10,6 @@ decorum = "*"
 iter_fixed = "*"
 nalgebra = "*"
 num-traits = "*"
+
+[dependencies.fj-math]
+path = "../../crates/fj-math"
