@@ -4,5 +4,8 @@
 name = "fj"
 edition = "2024"
 
+[dependencies]
+re_renderer = "*"
+
 [dependencies.fj-math]
 path = "../../crates/fj-math"
