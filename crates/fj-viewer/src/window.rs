@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 use fj_interop::TriMesh;
-use fj_math::{Aabb, Point, Scalar};
+use fj_math::{Aabb, Point};
+use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
@@ -60,19 +61,24 @@ impl Window {
         })
     }
 
-    pub fn winit_window(&self) -> &winit::window::Window {
+    pub fn inner(&self) -> &winit::window::Window {
         &self.window
     }
 
-    /// # Toggle whether the triangles of meshes are drawn
+    /// # Toggle whether to draw mesh triangles
     pub fn toggle_draw_mesh_triangles(&mut self) {
         self.draw_config.draw_mesh_triangles =
             !self.draw_config.draw_mesh_triangles;
     }
 
-    /// # Toggle whether the lines of meshes are drawn
+    /// # Toggle whether to draw mesh lines
     pub fn toggle_draw_mesh_lines(&mut self) {
         self.draw_config.draw_mesh_lines = !self.draw_config.draw_mesh_lines;
+    }
+
+    /// # Toggle whether to draw labels
+    pub fn toggle_draw_labels(&mut self) {
+        self.draw_config.draw_labels = !self.draw_config.draw_labels;
     }
 
     /// # Compute and store a focus point, unless one is already stored
@@ -86,7 +92,7 @@ impl Window {
         }
     }
 
-    /// # Handle the screen being resized
+    /// # Handle a screen resize
     pub fn on_screen_resize(&mut self, new_size: PhysicalSize<u32>) {
         self.new_screen_size = Some(new_size);
     }
@@ -133,13 +139,13 @@ impl Window {
         self.cursor = Some(cursor_new);
     }
 
-    /// # Handle a mouse button being pressed
+    /// # Handle a mouse button press
     pub fn on_mouse_button_pressed(&mut self, button: MouseButton) {
         self.most_recent_mouse_button = Some(button);
         self.add_focus_point();
     }
 
-    /// # Handle a mouse button being pressed
+    /// # Handle a mouse button release
     pub fn on_mouse_button_released(&mut self, button: MouseButton) {
         if self.most_recent_mouse_button == Some(button) {
             self.most_recent_mouse_button = None;
@@ -158,48 +164,58 @@ impl Window {
     }
 
     pub fn add_displayable(&mut self, displayable: Displayable) {
-        let (render_mode, vertices, aabb) = match displayable {
-            Displayable::Face { points, aabb } => {
-                let render_mode = RenderMode::Face;
-                let vertices = Vertices::for_face(&points);
-
-                (render_mode, vertices, aabb)
-            }
-            Displayable::Mesh { tri_mesh, aabb } => {
+        let (render_mode, vertices, aabb, labels) = match displayable {
+            Displayable::Mesh { tri_mesh } => {
                 let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
+                let aabb = tri_mesh.aabb();
+                let labels = tri_mesh
+                    .all_triangles()
+                    .flat_map(|triangle| triangle.points)
+                    .sorted()
+                    .dedup()
+                    .map(|point| (format!("{point:.3?}"), point))
+                    .collect();
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, aabb, labels)
             }
-            Displayable::PointGlobal { point } => {
+            Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
                 let vertices = Vertices::for_point(point);
-
                 let aabb = Aabb {
                     min: point,
                     max: point,
                 };
+                let labels = vec![];
 
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, aabb, labels)
             }
-            Displayable::PointSurface { point } => {
-                let point = Point::from([point.u, point.v, Scalar::ZERO]);
+            Displayable::Polyline { points } => {
+                let render_mode = RenderMode::Polyline;
+                let vertices = Vertices::for_polyline(
+                    points
+                        .iter()
+                        .chain(points.first())
+                        .map(|PointWithLabel { point, .. }| point),
+                );
+                let aabb = Aabb::<3>::from_points(
+                    points
+                        .iter()
+                        .map(|PointWithLabel { point, .. }| point)
+                        .copied(),
+                );
+                let labels = points
+                    .into_iter()
+                    .map(|PointWithLabel { point, label }| (label, point))
+                    .collect();
 
-                let render_mode = RenderMode::Point;
-                let vertices = Vertices::for_point(point);
-
-                let aabb = Aabb {
-                    min: point,
-                    max: point,
-                };
-
-                (render_mode, vertices, aabb)
+                (render_mode, vertices, aabb, labels)
             }
         };
 
-        self.renderer.add_geometry(render_mode, vertices);
+        self.renderer.add_geometry(render_mode, vertices, labels);
 
         self.aabb = self.aabb.merged(&aabb);
         self.camera = Camera::new(&self.aabb);
@@ -246,33 +262,14 @@ impl Window {
 }
 
 pub enum Displayable {
-    Face {
-        points: Vec<Point<2>>,
-        aabb: Aabb<3>,
-    },
-    Mesh {
-        tri_mesh: TriMesh,
-        aabb: Aabb<3>,
-    },
-    PointGlobal {
-        point: Point<3>,
-    },
-    PointSurface {
-        point: Point<2>,
-    },
+    Mesh { tri_mesh: TriMesh },
+    Point { point: Point<3> },
+    Polyline { points: Vec<PointWithLabel> },
 }
 
-impl Displayable {
-    pub fn face(points: Vec<Point<2>>) -> Self {
-        let aabb =
-            Aabb::<3>::from_points(points.iter().map(|point| point.to_xyz()));
-        Self::Face { points, aabb }
-    }
-
-    pub fn mesh(tri_mesh: TriMesh) -> Self {
-        let aabb = tri_mesh.aabb();
-        Self::Mesh { tri_mesh, aabb }
-    }
+pub struct PointWithLabel {
+    pub point: Point<3>,
+    pub label: String,
 }
 
 #[derive(Debug, thiserror::Error)]

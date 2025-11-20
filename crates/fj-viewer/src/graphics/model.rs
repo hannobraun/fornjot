@@ -3,8 +3,9 @@ use std::ops::Range;
 use tobj::LoadError;
 use wgpu::util::DeviceExt;
 
-use super::texture::{self, LoadTextureError};
 use crate::assets::Assets;
+
+use super::texture::{self, LoadTextureError};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]

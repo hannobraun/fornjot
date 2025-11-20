@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
-use crate::graphics::RenderMode;
+use crate::graphics::{RenderMode, text::Label};
 
 use super::vertices::Vertex;
 
@@ -12,6 +12,7 @@ pub struct Geometry {
     pub vertex_buffer: wgpu::Buffer,
     pub index_buffer: wgpu::Buffer,
     pub num_indices: u32,
+    pub labels: Vec<Label>,
 }
 
 impl Geometry {
@@ -20,6 +21,7 @@ impl Geometry {
         device: &wgpu::Device,
         vertices: &[Vertex],
         indices: &[u32],
+        labels: Vec<Label>,
     ) -> Self {
         Self {
             render_mode,
@@ -41,6 +43,7 @@ impl Geometry {
                 .len()
                 .try_into()
                 .expect("`usize` couldn't be cast to `u32`"),
+            labels,
         }
     }
 }

@@ -9,24 +9,6 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn for_face(points: &[Point<2>]) -> Self {
-        let vertices = points
-            .iter()
-            .map(|point| {
-                let [x, y] = point.coords.components.map(Scalar::into_f32);
-
-                Vertex {
-                    position: [x, y, 0.],
-                    normal: [0., 0., 1.],
-                    color: [0., 0., 0., 1.],
-                }
-            })
-            .collect();
-        let indices = (0..).take(points.len()).collect();
-
-        Self { vertices, indices }
-    }
-
     pub fn for_mesh(tri_mesh: &TriMesh) -> Self {
         let (vertices, indices) = vertices_to_indexed_vertices(
             tri_mesh.triangles.iter().flat_map(|triangle| {
@@ -54,6 +36,26 @@ impl Vertices {
             color: [0., 0., 0., 1.],
         }];
         let indices = vec![0];
+
+        Self { vertices, indices }
+    }
+
+    pub fn for_polyline<'r>(
+        points: impl IntoIterator<Item = &'r Point<3>>,
+    ) -> Self {
+        let vertices = points
+            .into_iter()
+            .map(|point| {
+                let [x, y, z] = point.coords.components.map(Scalar::into_f32);
+
+                Vertex {
+                    position: [x, y, z],
+                    normal: [0., 0., 1.],
+                    color: [0., 0., 0., 1.],
+                }
+            })
+            .collect::<Vec<_>>();
+        let indices = (0..).take(vertices.len()).collect();
 
         Self { vertices, indices }
     }

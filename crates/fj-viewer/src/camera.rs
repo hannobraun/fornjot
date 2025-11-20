@@ -21,10 +21,10 @@ pub struct Camera {
     far_plane: f64,
 
     /// The rotational part of the transform
-    pub rotation: Transform,
+    rotation: Transform,
 
     /// The locational part of the transform
-    pub translation: Transform,
+    translation: Transform,
 }
 
 impl Camera {
@@ -95,14 +95,24 @@ impl Camera {
         self.far_plane
     }
 
+    /// # Access the camera rotation
+    pub fn rotation(&self) -> &Transform {
+        &self.rotation
+    }
+
     /// Returns the horizontal field of view of the camera.
     pub fn field_of_view_in_x(&self) -> f64 {
         Self::INITIAL_FIELD_OF_VIEW_IN_X
     }
 
-    /// Returns the position of the camera in world space.
+    /// # Compute the camera's vertical field of view
+    pub fn field_of_view_in_y(&self, aspect_ratio: f64) -> f64 {
+        2. * ((self.field_of_view_in_x() / 2.).tan() / aspect_ratio).atan()
+    }
+
+    /// # Compute the position of the camera in model space
     pub fn position(&self) -> Point<3> {
-        self.camera_to_model()
+        self.model_to_camera()
             .inverse_transform_point(&Point::<3>::origin())
     }
 
@@ -116,7 +126,7 @@ impl Camera {
         let cursor = Point::origin()
             + Vector::from([cursor.x * f, cursor.y * f, -self.near_plane()]);
 
-        self.camera_to_model().inverse_transform_point(&cursor)
+        self.model_to_camera().inverse_transform_point(&cursor)
     }
 
     /// # Compute the point on the model that the cursor currently points to
@@ -158,21 +168,14 @@ impl Camera {
         Some(FocusPoint(origin + dir * min_t?))
     }
 
-    /// Access the transform from camera to model space.
-    pub fn camera_to_model(&self) -> Transform {
-        // Using a mutable variable cleanly takes care of any type inference
-        // problems that this operation would otherwise have.
-        let mut transform = Transform::identity();
-
-        transform = transform * self.translation;
-        transform = transform * self.rotation;
-
-        transform
+    /// # Compute the transform from model space to camera space
+    pub fn model_to_camera(&self) -> Transform {
+        self.translation * self.rotation
     }
 
     /// Update the max and minimum rendering distance for this camera.
     pub fn update_planes(&mut self, aabb: &Aabb<3>) {
-        let view_transform = self.camera_to_model();
+        let view_transform = self.model_to_camera();
         let view_direction = Vector::from([0., 0., -1.]);
 
         let mut dist_min = f64::INFINITY;
@@ -230,7 +233,7 @@ impl Camera {
         let rotation = Transform::rotation(camera_rotation.right() * angle_x)
             * Transform::rotation(camera_rotation.up() * angle_y);
 
-        let transform = self.camera_to_model()
+        let transform = self.model_to_camera()
             * rotate_around
             * rotation
             * rotate_around.inverse();
@@ -247,13 +250,13 @@ impl Camera {
         focus_point: FocusPoint,
     ) {
         let previous = self.cursor_to_model_space(previous);
-        let cursor = self.cursor_to_model_space(current);
+        let current = self.cursor_to_model_space(current);
 
-        let d1 = Point::distance_to(&self.position(), &cursor);
+        let d1 = Point::distance_to(&self.position(), &current);
         let d2 = Point::distance_to(&self.position(), &focus_point.0);
 
-        let diff = (cursor - previous) * d2 / d1;
-        let offset = self.camera_to_model().transform_vector(&diff);
+        let diff = (current - previous) * d2 / d1;
+        let offset = self.model_to_camera().transform_vector(&diff);
 
         self.translation = self.translation
             * Transform::translation(Vector::from([

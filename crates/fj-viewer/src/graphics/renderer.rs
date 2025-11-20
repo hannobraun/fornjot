@@ -1,11 +1,18 @@
 use std::{io, mem::size_of, sync::Arc, vec};
 
+use fj_math::Point;
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::{camera::Camera, graphics::RenderMode};
+use crate::{
+    camera::Camera,
+    graphics::{
+        RenderMode,
+        text::{TextDrawError, TextRenderer},
+    },
+};
 
 use super::{
     DEPTH_FORMAT, DeviceError, SAMPLE_COUNT, device::Device,
@@ -16,7 +23,6 @@ use super::{
 };
 
 /// Graphics rendering state and target abstraction
-#[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface<'static>,
     device: Device,
@@ -32,6 +38,7 @@ pub struct Renderer {
     pipelines: Pipelines,
 
     navigation_cube_renderer: NavigationCubeRenderer,
+    text_renderer: TextRenderer,
 }
 
 impl Renderer {
@@ -193,6 +200,9 @@ impl Renderer {
             &surface_config,
         );
 
+        let text_renderer =
+            TextRenderer::new(&device.device, &device.queue, color_format);
+
         Ok(Self {
             surface,
             device,
@@ -208,6 +218,7 @@ impl Renderer {
             pipelines,
 
             navigation_cube_renderer,
+            text_renderer,
         })
     }
 
@@ -215,12 +226,21 @@ impl Renderer {
         &mut self,
         render_mode: RenderMode,
         vertices: Vertices,
+        labels: impl IntoIterator<Item = (String, Point<3>)>,
     ) {
+        let labels = labels
+            .into_iter()
+            .map(|(text, position)| {
+                self.text_renderer.make_label(&text, position)
+            })
+            .collect();
+
         self.geometries.push(Geometry::new(
             render_mode,
             &self.device.device,
             vertices.vertices(),
             vertices.indices(),
+            labels,
         ));
     }
 
@@ -257,9 +277,11 @@ impl Renderer {
     ) -> Result<(), DrawError> {
         let aspect_ratio = f64::from(self.surface_config.width)
             / f64::from(self.surface_config.height);
+        let transform = Transform::for_vertices(camera, aspect_ratio);
+
         let uniforms = Uniforms {
-            transform: Transform::for_vertices(camera, aspect_ratio),
-            transform_normals: Transform::for_normals(camera),
+            transform: transform.to_native(),
+            transform_normals: Transform::for_normals(camera).to_native(),
         };
 
         self.device.queue.write_buffer(
@@ -323,6 +345,19 @@ impl Renderer {
             for geometry in &self.geometries {
                 self.pipelines.draw(config, geometry, &mut render_pass);
             }
+
+            if config.draw_labels {
+                for geometry in &self.geometries {
+                    self.text_renderer.draw(
+                        &self.device.device,
+                        &self.device.queue,
+                        &self.surface_config,
+                        &mut render_pass,
+                        &geometry.labels,
+                        &transform,
+                    )?;
+                }
+            }
         }
 
         self.navigation_cube_renderer.draw(
@@ -330,7 +365,7 @@ impl Renderer {
             &mut encoder,
             &self.device.queue,
             aspect_ratio,
-            camera.rotation,
+            *camera.rotation(),
         );
 
         let command_buffer = encoder.finish();
@@ -408,5 +443,10 @@ pub enum RendererInitError {
 ///
 /// Returned by [`Renderer::draw`].
 #[derive(Error, Debug)]
-#[error("Error acquiring output surface: {0}")]
-pub struct DrawError(#[from] wgpu::SurfaceError);
+pub enum DrawError {
+    #[error("Error acquiring output surface")]
+    Surface(#[from] wgpu::SurfaceError),
+
+    #[error("Error rendering text")]
+    Text(#[from] TextDrawError),
+}

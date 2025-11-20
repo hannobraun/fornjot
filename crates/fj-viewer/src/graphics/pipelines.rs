@@ -1,7 +1,9 @@
 use std::mem::size_of;
 
+use crate::graphics::MULTISAMPLE_STATE;
+
 use super::{
-    DEPTH_FORMAT, DrawConfig, SAMPLE_COUNT,
+    DEPTH_FORMAT, DrawConfig,
     geometry::Geometry,
     shaders::{Shader, Shaders},
     vertices::Vertex,
@@ -83,9 +85,6 @@ impl Pipelines {
         render_pass: &mut wgpu::RenderPass,
     ) {
         match geometry.render_mode {
-            RenderMode::Face => {
-                self.lines.draw(geometry, render_pass);
-            }
             RenderMode::Mesh => {
                 if config.draw_mesh_triangles {
                     self.mesh_triangles.draw(geometry, render_pass);
@@ -99,6 +98,9 @@ impl Pipelines {
             }
             RenderMode::Point => {
                 self.points.draw(geometry, render_pass);
+            }
+            RenderMode::Polyline => {
+                self.lines.draw(geometry, render_pass);
             }
         }
     }
@@ -158,11 +160,7 @@ impl Pipeline {
                     },
                     bias: wgpu::DepthBiasState::default(),
                 }),
-                multisample: wgpu::MultisampleState {
-                    count: SAMPLE_COUNT,
-                    mask: !0,
-                    alpha_to_coverage_enabled: true,
-                },
+                multisample: MULTISAMPLE_STATE,
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
                     entry_point: Some(shader.frag_entry),
@@ -201,7 +199,7 @@ impl Pipeline {
 
 #[derive(Clone, Copy, Debug)]
 pub enum RenderMode {
-    Face,
     Mesh,
     Point,
+    Polyline,
 }

@@ -23,7 +23,7 @@ use winit::{
 use crate::{
     RendererInitError,
     input::DEFAULT_CAMERA_TUNING_CONFIG,
-    window::{Displayable, Window},
+    window::{Displayable, PointWithLabel, Window},
 };
 
 /// # Create a model viewer and spawn a new thread where to use it
@@ -104,31 +104,31 @@ pub struct WindowHandle {
 
 impl WindowHandle {
     /// # Display a 2D face
-    pub fn display_face(&self, points: Vec<Point<2>>) {
+    pub fn display_face(&self, points: Vec<Point<2>>) -> &Self {
+        let points = points
+            .into_iter()
+            .map(|point| PointWithLabel {
+                point: point.to_xyz(),
+                label: format!("{point:?}"),
+            })
+            .collect::<Vec<_>>();
+
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::face(points),
+            displayable: Displayable::Polyline { points },
             window_id: self.id,
         });
+
+        self
     }
 
     /// # Display a 3D triangle mesh
-    pub fn display_mesh(&self, tri_mesh: TriMesh) {
+    pub fn display_mesh(&self, tri_mesh: TriMesh) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::mesh(tri_mesh),
+            displayable: Displayable::Mesh { tri_mesh },
             window_id: self.id,
         });
-    }
 
-    /// # Display a 3D point
-    ///
-    /// Please note that currently the point is only displayed as a single
-    /// pixel. Depending on your resolution, that might mean that it's barely
-    /// visible.
-    pub fn display_point_global(&self, point: Point<3>) {
-        self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::PointGlobal { point },
-            window_id: self.id,
-        });
+        self
     }
 
     /// # Display a 2D point
@@ -136,17 +136,39 @@ impl WindowHandle {
     /// Please note that currently the point is only displayed as a single
     /// pixel. Depending on your resolution, that might mean that it's barely
     /// visible.
-    pub fn display_point_surface(&self, point: Point<2>) {
+    pub fn display_point_surface(&self, point: impl Into<Point<2>>) -> &Self {
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::PointSurface { point },
+            displayable: Displayable::Point {
+                point: point.into().to_xyz(),
+            },
             window_id: self.id,
         });
+
+        self
+    }
+
+    /// # Display a 3D point
+    ///
+    /// Please note that currently the point is only displayed as a single
+    /// pixel. Depending on your resolution, that might mean that it's barely
+    /// visible.
+    pub fn display_point_global(&self, point: impl Into<Point<3>>) -> &Self {
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::Point {
+                point: point.into(),
+            },
+            window_id: self.id,
+        });
+
+        self
     }
 
     /// # Clear the contents of the window
-    pub fn clear(&self) {
+    pub fn clear(&self) -> &Self {
         self.event_loop
             .send_event(EventLoopEvent::Clear { window_id: self.id });
+
+        self
     }
 }
 
@@ -221,6 +243,9 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
                 Key::Character("2") => {
                     window.toggle_draw_mesh_lines();
                 }
+                Key::Character("3") => {
+                    window.toggle_draw_labels();
+                }
                 _ => {}
             },
             WindowEvent::CursorMoved { position, .. } => {
@@ -270,7 +295,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         }
 
         if !drawn {
-            window.winit_window().request_redraw();
+            window.inner().request_redraw();
         }
     }
 
@@ -282,7 +307,7 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
         match event {
             EventLoopEvent::Window { id: window_id } => {
                 let window = block_on(Window::new(event_loop)).unwrap();
-                let winit_window_id = window.winit_window().id();
+                let winit_window_id = window.inner().id();
 
                 self.windows.insert(winit_window_id, window);
                 self.id_map.insert(window_id, winit_window_id);
