@@ -25,6 +25,7 @@ thiserror = "2.0.17"
 tracing = "0.1.41"
 winit = "0.30.12"
 glyphon = "0.9.0"
+itertools = "0.14.0"
 
 [dependencies.bytemuck]
 version = "1.24.0"

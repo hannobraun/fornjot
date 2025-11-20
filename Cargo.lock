@@ -979,6 +979,7 @@ dependencies = [
  "getrandom 0.3.4",
  "glyphon",
  "image",
+ "itertools",
  "nalgebra",
  "raw-window-handle",
  "thiserror 2.0.17",
