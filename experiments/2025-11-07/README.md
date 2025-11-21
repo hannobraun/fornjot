@@ -29,6 +29,12 @@ Specifically, I have the following objectives:
 - Explore how local representation of geometry could simplify approximation.
   The mainline code already uses local geometry, but it does not use approximations as uniform intermediate representations. It is unclear to me how those two concepts are going to interact.
 
+In addition, I want to take a new approach to achieving these objectives: focus on the core data structures and how to process them. Completely ignore the operations that build or modify these core data structures. My example models would create those "manually".
+
+So essentially, get the core and the backend working, and leave the frontend for later. This is not going to be ideal, as supporting the frontend/operations side is a big part of what the core data structures need to do.
+
+But doing everything at once is a huge task, and one I haven't done too well at in the past. I hope that by compartmentalizing, I can do a better job overall, knowing that revisions will be necessary later on, when I'm ready to tackle the frontend.
+
 ## Results
 
 The experiment is still ongoing.
