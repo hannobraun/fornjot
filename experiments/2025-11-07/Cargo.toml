@@ -6,7 +6,6 @@ edition = "2024"
 
 [dependencies]
 anyhow = "*"
-re_renderer = "*"
 
 [dependencies.fj-math]
 path = "../../crates/fj-math"
