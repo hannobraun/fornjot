@@ -1,4 +1,7 @@
+use fj_math::Point;
+
 fn main() -> anyhow::Result<()> {
-    println!("Hello, world!");
+    let point = Point::from([0.]);
+    println!("{point:?}");
     Ok(())
 }
