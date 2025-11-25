@@ -5,3 +5,4 @@ pub mod geometry;
 pub mod helpers;
 pub mod storage;
 pub mod topology;
+pub mod viewer;
