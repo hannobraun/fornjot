@@ -248,6 +248,7 @@ dependencies = [
  "bytemuck",
  "fj-interop",
  "fj-math",
+ "nalgebra",
  "thiserror 2.0.17",
  "tobj",
  "tracing",
