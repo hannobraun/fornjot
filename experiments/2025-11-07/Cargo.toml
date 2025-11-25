@@ -7,6 +7,7 @@ edition = "2024"
 [dependencies]
 anyhow = "*"
 thiserror = "*"
+tobj = "*"
 tracing = "*"
 wgpu = "25"
 
