@@ -245,6 +245,7 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "bytemuck",
  "fj-interop",
  "fj-math",
  "thiserror 2.0.17",
