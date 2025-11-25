@@ -6,6 +6,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "*"
+tracing = "*"
 
 [dependencies.fj-interop]
 path = "../../crates/fj-interop"
