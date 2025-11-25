@@ -7,6 +7,7 @@ edition = "2024"
 [dependencies]
 anyhow = "*"
 bytemuck = "*"
+futures = "*"
 glyphon = "*"
 image = "*"
 nalgebra = "*"
