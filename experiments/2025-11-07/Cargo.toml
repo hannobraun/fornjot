@@ -12,6 +12,7 @@ thiserror = "*"
 tobj = "*"
 tracing = "*"
 wgpu = "25"
+winit = "*"
 
 [dependencies.fj-interop]
 path = "../../crates/fj-interop"
