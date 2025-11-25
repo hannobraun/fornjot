@@ -7,11 +7,12 @@ edition = "2024"
 [dependencies]
 anyhow = "*"
 bytemuck = "*"
+glyphon = "*"
 nalgebra = "*"
 thiserror = "*"
 tobj = "*"
 tracing = "*"
-wgpu = "25"
+wgpu = "25" # version pinned for compatibility with `glyphon`
 winit = "*"
 
 [dependencies.fj-interop]
