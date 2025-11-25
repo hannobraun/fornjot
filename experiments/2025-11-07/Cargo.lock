@@ -234,6 +234,7 @@ dependencies = [
  "anyhow",
  "fj-interop",
  "fj-math",
+ "thiserror 2.0.17",
  "tracing",
  "wgpu",
 ]
