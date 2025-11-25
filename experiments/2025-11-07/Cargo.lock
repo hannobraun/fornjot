@@ -727,6 +727,7 @@ dependencies = [
  "futures",
  "glyphon",
  "image",
+ "itertools",
  "nalgebra",
  "thiserror 2.0.17",
  "tobj",
