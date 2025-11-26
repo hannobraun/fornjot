@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj::math::Point;
 
 fn main() -> anyhow::Result<()> {
     let point = Point::from([0.]);
