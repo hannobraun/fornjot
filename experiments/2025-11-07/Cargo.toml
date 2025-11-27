@@ -18,6 +18,9 @@ tracing = "*"
 wgpu = "25" # version pinned for compatibility with `glyphon`
 winit = "*"
 
+[dependencies.fj-export]
+path = "../../crates/fj-export"
+
 [dependencies.fj-interop]
 path = "../../crates/fj-interop"
 
