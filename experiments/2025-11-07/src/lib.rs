@@ -1,6 +1,7 @@
 #![allow(clippy::module_inception)]
 
 pub mod approx;
+pub mod debug;
 pub mod geometry;
 pub mod helpers;
 pub mod storage;
