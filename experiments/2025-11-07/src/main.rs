@@ -13,8 +13,8 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn model(_: &ViewerHandle) -> TriMesh {
-    TriMesh {
+fn model(viewer: &ViewerHandle) -> TriMesh {
+    let tri_mesh = TriMesh {
         triangles: vec![MeshTriangle {
             inner: Triangle::from_points([
                 [0., 0., 0.],
@@ -24,5 +24,9 @@ fn model(_: &ViewerHandle) -> TriMesh {
             is_internal: false,
             color: Color::default(),
         }],
-    }
+    };
+
+    viewer.open_window().display_mesh(tri_mesh.clone());
+
+    tri_mesh
 }
