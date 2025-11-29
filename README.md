@@ -36,7 +36,11 @@ Fornjot is supported by [**@reivilibre**](https://github.com/reivilibre), [**@th
 
 ## Status
 
-Fornjot is usable for simple models (see [`models/` directory](models)), but currently lacks the features for anything more advanced. Work to change that is underway.
+Fornjot's mainline code (i.e. what is available at the top level of this repository, specifically in the [`crates/` directory](crates)) has not been developed in over a year, in favor of [a series of experiments](experiments).
+
+At this point, I fully expect that the code developed as part of such an experiment will replace the mainline code eventually. When and how that might happen is unclear.
+
+Both the mainline code and the more advanced experiments are usable for simple very models (see [`models/` directory](models), for the mainline code). Currently, Fornjot lacks the features for anything more advanced, making it unsuited for real-world use cases.
 
 Despite this, there are some experimental projects that are build on top of Fornjot:
 
