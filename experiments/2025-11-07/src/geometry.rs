@@ -56,3 +56,25 @@ pub struct SizeHint {
 pub struct Increment<const D: usize> {
     pub value: Vector<D>,
 }
+
+pub struct Plane {
+    pub u: Vector<3>,
+    pub v: Vector<3>,
+}
+
+impl SurfaceGeometry for Plane {
+    fn local_point_to_vector(&self, point: Point<2>) -> Vector<3> {
+        self.u * point.u + self.v * point.v
+    }
+
+    fn increment_at(
+        &self,
+        _: Point<2>,
+        _: Tolerance,
+        size_hint: SizeHint,
+    ) -> Increment<2> {
+        Increment {
+            value: Vector::from_component(size_hint.value),
+        }
+    }
+}
