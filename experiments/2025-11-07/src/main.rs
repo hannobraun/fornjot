@@ -15,15 +15,116 @@ fn main() -> anyhow::Result<()> {
 
 fn model(viewer: &ViewerHandle) -> TriMesh {
     let tri_mesh = TriMesh {
-        triangles: vec![MeshTriangle {
-            inner: Triangle::from_points([
-                [0., 0., 0.],
-                [1., 0., 0.],
-                [0., 1., 0.],
-            ]),
-            is_internal: false,
-            color: Color::default(),
-        }],
+        triangles: vec![
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., -1., -1.],
+                    [1., -1., -1.],
+                    [-1., -1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., -1., -1.],
+                    [1., -1., 1.],
+                    [-1., -1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., -1., -1.],
+                    [1., 1., -1.],
+                    [1., -1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., 1., -1.],
+                    [1., 1., 1.],
+                    [1., -1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., 1., -1.],
+                    [-1., 1., -1.],
+                    [1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., 1., -1.],
+                    [-1., 1., 1.],
+                    [1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., 1., -1.],
+                    [-1., -1., -1.],
+                    [-1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., -1., -1.],
+                    [-1., -1., 1.],
+                    [-1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., 1., -1.],
+                    [1., 1., -1.],
+                    [-1., -1., -1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., 1., -1.],
+                    [1., -1., -1.],
+                    [-1., -1., -1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [-1., -1., 1.],
+                    [1., -1., 1.],
+                    [-1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+            MeshTriangle {
+                inner: Triangle::from_points([
+                    [1., -1., 1.],
+                    [1., 1., 1.],
+                    [-1., 1., 1.],
+                ]),
+                is_internal: false,
+                color: Color::default(),
+            },
+        ],
     };
 
     viewer.open_window().display_mesh(tri_mesh.clone());
