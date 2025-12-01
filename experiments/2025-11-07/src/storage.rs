@@ -23,8 +23,8 @@ pub struct Handle<T: ?Sized> {
     /// working with them.
     ///
     /// For now, it is unclear what those access patterns are and how to
-    /// implement this centralized storage in a way that's beneficial. For now,
-    /// this should do.
+    /// implement this centralized storage in a way that's beneficial. This
+    /// should do.
     inner: Rc<T>,
 }
 
