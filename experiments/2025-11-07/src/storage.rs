@@ -25,7 +25,7 @@ pub struct Handle<T: ?Sized> {
     /// For now, it is unclear what those access patterns are and how to
     /// implement this centralized storage in a way that's beneficial. This
     /// should do.
-    inner: Rc<T>,
+    pub inner: Rc<T>,
 }
 
 impl<T> Handle<T> {
