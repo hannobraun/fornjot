@@ -57,6 +57,27 @@ pub struct Increment<const D: usize> {
     pub value: Vector<D>,
 }
 
+pub struct Line {
+    pub t: Vector<2>,
+}
+
+impl CurveGeometry for Line {
+    fn local_point_to_vector(&self, point: Point<1>) -> Vector<2> {
+        self.t * point.t
+    }
+
+    fn increment_at(
+        &self,
+        _: Point<1>,
+        _: Tolerance,
+        size_hint: SizeHint,
+    ) -> Increment<1> {
+        Increment {
+            value: Vector::from_component(size_hint.value),
+        }
+    }
+}
+
 pub struct Plane {
     pub u: Vector<3>,
     pub v: Vector<3>,
