@@ -116,6 +116,9 @@ pub struct LocalEdge {
 /// - All coincident [`LocalVertex`] instances within within the `Edge` must be
 ///   representations of the same [`Vertex`].
 pub struct Edge {
+    /// # The curve that this edge is defined on
+    pub curve: Handle<Curve>,
+
     /// # The boundary of this `Edge`
     ///
     /// The order of the vertices defines the nominal orientation of the `Edge`.
