@@ -2,6 +2,16 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::Triangle;
 
 fn main() -> anyhow::Result<()> {
+    let tri_mesh = model();
+
+    fj_viewer::make_viewer_and_spawn_thread(|viewer| {
+        viewer.open_window().display_mesh(tri_mesh);
+    })?;
+
+    Ok(())
+}
+
+fn model() -> TriMesh {
     let vertices = [
         [0., 0., 0.], // v0
         [0., 0., 1.], // v1
@@ -48,9 +58,5 @@ fn main() -> anyhow::Result<()> {
         });
     }
 
-    fj_viewer::make_viewer_and_spawn_thread(|viewer| {
-        viewer.open_window().display_mesh(tri_mesh);
-    })?;
-
-    Ok(())
+    tri_mesh
 }
