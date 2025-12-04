@@ -4,5 +4,8 @@
 name = "fj"
 edition = "2024"
 
+[dependencies]
+anyhow = "*"
+
 [dependencies.fj-viewer]
 path = "../../crates/fj-viewer"
