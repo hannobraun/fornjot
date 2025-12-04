@@ -46,6 +46,23 @@ fn model() -> TriMesh {
         [1, 7, 3], // t11
     ];
 
+    let edges = [
+        [0, 1], // e0
+        [0, 2], // e1
+        [0, 4], // e2
+        [1, 3], // e3
+        [1, 5], // e4
+        [2, 3], // e5
+        [2, 6], // e6
+        [3, 7], // e7
+        [4, 5], // e8
+        [4, 6], // e9
+        [5, 7], // e10
+        [6, 7], // e11
+    ];
+
+    dbg!(edges);
+
     let mut tri_mesh = TriMesh::new();
 
     for [a, b, c] in triangles {
