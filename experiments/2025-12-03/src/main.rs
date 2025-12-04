@@ -17,7 +17,7 @@ fn main() -> anyhow::Result<()> {
         [0, 4, 5], // t0
     ];
 
-    dbg!(vertices, triangles);
+    dbg!(vertices);
 
     let mut tri_mesh = TriMesh::new();
 
