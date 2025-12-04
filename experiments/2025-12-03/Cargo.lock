@@ -524,6 +524,7 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "fj-interop",
  "fj-viewer",
 ]
 
