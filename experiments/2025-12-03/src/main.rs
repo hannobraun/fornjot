@@ -1,4 +1,4 @@
-fn main() {
+fn main() -> anyhow::Result<()> {
     let vertices = [
         [0., 0., 0.], // v0
         [0., 0., 1.], // v1
@@ -15,4 +15,6 @@ fn main() {
     ];
 
     dbg!(vertices, triangles);
+
+    Ok(())
 }
