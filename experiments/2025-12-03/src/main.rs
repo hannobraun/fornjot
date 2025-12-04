@@ -2,10 +2,13 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::Triangle;
 
 fn main() -> anyhow::Result<()> {
-    fj_viewer::make_viewer_and_spawn_thread(|viewer| {
+    let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
         let tri_mesh = model();
-        viewer.open_window().display_mesh(tri_mesh);
+        viewer.open_window().display_mesh(tri_mesh.clone());
+        tri_mesh
     })?;
+
+    fj_export::export(tri_mesh.external_triangles(), "output.3mf")?;
 
     Ok(())
 }
