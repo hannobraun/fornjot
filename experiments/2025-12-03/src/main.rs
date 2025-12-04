@@ -10,5 +10,9 @@ fn main() {
         [1., 1., 1.], // v7
     ];
 
-    dbg!(vertices);
+    let triangles = [
+        [0, 4, 5], // t0
+    ];
+
+    dbg!(vertices, triangles);
 }
