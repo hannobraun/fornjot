@@ -34,8 +34,6 @@ fn main() -> anyhow::Result<()> {
         [1, 7, 3], // t11
     ];
 
-    dbg!(vertices);
-
     let mut tri_mesh = TriMesh::new();
 
     for [a, b, c] in triangles {
