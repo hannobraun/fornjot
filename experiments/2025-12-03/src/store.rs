@@ -5,8 +5,8 @@ pub struct Store<T> {
 }
 
 impl<T> Store<T> {
-    pub fn push(&mut self, vertex: impl Into<T>) -> Index<T> {
-        let vertex = vertex.into();
+    pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
+        let vertex = object.into();
 
         let index = self.inner.len();
         self.inner.push(vertex);
