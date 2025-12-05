@@ -26,7 +26,7 @@ fn model() -> TriMesh {
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
 
-    // Sweep initial vertex into the initial edge.
+    // Sweep initial vertex into bottom-front edge.
     let v4 = {
         let e0 =
             sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices, &mut edges);
