@@ -7,8 +7,8 @@ pub struct Store<T> {
     inner: Vec<T>,
 }
 
-impl Store<Vertex> {
-    pub fn push(&mut self, vertex: impl Into<Vertex>) -> Index<Vertex> {
+impl<T> Store<T> {
+    pub fn push(&mut self, vertex: impl Into<T>) -> Index<T> {
         let vertex = vertex.into();
 
         let index = self.inner.len();
