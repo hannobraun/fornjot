@@ -1,3 +1,5 @@
+use std::ops;
+
 use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Triangle, Vector};
 
@@ -55,9 +57,9 @@ fn model() -> TriMesh {
     for [a, b, c] in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: Triangle::from_points([
-                vertices.inner[a].position,
-                vertices.inner[b].position,
-                vertices.inner[c].position,
+                vertices[a].position,
+                vertices[b].position,
+                vertices[c].position,
             ]),
             is_internal: false,
             color: Color::default(),
@@ -72,7 +74,7 @@ pub fn sweep_vertex_to_edge(
     path: impl Into<Vector<3>>,
     vertices: &mut Vertices,
 ) -> usize {
-    let position = vertices.inner[vertex].position;
+    let position = vertices[vertex].position;
     vertices.push(position + path.into())
 }
 
@@ -88,6 +90,14 @@ impl Vertices {
         self.inner.push(Vertex { position });
 
         index
+    }
+}
+
+impl ops::Index<usize> for Vertices {
+    type Output = Vertex;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.inner[index]
     }
 }
 
