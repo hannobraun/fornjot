@@ -67,7 +67,9 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn push(&mut self, vertex: [f64; 3]) {
+    pub fn push(&mut self, vertex: [f64; 3]) -> usize {
+        let index = self.inner.len();
         self.inner.push(vertex);
+        index
     }
 }
