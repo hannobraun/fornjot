@@ -3,11 +3,11 @@ use std::{marker::PhantomData, ops};
 use fj_math::Point;
 
 #[derive(Default)]
-pub struct Vertices<T> {
+pub struct Store<T> {
     inner: Vec<T>,
 }
 
-impl Vertices<Vertex> {
+impl Store<Vertex> {
     pub fn push(&mut self, vertex: impl Into<Vertex>) -> Index<Vertex> {
         let vertex = vertex.into();
 
@@ -21,7 +21,7 @@ impl Vertices<Vertex> {
     }
 }
 
-impl Default for Vertices<Vertex> {
+impl Default for Store<Vertex> {
     fn default() -> Self {
         Self {
             inner: Vec::default(),
@@ -29,7 +29,7 @@ impl Default for Vertices<Vertex> {
     }
 }
 
-impl ops::Index<Index<Vertex>> for Vertices<Vertex> {
+impl ops::Index<Index<Vertex>> for Store<Vertex> {
     type Output = Vertex;
 
     fn index(&self, index: Index<Vertex>) -> &Self::Output {
