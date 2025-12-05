@@ -17,33 +17,33 @@ fn model() -> TriMesh {
     let mut vertices = Vertices { inner: Vec::new() };
     let mut triangles = Vec::new();
 
-    vertices.push([0., 0., 0.]); // v0
-    vertices.push([0., 0., 1.]); // v1
-    vertices.push([0., 1., 0.]); // v2
-    vertices.push([0., 1., 1.]); // v3
-    vertices.push([1., 0., 0.]); // v4
-    vertices.push([1., 0., 1.]); // v5
-    vertices.push([1., 1., 0.]); // v6
-    vertices.push([1., 1., 1.]); // v7
+    let v0 = vertices.push([0., 0., 0.]);
+    let v1 = vertices.push([0., 0., 1.]);
+    let v2 = vertices.push([0., 1., 0.]);
+    let v3 = vertices.push([0., 1., 1.]);
+    let v4 = vertices.push([1., 0., 0.]);
+    let v5 = vertices.push([1., 0., 1.]);
+    let v6 = vertices.push([1., 1., 0.]);
+    let v7 = vertices.push([1., 1., 1.]);
 
     // front
-    triangles.push([0, 4, 5]); // t0
-    triangles.push([0, 5, 1]); // t1
+    triangles.push([v0, v4, v5]); // t0
+    triangles.push([v0, v5, v1]); // t1
     // right
-    triangles.push([4, 6, 7]); // t2
-    triangles.push([4, 7, 5]); // t3
+    triangles.push([v4, v6, v7]); // t2
+    triangles.push([v4, v7, v5]); // t3
     // back
-    triangles.push([6, 2, 3]); // t4
-    triangles.push([6, 3, 7]); // t5
+    triangles.push([v6, v2, v3]); // t4
+    triangles.push([v6, v3, v7]); // t5
     // left
-    triangles.push([2, 0, 1]); // t6
-    triangles.push([2, 1, 3]); // t7
+    triangles.push([v2, v0, v1]); // t6
+    triangles.push([v2, v1, v3]); // t7
     // bottom
-    triangles.push([2, 6, 4]); // t8
-    triangles.push([2, 4, 0]); // t9
+    triangles.push([v2, v6, v4]); // t8
+    triangles.push([v2, v4, v0]); // t9
     // top
-    triangles.push([1, 5, 7]); // t10
-    triangles.push([1, 7, 3]); // t11
+    triangles.push([v1, v5, v7]); // t10
+    triangles.push([v1, v7, v3]); // t11
 
     let mut tri_mesh = TriMesh::new();
 
