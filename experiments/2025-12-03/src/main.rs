@@ -16,7 +16,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    let mut vertices = Vertices { inner: Vec::new() };
+    let mut vertices = Vertices::default();
     let mut triangles = Vec::new();
 
     // Push initial vertex.
@@ -78,6 +78,7 @@ pub fn sweep_vertex_to_edge(
     vertices.push(position + path.into())
 }
 
+#[derive(Default)]
 pub struct Vertices {
     inner: Vec<Vertex>,
 }
