@@ -1,5 +1,5 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::Triangle;
+use fj_math::{Point, Triangle};
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
@@ -69,11 +69,13 @@ pub struct Vertices {
 impl Vertices {
     pub fn push(&mut self, vertex: [f64; 3]) -> usize {
         let index = self.inner.len();
-        self.inner.push(Vertex { position: vertex });
+        self.inner.push(Vertex {
+            position: vertex.into(),
+        });
         index
     }
 }
 
 pub struct Vertex {
-    position: [f64; 3],
+    position: Point<3>,
 }
