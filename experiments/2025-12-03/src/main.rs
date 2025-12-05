@@ -109,9 +109,9 @@ pub fn sweep_edge_to_face(
 
     let [v0, v1] = edges[e0].vertices;
 
-    let [v3, v2] = [v0, v1]
-        .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges))
-        .map(|edge| edges[edge].vertices[1]);
+    let [e3, e1] = [v0, v1]
+        .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges));
+    let [v3, v2] = [e3, e1].map(|edge| edges[edge].vertices[1]);
 
     triangles.push([v0, v1, v2]);
     triangles.push([v0, v2, v3]);
