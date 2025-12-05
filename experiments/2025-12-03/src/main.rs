@@ -51,6 +51,7 @@ fn model() -> TriMesh {
     let v5 = vertices.push([1., 0., 1.]);
     let v7 = vertices.push([1., 1., 1.]);
 
+    // Push rest of triangles in an unstructured manner.
     // front
     triangles.push([v0, v4, v5]); // t0
     triangles.push([v0, v5, v1]); // t1
@@ -63,9 +64,6 @@ fn model() -> TriMesh {
     // left
     triangles.push([v2, v0, v1]); // t6
     triangles.push([v2, v1, v3]); // t7
-    // bottom
-    triangles.push([v2, v6, v4]); // t8
-    triangles.push([v2, v4, v0]); // t9
     // top
     triangles.push([v1, v5, v7]); // t10
     triangles.push([v1, v7, v3]); // t11
@@ -104,7 +102,7 @@ pub fn sweep_edge_to_face(
     edge: Index<Edge>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
-    _: &mut Store<Triangle>,
+    triangles: &mut Store<Triangle>,
     edges: &mut Store<Edge>,
 ) -> [Index<Vertex>; 2] {
     let path = path.into();
@@ -114,6 +112,9 @@ pub fn sweep_edge_to_face(
     let [v3, v2] = [v0, v1]
         .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges))
         .map(|edge| edges[edge].vertices[1]);
+
+    triangles.push([v0, v1, v2]);
+    triangles.push([v0, v2, v3]);
 
     [v3, v2]
 }
