@@ -111,9 +111,11 @@ pub fn sweep_edge_to_face(
 
     let [v0, v1] = edges[edge].vertices;
 
-    [v0, v1]
+    let [v3, v2] = [v0, v1]
         .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges))
-        .map(|edge| edges[edge].vertices[1])
+        .map(|edge| edges[edge].vertices[1]);
+
+    [v3, v2]
 }
 
 pub struct Vertex {
