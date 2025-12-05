@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, ops};
+use std::{marker::PhantomData, ops, vec};
 
 pub struct Store<T> {
     inner: Vec<T>,
@@ -31,6 +31,15 @@ impl<T> ops::Index<Index<T>> for Store<T> {
 
     fn index(&self, index: Index<T>) -> &Self::Output {
         &self.inner[index.inner]
+    }
+}
+
+impl<T> IntoIterator for Store<T> {
+    type Item = T;
+    type IntoIter = vec::IntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
     }
 }
 
