@@ -33,6 +33,19 @@ pub struct Vertex {
     pub position: Point<3>,
 }
 
+impl From<[f64; 3]> for Vertex {
+    fn from(position: [f64; 3]) -> Self {
+        let position = position.into();
+        Self { position }
+    }
+}
+
+impl From<Point<3>> for Vertex {
+    fn from(position: Point<3>) -> Self {
+        Self { position }
+    }
+}
+
 pub struct Index<T> {
     inner: usize,
     _t: PhantomData<T>,
