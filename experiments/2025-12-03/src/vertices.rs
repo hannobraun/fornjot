@@ -2,7 +2,6 @@ use std::{marker::PhantomData, ops};
 
 use fj_math::Point;
 
-#[derive(Default)]
 pub struct Store<T> {
     inner: Vec<T>,
 }
