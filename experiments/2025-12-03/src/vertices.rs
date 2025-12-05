@@ -8,8 +8,8 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn push(&mut self, position: impl Into<Vertex>) -> Index<Vertex> {
-        let position = position.into();
+    pub fn push(&mut self, vertex: impl Into<Vertex>) -> Index<Vertex> {
+        let position = vertex.into();
 
         let index = self.inner.len();
         self.inner.push(position);
