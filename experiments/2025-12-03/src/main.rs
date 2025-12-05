@@ -109,8 +109,9 @@ pub fn sweep_edge_to_face(
 ) -> [Index<Vertex>; 2] {
     let path = path.into();
 
-    edges[edge]
-        .vertices
+    let [v0, v1] = edges[edge].vertices;
+
+    [v0, v1]
         .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges))
         .map(|edge| edges[edge].vertices[1])
 }
