@@ -26,20 +26,20 @@ fn model() -> TriMesh {
     let mut edges = Store::default();
 
     // Push initial vertex.
-    let v0 = vertices.push([0., 0., 0.]);
+    let v2 = vertices.push([0., 1., 0.]);
 
-    // Sweep initial vertex into bottom-front edge.
-    let (e0, v4) = {
+    // Sweep initial vertex into lower-back edge.
+    let (e0, v6) = {
         let e0 =
-            sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices, &mut edges);
+            sweep_vertex_to_edge(v2, [1., 0., 0.], &mut vertices, &mut edges);
 
         (e0, edges[e0].vertices[1])
     };
 
     // Sweep edge into bottom face.
-    let [v2, v6] = sweep_edge_to_face(
+    let [v0, v4] = sweep_edge_to_face(
         e0,
-        [0., 1., 0.],
+        [0., -1., 0.],
         &mut vertices,
         &mut triangles,
         &mut edges,
