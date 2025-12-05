@@ -20,7 +20,7 @@ impl<T> Store<T> {
     }
 }
 
-impl Default for Store<Vertex> {
+impl<T> Default for Store<T> {
     fn default() -> Self {
         Self {
             inner: Vec::default(),
