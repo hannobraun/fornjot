@@ -18,9 +18,11 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
+    // Geometry
     let mut vertices = Store::default();
     let mut triangles = Store::default();
 
+    // Topology
     let mut edges = Store::default();
 
     // Push initial vertex.
