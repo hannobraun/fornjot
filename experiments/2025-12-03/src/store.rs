@@ -1,7 +1,5 @@
 use std::{marker::PhantomData, ops};
 
-use fj_math::Point;
-
 pub struct Store<T> {
     inner: Vec<T>,
 }
@@ -33,23 +31,6 @@ impl<T> ops::Index<Index<T>> for Store<T> {
 
     fn index(&self, index: Index<T>) -> &Self::Output {
         &self.inner[index.inner]
-    }
-}
-
-pub struct Vertex {
-    pub position: Point<3>,
-}
-
-impl From<[f64; 3]> for Vertex {
-    fn from(position: [f64; 3]) -> Self {
-        let position = position.into();
-        Self { position }
-    }
-}
-
-impl From<Point<3>> for Vertex {
-    fn from(position: Point<3>) -> Self {
-        Self { position }
     }
 }
 

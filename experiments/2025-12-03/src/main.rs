@@ -1,7 +1,7 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Triangle, Vector};
+use fj_math::{Point, Triangle, Vector};
 
-use crate::store::{Index, Store, Vertex};
+use crate::store::{Index, Store};
 
 mod store;
 
@@ -78,4 +78,21 @@ pub fn sweep_vertex_to_edge(
 ) -> Index<Vertex> {
     let position = vertices[vertex].position;
     vertices.push(position + path.into())
+}
+
+pub struct Vertex {
+    pub position: Point<3>,
+}
+
+impl From<[f64; 3]> for Vertex {
+    fn from(position: [f64; 3]) -> Self {
+        let position = position.into();
+        Self { position }
+    }
+}
+
+impl From<Point<3>> for Vertex {
+    fn from(position: Point<3>) -> Self {
+        Self { position }
+    }
 }
