@@ -21,11 +21,18 @@ fn model() -> TriMesh {
     let mut vertices = Store::default();
     let mut triangles = Vec::new();
 
+    let mut edges = Store::default();
+
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into the initial edge.
-    let v4 = sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices);
+    let v4 = {
+        let e0 =
+            sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices, &mut edges);
+
+        edges[e0].vertices[1]
+    };
 
     // Push rest of vertices in an unstructured manner.
     let v1 = vertices.push([0., 0., 1.]);
@@ -75,9 +82,14 @@ pub fn sweep_vertex_to_edge(
     vertex: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
-) -> Index<Vertex> {
+    edges: &mut Store<Edge>,
+) -> Index<Edge> {
     let position = vertices[vertex].position;
-    vertices.push(position + path.into())
+    let b = vertices.push(position + path.into());
+
+    edges.push(Edge {
+        vertices: [vertex, b],
+    })
 }
 
 pub struct Vertex {
@@ -95,4 +107,8 @@ impl From<Point<3>> for Vertex {
     fn from(position: Point<3>) -> Self {
         Self { position }
     }
+}
+
+pub struct Edge {
+    pub vertices: [Index<Vertex>; 2],
 }
