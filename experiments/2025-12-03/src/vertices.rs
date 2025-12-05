@@ -8,11 +8,11 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn push(&mut self, position: impl Into<Point<3>>) -> Index<Vertex> {
+    pub fn push(&mut self, position: impl Into<Vertex>) -> Index<Vertex> {
         let position = position.into();
 
         let index = self.inner.len();
-        self.inner.push(Vertex { position });
+        self.inner.push(position);
 
         Index {
             inner: index,
