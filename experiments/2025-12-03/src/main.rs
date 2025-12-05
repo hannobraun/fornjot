@@ -1,5 +1,5 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Triangle};
+use fj_math::{Point, Triangle, Vector};
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
@@ -17,11 +17,16 @@ fn model() -> TriMesh {
     let mut vertices = Vertices { inner: Vec::new() };
     let mut triangles = Vec::new();
 
+    // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
+
+    // Sweep initial vertex into the initial edge.
+    let v4 = sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices);
+
+    // Push rest of vertices in an unstructured manner.
     let v1 = vertices.push([0., 0., 1.]);
     let v2 = vertices.push([0., 1., 0.]);
     let v3 = vertices.push([0., 1., 1.]);
-    let v4 = vertices.push([1., 0., 0.]);
     let v5 = vertices.push([1., 0., 1.]);
     let v6 = vertices.push([1., 1., 0.]);
     let v7 = vertices.push([1., 1., 1.]);
@@ -60,6 +65,15 @@ fn model() -> TriMesh {
     }
 
     tri_mesh
+}
+
+pub fn sweep_vertex_to_edge(
+    vertex: usize,
+    path: impl Into<Vector<3>>,
+    vertices: &mut Vertices,
+) -> usize {
+    let position = vertices.inner[vertex].position;
+    vertices.push(position + path.into())
 }
 
 pub struct Vertices {
