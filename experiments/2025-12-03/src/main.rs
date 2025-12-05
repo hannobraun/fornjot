@@ -19,7 +19,7 @@ fn main() -> anyhow::Result<()> {
 
 fn model() -> TriMesh {
     let mut vertices = Store::default();
-    let mut triangles = Vec::new();
+    let mut triangles = Store::default();
 
     let mut edges = Store::default();
 
@@ -65,7 +65,10 @@ fn model() -> TriMesh {
 
     let mut tri_mesh = TriMesh::new();
 
-    for [a, b, c] in triangles {
+    for Triangle {
+        vertices: [a, b, c],
+    } in triangles
+    {
         tri_mesh.triangles.push(MeshTriangle {
             inner: fj_math::Triangle::from_points([
                 vertices[a].position,
@@ -118,6 +121,16 @@ impl From<[f64; 3]> for Vertex {
 impl From<Point<3>> for Vertex {
     fn from(position: Point<3>) -> Self {
         Self { position }
+    }
+}
+
+pub struct Triangle {
+    pub vertices: [Index<Vertex>; 3],
+}
+
+impl From<[Index<Vertex>; 3]> for Triangle {
+    fn from(vertices: [Index<Vertex>; 3]) -> Self {
+        Self { vertices }
     }
 }
 
