@@ -1,5 +1,5 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Triangle, Vector};
+use fj_math::{Point, Vector};
 
 use crate::store::{Index, Store};
 
@@ -67,7 +67,7 @@ fn model() -> TriMesh {
 
     for [a, b, c] in triangles {
         tri_mesh.triangles.push(MeshTriangle {
-            inner: Triangle::from_points([
+            inner: fj_math::Triangle::from_points([
                 vertices[a].position,
                 vertices[b].position,
                 vertices[c].position,
