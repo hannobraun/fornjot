@@ -79,17 +79,15 @@ fn model() -> TriMesh {
 }
 
 pub fn sweep_vertex_to_edge(
-    vertex: Index<Vertex>,
+    a: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     edges: &mut Store<Edge>,
 ) -> Index<Edge> {
-    let position = vertices[vertex].position;
+    let position = vertices[a].position;
     let b = vertices.push(position + path.into());
 
-    edges.push(Edge {
-        vertices: [vertex, b],
-    })
+    edges.push(Edge { vertices: [a, b] })
 }
 
 pub struct Vertex {
