@@ -85,7 +85,6 @@ pub fn sweep_vertex_to_edge(
     edges: &mut Store<Edge>,
 ) -> Index<Edge> {
     let b = vertices.push(vertices[a].position + path.into());
-
     edges.push(Edge { vertices: [a, b] })
 }
 
