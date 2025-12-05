@@ -43,6 +43,7 @@ impl<T> IntoIterator for Store<T> {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct Index<T> {
     inner: usize,
     _t: PhantomData<T>,
