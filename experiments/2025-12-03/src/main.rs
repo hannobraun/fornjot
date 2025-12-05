@@ -119,6 +119,7 @@ pub fn sweep_edge_to_face(
     [v3, v2]
 }
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct Vertex {
     pub position: Point<3>,
 }
@@ -136,6 +137,7 @@ impl From<Point<3>> for Vertex {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct Triangle {
     pub vertices: [Index<Vertex>; 3],
 }
@@ -146,6 +148,7 @@ impl From<[Index<Vertex>; 3]> for Triangle {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
 pub struct Edge {
     pub vertices: [Index<Vertex>; 2],
 }
