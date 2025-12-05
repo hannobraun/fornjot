@@ -27,19 +27,21 @@ fn model() -> TriMesh {
     let v0 = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into bottom-front edge.
-    let v4 = {
+    let (e0, v4) = {
         let e0 =
             sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices, &mut edges);
 
-        edges[e0].vertices[1]
+        (e0, edges[e0].vertices[1])
     };
+
+    // Sweep edge into bottom face.
+    let [v2, v6] =
+        sweep_edge_to_face(e0, [0., 1., 0.], &mut vertices, &mut edges);
 
     // Push rest of vertices in an unstructured manner.
     let v1 = vertices.push([0., 0., 1.]);
-    let v2 = vertices.push([0., 1., 0.]);
     let v3 = vertices.push([0., 1., 1.]);
     let v5 = vertices.push([1., 0., 1.]);
-    let v6 = vertices.push([1., 1., 0.]);
     let v7 = vertices.push([1., 1., 1.]);
 
     // front
@@ -86,6 +88,20 @@ pub fn sweep_vertex_to_edge(
 ) -> Index<Edge> {
     let b = vertices.push(vertices[a].position + path.into());
     edges.push(Edge { vertices: [a, b] })
+}
+
+pub fn sweep_edge_to_face(
+    edge: Index<Edge>,
+    path: impl Into<Vector<3>>,
+    vertices: &mut Store<Vertex>,
+    edges: &mut Store<Edge>,
+) -> [Index<Vertex>; 2] {
+    let path = path.into();
+
+    edges[edge]
+        .vertices
+        .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges))
+        .map(|edge| edges[edge].vertices[1])
 }
 
 pub struct Vertex {
