@@ -67,7 +67,7 @@ pub struct Vertices {
 }
 
 impl Vertices {
-    pub fn push(&mut self, position: [f64; 3]) -> usize {
+    pub fn push(&mut self, position: impl Into<Point<3>>) -> usize {
         let position = position.into();
 
         let index = self.inner.len();
