@@ -53,16 +53,27 @@ fn model() -> TriMesh {
         [e3, e1].map(|edge| edges[edge].vertices[1])
     };
 
+    // Sweep edge into front face.
+    let [v1, v5] = {
+        let f1 = sweep_edge_to_face(
+            e0,
+            [0., 0., 1.],
+            &mut vertices,
+            &mut triangles,
+            &mut edges,
+            &mut faces,
+        );
+
+        let [_, e1, _, e3] = faces[f1].boundary;
+
+        [e3, e1].map(|edge| edges[edge].vertices[1])
+    };
+
     // Push rest of vertices in an unstructured manner.
-    let v1 = vertices.push([0., 0., 1.]);
     let v3 = vertices.push([0., 1., 1.]);
-    let v5 = vertices.push([1., 0., 1.]);
     let v7 = vertices.push([1., 1., 1.]);
 
     // Push rest of triangles in an unstructured manner.
-    // front
-    triangles.push([v0, v4, v5]); // t0
-    triangles.push([v0, v5, v1]); // t1
     // right
     triangles.push([v4, v6, v7]); // t2
     triangles.push([v4, v7, v5]); // t3
