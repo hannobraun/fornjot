@@ -1,7 +1,7 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Triangle, Vector};
 
-use crate::vertices::Vertices;
+use crate::vertices::{Index, Vertex, Vertices};
 
 mod vertices;
 
@@ -72,10 +72,10 @@ fn model() -> TriMesh {
 }
 
 pub fn sweep_vertex_to_edge(
-    vertex: usize,
+    vertex: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Vertices,
-) -> usize {
+) -> Index<Vertex> {
     let position = vertices[vertex].position;
     vertices.push(position + path.into())
 }
