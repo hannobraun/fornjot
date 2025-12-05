@@ -28,10 +28,10 @@ impl<T> Default for Store<T> {
     }
 }
 
-impl ops::Index<Index<Vertex>> for Store<Vertex> {
-    type Output = Vertex;
+impl<T> ops::Index<Index<T>> for Store<T> {
+    type Output = T;
 
-    fn index(&self, index: Index<Vertex>) -> &Self::Output {
+    fn index(&self, index: Index<T>) -> &Self::Output {
         &self.inner[index.inner]
     }
 }
