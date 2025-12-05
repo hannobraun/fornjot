@@ -50,9 +50,9 @@ fn model() -> TriMesh {
     for [a, b, c] in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: Triangle::from_points([
-                vertices.inner[a],
-                vertices.inner[b],
-                vertices.inner[c],
+                vertices.inner[a].position,
+                vertices.inner[b].position,
+                vertices.inner[c].position,
             ]),
             is_internal: false,
             color: Color::default(),
@@ -63,13 +63,17 @@ fn model() -> TriMesh {
 }
 
 pub struct Vertices {
-    inner: Vec<[f64; 3]>,
+    inner: Vec<Vertex>,
 }
 
 impl Vertices {
     pub fn push(&mut self, vertex: [f64; 3]) -> usize {
         let index = self.inner.len();
-        self.inner.push(vertex);
+        self.inner.push(Vertex { position: vertex });
         index
     }
+}
+
+pub struct Vertex {
+    position: [f64; 3],
 }
