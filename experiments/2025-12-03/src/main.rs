@@ -24,6 +24,7 @@ fn model() -> TriMesh {
 
     // Topology
     let mut edges = Store::default();
+    let mut faces = Store::default();
 
     // Push initial vertex.
     let v2 = vertices.push([0., 1., 0.]);
@@ -37,13 +38,20 @@ fn model() -> TriMesh {
     };
 
     // Sweep edge into bottom face.
-    let [v0, v4] = sweep_edge_to_face(
-        e0,
-        [0., -1., 0.],
-        &mut vertices,
-        &mut triangles,
-        &mut edges,
-    );
+    let [v0, v4] = {
+        let f0 = sweep_edge_to_face(
+            e0,
+            [0., -1., 0.],
+            &mut vertices,
+            &mut triangles,
+            &mut edges,
+            &mut faces,
+        );
+
+        let [_, e1, _, e3] = faces[f0].boundary;
+
+        [e3, e1].map(|edge| edges[edge].vertices[1])
+    };
 
     // Push rest of vertices in an unstructured manner.
     let v1 = vertices.push([0., 0., 1.]);
@@ -104,7 +112,8 @@ pub fn sweep_edge_to_face(
     vertices: &mut Store<Vertex>,
     triangles: &mut Store<Triangle>,
     edges: &mut Store<Edge>,
-) -> [Index<Vertex>; 2] {
+    faces: &mut Store<Face>,
+) -> Index<Face> {
     let path = path.into();
 
     let [v0, v1] = edges[e0].vertices;
@@ -119,7 +128,9 @@ pub fn sweep_edge_to_face(
     triangles.push([v0, v1, v2]);
     triangles.push([v0, v2, v3]);
 
-    [v3, v2]
+    faces.push(Face {
+        boundary: [e0, e1, e2, e3],
+    })
 }
 
 #[derive(Debug, Eq, PartialEq)]
@@ -154,4 +165,9 @@ impl From<[Index<Vertex>; 3]> for Triangle {
 #[derive(Debug, Eq, PartialEq)]
 pub struct Edge {
     pub vertices: [Index<Vertex>; 2],
+}
+
+#[derive(Debug, Eq, PartialEq)]
+pub struct Face {
+    pub boundary: [Index<Edge>; 4],
 }
