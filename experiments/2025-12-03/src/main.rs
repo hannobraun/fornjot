@@ -14,7 +14,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    let mut vertices = Vec::new();
+    let mut vertices = Vertices { inner: Vec::new() };
     let mut triangles = Vec::new();
 
     vertices.push([0., 0., 0.]); // v0
@@ -50,9 +50,9 @@ fn model() -> TriMesh {
     for [a, b, c] in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: Triangle::from_points([
-                vertices[a],
-                vertices[b],
-                vertices[c],
+                vertices.inner[a],
+                vertices.inner[b],
+                vertices.inner[c],
             ]),
             is_internal: false,
             color: Color::default(),
@@ -60,4 +60,14 @@ fn model() -> TriMesh {
     }
 
     tri_mesh
+}
+
+pub struct Vertices {
+    inner: Vec<[f64; 3]>,
+}
+
+impl Vertices {
+    pub fn push(&mut self, vertex: [f64; 3]) {
+        self.inner.push(vertex);
+    }
 }
