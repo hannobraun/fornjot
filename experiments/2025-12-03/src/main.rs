@@ -1,7 +1,9 @@
-use std::ops;
-
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Triangle, Vector};
+use fj_math::{Triangle, Vector};
+
+use crate::vertices::Vertices;
+
+mod vertices;
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
@@ -76,32 +78,4 @@ pub fn sweep_vertex_to_edge(
 ) -> usize {
     let position = vertices[vertex].position;
     vertices.push(position + path.into())
-}
-
-#[derive(Default)]
-pub struct Vertices {
-    inner: Vec<Vertex>,
-}
-
-impl Vertices {
-    pub fn push(&mut self, position: impl Into<Point<3>>) -> usize {
-        let position = position.into();
-
-        let index = self.inner.len();
-        self.inner.push(Vertex { position });
-
-        index
-    }
-}
-
-impl ops::Index<usize> for Vertices {
-    type Output = Vertex;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.inner[index]
-    }
-}
-
-pub struct Vertex {
-    position: Point<3>,
 }
