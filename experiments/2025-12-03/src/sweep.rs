@@ -17,7 +17,9 @@ impl Sweep {
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Index<HalfEdge> {
-        let v1 = vertices.push(vertices[v0].position + path.into());
+        let path = path.into();
+
+        let v1 = vertices.push(vertices[v0].position + path);
         half_edges.push(HalfEdge { vertices: [v0, v1] })
     }
 
