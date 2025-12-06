@@ -23,7 +23,7 @@ fn model() -> TriMesh {
     let mut triangles = Store::default();
 
     // Topology
-    let mut edges = Store::default();
+    let mut half_edges = Store::default();
     let mut faces = Store::default();
 
     // Push initial vertex.
@@ -31,10 +31,14 @@ fn model() -> TriMesh {
 
     // Sweep initial vertex into lower-back edge.
     let (e0, v4) = {
-        let e0 =
-            sweep_vertex_to_edge(v0, [1., 0., 0.], &mut vertices, &mut edges);
+        let e0 = sweep_vertex_to_edge(
+            v0,
+            [1., 0., 0.],
+            &mut vertices,
+            &mut half_edges,
+        );
 
-        (e0, edges[e0].vertices[1])
+        (e0, half_edges[e0].vertices[1])
     };
 
     // Sweep edge into bottom face.
@@ -44,13 +48,13 @@ fn model() -> TriMesh {
             [0., 1., 0.],
             &mut vertices,
             &mut triangles,
-            &mut edges,
+            &mut half_edges,
             &mut faces,
         );
 
         let [_, e1, _, e3] = faces[f0].boundary;
 
-        [e3, e1].map(|edge| edges[edge].vertices[1])
+        [e3, e1].map(|edge| half_edges[edge].vertices[1])
     };
 
     // Sweep edge into front face.
@@ -60,13 +64,13 @@ fn model() -> TriMesh {
             [0., 0., 1.],
             &mut vertices,
             &mut triangles,
-            &mut edges,
+            &mut half_edges,
             &mut faces,
         );
 
         let [_, e1, _, e3] = faces[f1].boundary;
 
-        [e3, e1].map(|edge| edges[edge].vertices[1])
+        [e3, e1].map(|edge| half_edges[edge].vertices[1])
     };
 
     // Push rest of vertices in an unstructured manner.
