@@ -6,6 +6,7 @@ use crate::{
     topology::{Face, HalfEdge},
 };
 
+#[derive(Default)]
 pub struct Sweep {}
 
 impl Sweep {

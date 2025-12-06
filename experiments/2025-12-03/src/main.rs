@@ -29,7 +29,7 @@ fn model() -> TriMesh {
     let mut faces = Store::default();
 
     // Operations
-    let mut sweep = Sweep {};
+    let mut sweep = Sweep::default();
 
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
