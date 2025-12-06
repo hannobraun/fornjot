@@ -111,10 +111,10 @@ pub fn sweep_vertex_to_edge(
     a: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
-    edges: &mut Store<HalfEdge>,
+    half_edges: &mut Store<HalfEdge>,
 ) -> Index<HalfEdge> {
     let b = vertices.push(vertices[a].position + path.into());
-    edges.push(HalfEdge { vertices: [a, b] })
+    half_edges.push(HalfEdge { vertices: [a, b] })
 }
 
 pub fn sweep_edge_to_face(
