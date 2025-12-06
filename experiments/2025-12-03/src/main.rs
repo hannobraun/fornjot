@@ -40,14 +40,14 @@ fn model() -> TriMesh {
 
     // Sweep initial vertex into lower-left edge.
     let (e0, v2) = {
-        let e0 = sweep.vertex_to_half_edge(
+        let e02 = sweep.vertex_to_half_edge(
             v0,
             [0., 1., 0.],
             &mut vertices,
             &mut half_edges,
         );
 
-        (e0, half_edges[e0].vertices[1])
+        (e02, half_edges[e02].vertices[1])
     };
 
     // Sweep edge into bottom face.
