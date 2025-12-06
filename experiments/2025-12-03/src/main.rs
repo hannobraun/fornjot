@@ -43,7 +43,7 @@ fn model() -> TriMesh {
 
     // Sweep edge into bottom face.
     let [v2, v6] = {
-        let f0 = sweep_edge_to_face(
+        let f0 = sweep_half_edge_to_face(
             e0,
             [0., 1., 0.],
             &mut vertices,
@@ -59,7 +59,7 @@ fn model() -> TriMesh {
 
     // Sweep edge into front face.
     let [v1, v5] = {
-        let f1 = sweep_edge_to_face(
+        let f1 = sweep_half_edge_to_face(
             e0,
             [0., 0., 1.],
             &mut vertices,
@@ -121,7 +121,7 @@ pub fn sweep_vertex_to_half_edge(
     half_edges.push(HalfEdge { vertices: [a, b] })
 }
 
-pub fn sweep_edge_to_face(
+pub fn sweep_half_edge_to_face(
     e0: Index<HalfEdge>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
