@@ -1,10 +1,6 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
 
-use crate::{
-    geometry::Triangle,
-    store::Store,
-    sweep::{sweep_half_edge_to_face, sweep_vertex_to_half_edge},
-};
+use crate::{geometry::Triangle, store::Store, sweep::Sweep};
 
 mod geometry;
 mod store;
@@ -32,12 +28,15 @@ fn model() -> TriMesh {
     let mut half_edges = Store::default();
     let mut faces = Store::default();
 
+    // Operations
+    let mut sweep = Sweep {};
+
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into lower-back edge.
     let (e0, v4) = {
-        let e0 = sweep_vertex_to_half_edge(
+        let e0 = sweep.vertex_to_half_edge(
             v0,
             [1., 0., 0.],
             &mut vertices,
@@ -49,7 +48,7 @@ fn model() -> TriMesh {
 
     // Sweep edge into bottom face.
     let [v2, v6] = {
-        let f0 = sweep_half_edge_to_face(
+        let f0 = sweep.half_edge_to_face(
             e0,
             [0., 1., 0.],
             &mut vertices,
@@ -65,7 +64,7 @@ fn model() -> TriMesh {
 
     // Sweep edge into front face.
     let [v1, v5] = {
-        let f1 = sweep_half_edge_to_face(
+        let f1 = sweep.half_edge_to_face(
             e0,
             [0., 0., 1.],
             &mut vertices,
