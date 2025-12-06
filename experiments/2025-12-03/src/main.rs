@@ -111,18 +111,18 @@ pub fn sweep_vertex_to_edge(
     a: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
-    edges: &mut Store<Edge>,
-) -> Index<Edge> {
+    edges: &mut Store<HalfEdge>,
+) -> Index<HalfEdge> {
     let b = vertices.push(vertices[a].position + path.into());
-    edges.push(Edge { vertices: [a, b] })
+    edges.push(HalfEdge { vertices: [a, b] })
 }
 
 pub fn sweep_edge_to_face(
-    e0: Index<Edge>,
+    e0: Index<HalfEdge>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     triangles: &mut Store<Triangle>,
-    edges: &mut Store<Edge>,
+    edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
 ) -> Index<Face> {
     let path = path.into();
@@ -133,7 +133,7 @@ pub fn sweep_edge_to_face(
         .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, edges));
     let [v3, v2] = [e3, e1].map(|edge| edges[edge].vertices[1]);
 
-    let e2 = edges.push(Edge { vertices: [v2, v3] });
+    let e2 = edges.push(HalfEdge { vertices: [v2, v3] });
     let _ = e2;
 
     triangles.push([v0, v1, v2]);
@@ -174,11 +174,11 @@ impl From<[Index<Vertex>; 3]> for Triangle {
 }
 
 #[derive(Debug, Eq, PartialEq)]
-pub struct Edge {
+pub struct HalfEdge {
     pub vertices: [Index<Vertex>; 2],
 }
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Face {
-    pub boundary: [Index<Edge>; 4],
+    pub boundary: [Index<HalfEdge>; 4],
 }
