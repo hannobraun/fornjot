@@ -38,11 +38,11 @@ fn model() -> TriMesh {
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
 
-    // Sweep initial vertex into lower-back edge.
-    let (e0, v4) = {
+    // Sweep initial vertex into lower-left edge.
+    let (e0, v2) = {
         let e0 = sweep.vertex_to_half_edge(
             v0,
-            [1., 0., 0.],
+            [0., 1., 0.],
             &mut vertices,
             &mut half_edges,
         );
@@ -51,10 +51,10 @@ fn model() -> TriMesh {
     };
 
     // Sweep edge into bottom face.
-    let [v2, v6] = {
+    let [v4, v6] = {
         let f0 = sweep.half_edge_to_face(
             e0,
-            [0., 1., 0.],
+            [1., 0., 0.],
             &mut vertices,
             &mut triangles,
             &mut half_edges,
