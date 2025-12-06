@@ -63,7 +63,7 @@ fn model() -> TriMesh {
 
         let [_, e1, _, e3] = faces[f0].boundary;
 
-        [e3, e1].map(|e| half_edges[e].vertices[1])
+        [half_edges[e3].vertices[0], half_edges[e1].vertices[1]]
     };
 
     // Sweep edge into front face.
@@ -79,7 +79,7 @@ fn model() -> TriMesh {
 
         let [_, e1, _, e3] = faces[f1].boundary;
 
-        [e3, e1].map(|e| half_edges[e].vertices[1])
+        [half_edges[e3].vertices[0], half_edges[e1].vertices[1]]
     };
 
     // Push rest of vertices in an unstructured manner.

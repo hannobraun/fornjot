@@ -36,13 +36,16 @@ impl Sweep {
 
         let [v0, v1] = half_edges[e0].vertices;
 
-        let [e3, e1] = [v0, v1].map(|vertex| {
-            self.vertex_to_half_edge(vertex, path, vertices, half_edges)
-        });
-        let [v3, v2] = [e3, e1].map(|edge| half_edges[edge].vertices[1]);
+        let e1 = self.vertex_to_half_edge(v1, path, vertices, half_edges);
+        let [_, v2] = half_edges[e1].vertices;
 
-        let e2 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-        let _ = e2;
+        let e2 = {
+            let v0_to_v1 = vertices[v1].position - vertices[v0].position;
+            self.vertex_to_half_edge(v2, -v0_to_v1, vertices, half_edges)
+        };
+        let [_, v3] = half_edges[e2].vertices;
+
+        let e3 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
         triangles.push([v0, v1, v2], vertices);
         triangles.push([v0, v2, v3], vertices);
