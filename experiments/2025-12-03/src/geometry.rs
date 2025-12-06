@@ -37,6 +37,7 @@ pub struct Triangles {
 }
 
 impl Triangles {
+    #[track_caller]
     pub fn push(
         &mut self,
         triangle: impl Into<Triangle>,
