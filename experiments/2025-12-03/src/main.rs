@@ -1,6 +1,10 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
 
-use crate::{geometry::Triangle, store::Store, sweep::Sweep};
+use crate::{
+    geometry::{Triangle, Triangles},
+    store::Store,
+    sweep::Sweep,
+};
 
 mod geometry;
 mod store;
@@ -22,7 +26,7 @@ fn main() -> anyhow::Result<()> {
 fn model() -> TriMesh {
     // Geometry
     let mut vertices = Store::default();
-    let mut triangles = Store::default();
+    let mut triangles = Triangles::default();
 
     // Topology
     let mut half_edges = Store::default();
@@ -84,23 +88,23 @@ fn model() -> TriMesh {
 
     // Push rest of triangles in an unstructured manner.
     // right
-    triangles.push([v4, v6, v7]); // t2
-    triangles.push([v4, v7, v5]); // t3
+    triangles.push([v4, v6, v7], &vertices); // t2
+    triangles.push([v4, v7, v5], &vertices); // t3
     // back
-    triangles.push([v6, v2, v3]); // t4
-    triangles.push([v6, v3, v7]); // t5
+    triangles.push([v6, v2, v3], &vertices); // t4
+    triangles.push([v6, v3, v7], &vertices); // t5
     // left
-    triangles.push([v2, v0, v1]); // t6
-    triangles.push([v2, v1, v3]); // t7
+    triangles.push([v2, v0, v1], &vertices); // t6
+    triangles.push([v2, v1, v3], &vertices); // t7
     // top
-    triangles.push([v1, v5, v7]); // t10
-    triangles.push([v1, v7, v3]); // t11
+    triangles.push([v1, v5, v7], &vertices); // t10
+    triangles.push([v1, v7, v3], &vertices); // t11
 
     let mut tri_mesh = TriMesh::new();
 
     for Triangle {
         vertices: [a, b, c],
-    } in triangles
+    } in triangles.into_store()
     {
         tri_mesh.triangles.push(MeshTriangle {
             inner: fj_math::Triangle::from_points([

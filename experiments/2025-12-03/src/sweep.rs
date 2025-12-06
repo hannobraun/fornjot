@@ -1,7 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    geometry::{Triangle, Vertex},
+    geometry::{Triangles, Vertex},
     store::{Index, Store},
     topology::{Face, HalfEdge},
 };
@@ -28,7 +28,7 @@ impl Sweep {
         e0: Index<HalfEdge>,
         path: impl Into<Vector<3>>,
         vertices: &mut Store<Vertex>,
-        triangles: &mut Store<Triangle>,
+        triangles: &mut Triangles,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
@@ -44,8 +44,8 @@ impl Sweep {
         let e2 = half_edges.push(HalfEdge { vertices: [v2, v3] });
         let _ = e2;
 
-        triangles.push([v0, v1, v2]);
-        triangles.push([v0, v2, v3]);
+        triangles.push([v0, v1, v2], vertices);
+        triangles.push([v0, v2, v3], vertices);
 
         faces.push(Face {
             boundary: [e0, e1, e2, e3],
