@@ -54,7 +54,7 @@ fn model() -> TriMesh {
 
         let [_, e1, _, e3] = faces[f0].boundary;
 
-        [e3, e1].map(|edge| half_edges[edge].vertices[1])
+        [e3, e1].map(|e| half_edges[e].vertices[1])
     };
 
     // Sweep edge into front face.
