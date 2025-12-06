@@ -1,8 +1,12 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Vector};
+use fj_math::Vector;
 
-use crate::store::{Index, Store};
+use crate::{
+    geometry::{Triangle, Vertex},
+    store::{Index, Store},
+};
 
+mod geometry;
 mod store;
 
 fn main() -> anyhow::Result<()> {
@@ -147,35 +151,6 @@ pub fn sweep_half_edge_to_face(
     faces.push(Face {
         boundary: [e0, e1, e2, e3],
     })
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct Vertex {
-    pub position: Point<3>,
-}
-
-impl From<[f64; 3]> for Vertex {
-    fn from(position: [f64; 3]) -> Self {
-        let position = position.into();
-        Self { position }
-    }
-}
-
-impl From<Point<3>> for Vertex {
-    fn from(position: Point<3>) -> Self {
-        Self { position }
-    }
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct Triangle {
-    pub vertices: [Index<Vertex>; 3],
-}
-
-impl From<[Index<Vertex>; 3]> for Triangle {
-    fn from(vertices: [Index<Vertex>; 3]) -> Self {
-        Self { vertices }
-    }
 }
 
 #[derive(Debug, Eq, PartialEq)]
