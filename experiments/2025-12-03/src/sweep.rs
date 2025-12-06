@@ -12,13 +12,13 @@ pub struct Sweep {}
 impl Sweep {
     pub fn vertex_to_half_edge(
         &mut self,
-        a: Index<Vertex>,
+        v0: Index<Vertex>,
         path: impl Into<Vector<3>>,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Index<HalfEdge> {
-        let b = vertices.push(vertices[a].position + path.into());
-        half_edges.push(HalfEdge { vertices: [a, b] })
+        let b = vertices.push(vertices[v0].position + path.into());
+        half_edges.push(HalfEdge { vertices: [v0, b] })
     }
 
     pub fn half_edge_to_face(
