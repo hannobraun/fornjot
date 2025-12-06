@@ -1,14 +1,14 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::Vector;
 
 use crate::{
-    geometry::{Triangle, Vertex},
-    store::{Index, Store},
-    topology::{Face, HalfEdge},
+    geometry::Triangle,
+    store::Store,
+    sweep::{sweep_half_edge_to_face, sweep_vertex_to_half_edge},
 };
 
 mod geometry;
 mod store;
+mod sweep;
 mod topology;
 
 fn main() -> anyhow::Result<()> {
@@ -115,42 +115,4 @@ fn model() -> TriMesh {
     }
 
     tri_mesh
-}
-
-pub fn sweep_vertex_to_half_edge(
-    a: Index<Vertex>,
-    path: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    half_edges: &mut Store<HalfEdge>,
-) -> Index<HalfEdge> {
-    let b = vertices.push(vertices[a].position + path.into());
-    half_edges.push(HalfEdge { vertices: [a, b] })
-}
-
-pub fn sweep_half_edge_to_face(
-    e0: Index<HalfEdge>,
-    path: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    triangles: &mut Store<Triangle>,
-    half_edges: &mut Store<HalfEdge>,
-    faces: &mut Store<Face>,
-) -> Index<Face> {
-    let path = path.into();
-
-    let [v0, v1] = half_edges[e0].vertices;
-
-    let [e3, e1] = [v0, v1].map(|vertex| {
-        sweep_vertex_to_half_edge(vertex, path, vertices, half_edges)
-    });
-    let [v3, v2] = [e3, e1].map(|edge| half_edges[edge].vertices[1]);
-
-    let e2 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-    let _ = e2;
-
-    triangles.push([v0, v1, v2]);
-    triangles.push([v0, v2, v3]);
-
-    faces.push(Face {
-        boundary: [e0, e1, e2, e3],
-    })
 }
