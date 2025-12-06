@@ -4,10 +4,12 @@ use fj_math::Vector;
 use crate::{
     geometry::{Triangle, Vertex},
     store::{Index, Store},
+    topology::{Face, HalfEdge},
 };
 
 mod geometry;
 mod store;
+mod topology;
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
@@ -151,14 +153,4 @@ pub fn sweep_half_edge_to_face(
     faces.push(Face {
         boundary: [e0, e1, e2, e3],
     })
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct HalfEdge {
-    pub vertices: [Index<Vertex>; 2],
-}
-
-#[derive(Debug, Eq, PartialEq)]
-pub struct Face {
-    pub boundary: [Index<HalfEdge>; 4],
 }
