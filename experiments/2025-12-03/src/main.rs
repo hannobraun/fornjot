@@ -31,7 +31,7 @@ fn model() -> TriMesh {
 
     // Sweep initial vertex into lower-back edge.
     let (e0, v4) = {
-        let e0 = sweep_vertex_to_edge(
+        let e0 = sweep_vertex_to_half_edge(
             v0,
             [1., 0., 0.],
             &mut vertices,
@@ -111,7 +111,7 @@ fn model() -> TriMesh {
     tri_mesh
 }
 
-pub fn sweep_vertex_to_edge(
+pub fn sweep_vertex_to_half_edge(
     a: Index<Vertex>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
@@ -133,8 +133,9 @@ pub fn sweep_edge_to_face(
 
     let [v0, v1] = half_edges[e0].vertices;
 
-    let [e3, e1] = [v0, v1]
-        .map(|vertex| sweep_vertex_to_edge(vertex, path, vertices, half_edges));
+    let [e3, e1] = [v0, v1].map(|vertex| {
+        sweep_vertex_to_half_edge(vertex, path, vertices, half_edges)
+    });
     let [v3, v2] = [e3, e1].map(|edge| half_edges[edge].vertices[1]);
 
     let e2 = half_edges.push(HalfEdge { vertices: [v2, v3] });
