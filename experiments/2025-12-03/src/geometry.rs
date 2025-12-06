@@ -46,9 +46,9 @@ impl Triangles {
         let triangle = triangle.into();
 
         let [a, b, c] = triangle.vertices.map(|v| vertices[v].position);
-        assert_ne!(a, b);
-        assert_ne!(a, c);
-        assert_ne!(b, c);
+        if a == b || a == c || b == c {
+            panic!("Invalid triangle: {:?}", [a, b, c]);
+        }
 
         self.store.push(triangle)
     }
