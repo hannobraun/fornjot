@@ -50,7 +50,7 @@ fn model() -> TriMesh {
         (e02, half_edges[e02].vertices[1])
     };
 
-    // Sweep edge into bottom face.
+    // Sweep lower-left edge into bottom face.
     let [v4, v6] = {
         let f0 = sweep.half_edge_to_face(
             e02,
