@@ -12,6 +12,7 @@ impl<T> Store<T>
 where
     T: PartialEq + fmt::Debug,
 {
+    #[track_caller]
     pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
         let object = object.into();
 
