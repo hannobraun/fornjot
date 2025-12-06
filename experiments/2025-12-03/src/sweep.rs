@@ -17,8 +17,8 @@ impl Sweep {
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Index<HalfEdge> {
-        let b = vertices.push(vertices[v0].position + path.into());
-        half_edges.push(HalfEdge { vertices: [v0, b] })
+        let v1 = vertices.push(vertices[v0].position + path.into());
+        half_edges.push(HalfEdge { vertices: [v0, v1] })
     }
 
     pub fn half_edge_to_face(
