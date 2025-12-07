@@ -2,8 +2,9 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 
 use crate::{
     geometry::{Triangle, Triangles},
-    store::Store,
+    store::{Index, Store},
     sweep::Sweep,
+    topology::HalfEdge,
 };
 
 mod geometry;
@@ -66,9 +67,25 @@ fn model() -> TriMesh {
         [half_edges[e3].vertices[0], half_edges[e1].vertices[1]]
     };
 
+    // Sweep lower-left edge into left face.
+    let [v1, v3] = {
+        let e20 = reverse_half_edge(e02, &mut half_edges);
+
+        let f2013 = sweep.half_edge_to_face(
+            e20,
+            [0., 0., 1.],
+            &mut vertices,
+            &mut triangles,
+            &mut half_edges,
+            &mut faces,
+        );
+
+        let [_, e1, _, e3] = faces[f2013].boundary;
+
+        [half_edges[e1].vertices[1], half_edges[e3].vertices[0]]
+    };
+
     // Push rest of vertices in an unstructured manner.
-    let v1 = vertices.push([0., 0., 1.]);
-    let v3 = vertices.push([0., 1., 1.]);
     let v5 = vertices.push([1., 0., 1.]);
     let v7 = vertices.push([1., 1., 1.]);
 
@@ -79,9 +96,6 @@ fn model() -> TriMesh {
     // back
     triangles.push([v6, v2, v3], &vertices); // t4
     triangles.push([v6, v3, v7], &vertices); // t5
-    // left
-    triangles.push([v2, v0, v1], &vertices); // t6
-    triangles.push([v2, v1, v3], &vertices); // t7
     // front
     triangles.push([v0, v4, v5], &vertices); // t8
     triangles.push([v0, v5, v1], &vertices); // t9
@@ -107,4 +121,12 @@ fn model() -> TriMesh {
     }
 
     tri_mesh
+}
+
+pub fn reverse_half_edge(
+    e: Index<HalfEdge>,
+    half_edges: &mut Store<HalfEdge>,
+) -> Index<HalfEdge> {
+    let [v0, v1] = half_edges[e].vertices;
+    half_edges.push(HalfEdge { vertices: [v1, v0] })
 }
