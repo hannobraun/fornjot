@@ -62,11 +62,11 @@ fn model() -> TriMesh {
             &mut faces,
         );
 
-        let [_, e26, _, e3] = faces[f0264].boundary;
+        let [_, e26, _, e40] = faces[f0264].boundary;
 
         (
             f0264,
-            half_edges[e3].vertices[0],
+            half_edges[e40].vertices[0],
             half_edges[e26].vertices[1],
         )
     };
