@@ -105,11 +105,12 @@ fn model() -> TriMesh {
         let [_, v5] = half_edges[e45].vertices;
         let e51 = half_edges.push(HalfEdge { vertices: [v5, v1] });
 
-        triangles.push([v1, v0, v4], &vertices);
-        triangles.push([v1, v4, v5], &vertices);
+        let t104 = triangles.push([v1, v0, v4], &vertices);
+        let t145 = triangles.push([v1, v4, v5], &vertices);
 
         let _f1045 = faces.push(Face {
             boundary: [e10, e04, e45, e51],
+            triangles: [t104, t145],
         });
 
         v5
@@ -149,6 +150,20 @@ fn model() -> TriMesh {
     tri_mesh
 }
 
+pub fn reverse_triangle(
+    t012: Index<Triangle>,
+    triangles: &mut Triangles,
+    vertices: &Store<Vertex>,
+) -> Index<Triangle> {
+    let [v0, v1, v2] = triangles[t012].vertices;
+    triangles.push(
+        Triangle {
+            vertices: [v0, v2, v1],
+        },
+        vertices,
+    )
+}
+
 pub fn reverse_half_edge(
     e: Index<HalfEdge>,
     half_edges: &mut Store<HalfEdge>,
@@ -161,14 +176,19 @@ pub fn reverse_face(
     f0123: Index<Face>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
-    _: &mut Triangles,
-    _: &Store<Vertex>,
+    triangles: &mut Triangles,
+    vertices: &Store<Vertex>,
 ) -> Index<Face> {
     let [e10, e21, e32, e03] = faces[f0123]
         .boundary
         .map(|e| reverse_half_edge(e, half_edges));
 
+    let triangles = faces[f0123]
+        .triangles
+        .map(|t012| reverse_triangle(t012, triangles, vertices));
+
     faces.push(Face {
         boundary: [e03, e32, e21, e10],
+        triangles,
     })
 }

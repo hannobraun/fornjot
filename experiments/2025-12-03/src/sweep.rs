@@ -47,11 +47,12 @@ impl Sweep {
 
         let e3 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
-        triangles.push([v0, v1, v2], vertices);
-        triangles.push([v0, v2, v3], vertices);
+        let t0 = triangles.push([v0, v1, v2], vertices);
+        let t1 = triangles.push([v0, v2, v3], vertices);
 
         faces.push(Face {
             boundary: [e0, e1, e2, e3],
+            triangles: [t0, t1],
         })
     }
 }

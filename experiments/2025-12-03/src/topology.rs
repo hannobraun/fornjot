@@ -1,7 +1,7 @@
 use std::ops;
 
 use crate::{
-    geometry::Vertex,
+    geometry::{Triangle, Vertex},
     store::{Index, Store},
 };
 
@@ -13,6 +13,7 @@ pub struct HalfEdge {
 #[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
     pub boundary: [Index<HalfEdge>; 4],
+    pub triangles: [Index<Triangle>; 2],
 }
 
 #[derive(Default)]
