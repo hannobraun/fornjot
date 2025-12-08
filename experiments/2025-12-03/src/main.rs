@@ -63,7 +63,6 @@ fn model() -> TriMesh {
         );
 
         let [_, _, e64, _] = faces[f0264].boundary;
-
         (f0264, half_edges[e64].vertices)
     };
 
