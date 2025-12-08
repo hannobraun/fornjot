@@ -76,7 +76,7 @@ fn model() -> TriMesh {
     let [e04, _, _, e20] = faces[f0462].boundary;
 
     // Sweep lower-left edge into left face.
-    let (_f2013, [v1, v3]) = {
+    let (f2013, [v1, v3]) = {
         let f2013 = sweep.half_edge_to_face(
             e20,
             [0., 0., 1.],
@@ -92,7 +92,7 @@ fn model() -> TriMesh {
 
     // Complete front face from the parts we already have.
     let (_f1045, v5) = {
-        let [_, e01, _, _] = faces[_f2013].boundary;
+        let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse_half_edge(e01, &mut half_edges);
 
         let e45 = sweep.vertex_to_half_edge(
