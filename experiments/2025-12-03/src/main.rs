@@ -105,6 +105,9 @@ fn model() -> TriMesh {
         let [_, v5] = half_edges[e45].vertices;
         let e51 = half_edges.push(HalfEdge { vertices: [v5, v1] });
 
+        triangles.push([v1, v0, v4], &vertices);
+        triangles.push([v1, v4, v5], &vertices);
+
         let _f1045 = faces.push(Face {
             boundary: [e10, e04, e45, e51],
         });
@@ -122,9 +125,6 @@ fn model() -> TriMesh {
     // back
     triangles.push([v6, v2, v3], &vertices); // t4
     triangles.push([v6, v3, v7], &vertices); // t5
-    // front
-    triangles.push([v0, v4, v5], &vertices); // t8
-    triangles.push([v0, v5, v1], &vertices); // t9
     // top
     triangles.push([v1, v5, v7], &vertices); // t10
     triangles.push([v1, v7, v3], &vertices); // t11
