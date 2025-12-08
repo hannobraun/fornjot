@@ -108,12 +108,12 @@ fn model() -> TriMesh {
         let t104 = triangles.push([v1, v0, v4], &vertices);
         let t145 = triangles.push([v1, v4, v5], &vertices);
 
-        let _f1045 = faces.push(Face {
+        let f1045 = faces.push(Face {
             boundary: [e10, e04, e45, e51],
             triangles: [t104, t145],
         });
 
-        (_f1045, v5)
+        (f1045, v5)
     };
 
     // Push rest of vertices in an unstructured manner.
