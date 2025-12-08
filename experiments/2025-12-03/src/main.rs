@@ -91,7 +91,7 @@ fn model() -> TriMesh {
     };
 
     // Complete front face from the parts we already have.
-    let v5 = {
+    let (_f1045, v5) = {
         let [_, e01, _, _] = faces[_f2013].boundary;
         let e10 = reverse_half_edge(e01, &mut half_edges);
 
@@ -113,7 +113,7 @@ fn model() -> TriMesh {
             triangles: [t104, t145],
         });
 
-        v5
+        (_f1045, v5)
     };
 
     // Push rest of vertices in an unstructured manner.
