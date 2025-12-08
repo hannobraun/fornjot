@@ -132,9 +132,11 @@ fn model() -> TriMesh {
 
     let mut tri_mesh = TriMesh::new();
 
+    let triangles = triangles.into_store();
+
     for Triangle {
         vertices: [a, b, c],
-    } in triangles.into_store()
+    } in triangles
     {
         tri_mesh.triangles.push(MeshTriangle {
             inner: fj_math::Triangle::from_points([
