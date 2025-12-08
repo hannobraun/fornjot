@@ -121,20 +121,25 @@ fn model() -> TriMesh {
 
     // Push rest of triangles in an unstructured manner.
     // right
-    triangles.push([v4, v6, v7], &vertices); // t2
-    triangles.push([v4, v7, v5], &vertices); // t3
+    let t467 = triangles.push([v4, v6, v7], &vertices);
+    let t475 = triangles.push([v4, v7, v5], &vertices);
     // back
-    triangles.push([v6, v2, v3], &vertices); // t4
-    triangles.push([v6, v3, v7], &vertices); // t5
+    let t623 = triangles.push([v6, v2, v3], &vertices);
+    let t637 = triangles.push([v6, v3, v7], &vertices);
     // top
-    triangles.push([v1, v5, v7], &vertices); // t10
-    triangles.push([v1, v7, v3], &vertices); // t11
+    let t157 = triangles.push([v1, v5, v7], &vertices);
+    let t173 = triangles.push([v1, v7, v3], &vertices);
 
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = triangles.into_store();
+    let triangles = [f0264, f2013, _f1045]
+        .map(|f0123| faces[f0123].triangles)
+        .into_iter()
+        .flatten()
+        .chain([t467, t475, t623, t637, t157, t173])
+        .map(|t012| &triangles[t012]);
 
-    for Triangle {
+    for &Triangle {
         vertices: [a, b, c],
     } in triangles
     {
