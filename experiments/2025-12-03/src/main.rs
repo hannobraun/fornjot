@@ -80,9 +80,8 @@ fn model() -> TriMesh {
             &mut faces,
         );
 
-        let [_, e01, _, e32] = faces[f2013].boundary;
-
-        [half_edges[e01].vertices[1], half_edges[e32].vertices[0]]
+        let [_, _, e13, _] = faces[f2013].boundary;
+        half_edges[e13].vertices
     };
 
     // Push rest of vertices in an unstructured manner.
