@@ -72,11 +72,10 @@ fn model() -> TriMesh {
     };
 
     let f0462 = reverse_face(f0264, &mut half_edges, &mut faces);
+    let [_, _, _, e20] = faces[f0462].boundary;
 
     // Sweep lower-left edge into left face.
     let [v1, v3] = {
-        let [_, _, _, e20] = faces[f0462].boundary;
-
         let f2013 = sweep.half_edge_to_face(
             e20,
             [0., 0., 1.],
