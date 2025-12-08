@@ -1,7 +1,7 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
 
 use crate::{
-    geometry::{Triangle, Triangles},
+    geometry::{Triangle, Triangles, Vertex},
     store::{Index, Store},
     sweep::Sweep,
     topology::{Face, Faces, HalfEdge},
@@ -66,7 +66,7 @@ fn model() -> TriMesh {
         (f0264, half_edges[e64].vertices)
     };
 
-    let f0462 = reverse_face(f0264, &mut half_edges, &mut faces);
+    let f0462 = reverse_face(f0264, &mut half_edges, &mut faces, &vertices);
     let [e04, _, _, e20] = faces[f0462].boundary;
 
     // Sweep lower-left edge into left face.
@@ -155,6 +155,7 @@ pub fn reverse_face(
     f0123: Index<Face>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
+    _: &Store<Vertex>,
 ) -> Index<Face> {
     let [e10, e21, e32, e03] = faces[f0123]
         .boundary
