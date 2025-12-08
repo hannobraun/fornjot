@@ -67,7 +67,7 @@ fn model() -> TriMesh {
     };
 
     let f0462 = reverse_face(f0264, &mut half_edges, &mut faces);
-    let [_, _, _, e20] = faces[f0462].boundary;
+    let [e04, _, _, e20] = faces[f0462].boundary;
 
     // Sweep lower-left edge into left face.
     let (_f2013, [v1, v3]) = {
@@ -84,8 +84,29 @@ fn model() -> TriMesh {
         (f2013, half_edges[e13].vertices)
     };
 
+    // Complete front face from the parts we already have.
+    let v5 = {
+        let [_, e01, _, _] = faces[_f2013].boundary;
+        let e10 = reverse_half_edge(e01, &mut half_edges);
+
+        let e45 = sweep.vertex_to_half_edge(
+            v4,
+            [0., 0., 1.],
+            &mut vertices,
+            &mut half_edges,
+        );
+
+        let [_, v5] = half_edges[e45].vertices;
+        let e51 = half_edges.push(HalfEdge { vertices: [v5, v1] });
+
+        let _f1045 = faces.push(Face {
+            boundary: [e10, e04, e45, e51],
+        });
+
+        v5
+    };
+
     // Push rest of vertices in an unstructured manner.
-    let v5 = vertices.push([1., 0., 1.]);
     let v7 = vertices.push([1., 1., 1.]);
 
     // Push rest of triangles in an unstructured manner.
