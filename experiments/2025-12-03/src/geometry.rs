@@ -1,3 +1,5 @@
+use std::ops;
+
 use fj_math::Point;
 
 use crate::store::{Index, Store};
@@ -55,5 +57,13 @@ impl Triangles {
 
     pub fn into_store(self) -> Store<Triangle> {
         self.store
+    }
+}
+
+impl ops::Index<Index<Triangle>> for Triangles {
+    type Output = Triangle;
+
+    fn index(&self, index: Index<Triangle>) -> &Self::Output {
+        &self.store[index]
     }
 }
