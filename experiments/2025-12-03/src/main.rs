@@ -91,7 +91,7 @@ fn model() -> TriMesh {
     };
 
     // Complete front face from the parts we already have.
-    let (_f1045, v5) = {
+    let (f1045, v5) = {
         let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse_half_edge(e01, &mut half_edges);
 
@@ -132,7 +132,7 @@ fn model() -> TriMesh {
 
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = [f0264, f2013, _f1045]
+    let triangles = [f0264, f2013, f1045]
         .map(|f0123| faces[f0123].triangles)
         .into_iter()
         .flatten()
