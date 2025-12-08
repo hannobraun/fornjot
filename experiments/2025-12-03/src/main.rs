@@ -62,12 +62,9 @@ fn model() -> TriMesh {
             &mut faces,
         );
 
-        let [_, e26, _, e40] = faces[f0264].boundary;
+        let [_, _, e64, _] = faces[f0264].boundary;
 
-        (
-            f0264,
-            [half_edges[e26].vertices[1], half_edges[e40].vertices[0]],
-        )
+        (f0264, half_edges[e64].vertices)
     };
 
     let f0462 = reverse_face(f0264, &mut half_edges, &mut faces);
