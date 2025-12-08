@@ -4,7 +4,7 @@ use crate::{
     geometry::{Triangle, Triangles},
     store::{Index, Store},
     sweep::Sweep,
-    topology::{Face, HalfEdge},
+    topology::{Face, Faces, HalfEdge},
 };
 
 mod geometry;
@@ -31,7 +31,7 @@ fn model() -> TriMesh {
 
     // Topology
     let mut half_edges = Store::default();
-    let mut faces = Store::default();
+    let mut faces = Faces::default();
 
     // Operations
     let mut sweep = Sweep::default();
@@ -154,7 +154,7 @@ pub fn reverse_half_edge(
 pub fn reverse_face(
     f: Index<Face>,
     half_edges: &mut Store<HalfEdge>,
-    faces: &mut Store<Face>,
+    faces: &mut Faces,
 ) -> Index<Face> {
     let [e10, e21, e32, e03] =
         faces[f].boundary.map(|e| reverse_half_edge(e, half_edges));

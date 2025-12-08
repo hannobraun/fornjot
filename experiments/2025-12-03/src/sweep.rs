@@ -3,7 +3,7 @@ use fj_math::Vector;
 use crate::{
     geometry::{Triangles, Vertex},
     store::{Index, Store},
-    topology::{Face, HalfEdge},
+    topology::{Face, Faces, HalfEdge},
 };
 
 #[derive(Default)]
@@ -30,7 +30,7 @@ impl Sweep {
         vertices: &mut Store<Vertex>,
         triangles: &mut Triangles,
         half_edges: &mut Store<HalfEdge>,
-        faces: &mut Store<Face>,
+        faces: &mut Faces,
     ) -> Index<Face> {
         let path = path.into();
 
