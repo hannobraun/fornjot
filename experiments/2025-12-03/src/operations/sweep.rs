@@ -21,7 +21,7 @@ pub fn vertex_to_half_edge(
 }
 
 pub fn half_edge_to_face(
-    e0: Index<HalfEdge>,
+    e01: Index<HalfEdge>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
@@ -30,7 +30,7 @@ pub fn half_edge_to_face(
 ) -> Index<Face> {
     let path = path.into();
 
-    let [v0, v1] = half_edges[e0].vertices;
+    let [v0, v1] = half_edges[e01].vertices;
 
     let e1 = vertex_to_half_edge(v1, path, vertices, half_edges);
     let [_, v2] = half_edges[e1].vertices;
@@ -47,7 +47,7 @@ pub fn half_edge_to_face(
     let t1 = triangles.push([v0, v2, v3], vertices);
 
     faces.push(Face {
-        boundary: [e0, e1, e2, e3],
+        boundary: [e01, e1, e2, e3],
         triangles: [t0, t1],
     })
 }
