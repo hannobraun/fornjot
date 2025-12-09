@@ -3,7 +3,6 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use crate::{
     geometry::{Triangle, Triangles, Vertex},
     store::{Index, Store},
-    sweep::Sweep,
     topology::{Face, Faces, HalfEdge},
 };
 
@@ -33,15 +32,12 @@ fn model() -> TriMesh {
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
 
-    // Operations
-    let mut sweep = Sweep::default();
-
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into lower-left edge.
     let (e02, v2) = {
-        let e02 = sweep.vertex_to_half_edge(
+        let e02 = sweep::vertex_to_half_edge(
             v0,
             [0., 1., 0.],
             &mut vertices,
@@ -53,7 +49,7 @@ fn model() -> TriMesh {
 
     // Sweep lower-left edge into bottom face.
     let (f0264, [v6, v4]) = {
-        let f0264 = sweep.half_edge_to_face(
+        let f0264 = sweep::half_edge_to_face(
             e02,
             [1., 0., 0.],
             &mut vertices,
@@ -77,7 +73,7 @@ fn model() -> TriMesh {
 
     // Sweep lower-left edge into left face.
     let (f2013, [v1, v3]) = {
-        let f2013 = sweep.half_edge_to_face(
+        let f2013 = sweep::half_edge_to_face(
             e20,
             [0., 0., 1.],
             &mut vertices,
@@ -95,7 +91,7 @@ fn model() -> TriMesh {
         let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse_half_edge(e01, &mut half_edges);
 
-        let e45 = sweep.vertex_to_half_edge(
+        let e45 = sweep::vertex_to_half_edge(
             v4,
             [0., 0., 1.],
             &mut vertices,
@@ -121,7 +117,7 @@ fn model() -> TriMesh {
         let [_, _, e45, _] = faces[f1045].boundary;
         let e54 = reverse_half_edge(e45, &mut half_edges);
 
-        let e67 = sweep.vertex_to_half_edge(
+        let e67 = sweep::vertex_to_half_edge(
             v6,
             [0., 0., 1.],
             &mut vertices,
