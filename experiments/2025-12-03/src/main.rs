@@ -161,18 +161,35 @@ fn model() -> TriMesh {
         })
     };
 
-    // Push rest of triangles in an unstructured manner.
-    // top
-    let t157 = triangles.push([v1, v5, v7], &vertices);
-    let t173 = triangles.push([v1, v7, v3], &vertices);
+    // Complete top face from the parts we already have.
+    let f1573 = {
+        let [_, _, _, e51] = faces[f1045].boundary;
+        let e15 = reverse_half_edge(e51, &mut half_edges);
+
+        let [_, _, _, e75] = faces[f5467].boundary;
+        let e57 = reverse_half_edge(e75, &mut half_edges);
+
+        let [_, _, _, e37] = faces[f7623].boundary;
+        let e73 = reverse_half_edge(e37, &mut half_edges);
+
+        let [_, _, e13, _] = faces[f2013].boundary;
+        let e31 = reverse_half_edge(e13, &mut half_edges);
+
+        let t157 = triangles.push([v1, v5, v7], &vertices);
+        let t173 = triangles.push([v1, v7, v3], &vertices);
+
+        faces.push(Face {
+            boundary: [e15, e57, e73, e31],
+            triangles: [t157, t173],
+        })
+    };
 
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = [f0264, f2013, f1045, f5467, f7623]
+    let triangles = [f0264, f2013, f1045, f5467, f7623, f1573]
         .map(|f0123| faces[f0123].triangles)
         .into_iter()
         .flatten()
-        .chain([t157, t173])
         .map(|t012| &triangles[t012]);
 
     for &Triangle {
