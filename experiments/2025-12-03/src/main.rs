@@ -5,12 +5,13 @@ use crate::{
         geometry::{Triangle, Triangles, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
+    operations::sweep,
     store::{Index, Store},
 };
 
 mod objects;
+mod operations;
 mod store;
-mod sweep;
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
