@@ -187,9 +187,8 @@ fn model() -> TriMesh {
     let mut tri_mesh = TriMesh::new();
 
     let triangles = [f0264, f2013, f1045, f5467, f7623, f1573]
-        .map(|f0123| faces[f0123].triangles)
         .into_iter()
-        .flatten()
+        .flat_map(|f0123| faces[f0123].triangles)
         .map(|t012| &triangles[t012]);
 
     for &Triangle {
