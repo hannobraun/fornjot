@@ -41,13 +41,13 @@ pub fn half_edge_to_face(
     };
     let [_, v3] = half_edges[e23].vertices;
 
-    let e3 = half_edges.push(HalfEdge { vertices: [v3, v0] });
+    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
     let t0 = triangles.push([v0, v1, v2], vertices);
     let t1 = triangles.push([v0, v2, v3], vertices);
 
     faces.push(Face {
-        boundary: [e01, e12, e23, e3],
+        boundary: [e01, e12, e23, e30],
         triangles: [t0, t1],
     })
 }
