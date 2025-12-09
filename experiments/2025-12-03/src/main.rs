@@ -1,15 +1,16 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
 
 use crate::{
-    geometry::{Triangle, Triangles, Vertex},
+    objects::{
+        geometry::{Triangle, Triangles, Vertex},
+        topology::{Face, Faces, HalfEdge},
+    },
     store::{Index, Store},
-    topology::{Face, Faces, HalfEdge},
 };
 
-mod geometry;
+mod objects;
 mod store;
 mod sweep;
-mod topology;
 
 fn main() -> anyhow::Result<()> {
     let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {

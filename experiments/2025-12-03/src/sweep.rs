@@ -1,9 +1,11 @@
 use fj_math::Vector;
 
 use crate::{
-    geometry::{Triangles, Vertex},
+    objects::{
+        geometry::{Triangles, Vertex},
+        topology::{Face, Faces, HalfEdge},
+    },
     store::{Index, Store},
-    topology::{Face, Faces, HalfEdge},
 };
 
 pub fn vertex_to_half_edge(

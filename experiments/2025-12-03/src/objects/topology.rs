@@ -1,7 +1,7 @@
 use std::ops;
 
 use crate::{
-    geometry::{Triangle, Vertex},
+    objects::geometry::{Triangle, Vertex},
     store::{Index, Store},
 };
 
