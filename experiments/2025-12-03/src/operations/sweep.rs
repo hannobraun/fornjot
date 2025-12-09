@@ -44,10 +44,10 @@ pub fn half_edge_to_face(
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
     let t012 = triangles.push([v0, v1, v2], vertices);
-    let t1 = triangles.push([v0, v2, v3], vertices);
+    let t023 = triangles.push([v0, v2, v3], vertices);
 
     faces.push(Face {
         boundary: [e01, e12, e23, e30],
-        triangles: [t012, t1],
+        triangles: [t012, t023],
     })
 }
