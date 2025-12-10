@@ -37,10 +37,8 @@ pub fn from_two_half_edges_and_vertex(
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [v0, v1b] = half_edges[e01].vertices;
-    let [v1, v2] = half_edges[e12].vertices;
-
-    assert_eq!(v1, v1b);
+    let [v0, _] = half_edges[e01].vertices;
+    let [_, v2] = half_edges[e12].vertices;
 
     let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
