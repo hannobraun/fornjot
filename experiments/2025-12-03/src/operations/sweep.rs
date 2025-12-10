@@ -34,7 +34,6 @@ pub fn half_edge_to_face(
     let v2 = vertices.push(vertices[v1].position + path);
 
     let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
-    let [_, v2] = half_edges[e12].vertices;
 
     let e23 = {
         let v0_to_v1 = vertices[v1].position - vertices[v0].position;
