@@ -38,7 +38,7 @@ fn model() -> TriMesh {
     let v0 = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into lower-left edge.
-    let (e02, v2) = {
+    let (e02, _) = {
         let e02 = sweep::vertex_to_half_edge(
             v0,
             [0., 1., 0.],
@@ -134,15 +134,13 @@ fn model() -> TriMesh {
         let [_, _, _, e32] = faces[f2013].boundary;
         let e23 = reverse_half_edge(e32, &mut half_edges);
 
-        let e37 = half_edges.push(HalfEdge { vertices: [v3, v7] });
-
-        let t762 = triangles.push([v7, v6, v2], &vertices);
-        let t723 = triangles.push([v7, v2, v3], &vertices);
-
-        faces.push(Face {
-            boundary: [e76, e62, e23, e37],
-            triangles: [t762, t723],
-        })
+        face::from_three_half_edges(
+            [e76, e62, e23],
+            &vertices,
+            &mut triangles,
+            &mut half_edges,
+            &mut faces,
+        )
     };
 
     // Complete top face from the parts we already have.
