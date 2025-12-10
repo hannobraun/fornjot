@@ -20,6 +20,30 @@ pub fn from_half_edge_and_two_vertices(
     let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
+    from_half_edges(
+        [e01, e12, e23, e30],
+        vertices,
+        triangles,
+        half_edges,
+        faces,
+    )
+}
+
+pub fn from_half_edges(
+    [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
+    vertices: &Store<Vertex>,
+    triangles: &mut Triangles,
+    half_edges: &mut Store<HalfEdge>,
+    faces: &mut Faces,
+) -> Index<Face> {
+    let [[v0, v1], [v1b, v2], [v2b, v3], [v3b, v0b]] =
+        [e01, e12, e23, e30].map(|e| half_edges[e].vertices);
+
+    assert_eq!(v0, v0b);
+    assert_eq!(v1, v1b);
+    assert_eq!(v2, v2b);
+    assert_eq!(v3, v3b);
+
     let t012 = triangles.push([v0, v1, v2], vertices);
     let t123 = triangles.push([v0, v2, v3], vertices);
 
