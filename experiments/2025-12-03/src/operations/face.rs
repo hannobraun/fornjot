@@ -36,8 +36,10 @@ pub fn from_half_edges(
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [[v0, v1], [v1b, v2], [v2b, v3], [v3b, v0b]] =
-        [e01, e12, e23, e30].map(|e| half_edges[e].vertices);
+    let [v0, v1b] = half_edges[e01].vertices;
+    let [v1, v2b] = half_edges[e12].vertices;
+    let [v2, v3b] = half_edges[e23].vertices;
+    let [v3, v0b] = half_edges[e30].vertices;
 
     assert_eq!(v0, v0b);
     assert_eq!(v1, v1b);
