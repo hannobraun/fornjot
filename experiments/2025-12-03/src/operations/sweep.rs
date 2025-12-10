@@ -32,13 +32,11 @@ pub fn half_edge_to_face(
 
     let [v0, v1] = half_edges[e01].vertices;
     let v2 = vertices.push(vertices[v1].position + path);
+    let v3 = vertices.push(vertices[v0].position + path);
 
     let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
+    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
 
-    let e23 = {
-        let v0_to_v1 = vertices[v1].position - vertices[v0].position;
-        vertex_to_half_edge(v2, -v0_to_v1, vertices, half_edges)
-    };
     let [_, v3] = half_edges[e23].vertices;
 
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
