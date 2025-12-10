@@ -1,0 +1,30 @@
+use crate::{
+    objects::{
+        geometry::{Triangles, Vertex},
+        topology::{Face, Faces, HalfEdge},
+    },
+    store::{Index, Store},
+};
+
+pub fn from_half_edge_and_two_vertices(
+    e01: Index<HalfEdge>,
+    [v2, v3]: [Index<Vertex>; 2],
+    vertices: &Store<Vertex>,
+    triangles: &mut Triangles,
+    half_edges: &mut Store<HalfEdge>,
+    faces: &mut Faces,
+) -> Index<Face> {
+    let [v0, v1] = half_edges[e01].vertices;
+
+    let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
+    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
+    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
+
+    let t012 = triangles.push([v0, v1, v2], vertices);
+    let t123 = triangles.push([v0, v2, v3], vertices);
+
+    faces.push(Face {
+        boundary: [e01, e12, e23, e30],
+        triangles: [t012, t123],
+    })
+}

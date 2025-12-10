@@ -5,6 +5,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
+    operations::face,
     store::{Index, Store},
 };
 
@@ -33,15 +34,12 @@ pub fn half_edge_to_face(
     let [v0, v1] = half_edges[e01].vertices;
     let [v2, v3] = [v1, v0].map(|v| vertices.push(vertices[v].position + path));
 
-    let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
-    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
-
-    let t012 = triangles.push([v0, v1, v2], vertices);
-    let t023 = triangles.push([v0, v2, v3], vertices);
-
-    faces.push(Face {
-        boundary: [e01, e12, e23, e30],
-        triangles: [t012, t023],
-    })
+    face::from_half_edge_and_two_vertices(
+        e01,
+        [v2, v3],
+        vertices,
+        triangles,
+        half_edges,
+        faces,
+    )
 }
