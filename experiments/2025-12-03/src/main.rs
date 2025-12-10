@@ -214,12 +214,11 @@ pub fn reverse_face(
         .boundary
         .map(|e| reverse_half_edge(e, half_edges));
 
-    let triangles = faces[f0123]
-        .triangles
-        .map(|t012| reverse_triangle(t012, triangles, vertices));
-
-    faces.push(Face {
-        boundary: [e03, e32, e21, e10],
+    face::from_four_half_edges(
+        [e03, e32, e21, e10],
+        vertices,
+        half_edges,
         triangles,
-    })
+        faces,
+    )
 }
