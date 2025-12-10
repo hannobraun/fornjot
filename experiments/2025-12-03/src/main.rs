@@ -65,7 +65,7 @@ fn model() -> TriMesh {
     let [e04, e46, e62, e20] = faces[f0462].boundary;
 
     // Sweep lower-left edge into left face.
-    let (f2013, [v1, v3]) = {
+    let (f2013, [_, _]) = {
         let f2013 = sweep::half_edge_to_face(
             e20,
             [0., 0., 1.],
@@ -80,7 +80,7 @@ fn model() -> TriMesh {
     };
 
     // Complete front face from the parts we already have.
-    let (f1045, v5) = {
+    let (f1045, _) = {
         let [v4, _] = half_edges[e46].vertices;
 
         let [_, e01, _, _] = faces[f2013].boundary;
@@ -101,7 +101,7 @@ fn model() -> TriMesh {
     };
 
     // Complete right face from the parts we already have.
-    let (f5467, v7) = {
+    let (f5467, _) = {
         let [v6, _] = half_edges[e62].vertices;
 
         let [_, _, e45, _] = faces[f1045].boundary;
@@ -152,13 +152,13 @@ fn model() -> TriMesh {
         let [_, _, e13, _] = faces[f2013].boundary;
         let e31 = reverse_half_edge(e13, &mut half_edges);
 
-        let t157 = triangles.push([v1, v5, v7], &vertices);
-        let t173 = triangles.push([v1, v7, v3], &vertices);
-
-        faces.push(Face {
-            boundary: [e15, e57, e73, e31],
-            triangles: [t157, t173],
-        })
+        face::from_four_half_edges(
+            [e15, e57, e73, e31],
+            &vertices,
+            &half_edges,
+            &mut triangles,
+            &mut faces,
+        )
     };
 
     let mut tri_mesh = TriMesh::new();
