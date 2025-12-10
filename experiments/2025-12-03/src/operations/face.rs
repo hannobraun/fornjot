@@ -20,7 +20,7 @@ pub fn from_half_edge_and_two_vertices(
     let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
-    from_half_edges(
+    from_four_half_edges(
         [e01, e12, e23, e30],
         vertices,
         half_edges,
@@ -45,7 +45,7 @@ pub fn from_two_half_edges_and_vertex(
     let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
-    from_half_edges(
+    from_four_half_edges(
         [e01, e12, e23, e30],
         vertices,
         half_edges,
@@ -54,7 +54,7 @@ pub fn from_two_half_edges_and_vertex(
     )
 }
 
-pub fn from_half_edges(
+pub fn from_four_half_edges(
     [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
