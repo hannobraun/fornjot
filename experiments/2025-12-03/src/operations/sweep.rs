@@ -36,9 +36,6 @@ pub fn half_edge_to_face(
 
     let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
     let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-
-    let [_, v3] = half_edges[e23].vertices;
-
     let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
 
     let t012 = triangles.push([v0, v1, v2], vertices);
