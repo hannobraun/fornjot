@@ -55,14 +55,17 @@ fn model() -> TriMesh {
         &mut faces,
     );
 
-    let f0462 = reverse_face(
-        f0264,
-        &mut half_edges,
-        &mut faces,
-        &mut triangles,
-        &vertices,
-    );
-    let [e04, e46, e62, e20] = faces[f0462].boundary;
+    let [e04, e46, e62, e20] = {
+        let f0462 = reverse_face(
+            f0264,
+            &mut half_edges,
+            &mut faces,
+            &mut triangles,
+            &vertices,
+        );
+
+        faces[f0462].boundary
+    };
 
     // Sweep lower-left edge into left face.
     let f2013 = sweep::half_edge_to_face(
