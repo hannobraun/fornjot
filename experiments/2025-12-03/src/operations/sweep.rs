@@ -32,7 +32,7 @@ pub fn half_edge_to_face(
     let path = path.into();
 
     let [v0, v1] = half_edges[e01].vertices;
-    let [v2, v3] = [v1, v0].map(|v| vertices.push(vertices[v].position + path));
+    let [v3, v2] = [v0, v1].map(|v| vertices.push(vertices[v].position + path));
 
     face::from_half_edge_and_two_vertices(
         e01,
