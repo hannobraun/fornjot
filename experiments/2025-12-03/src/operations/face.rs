@@ -23,8 +23,8 @@ pub fn from_half_edge_and_two_vertices(
     from_half_edges(
         [e01, e12, e23, e30],
         vertices,
-        triangles,
         half_edges,
+        triangles,
         faces,
     )
 }
@@ -32,8 +32,8 @@ pub fn from_half_edge_and_two_vertices(
 pub fn from_half_edges(
     [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
     vertices: &Store<Vertex>,
-    triangles: &mut Triangles,
     half_edges: &Store<HalfEdge>,
+    triangles: &mut Triangles,
     faces: &mut Faces,
 ) -> Index<Face> {
     let [v0, v1b] = half_edges[e01].vertices;
