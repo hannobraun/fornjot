@@ -29,6 +29,31 @@ pub fn from_half_edge_and_two_vertices(
     )
 }
 
+pub fn from_two_half_edges_and_vertex(
+    [e01, e12]: [Index<HalfEdge>; 2],
+    v3: Index<Vertex>,
+    vertices: &Store<Vertex>,
+    triangles: &mut Triangles,
+    half_edges: &mut Store<HalfEdge>,
+    faces: &mut Faces,
+) -> Index<Face> {
+    let [v0, v1b] = half_edges[e01].vertices;
+    let [v1, v2] = half_edges[e12].vertices;
+
+    assert_eq!(v1, v1b);
+
+    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
+    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
+
+    from_half_edges(
+        [e01, e12, e23, e30],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
+    )
+}
+
 pub fn from_half_edges(
     [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
     vertices: &Store<Vertex>,
