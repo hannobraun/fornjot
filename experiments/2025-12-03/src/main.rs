@@ -94,7 +94,7 @@ fn model() -> TriMesh {
     };
 
     // Complete right face from the parts we already have.
-    let (f5467, _) = {
+    let f5467 = {
         let [v6, _] = half_edges[e62].vertices;
 
         let [_, _, e45, _] = faces[f1045].boundary;
@@ -102,16 +102,14 @@ fn model() -> TriMesh {
 
         let v7 = vertices.push(vertices[v6].position + [0., 0., 1.]);
 
-        let f5467 = face::from_two_half_edges_and_vertex(
+        face::from_two_half_edges_and_vertex(
             [e54, e46],
             v7,
             &vertices,
             &mut triangles,
             &mut half_edges,
             &mut faces,
-        );
-
-        (f5467, v7)
+        )
     };
 
     // Complete back face from the parts we already have.
