@@ -33,7 +33,7 @@ pub fn from_half_edges(
     [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
     vertices: &Store<Vertex>,
     triangles: &mut Triangles,
-    half_edges: &mut Store<HalfEdge>,
+    half_edges: &Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
     let [v0, v1b] = half_edges[e01].vertices;
