@@ -120,7 +120,6 @@ pub fn face_to_solid(
         )
     };
 
-    // Complete top face from the parts we already have.
     let f1573 = {
         let [_, _, _, e51] = faces[f4037].boundary;
         let e15 = reverse::half_edge(e51, half_edges);
