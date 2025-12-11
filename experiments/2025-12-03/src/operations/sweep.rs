@@ -86,7 +86,6 @@ pub fn face_to_solid(
         )
     };
 
-    // Complete right face from the parts we already have.
     let f5467 = {
         let [v6, _] = half_edges[e21].vertices;
 
