@@ -157,15 +157,15 @@ fn model() -> TriMesh {
         )
     };
 
-    solids.push(Solid {
+    let s01234567 = solids.push(Solid {
         boundary: [f0264, f2013, f1045, f5467, f7623, f1573],
     });
 
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = solids
+    let triangles = solids[s01234567]
+        .boundary
         .into_iter()
-        .flat_map(|solid| solid.boundary)
         .flat_map(|f0123| faces[f0123].triangles)
         .map(|t012| &triangles[t012]);
 
