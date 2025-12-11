@@ -60,10 +60,10 @@ fn model() -> TriMesh {
     let [e04, e46, e62, e20] = {
         let f0462 = reverse::face(
             f0264,
+            &vertices,
             &mut half_edges,
             &mut faces,
             &mut triangles,
-            &vertices,
         );
 
         faces[f0462].boundary
