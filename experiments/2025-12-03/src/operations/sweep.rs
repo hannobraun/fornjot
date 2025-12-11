@@ -64,7 +64,6 @@ pub fn face_to_solid(
         let [v, _] = half_edges[e].boundary;
         v
     });
-    let [v0, v1, v2, v3] = bottom_vertices;
 
     let top_vertices = bottom_vertices.map(|v| {
         let position = vertices[v].position + path;
@@ -84,6 +83,8 @@ pub fn face_to_solid(
         triangles,
         faces,
     );
+
+    let [v0, v1, v2, v3] = bottom_vertices;
 
     let e04 = half_edges.push(HalfEdge { boundary: [v0, v4] });
     let e15 = half_edges.push(HalfEdge { boundary: [v1, v5] });
