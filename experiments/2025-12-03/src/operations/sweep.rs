@@ -86,7 +86,7 @@ pub fn face_to_solid(
         )
     };
 
-    let f5467 = {
+    let f7326 = {
         let [v2, _] = half_edges[e21].vertices;
 
         let [_, _, e37, _] = faces[f4037].boundary;
@@ -106,7 +106,7 @@ pub fn face_to_solid(
 
     // Complete back face from the parts we already have.
     let f7623 = {
-        let [_, _, e67, _] = faces[f5467].boundary;
+        let [_, _, e67, _] = faces[f7326].boundary;
         let e76 = reverse::half_edge(e67, half_edges);
 
         let [_, _, _, e32] = faces[f1045].boundary;
@@ -126,7 +126,7 @@ pub fn face_to_solid(
         let [_, _, _, e51] = faces[f4037].boundary;
         let e15 = reverse::half_edge(e51, half_edges);
 
-        let [_, _, _, e75] = faces[f5467].boundary;
+        let [_, _, _, e75] = faces[f7326].boundary;
         let e57 = reverse::half_edge(e75, half_edges);
 
         let [_, _, _, e37] = faces[f7623].boundary;
@@ -145,6 +145,6 @@ pub fn face_to_solid(
     };
 
     solids.push(Solid {
-        boundary: [f0123, f1045, f4037, f5467, f7623, f1573],
+        boundary: [f0123, f1045, f4037, f7326, f7623, f1573],
     })
 }
