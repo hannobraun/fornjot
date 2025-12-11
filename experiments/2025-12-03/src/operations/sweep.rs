@@ -64,14 +64,14 @@ pub fn face_to_solid(
         faces[f0321].boundary
     };
 
-    let f2013 = sweep::half_edge_to_face(
+    let f1045 = sweep::half_edge_to_face(
         e10, path, vertices, triangles, half_edges, faces,
     );
 
     let f4037 = {
         let [v3, _] = half_edges[e32].vertices;
 
-        let [_, e04, _, _] = faces[f2013].boundary;
+        let [_, e04, _, _] = faces[f1045].boundary;
         let e40 = reverse::half_edge(e04, half_edges);
 
         let v7 = vertices.push(vertices[v3].position + path);
@@ -110,7 +110,7 @@ pub fn face_to_solid(
         let [_, _, e67, _] = faces[f5467].boundary;
         let e76 = reverse::half_edge(e67, half_edges);
 
-        let [_, _, _, e32] = faces[f2013].boundary;
+        let [_, _, _, e32] = faces[f1045].boundary;
         let e23 = reverse::half_edge(e32, half_edges);
 
         face::from_three_half_edges(
@@ -133,7 +133,7 @@ pub fn face_to_solid(
         let [_, _, _, e37] = faces[f7623].boundary;
         let e73 = reverse::half_edge(e37, half_edges);
 
-        let [_, _, e13, _] = faces[f2013].boundary;
+        let [_, _, e13, _] = faces[f1045].boundary;
         let e31 = reverse::half_edge(e13, half_edges);
 
         face::from_four_half_edges(
@@ -146,6 +146,6 @@ pub fn face_to_solid(
     };
 
     solids.push(Solid {
-        boundary: [f0123, f2013, f4037, f5467, f7623, f1573],
+        boundary: [f0123, f1045, f4037, f5467, f7623, f1573],
     })
 }
