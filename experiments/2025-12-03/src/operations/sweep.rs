@@ -59,7 +59,6 @@ pub fn face_to_solid(
     let bottom_inv =
         reverse::face(bottom, vertices, triangles, half_edges, faces);
     let bottom_edges_for_sides = faces[bottom_inv].boundary;
-    let [e01, e12, e23, e30] = bottom_edges_for_sides;
 
     let [v0, v1, v2, v3] = bottom_edges_for_sides.map(|e| {
         let [v, _] = half_edges[e].boundary;
@@ -98,6 +97,8 @@ pub fn face_to_solid(
     let e51 = reverse::half_edge(e15, half_edges);
     let e62 = reverse::half_edge(e26, half_edges);
     let e73 = reverse::half_edge(e37, half_edges);
+
+    let [e01, e12, e23, e30] = bottom_edges_for_sides;
 
     let f0154 = face::from_four_half_edges(
         [e01, e15, e54, e40],
