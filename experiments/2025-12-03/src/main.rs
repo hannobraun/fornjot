@@ -165,7 +165,7 @@ fn model() -> TriMesh {
 
     let triangles = solids
         .into_iter()
-        .flat_map(|solid: Solid| solid.boundary)
+        .flat_map(|solid| solid.boundary)
         .flat_map(|f0123| faces[f0123].triangles)
         .map(|t012| &triangles[t012]);
 
