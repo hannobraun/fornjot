@@ -3,7 +3,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use crate::{
     objects::{
         geometry::{Triangle, Triangles, Vertex},
-        topology::{Face, Faces, HalfEdge},
+        topology::{Face, Faces, HalfEdge, Solid},
     },
     operations::{face, sweep},
     store::{Index, Store},
@@ -33,6 +33,7 @@ fn model() -> TriMesh {
     // Topology
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
+    let mut solids = Store::default();
 
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
@@ -156,10 +157,15 @@ fn model() -> TriMesh {
         )
     };
 
+    solids.push(Solid {
+        boundary: [f0264, f2013, f1045, f5467, f7623, f1573],
+    });
+
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = [f0264, f2013, f1045, f5467, f7623, f1573]
+    let triangles = solids
         .into_iter()
+        .flat_map(|solid: Solid| solid.boundary)
         .flat_map(|f0123| faces[f0123].triangles)
         .map(|t012| &triangles[t012]);
 

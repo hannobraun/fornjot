@@ -16,6 +16,11 @@ pub struct Face {
     pub triangles: [Index<Triangle>; 2],
 }
 
+#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub struct Solid {
+    pub boundary: [Index<Face>; 6],
+}
+
 #[derive(Default)]
 pub struct Faces {
     inner: Store<Face>,
