@@ -58,10 +58,10 @@ pub fn face_to_solid(
 
     // Prepare all the bottom edges we're going to need for the side faces.
     let [e04, e46, e62, e20] = {
-        let f0462 =
+        let f0321 =
             reverse::face(f0123, vertices, triangles, half_edges, faces);
 
-        faces[f0462].boundary
+        faces[f0321].boundary
     };
 
     // Sweep lower-left edge into left face.
