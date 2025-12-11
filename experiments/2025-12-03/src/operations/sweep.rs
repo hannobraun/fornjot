@@ -56,7 +56,7 @@ pub fn face_to_solid(
     // Prepare all the bottom edges we're going to need for the side faces.
     let [e04, e46, e62, e20] = {
         let f0462 =
-            reverse::face(f0264, vertices, half_edges, faces, triangles);
+            reverse::face(f0264, vertices, triangles, half_edges, faces);
 
         faces[f0462].boundary
     };

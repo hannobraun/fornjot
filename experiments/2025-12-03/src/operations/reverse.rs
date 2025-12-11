@@ -18,9 +18,9 @@ pub fn half_edge(
 pub fn face(
     f0123: Index<Face>,
     vertices: &Store<Vertex>,
+    triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
-    triangles: &mut Triangles,
 ) -> Index<Face> {
     let [e10, e21, e32, e03] =
         faces[f0123].boundary.map(|e| half_edge(e, half_edges));
