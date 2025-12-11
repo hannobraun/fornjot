@@ -47,12 +47,15 @@ pub fn half_edge_to_face(
 
 pub fn face_to_solid(
     f0264: Index<Face>,
+    path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
+    let path = path.into();
+
     // Prepare all the bottom edges we're going to need for the side faces.
     let [e04, e46, e62, e20] = {
         let f0462 =
@@ -63,12 +66,7 @@ pub fn face_to_solid(
 
     // Sweep lower-left edge into left face.
     let f2013 = sweep::half_edge_to_face(
-        e20,
-        [0., 0., 1.],
-        vertices,
-        triangles,
-        half_edges,
-        faces,
+        e20, path, vertices, triangles, half_edges, faces,
     );
 
     // Complete front face from the parts we already have.
@@ -78,7 +76,7 @@ pub fn face_to_solid(
         let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse::half_edge(e01, half_edges);
 
-        let v5 = vertices.push(vertices[v4].position + [0., 0., 1.]);
+        let v5 = vertices.push(vertices[v4].position + path);
 
         face::from_two_half_edges_and_vertex(
             [e10, e04],
@@ -97,7 +95,7 @@ pub fn face_to_solid(
         let [_, _, e45, _] = faces[f1045].boundary;
         let e54 = reverse::half_edge(e45, half_edges);
 
-        let v7 = vertices.push(vertices[v6].position + [0., 0., 1.]);
+        let v7 = vertices.push(vertices[v6].position + path);
 
         face::from_two_half_edges_and_vertex(
             [e54, e46],

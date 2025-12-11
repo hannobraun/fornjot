@@ -58,6 +58,7 @@ fn model() -> TriMesh {
 
     let s01234567 = sweep::face_to_solid(
         f0264,
+        [0., 0., 1.],
         &mut vertices,
         &mut triangles,
         &mut half_edges,
