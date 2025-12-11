@@ -105,8 +105,8 @@ pub fn face_to_solid(
     };
 
     let f7623 = {
-        let [_, _, e67, _] = faces[f7326].boundary;
-        let e76 = reverse::half_edge(e67, half_edges);
+        let [_, _, e26, _] = faces[f7326].boundary;
+        let e76 = reverse::half_edge(e26, half_edges);
 
         let [_, _, _, e32] = faces[f1045].boundary;
         let e23 = reverse::half_edge(e32, half_edges);
