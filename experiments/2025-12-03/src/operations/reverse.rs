@@ -15,7 +15,7 @@ pub fn half_edge(
     half_edges.push(HalfEdge { vertices: [v1, v0] })
 }
 
-pub fn reverse_face(
+pub fn face(
     f0123: Index<Face>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,

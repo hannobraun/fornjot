@@ -5,11 +5,7 @@ use crate::{
         geometry::{Triangle, Triangles},
         topology::{Faces, Solid},
     },
-    operations::{
-        face,
-        reverse::{self, reverse_face},
-        sweep,
-    },
+    operations::{face, reverse, sweep},
     store::Store,
 };
 
@@ -62,7 +58,7 @@ fn model() -> TriMesh {
 
     // Prepare all the bottom edges we're going to need for the side faces.
     let [e04, e46, e62, e20] = {
-        let f0462 = reverse_face(
+        let f0462 = reverse::face(
             f0264,
             &mut half_edges,
             &mut faces,
