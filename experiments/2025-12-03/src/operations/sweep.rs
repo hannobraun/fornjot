@@ -46,7 +46,7 @@ pub fn half_edge_to_face(
 }
 
 pub fn face_to_solid(
-    f0321: Index<Face>,
+    bottom: Index<Face>,
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
@@ -56,7 +56,7 @@ pub fn face_to_solid(
 ) -> Index<Solid> {
     let path = path.into();
 
-    let f0123 = reverse::face(f0321, vertices, triangles, half_edges, faces);
+    let f0123 = reverse::face(bottom, vertices, triangles, half_edges, faces);
     let [e01, e12, e23, e30] = faces[f0123].boundary;
 
     let [v0, _] = half_edges[e01].boundary;
@@ -127,6 +127,6 @@ pub fn face_to_solid(
     );
 
     solids.push(Solid {
-        boundary: [f0321, f0154, f1265, f2376, f3047, f4567],
+        boundary: [bottom, f0154, f1265, f2376, f3047, f4567],
     })
 }
