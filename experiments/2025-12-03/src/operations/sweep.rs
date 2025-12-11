@@ -74,11 +74,11 @@ pub fn face_to_solid(
         let [_, e04, _, _] = faces[f2013].boundary;
         let e40 = reverse::half_edge(e04, half_edges);
 
-        let v5 = vertices.push(vertices[v3].position + path);
+        let v7 = vertices.push(vertices[v3].position + path);
 
         face::from_two_half_edges_and_vertex(
             [e40, e03],
-            v5,
+            v7,
             vertices,
             triangles,
             half_edges,
