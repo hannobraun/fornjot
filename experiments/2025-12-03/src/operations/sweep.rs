@@ -58,7 +58,7 @@ pub fn face_to_solid(
 
     // Prepare all the bottom edges we're going to need for the side faces.
     let f0123 = reverse::face(f0321, vertices, triangles, half_edges, faces);
-    let [e03, e32, e21, e10] = faces[f0123].boundary;
+    let [e01, e32, e21, e10] = faces[f0123].boundary;
 
     let f1045 = sweep::half_edge_to_face(
         e10, path, vertices, triangles, half_edges, faces,
@@ -73,7 +73,7 @@ pub fn face_to_solid(
         let v7 = vertices.push(vertices[v3].position + path);
 
         face::from_two_half_edges_and_vertex(
-            [e40, e03],
+            [e40, e01],
             v7,
             vertices,
             triangles,
