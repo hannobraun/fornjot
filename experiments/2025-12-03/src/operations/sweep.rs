@@ -70,12 +70,12 @@ pub fn face_to_solid(
 
     // Complete front face from the parts we already have.
     let f1045 = {
-        let [v4, _] = half_edges[e32].vertices;
+        let [v3, _] = half_edges[e32].vertices;
 
         let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse::half_edge(e01, half_edges);
 
-        let v5 = vertices.push(vertices[v4].position + path);
+        let v5 = vertices.push(vertices[v3].position + path);
 
         face::from_two_half_edges_and_vertex(
             [e10, e03],
