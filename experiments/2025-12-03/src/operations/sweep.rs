@@ -68,7 +68,6 @@ pub fn face_to_solid(
         e10, path, vertices, triangles, half_edges, faces,
     );
 
-    // Complete front face from the parts we already have.
     let f1045 = {
         let [v3, _] = half_edges[e32].vertices;
 
