@@ -61,7 +61,7 @@ pub fn face_to_solid(
     let bottom_edges_for_sides = faces[bottom_inv].boundary;
     let [e01, e12, e23, e30] = bottom_edges_for_sides;
 
-    let [v0, v1, v2, v3] = [e01, e12, e23, e30].map(|e| {
+    let [v0, v1, v2, v3] = bottom_edges_for_sides.map(|e| {
         let [v, _] = half_edges[e].boundary;
         v
     });
