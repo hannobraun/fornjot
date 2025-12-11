@@ -89,8 +89,8 @@ pub fn face_to_solid(
     let f5467 = {
         let [v2, _] = half_edges[e21].vertices;
 
-        let [_, _, e45, _] = faces[f4037].boundary;
-        let e54 = reverse::half_edge(e45, half_edges);
+        let [_, _, e37, _] = faces[f4037].boundary;
+        let e54 = reverse::half_edge(e37, half_edges);
 
         let v7 = vertices.push(vertices[v2].position + path);
 
