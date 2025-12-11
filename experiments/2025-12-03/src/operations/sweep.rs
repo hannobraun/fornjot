@@ -3,9 +3,9 @@ use fj_math::Vector;
 use crate::{
     objects::{
         geometry::{Triangles, Vertex},
-        topology::{Face, Faces, HalfEdge},
+        topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::face,
+    operations::{face, reverse, sweep},
     store::{Index, Store},
 };
 
@@ -43,4 +43,113 @@ pub fn half_edge_to_face(
         half_edges,
         faces,
     )
+}
+
+pub fn face_to_solid(
+    f0264: Index<Face>,
+    vertices: &mut Store<Vertex>,
+    triangles: &mut Triangles,
+    half_edges: &mut Store<HalfEdge>,
+    faces: &mut Faces,
+    solids: &mut Store<Solid>,
+) -> Index<Solid> {
+    // Prepare all the bottom edges we're going to need for the side faces.
+    let [e04, e46, e62, e20] = {
+        let f0462 =
+            reverse::face(f0264, vertices, half_edges, faces, triangles);
+
+        faces[f0462].boundary
+    };
+
+    // Sweep lower-left edge into left face.
+    let f2013 = sweep::half_edge_to_face(
+        e20,
+        [0., 0., 1.],
+        vertices,
+        triangles,
+        half_edges,
+        faces,
+    );
+
+    // Complete front face from the parts we already have.
+    let f1045 = {
+        let [v4, _] = half_edges[e46].vertices;
+
+        let [_, e01, _, _] = faces[f2013].boundary;
+        let e10 = reverse::half_edge(e01, half_edges);
+
+        let v5 = vertices.push(vertices[v4].position + [0., 0., 1.]);
+
+        face::from_two_half_edges_and_vertex(
+            [e10, e04],
+            v5,
+            vertices,
+            triangles,
+            half_edges,
+            faces,
+        )
+    };
+
+    // Complete right face from the parts we already have.
+    let f5467 = {
+        let [v6, _] = half_edges[e62].vertices;
+
+        let [_, _, e45, _] = faces[f1045].boundary;
+        let e54 = reverse::half_edge(e45, half_edges);
+
+        let v7 = vertices.push(vertices[v6].position + [0., 0., 1.]);
+
+        face::from_two_half_edges_and_vertex(
+            [e54, e46],
+            v7,
+            vertices,
+            triangles,
+            half_edges,
+            faces,
+        )
+    };
+
+    // Complete back face from the parts we already have.
+    let f7623 = {
+        let [_, _, e67, _] = faces[f5467].boundary;
+        let e76 = reverse::half_edge(e67, half_edges);
+
+        let [_, _, _, e32] = faces[f2013].boundary;
+        let e23 = reverse::half_edge(e32, half_edges);
+
+        face::from_three_half_edges(
+            [e76, e62, e23],
+            vertices,
+            triangles,
+            half_edges,
+            faces,
+        )
+    };
+
+    // Complete top face from the parts we already have.
+    let f1573 = {
+        let [_, _, _, e51] = faces[f1045].boundary;
+        let e15 = reverse::half_edge(e51, half_edges);
+
+        let [_, _, _, e75] = faces[f5467].boundary;
+        let e57 = reverse::half_edge(e75, half_edges);
+
+        let [_, _, _, e37] = faces[f7623].boundary;
+        let e73 = reverse::half_edge(e37, half_edges);
+
+        let [_, _, e13, _] = faces[f2013].boundary;
+        let e31 = reverse::half_edge(e13, half_edges);
+
+        face::from_four_half_edges(
+            [e15, e57, e73, e31],
+            vertices,
+            half_edges,
+            triangles,
+            faces,
+        )
+    };
+
+    solids.push(Solid {
+        boundary: [f0264, f2013, f1045, f5467, f7623, f1573],
+    })
 }
