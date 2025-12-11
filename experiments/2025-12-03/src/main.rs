@@ -33,7 +33,7 @@ fn model() -> TriMesh {
     // Topology
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
-    let mut solids = Store::default();
+    let mut solids = Store::<Solid>::default();
 
     // Push initial vertex.
     let v0 = vertices.push([0., 0., 0.]);
