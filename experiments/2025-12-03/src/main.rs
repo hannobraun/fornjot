@@ -187,20 +187,6 @@ fn model() -> TriMesh {
     tri_mesh
 }
 
-pub fn reverse_triangle(
-    t012: Index<Triangle>,
-    triangles: &mut Triangles,
-    vertices: &Store<Vertex>,
-) -> Index<Triangle> {
-    let [v0, v1, v2] = triangles[t012].vertices;
-    triangles.push(
-        Triangle {
-            vertices: [v0, v2, v1],
-        },
-        vertices,
-    )
-}
-
 pub fn reverse_half_edge(
     e: Index<HalfEdge>,
     half_edges: &mut Store<HalfEdge>,
