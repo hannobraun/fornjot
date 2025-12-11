@@ -54,10 +54,6 @@ impl Triangles {
 
         self.store.push(triangle)
     }
-
-    pub fn into_store(self) -> Store<Triangle> {
-        self.store
-    }
 }
 
 impl ops::Index<Index<Triangle>> for Triangles {
