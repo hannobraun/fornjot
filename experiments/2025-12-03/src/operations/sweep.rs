@@ -66,10 +66,10 @@ pub fn face_to_solid(
     });
     let [v0, v1, v2, v3] = bottom_vertices;
 
-    let v4 = vertices.push(vertices[v0].position + path);
-    let v5 = vertices.push(vertices[v1].position + path);
-    let v6 = vertices.push(vertices[v2].position + path);
-    let v7 = vertices.push(vertices[v3].position + path);
+    let [v4, v5, v6, v7] = bottom_vertices.map(|v| {
+        let position = vertices[v].position + path;
+        vertices.push(Vertex { position })
+    });
 
     let e45 = half_edges.push(HalfEdge { boundary: [v4, v5] });
     let e56 = half_edges.push(HalfEdge { boundary: [v5, v6] });
