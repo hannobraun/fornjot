@@ -106,13 +106,13 @@ pub fn face_to_solid(
 
     let f7623 = {
         let [_, _, e26, _] = faces[f7326].boundary;
-        let e76 = reverse::half_edge(e26, half_edges);
+        let e62 = reverse::half_edge(e26, half_edges);
 
         let [_, _, _, e32] = faces[f1045].boundary;
         let e23 = reverse::half_edge(e32, half_edges);
 
         face::from_three_half_edges(
-            [e76, e21, e23],
+            [e62, e21, e23],
             vertices,
             triangles,
             half_edges,
