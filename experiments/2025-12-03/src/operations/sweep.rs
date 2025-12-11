@@ -18,7 +18,7 @@ pub fn vertex_to_half_edge(
     let path = path.into();
 
     let v1 = vertices.push(vertices[v0].position + path);
-    half_edges.push(HalfEdge { vertices: [v0, v1] })
+    half_edges.push(HalfEdge { boundary: [v0, v1] })
 }
 
 pub fn half_edge_to_face(
@@ -32,7 +32,7 @@ pub fn half_edge_to_face(
     let path = path.into();
 
     let [v3, v2] = half_edges[e01]
-        .vertices
+        .boundary
         .map(|v| vertices.push(vertices[v].position + path));
 
     face::from_half_edge_and_two_vertices(
@@ -59,20 +59,20 @@ pub fn face_to_solid(
     let f0123 = reverse::face(f0321, vertices, triangles, half_edges, faces);
     let [e01, e12, e23, e30] = faces[f0123].boundary;
 
-    let [v0, _] = half_edges[e01].vertices;
-    let [v1, _] = half_edges[e12].vertices;
-    let [v2, _] = half_edges[e23].vertices;
-    let [v3, _] = half_edges[e30].vertices;
+    let [v0, _] = half_edges[e01].boundary;
+    let [v1, _] = half_edges[e12].boundary;
+    let [v2, _] = half_edges[e23].boundary;
+    let [v3, _] = half_edges[e30].boundary;
 
     let v4 = vertices.push(vertices[v0].position + path);
     let v5 = vertices.push(vertices[v1].position + path);
     let v6 = vertices.push(vertices[v2].position + path);
     let v7 = vertices.push(vertices[v3].position + path);
 
-    let e45 = half_edges.push(HalfEdge { vertices: [v4, v5] });
-    let e56 = half_edges.push(HalfEdge { vertices: [v5, v6] });
-    let e67 = half_edges.push(HalfEdge { vertices: [v6, v7] });
-    let e74 = half_edges.push(HalfEdge { vertices: [v7, v4] });
+    let e45 = half_edges.push(HalfEdge { boundary: [v4, v5] });
+    let e56 = half_edges.push(HalfEdge { boundary: [v5, v6] });
+    let e67 = half_edges.push(HalfEdge { boundary: [v6, v7] });
+    let e74 = half_edges.push(HalfEdge { boundary: [v7, v4] });
 
     let f4567 = face::from_four_half_edges(
         [e45, e56, e67, e74],
@@ -82,10 +82,10 @@ pub fn face_to_solid(
         faces,
     );
 
-    let e04 = half_edges.push(HalfEdge { vertices: [v0, v4] });
-    let e15 = half_edges.push(HalfEdge { vertices: [v1, v5] });
-    let e26 = half_edges.push(HalfEdge { vertices: [v2, v6] });
-    let e37 = half_edges.push(HalfEdge { vertices: [v3, v7] });
+    let e04 = half_edges.push(HalfEdge { boundary: [v0, v4] });
+    let e15 = half_edges.push(HalfEdge { boundary: [v1, v5] });
+    let e26 = half_edges.push(HalfEdge { boundary: [v2, v6] });
+    let e37 = half_edges.push(HalfEdge { boundary: [v3, v7] });
 
     let e54 = reverse::half_edge(e45, half_edges);
     let e65 = reverse::half_edge(e56, half_edges);

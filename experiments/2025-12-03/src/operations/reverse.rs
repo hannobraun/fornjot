@@ -11,8 +11,8 @@ pub fn half_edge(
     e: Index<HalfEdge>,
     half_edges: &mut Store<HalfEdge>,
 ) -> Index<HalfEdge> {
-    let [v0, v1] = half_edges[e].vertices;
-    half_edges.push(HalfEdge { vertices: [v1, v0] })
+    let [v0, v1] = half_edges[e].boundary;
+    half_edges.push(HalfEdge { boundary: [v1, v0] })
 }
 
 pub fn face(

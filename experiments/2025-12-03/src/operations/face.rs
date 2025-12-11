@@ -14,11 +14,11 @@ pub fn from_half_edge_and_two_vertices(
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [v0, v1] = half_edges[e01].vertices;
+    let [v0, v1] = half_edges[e01].boundary;
 
-    let e12 = half_edges.push(HalfEdge { vertices: [v1, v2] });
-    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
+    let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
+    let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
+    let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
     from_four_half_edges(
         [e01, e12, e23, e30],
@@ -36,10 +36,10 @@ pub fn from_four_half_edges(
     triangles: &mut Triangles,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [v0, v1b] = half_edges[e01].vertices;
-    let [v1, v2b] = half_edges[e12].vertices;
-    let [v2, v3b] = half_edges[e23].vertices;
-    let [v3, v0b] = half_edges[e30].vertices;
+    let [v0, v1b] = half_edges[e01].boundary;
+    let [v1, v2b] = half_edges[e12].boundary;
+    let [v2, v3b] = half_edges[e23].boundary;
+    let [v3, v0b] = half_edges[e30].boundary;
 
     assert_eq!(v0, v0b);
     assert_eq!(v1, v1b);
