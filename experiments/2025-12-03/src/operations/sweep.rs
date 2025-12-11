@@ -64,7 +64,6 @@ pub fn face_to_solid(
         faces[f0321].boundary
     };
 
-    // Sweep lower-left edge into left face.
     let f2013 = sweep::half_edge_to_face(
         e10, path, vertices, triangles, half_edges, faces,
     );
