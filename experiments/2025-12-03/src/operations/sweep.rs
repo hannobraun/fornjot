@@ -59,10 +59,10 @@ pub fn face_to_solid(
     let f0123 = reverse::face(bottom, vertices, triangles, half_edges, faces);
     let [e01, e12, e23, e30] = faces[f0123].boundary;
 
-    let [v0, _] = half_edges[e01].boundary;
-    let [v1, _] = half_edges[e12].boundary;
-    let [v2, _] = half_edges[e23].boundary;
-    let [v3, _] = half_edges[e30].boundary;
+    let [v0, v1, v2, v3] = [e01, e12, e23, e30].map(|e| {
+        let [v, _] = half_edges[e].boundary;
+        v
+    });
 
     let v4 = vertices.push(vertices[v0].position + path);
     let v5 = vertices.push(vertices[v1].position + path);
