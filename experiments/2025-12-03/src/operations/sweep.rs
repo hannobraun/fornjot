@@ -5,7 +5,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::{face, reverse, sweep},
+    operations::{face, reverse},
     store::{Index, Store},
 };
 
@@ -56,89 +56,77 @@ pub fn face_to_solid(
 ) -> Index<Solid> {
     let path = path.into();
 
-    // Prepare all the bottom edges we're going to need for the side faces.
     let f0123 = reverse::face(f0321, vertices, triangles, half_edges, faces);
     let [e01, e12, e23, e30] = faces[f0123].boundary;
 
-    let f1045 = sweep::half_edge_to_face(
-        e30, path, vertices, triangles, half_edges, faces,
+    let [v0, _] = half_edges[e01].vertices;
+    let [v1, _] = half_edges[e12].vertices;
+    let [v2, _] = half_edges[e23].vertices;
+    let [v3, _] = half_edges[e30].vertices;
+
+    let v4 = vertices.push(vertices[v0].position + path);
+    let v5 = vertices.push(vertices[v1].position + path);
+    let v6 = vertices.push(vertices[v2].position + path);
+    let v7 = vertices.push(vertices[v3].position + path);
+
+    let e45 = half_edges.push(HalfEdge { vertices: [v4, v5] });
+    let e56 = half_edges.push(HalfEdge { vertices: [v5, v6] });
+    let e67 = half_edges.push(HalfEdge { vertices: [v6, v7] });
+    let e74 = half_edges.push(HalfEdge { vertices: [v7, v4] });
+
+    let f4567 = face::from_four_half_edges(
+        [e45, e56, e67, e74],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
     );
 
-    let f4037 = {
-        let [v3, _] = half_edges[e12].vertices;
+    let e04 = half_edges.push(HalfEdge { vertices: [v0, v4] });
+    let e15 = half_edges.push(HalfEdge { vertices: [v1, v5] });
+    let e26 = half_edges.push(HalfEdge { vertices: [v2, v6] });
+    let e37 = half_edges.push(HalfEdge { vertices: [v3, v7] });
 
-        let [_, e04, _, _] = faces[f1045].boundary;
-        let e40 = reverse::half_edge(e04, half_edges);
+    let e54 = reverse::half_edge(e45, half_edges);
+    let e65 = reverse::half_edge(e56, half_edges);
+    let e76 = reverse::half_edge(e67, half_edges);
+    let e47 = reverse::half_edge(e74, half_edges);
 
-        let v7 = vertices.push(vertices[v3].position + path);
+    let e40 = reverse::half_edge(e04, half_edges);
+    let e51 = reverse::half_edge(e15, half_edges);
+    let e62 = reverse::half_edge(e26, half_edges);
+    let e73 = reverse::half_edge(e37, half_edges);
 
-        face::from_two_half_edges_and_vertex(
-            [e40, e01],
-            v7,
-            vertices,
-            triangles,
-            half_edges,
-            faces,
-        )
-    };
-
-    let f7326 = {
-        let [v2, _] = half_edges[e23].vertices;
-
-        let [_, _, e37, _] = faces[f4037].boundary;
-        let e73 = reverse::half_edge(e37, half_edges);
-
-        let v6 = vertices.push(vertices[v2].position + path);
-
-        face::from_two_half_edges_and_vertex(
-            [e73, e12],
-            v6,
-            vertices,
-            triangles,
-            half_edges,
-            faces,
-        )
-    };
-
-    let f6215 = {
-        let [_, _, e26, _] = faces[f7326].boundary;
-        let e62 = reverse::half_edge(e26, half_edges);
-
-        let [_, _, _, e51] = faces[f1045].boundary;
-        let e15 = reverse::half_edge(e51, half_edges);
-
-        face::from_three_half_edges(
-            [e62, e23, e15],
-            vertices,
-            triangles,
-            half_edges,
-            faces,
-        )
-    };
-
-    let f4765 = {
-        let [_, _, _, e74] = faces[f4037].boundary;
-        let e47 = reverse::half_edge(e74, half_edges);
-
-        let [_, _, _, e67] = faces[f7326].boundary;
-        let e76 = reverse::half_edge(e67, half_edges);
-
-        let [_, _, _, e56] = faces[f6215].boundary;
-        let e65 = reverse::half_edge(e56, half_edges);
-
-        let [_, _, e45, _] = faces[f1045].boundary;
-        let e54 = reverse::half_edge(e45, half_edges);
-
-        face::from_four_half_edges(
-            [e47, e76, e65, e54],
-            vertices,
-            half_edges,
-            triangles,
-            faces,
-        )
-    };
+    let f0154 = face::from_four_half_edges(
+        [e01, e15, e54, e40],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
+    );
+    let f1265 = face::from_four_half_edges(
+        [e12, e26, e65, e51],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
+    );
+    let f2376 = face::from_four_half_edges(
+        [e23, e37, e76, e62],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
+    );
+    let f3047 = face::from_four_half_edges(
+        [e30, e04, e47, e73],
+        vertices,
+        half_edges,
+        triangles,
+        faces,
+    );
 
     solids.push(Solid {
-        boundary: [f0321, f1045, f4037, f7326, f6215, f4765],
+        boundary: [f0321, f0154, f1265, f2376, f3047, f4567],
     })
 }

@@ -29,50 +29,6 @@ pub fn from_half_edge_and_two_vertices(
     )
 }
 
-pub fn from_two_half_edges_and_vertex(
-    [e01, e12]: [Index<HalfEdge>; 2],
-    v3: Index<Vertex>,
-    vertices: &Store<Vertex>,
-    triangles: &mut Triangles,
-    half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
-) -> Index<Face> {
-    let [v0, _] = half_edges[e01].vertices;
-    let [_, v2] = half_edges[e12].vertices;
-
-    let e23 = half_edges.push(HalfEdge { vertices: [v2, v3] });
-    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
-
-    from_four_half_edges(
-        [e01, e12, e23, e30],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    )
-}
-
-pub fn from_three_half_edges(
-    [e01, e12, e23]: [Index<HalfEdge>; 3],
-    vertices: &Store<Vertex>,
-    triangles: &mut Triangles,
-    half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
-) -> Index<Face> {
-    let [v0, _] = half_edges[e01].vertices;
-    let [_, v3] = half_edges[e23].vertices;
-
-    let e30 = half_edges.push(HalfEdge { vertices: [v3, v0] });
-
-    from_four_half_edges(
-        [e01, e12, e23, e30],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    )
-}
-
 pub fn from_four_half_edges(
     [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
     vertices: &Store<Vertex>,
