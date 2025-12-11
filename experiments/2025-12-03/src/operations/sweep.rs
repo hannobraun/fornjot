@@ -57,7 +57,7 @@ pub fn face_to_solid(
     let path = path.into();
 
     // Prepare all the bottom edges we're going to need for the side faces.
-    let [e03, e46, e62, e20] = {
+    let [e03, e32, e62, e20] = {
         let f0321 =
             reverse::face(f0123, vertices, triangles, half_edges, faces);
 
@@ -71,7 +71,7 @@ pub fn face_to_solid(
 
     // Complete front face from the parts we already have.
     let f1045 = {
-        let [v4, _] = half_edges[e46].vertices;
+        let [v4, _] = half_edges[e32].vertices;
 
         let [_, e01, _, _] = faces[f2013].boundary;
         let e10 = reverse::half_edge(e01, half_edges);
@@ -98,7 +98,7 @@ pub fn face_to_solid(
         let v7 = vertices.push(vertices[v6].position + path);
 
         face::from_two_half_edges_and_vertex(
-            [e54, e46],
+            [e54, e32],
             v7,
             vertices,
             triangles,
