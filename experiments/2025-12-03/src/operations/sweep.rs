@@ -56,8 +56,9 @@ pub fn face_to_solid(
 ) -> Index<Solid> {
     let path = path.into();
 
-    let f0123 = reverse::face(bottom, vertices, triangles, half_edges, faces);
-    let [e01, e12, e23, e30] = faces[f0123].boundary;
+    let bottom_inv =
+        reverse::face(bottom, vertices, triangles, half_edges, faces);
+    let [e01, e12, e23, e30] = faces[bottom_inv].boundary;
 
     let [v0, v1, v2, v3] = [e01, e12, e23, e30].map(|e| {
         let [v, _] = half_edges[e].boundary;
