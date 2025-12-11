@@ -7,7 +7,7 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn reverse_half_edge(
+pub fn half_edge(
     e: Index<HalfEdge>,
     half_edges: &mut Store<HalfEdge>,
 ) -> Index<HalfEdge> {
@@ -22,9 +22,8 @@ pub fn reverse_face(
     triangles: &mut Triangles,
     vertices: &Store<Vertex>,
 ) -> Index<Face> {
-    let [e10, e21, e32, e03] = faces[f0123]
-        .boundary
-        .map(|e| reverse_half_edge(e, half_edges));
+    let [e10, e21, e32, e03] =
+        faces[f0123].boundary.map(|e| half_edge(e, half_edges));
 
     face::from_four_half_edges(
         [e03, e32, e21, e10],

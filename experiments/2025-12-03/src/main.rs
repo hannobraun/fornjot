@@ -7,7 +7,7 @@ use crate::{
     },
     operations::{
         face,
-        reverse::{reverse_face, reverse_half_edge},
+        reverse::{self, reverse_face},
         sweep,
     },
     store::Store,
@@ -88,7 +88,7 @@ fn model() -> TriMesh {
         let [v4, _] = half_edges[e46].vertices;
 
         let [_, e01, _, _] = faces[f2013].boundary;
-        let e10 = reverse_half_edge(e01, &mut half_edges);
+        let e10 = reverse::half_edge(e01, &mut half_edges);
 
         let v5 = vertices.push(vertices[v4].position + [0., 0., 1.]);
 
@@ -107,7 +107,7 @@ fn model() -> TriMesh {
         let [v6, _] = half_edges[e62].vertices;
 
         let [_, _, e45, _] = faces[f1045].boundary;
-        let e54 = reverse_half_edge(e45, &mut half_edges);
+        let e54 = reverse::half_edge(e45, &mut half_edges);
 
         let v7 = vertices.push(vertices[v6].position + [0., 0., 1.]);
 
@@ -124,10 +124,10 @@ fn model() -> TriMesh {
     // Complete back face from the parts we already have.
     let f7623 = {
         let [_, _, e67, _] = faces[f5467].boundary;
-        let e76 = reverse_half_edge(e67, &mut half_edges);
+        let e76 = reverse::half_edge(e67, &mut half_edges);
 
         let [_, _, _, e32] = faces[f2013].boundary;
-        let e23 = reverse_half_edge(e32, &mut half_edges);
+        let e23 = reverse::half_edge(e32, &mut half_edges);
 
         face::from_three_half_edges(
             [e76, e62, e23],
@@ -141,16 +141,16 @@ fn model() -> TriMesh {
     // Complete top face from the parts we already have.
     let f1573 = {
         let [_, _, _, e51] = faces[f1045].boundary;
-        let e15 = reverse_half_edge(e51, &mut half_edges);
+        let e15 = reverse::half_edge(e51, &mut half_edges);
 
         let [_, _, _, e75] = faces[f5467].boundary;
-        let e57 = reverse_half_edge(e75, &mut half_edges);
+        let e57 = reverse::half_edge(e75, &mut half_edges);
 
         let [_, _, _, e37] = faces[f7623].boundary;
-        let e73 = reverse_half_edge(e37, &mut half_edges);
+        let e73 = reverse::half_edge(e37, &mut half_edges);
 
         let [_, _, e13, _] = faces[f2013].boundary;
-        let e31 = reverse_half_edge(e13, &mut half_edges);
+        let e31 = reverse::half_edge(e13, &mut half_edges);
 
         face::from_four_half_edges(
             [e15, e57, e73, e31],
