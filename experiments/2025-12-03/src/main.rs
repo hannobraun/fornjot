@@ -56,6 +56,7 @@ fn model() -> TriMesh {
         &mut faces,
     );
 
+    // Sweep bottom face into cube.
     let s01234567 = sweep::face_to_solid(
         f0264,
         [0., 0., 1.],
