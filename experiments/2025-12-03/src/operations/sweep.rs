@@ -79,7 +79,7 @@ pub fn face_to_solid(
         .expect("Original array had four entries; output must have the same.");
     let [e45, e56, e67, e74] = top_edges_for_top;
 
-    let f4567 = face::from_four_half_edges(
+    let top = face::from_four_half_edges(
         [e45, e56, e67, e74],
         vertices,
         half_edges,
@@ -137,6 +137,6 @@ pub fn face_to_solid(
     );
 
     solids.push(Solid {
-        boundary: [bottom, f0154, f1265, f2376, f3047, f4567],
+        boundary: [bottom, f0154, f1265, f2376, f3047, top],
     })
 }
