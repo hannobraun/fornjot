@@ -97,12 +97,8 @@ pub fn face_to_solid(
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
 
-    let [e45, e56, e67, e74] = top_edges_for_top;
-
-    let e54 = reverse::half_edge(e45, half_edges);
-    let e65 = reverse::half_edge(e56, half_edges);
-    let e76 = reverse::half_edge(e67, half_edges);
-    let e47 = reverse::half_edge(e74, half_edges);
+    let [e54, e65, e76, e47] =
+        top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
     let [e04, e15, e26, e37] = side_edges_going_up;
 
