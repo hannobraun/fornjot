@@ -86,7 +86,7 @@ pub fn face_to_solid(
         faces,
     );
 
-    let [e04, e15, e26, e37] = bottom_vertices
+    let side_edges_going_up = bottom_vertices
         .into_iter()
         .zip(top_vertices)
         .map(|(v_bottom, v_top)| {
@@ -96,6 +96,7 @@ pub fn face_to_solid(
         })
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
+    let [e04, e15, e26, e37] = side_edges_going_up;
 
     let [e45, e56, e67, e74] = top_edges_for_top;
 
