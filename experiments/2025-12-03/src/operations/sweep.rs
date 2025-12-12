@@ -86,13 +86,16 @@ pub fn face_to_solid(
         faces,
     );
 
-    let [v0, v1, v2, v3] = bottom_vertices;
-    let [v4, v5, v6, v7] = top_vertices;
-
-    let e04 = half_edges.push(HalfEdge { boundary: [v0, v4] });
-    let e15 = half_edges.push(HalfEdge { boundary: [v1, v5] });
-    let e26 = half_edges.push(HalfEdge { boundary: [v2, v6] });
-    let e37 = half_edges.push(HalfEdge { boundary: [v3, v7] });
+    let [e04, e15, e26, e37] = bottom_vertices
+        .into_iter()
+        .zip(top_vertices)
+        .map(|(v_bottom, v_top)| {
+            half_edges.push(HalfEdge {
+                boundary: [v_bottom, v_top],
+            })
+        })
+        .collect_array()
+        .expect("Original array had four entries; output must have the same.");
 
     let [e45, e56, e67, e74] = top_edges_for_top;
 
