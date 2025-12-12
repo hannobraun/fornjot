@@ -86,7 +86,7 @@ pub fn face_to_solid(
         faces,
     );
 
-    let side_edges_going_up = bottom_vertices
+    let side_edges_going_up: [_; 4] = bottom_vertices
         .into_iter()
         .zip(top_vertices)
         .map(|(v_bottom, v_top)| {
