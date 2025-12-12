@@ -77,7 +77,6 @@ pub fn face_to_solid(
         .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
-    let [e45, e56, e67, e74] = top_edges_for_top;
 
     let top = face::from_four_half_edges(
         top_edges_for_top,
@@ -94,6 +93,8 @@ pub fn face_to_solid(
     let e15 = half_edges.push(HalfEdge { boundary: [v1, v5] });
     let e26 = half_edges.push(HalfEdge { boundary: [v2, v6] });
     let e37 = half_edges.push(HalfEdge { boundary: [v3, v7] });
+
+    let [e45, e56, e67, e74] = top_edges_for_top;
 
     let e54 = reverse::half_edge(e45, half_edges);
     let e65 = reverse::half_edge(e56, half_edges);
