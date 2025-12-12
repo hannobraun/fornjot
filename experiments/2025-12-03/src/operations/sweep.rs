@@ -103,10 +103,8 @@ pub fn face_to_solid(
 
     let [e04, e15, e26, e37] = side_edges_going_up;
 
-    let e40 = reverse::half_edge(e04, half_edges);
-    let e51 = reverse::half_edge(e15, half_edges);
-    let e62 = reverse::half_edge(e26, half_edges);
-    let e73 = reverse::half_edge(e37, half_edges);
+    let [e40, e51, e62, e73] =
+        side_edges_going_up.map(|e| reverse::half_edge(e, half_edges));
 
     let [e01, e12, e23, e30] = bottom_edges_for_sides;
 
