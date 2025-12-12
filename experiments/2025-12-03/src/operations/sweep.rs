@@ -1,4 +1,5 @@
 use fj_math::Vector;
+use itertools::Itertools;
 
 use crate::{
     objects::{
@@ -71,10 +72,12 @@ pub fn face_to_solid(
     });
     let [v4, v5, v6, v7] = top_vertices;
 
-    let e45 = half_edges.push(HalfEdge { boundary: [v4, v5] });
-    let e56 = half_edges.push(HalfEdge { boundary: [v5, v6] });
-    let e67 = half_edges.push(HalfEdge { boundary: [v6, v7] });
-    let e74 = half_edges.push(HalfEdge { boundary: [v7, v4] });
+    let [e45, e56, e67, e74] = top_vertices
+        .into_iter()
+        .circular_tuple_windows()
+        .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
+        .collect_array()
+        .expect("Original array had four entries; output must have the same.");
 
     let f4567 = face::from_four_half_edges(
         [e45, e56, e67, e74],
