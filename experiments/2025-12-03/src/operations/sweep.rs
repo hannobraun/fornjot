@@ -80,7 +80,7 @@ pub fn face_to_solid(
     let [e45, e56, e67, e74] = top_edges_for_top;
 
     let top = face::from_four_half_edges(
-        [e45, e56, e67, e74],
+        top_edges_for_top,
         vertices,
         half_edges,
         triangles,
