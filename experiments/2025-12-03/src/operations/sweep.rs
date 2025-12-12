@@ -71,12 +71,13 @@ pub fn face_to_solid(
         vertices.push(Vertex { position })
     });
 
-    let [e45, e56, e67, e74] = top_vertices
+    let top_edges_for_top = top_vertices
         .into_iter()
         .circular_tuple_windows()
         .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
+    let [e45, e56, e67, e74] = top_edges_for_top;
 
     let f4567 = face::from_four_half_edges(
         [e45, e56, e67, e74],
