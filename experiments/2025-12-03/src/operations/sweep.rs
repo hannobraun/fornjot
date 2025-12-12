@@ -86,7 +86,7 @@ pub fn face_to_solid(
         faces,
     );
 
-    let side_edges_going_up: [_; 4] = bottom_vertices
+    let side_edges_going_up_shifted: [_; 4] = bottom_vertices
         .into_iter()
         .zip(top_vertices)
         .map(|(v_bottom, v_top)| {
@@ -101,10 +101,10 @@ pub fn face_to_solid(
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
     let side_edges_going_down =
-        side_edges_going_up.map(|e| reverse::half_edge(e, half_edges));
+        side_edges_going_up_shifted.map(|e| reverse::half_edge(e, half_edges));
 
     let [e01, e12, e23, e30] = bottom_edges_for_sides;
-    let [e04, e15, e26, e37] = side_edges_going_up;
+    let [e04, e15, e26, e37] = side_edges_going_up_shifted;
     let [e54, e65, e76, e47] = top_edges_for_sides;
     let [e40, e51, e62, e73] = side_edges_going_down;
 
