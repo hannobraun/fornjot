@@ -93,16 +93,13 @@ pub fn face_to_solid(
             .map(|(v_bottom, v_top)| HalfEdge {
                 boundary: [v_bottom, v_top],
             })
+            .cycle()
+            .skip(1)
+            .take(bottom_vertices.len())
             .collect_array::<4>()
             .expect(
                 "Original array had four entries; output must have the same.",
             );
-
-        let side_edges_going_up = side_edges_going_up
-            .into_iter()
-            .cycle()
-            .skip(1)
-            .take(side_edges_going_up.len());
 
         let side_edges_going_down = top_vertices
             .into_iter()
