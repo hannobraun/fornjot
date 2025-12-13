@@ -120,7 +120,7 @@ pub fn face_to_solid(
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
-    let [f0154, f1265, f2376, f3047] = bottom_edges_for_sides
+    let side_faces = bottom_edges_for_sides
         .into_iter()
         .zip(side_edges_going_up)
         .zip(top_edges_for_sides)
@@ -136,6 +136,7 @@ pub fn face_to_solid(
         })
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
+    let [f0154, f1265, f2376, f3047] = side_faces;
 
     solids.push(Solid {
         boundary: [bottom, f0154, f1265, f2376, f3047, top],
