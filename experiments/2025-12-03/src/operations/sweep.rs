@@ -87,7 +87,7 @@ pub fn face_to_solid(
     );
 
     let (side_edges_going_up, side_edges_going_down) = {
-        let side_edges = bottom_vertices
+        let side_edges_going_up = bottom_vertices
             .into_iter()
             .zip(top_vertices)
             .map(|(v_bottom, v_top)| HalfEdge {
@@ -98,11 +98,11 @@ pub fn face_to_solid(
                 "Original array had four entries; output must have the same.",
             );
 
-        let side_edges_going_up = side_edges
+        let side_edges_going_up = side_edges_going_up
             .into_iter()
             .cycle()
             .skip(1)
-            .take(side_edges.len());
+            .take(side_edges_going_up.len());
 
         let side_edges_going_down = top_vertices
             .into_iter()
