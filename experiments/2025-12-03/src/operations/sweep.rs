@@ -94,9 +94,7 @@ pub fn face_to_solid(
         })
         .cycle()
         .skip(1)
-        .take(bottom_vertices.len())
-        .collect_array::<4>()
-        .expect("Original array had four entries; output must have the same.");
+        .take(bottom_vertices.len());
 
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
