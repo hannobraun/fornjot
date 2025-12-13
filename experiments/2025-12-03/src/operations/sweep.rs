@@ -125,39 +125,22 @@ pub fn face_to_solid(
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
-    let [e01, e12, e23, e30] = bottom_edges_for_sides;
-    let [e15, e26, e37, e04] = side_edges_going_up;
-    let [e54, e65, e76, e47] = top_edges_for_sides;
-    let [e40, e51, e62, e73] = side_edges_going_down;
-
-    let f0154 = face::from_four_half_edges(
-        [e01, e15, e54, e40],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    );
-    let f1265 = face::from_four_half_edges(
-        [e12, e26, e65, e51],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    );
-    let f2376 = face::from_four_half_edges(
-        [e23, e37, e76, e62],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    );
-    let f3047 = face::from_four_half_edges(
-        [e30, e04, e47, e73],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    );
+    let [f0154, f1265, f2376, f3047] = bottom_edges_for_sides
+        .into_iter()
+        .zip(side_edges_going_up)
+        .zip(top_edges_for_sides)
+        .zip(side_edges_going_down)
+        .map(|(((bottom, right), top), left)| {
+            face::from_four_half_edges(
+                [bottom, right, top, left],
+                vertices,
+                half_edges,
+                triangles,
+                faces,
+            )
+        })
+        .collect_array()
+        .expect("Original array had four entries; output must have the same.");
 
     solids.push(Solid {
         boundary: [bottom, f0154, f1265, f2376, f3047, top],
