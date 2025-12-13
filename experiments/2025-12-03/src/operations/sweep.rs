@@ -86,33 +86,27 @@ pub fn face_to_solid(
         faces,
     );
 
-    let (side_edges_going_up, side_edges_going_down) = {
-        let side_edges_going_up = bottom_vertices
-            .into_iter()
-            .zip(top_vertices)
-            .map(|(v_bottom, v_top)| HalfEdge {
-                boundary: [v_bottom, v_top],
-            })
-            .cycle()
-            .skip(1)
-            .take(bottom_vertices.len())
-            .collect_array::<4>()
-            .expect(
-                "Original array had four entries; output must have the same.",
-            );
-
-        let side_edges_going_down = top_vertices
-            .into_iter()
-            .zip(bottom_vertices)
-            .map(|(v_top, v_bottom)| HalfEdge {
-                boundary: [v_top, v_bottom],
-            });
-
-        (side_edges_going_up, side_edges_going_down)
-    };
+    let side_edges_going_up = bottom_vertices
+        .into_iter()
+        .zip(top_vertices)
+        .map(|(v_bottom, v_top)| HalfEdge {
+            boundary: [v_bottom, v_top],
+        })
+        .cycle()
+        .skip(1)
+        .take(bottom_vertices.len())
+        .collect_array::<4>()
+        .expect("Original array had four entries; output must have the same.");
 
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
+
+    let side_edges_going_down = top_vertices
+        .into_iter()
+        .zip(bottom_vertices)
+        .map(|(v_top, v_bottom)| HalfEdge {
+            boundary: [v_top, v_bottom],
+        });
 
     let side_faces = bottom_edges_for_sides
         .into_iter()
