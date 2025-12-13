@@ -134,7 +134,7 @@ pub fn face_to_solid(
                 faces,
             )
         })
-        .collect_array()
+        .collect_array::<4>()
         .expect("Original array had four entries; output must have the same.");
 
     let [f0154, f1265, f2376, f3047] = side_faces;
