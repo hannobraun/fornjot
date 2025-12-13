@@ -117,10 +117,8 @@ pub fn face_to_solid(
         (side_edges_going_up, side_edges_going_down)
     };
 
-    let top_edges_for_sides = top_edges_for_top.map(|e| {
-        let half_edge = reverse::half_edge(e, half_edges);
-        half_edges.push(half_edge)
-    });
+    let top_edges_for_sides =
+        top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
     let side_faces = bottom_edges_for_sides
         .into_iter()
@@ -128,6 +126,8 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
+            let top = half_edges.push(top);
+
             face::from_four_half_edges(
                 [bottom, right, top, left],
                 vertices,
