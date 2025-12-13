@@ -110,12 +110,7 @@ pub fn face_to_solid(
             .into_iter()
             .cycle()
             .skip(1)
-            .take(side_edges.len())
-            .collect_array::<4>()
-            .expect(
-                "Original array had four entries, used `take` to take that \
-                many; thus output must have the same.",
-            );
+            .take(side_edges.len());
 
         let side_edges_going_down = side_edges.map(|(_, left)| left);
 
