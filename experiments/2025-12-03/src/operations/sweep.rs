@@ -136,8 +136,8 @@ pub fn face_to_solid(
         })
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
-    let [f0154, f1265, f2376, f3047] = side_faces;
 
+    let [f0154, f1265, f2376, f3047] = side_faces;
     solids.push(Solid {
         boundary: [bottom, f0154, f1265, f2376, f3047, top],
     })
