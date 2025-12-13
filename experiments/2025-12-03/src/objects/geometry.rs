@@ -4,7 +4,7 @@ use fj_math::Point;
 
 use crate::store::{Index, Store};
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {
     pub position: Point<3>,
 }
@@ -22,7 +22,7 @@ impl From<Point<3>> for Vertex {
     }
 }
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Triangle {
     pub vertices: [Index<Vertex>; 3],
 }

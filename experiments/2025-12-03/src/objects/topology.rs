@@ -5,18 +5,18 @@ use crate::{
     store::{Index, Store},
 };
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
     pub boundary: [Index<Vertex>; 2],
 }
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
     pub boundary: [Index<HalfEdge>; 4],
     pub triangles: [Index<Triangle>; 2],
 }
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
     pub boundary: [Index<Face>; 6],
 }
