@@ -86,24 +86,47 @@ pub fn face_to_solid(
         faces,
     );
 
-    let side_edges_going_up_shifted = bottom_vertices
-        .into_iter()
-        .zip(top_vertices)
-        .map(|(v_bottom, v_top)| {
-            half_edges.push(HalfEdge {
-                boundary: [v_bottom, v_top],
+    let (side_edges_going_up, side_edges_going_down) = {
+        let side_edges = bottom_vertices
+            .into_iter()
+            .zip(top_vertices)
+            .map(|(v_bottom, v_top)| {
+                let right_edge_prev = half_edges.push(HalfEdge {
+                    boundary: [v_bottom, v_top],
+                });
+                let left_edge_this = half_edges.push(HalfEdge {
+                    boundary: [v_top, v_bottom],
+                });
+
+                (right_edge_prev, left_edge_this)
             })
-        })
-        .collect_array()
-        .expect("Original array had four entries; output must have the same.");
-    let side_edges_going_down =
-        side_edges_going_up_shifted.map(|e| reverse::half_edge(e, half_edges));
+            .collect_array()
+            .expect(
+                "Original array had four entries; output must have the same.",
+            );
+
+        let side_edges_going_up = side_edges
+            .map(|(right, _)| right)
+            .into_iter()
+            .cycle()
+            .skip(1)
+            .take(side_edges.len())
+            .collect_array()
+            .expect(
+                "Original array had four entries, used `take` to take that \
+                many; thus output must have the same.",
+            );
+
+        let side_edges_going_down = side_edges.map(|(_, left)| left);
+
+        (side_edges_going_up, side_edges_going_down)
+    };
 
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
 
     let [e01, e12, e23, e30] = bottom_edges_for_sides;
-    let [e04, e15, e26, e37] = side_edges_going_up_shifted;
+    let [e15, e26, e37, e04] = side_edges_going_up;
     let [e54, e65, e76, e47] = top_edges_for_sides;
     let [e40, e51, e62, e73] = side_edges_going_down;
 
