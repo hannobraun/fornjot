@@ -112,7 +112,12 @@ pub fn face_to_solid(
             .skip(1)
             .take(side_edges.len());
 
-        let side_edges_going_down = side_edges.map(|(_, left)| left);
+        let side_edges_going_down = top_vertices
+            .into_iter()
+            .zip(bottom_vertices)
+            .map(|(v_top, v_bottom)| HalfEdge {
+                boundary: [v_top, v_bottom],
+            });
 
         (side_edges_going_up, side_edges_going_down)
     };
