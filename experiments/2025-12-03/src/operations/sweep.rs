@@ -111,7 +111,7 @@ pub fn face_to_solid(
             .cycle()
             .skip(1)
             .take(side_edges.len())
-            .collect_array()
+            .collect_array::<4>()
             .expect(
                 "Original array had four entries, used `take` to take that \
                 many; thus output must have the same.",
