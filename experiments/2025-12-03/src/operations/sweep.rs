@@ -100,7 +100,7 @@ pub fn face_to_solid(
 
                 (right_edge_prev, left_edge_this)
             })
-            .collect_array()
+            .collect_array::<4>()
             .expect(
                 "Original array had four entries; output must have the same.",
             );
