@@ -7,10 +7,7 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn half_edge(
-    e: Index<HalfEdge>,
-    half_edges: &mut Store<HalfEdge>,
-) -> HalfEdge {
+pub fn half_edge(e: Index<HalfEdge>, half_edges: &Store<HalfEdge>) -> HalfEdge {
     let [v0, v1] = half_edges[e].boundary;
     HalfEdge { boundary: [v1, v0] }
 }
