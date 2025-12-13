@@ -94,9 +94,9 @@ pub fn face_to_solid(
                 let right_edge_prev = half_edges.push(HalfEdge {
                     boundary: [v_bottom, v_top],
                 });
-                let left_edge_this = half_edges.push(HalfEdge {
+                let left_edge_this = HalfEdge {
                     boundary: [v_top, v_bottom],
-                });
+                };
 
                 (right_edge_prev, left_edge_this)
             })
@@ -127,6 +127,7 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let top = half_edges.push(top);
+            let left = half_edges.push(left);
 
             face::from_four_half_edges(
                 [bottom, right, top, left],
