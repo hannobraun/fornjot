@@ -90,15 +90,8 @@ pub fn face_to_solid(
         let side_edges = bottom_vertices
             .into_iter()
             .zip(top_vertices)
-            .map(|(v_bottom, v_top)| {
-                let right_edge_prev = HalfEdge {
-                    boundary: [v_bottom, v_top],
-                };
-                let left_edge_this = HalfEdge {
-                    boundary: [v_top, v_bottom],
-                };
-
-                (right_edge_prev, left_edge_this)
+            .map(|(v_bottom, v_top)| HalfEdge {
+                boundary: [v_bottom, v_top],
             })
             .collect_array::<4>()
             .expect(
@@ -106,7 +99,6 @@ pub fn face_to_solid(
             );
 
         let side_edges_going_up = side_edges
-            .map(|(right, _)| right)
             .into_iter()
             .cycle()
             .skip(1)
