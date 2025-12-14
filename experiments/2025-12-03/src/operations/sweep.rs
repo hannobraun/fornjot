@@ -59,7 +59,7 @@ pub fn face_to_solid(
 
     let bottom_inv =
         reverse::face(bottom, vertices, triangles, half_edges, faces);
-    let bottom_edges_for_sides = faces[bottom_inv].boundary;
+    let bottom_edges_for_sides = faces[bottom_inv].boundary.clone();
 
     let bottom_vertices = bottom_edges_for_sides
         .iter()

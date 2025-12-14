@@ -50,7 +50,7 @@ pub fn from_four_half_edges(
     let t123 = triangles.push([v0, v2, v3], vertices);
 
     faces.push(Face {
-        boundary: [e01, e12, e23, e30],
+        boundary: vec![e01, e12, e23, e30],
         triangles: [t012, t123],
     })
 }
