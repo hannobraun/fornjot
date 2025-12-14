@@ -66,13 +66,18 @@ pub fn face_to_solid(
         v
     });
 
-    let top_vertices = bottom_vertices.map(|v| {
-        let position = vertices[v].position + path;
-        vertices.push(Vertex { position })
-    });
+    let top_vertices = bottom_vertices
+        .iter()
+        .copied()
+        .map(|v| {
+            let position = vertices[v].position + path;
+            vertices.push(Vertex { position })
+        })
+        .collect::<Vec<_>>();
 
     let top_edges_for_top = top_vertices
-        .into_iter()
+        .iter()
+        .copied()
         .circular_tuple_windows()
         .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
         .collect_array()
@@ -88,7 +93,7 @@ pub fn face_to_solid(
 
     let side_edges_going_up = bottom_vertices
         .into_iter()
-        .zip(top_vertices)
+        .zip(top_vertices.iter().copied())
         .map(|(v_bottom, v_top)| HalfEdge {
             boundary: [v_bottom, v_top],
         })
