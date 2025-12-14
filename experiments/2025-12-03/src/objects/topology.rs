@@ -10,7 +10,7 @@ pub struct HalfEdge {
     pub boundary: [Index<Vertex>; 2],
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
     pub boundary: [Index<HalfEdge>; 4],
     pub triangles: [Index<Triangle>; 2],
