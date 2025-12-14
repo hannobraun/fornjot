@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::{
     objects::{
         geometry::{Triangles, Vertex},
@@ -19,10 +21,16 @@ pub fn face(
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [e10, e21, e32, e03] = faces[f0123].boundary.map(|e| {
-        let half_edge = half_edge(e, half_edges);
-        half_edges.push(half_edge)
-    });
+    let [e10, e21, e32, e03] = faces[f0123]
+        .boundary
+        .iter()
+        .copied()
+        .map(|e| {
+            let half_edge = half_edge(e, half_edges);
+            half_edges.push(half_edge)
+        })
+        .collect_array::<4>()
+        .unwrap();
 
     face::from_four_half_edges(
         [e03, e32, e21, e10],
