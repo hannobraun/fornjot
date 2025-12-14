@@ -61,10 +61,14 @@ pub fn face_to_solid(
         reverse::face(bottom, vertices, triangles, half_edges, faces);
     let bottom_edges_for_sides = faces[bottom_inv].boundary;
 
-    let bottom_vertices = bottom_edges_for_sides.map(|e| {
-        let [v, _] = half_edges[e].boundary;
-        v
-    });
+    let bottom_vertices = bottom_edges_for_sides
+        .iter()
+        .copied()
+        .map(|e| {
+            let [v, _] = half_edges[e].boundary;
+            v
+        })
+        .collect::<Vec<_>>();
 
     let top_vertices = bottom_vertices
         .iter()
