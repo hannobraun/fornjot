@@ -92,7 +92,8 @@ pub fn face_to_solid(
     );
 
     let side_edges_going_up = bottom_vertices
-        .into_iter()
+        .iter()
+        .copied()
         .zip(top_vertices.iter().copied())
         .map(|(v_bottom, v_top)| HalfEdge {
             boundary: [v_bottom, v_top],
