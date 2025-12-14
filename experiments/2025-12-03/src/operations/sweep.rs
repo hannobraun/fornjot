@@ -94,7 +94,8 @@ pub fn face_to_solid(
         })
         .cycle()
         .skip(1)
-        .take(bottom_vertices.len());
+        .take(bottom_vertices.len())
+        .collect::<Vec<_>>();
 
     let top_edges_for_sides =
         top_edges_for_top.map(|e| reverse::half_edge(e, half_edges));
