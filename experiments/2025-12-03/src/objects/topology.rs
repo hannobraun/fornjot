@@ -13,7 +13,7 @@ pub struct HalfEdge {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
     pub boundary: Vec<Index<HalfEdge>>,
-    pub triangles: [Index<Triangle>; 2],
+    pub triangles: Vec<Index<Triangle>>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]

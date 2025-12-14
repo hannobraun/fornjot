@@ -72,7 +72,7 @@ fn model() -> TriMesh {
     let triangles = solids[s01234567]
         .boundary
         .into_iter()
-        .flat_map(|f0123| faces[f0123].triangles)
+        .flat_map(|f0123| faces[f0123].triangles.iter().copied())
         .map(|t012| &triangles[t012]);
 
     for &Triangle {

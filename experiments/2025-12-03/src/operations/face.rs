@@ -51,6 +51,6 @@ pub fn from_four_half_edges(
 
     faces.push(Face {
         boundary: vec![e01, e12, e23, e30],
-        triangles: [t012, t123],
+        triangles: vec![t012, t123],
     })
 }
