@@ -18,7 +18,7 @@ pub struct Face {
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
-    pub boundary: [Index<Face>; 6],
+    pub boundary: Vec<Index<Face>>,
 }
 
 #[derive(Default)]

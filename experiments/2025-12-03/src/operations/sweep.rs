@@ -138,14 +138,7 @@ pub fn face_to_solid(
         .collect_array::<4>()
         .expect("Original array had four entries; output must have the same.");
 
-    let all_faces = [bottom, top]
-        .into_iter()
-        .chain(side_faces)
-        .collect_array()
-        .expect(
-            "Chained two arrays that add up to 6 items; must result in \
-            iterator of that length.",
-        );
+    let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
 
     solids.push(Solid {
         boundary: all_faces,
