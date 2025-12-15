@@ -16,7 +16,7 @@ pub struct Face {
     pub triangles: Vec<Index<Triangle>>,
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
     pub boundary: [Index<Face>; 6],
 }
