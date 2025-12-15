@@ -134,9 +134,7 @@ pub fn face_to_solid(
                 triangles,
                 faces,
             )
-        })
-        .collect_array::<4>()
-        .expect("Original array had four entries; output must have the same.");
+        });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
 
