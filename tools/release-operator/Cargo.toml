@@ -20,7 +20,7 @@ thiserror = "2.0.17"
 path = "../autolib"
 
 [dependencies.reqwest]
-version = "0.12.24"
+version = "0.12.25"
 features = ["blocking"]
 
 [dependencies.clap]
