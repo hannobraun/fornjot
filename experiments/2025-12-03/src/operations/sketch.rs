@@ -40,10 +40,10 @@ impl Sketch<1> {
     ) -> Sketch<2> {
         let _ = start.into();
 
-        let [e01] = self.boundary.map(|segment| segment.half_edge);
+        let [e01] = self.boundary;
 
         Sketch {
-            boundary: [e01, e12].map(|half_edge| SketchSegment { half_edge }),
+            boundary: [e01, SketchSegment { half_edge: e12 }],
         }
     }
 
