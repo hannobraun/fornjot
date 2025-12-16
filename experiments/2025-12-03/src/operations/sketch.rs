@@ -140,13 +140,12 @@ impl Sketch<4> {
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
-        let [e01, e12, e23, e30] =
-            self.boundary.map(|segment| segment.half_edge);
+        let [e01, e12, e23, e30] = self.boundary;
 
-        let [v0, v1b] = half_edges[e01].boundary;
-        let [v1, v2b] = half_edges[e12].boundary;
-        let [v2, v3b] = half_edges[e23].boundary;
-        let [v3, v0b] = half_edges[e30].boundary;
+        let [v0, v1b] = half_edges[e01.half_edge].boundary;
+        let [v1, v2b] = half_edges[e12.half_edge].boundary;
+        let [v2, v3b] = half_edges[e23.half_edge].boundary;
+        let [v3, v0b] = half_edges[e30.half_edge].boundary;
 
         assert_eq!(v0, v0b);
         assert_eq!(v1, v1b);
@@ -157,7 +156,10 @@ impl Sketch<4> {
         let t123 = triangles.push([v0, v2, v3], vertices);
 
         faces.push(Face {
-            boundary: [e01, e12, e23, e30].into_iter().collect(),
+            boundary: [e01, e12, e23, e30]
+                .into_iter()
+                .map(|segment| segment.half_edge)
+                .collect(),
             triangles: vec![t012, t123],
         })
     }
