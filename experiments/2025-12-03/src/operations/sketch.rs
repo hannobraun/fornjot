@@ -124,11 +124,10 @@ impl Sketch<3> {
     ) -> Sketch<4> {
         let _ = start.into();
 
-        let [e01, e12, e23] = self.boundary.map(|segment| segment.half_edge);
+        let [e01, e12, e23] = self.boundary;
 
         Sketch {
-            boundary: [e01, e12, e23, e30]
-                .map(|half_edge| SketchSegment { half_edge }),
+            boundary: [e01, e12, e23, SketchSegment { half_edge: e30 }],
         }
     }
 }
