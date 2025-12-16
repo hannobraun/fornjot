@@ -1,3 +1,5 @@
+use fj_math::Point;
+
 use crate::{
     objects::{
         geometry::{Triangles, Vertex},
@@ -15,7 +17,13 @@ impl Sketch<0> {
         Self { boundary: [] }
     }
 
-    pub fn push_half_edge(self, e01: Index<HalfEdge>) -> Sketch<1> {
+    pub fn push_half_edge(
+        self,
+        start: impl Into<Point<2>>,
+        e01: Index<HalfEdge>,
+    ) -> Sketch<1> {
+        let _ = start;
+
         let [] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {
