@@ -55,13 +55,13 @@ impl Sketch<1> {
     ) -> Sketch<2> {
         let _ = position.into();
 
-        let [e01] = self.boundary.map(|segment| segment.half_edge);
+        let [e01] = self.boundary;
 
-        let [_, v1] = half_edges[e01].boundary;
+        let [_, v1] = half_edges[e01.half_edge].boundary;
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
         Sketch {
-            boundary: [e01, e12].map(|half_edge| SketchSegment { half_edge }),
+            boundary: [e01, SketchSegment { half_edge: e12 }],
         }
     }
 }
