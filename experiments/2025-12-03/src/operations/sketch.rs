@@ -17,12 +17,11 @@ pub fn from_half_edge_and_two_vertices(
     let [_, v1] = half_edges[e01].boundary;
 
     let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
-    let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
     Sketch::new()
         .push_half_edge(e01)
         .push_half_edge(e12)
-        .push_half_edge(e23)
+        .push_vertex(v3, half_edges)
         .close_with_half_edge(half_edges)
         .build(vertices, half_edges, triangles, faces)
 }
@@ -55,6 +54,21 @@ impl Sketch<1> {
 impl Sketch<2> {
     pub fn push_half_edge(self, e23: Index<HalfEdge>) -> Sketch<3> {
         let [e01, e12] = self.boundary;
+
+        Sketch {
+            boundary: [e01, e12, e23],
+        }
+    }
+
+    pub fn push_vertex(
+        self,
+        v3: Index<Vertex>,
+        half_edges: &mut Store<HalfEdge>,
+    ) -> Sketch<3> {
+        let [e01, e12] = self.boundary;
+
+        let [_, v2] = half_edges[e12].boundary;
+        let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
         Sketch {
             boundary: [e01, e12, e23],
