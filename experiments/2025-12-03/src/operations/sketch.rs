@@ -67,7 +67,13 @@ impl Sketch<1> {
 }
 
 impl Sketch<2> {
-    pub fn push_half_edge(self, e23: Index<HalfEdge>) -> Sketch<3> {
+    pub fn push_half_edge(
+        self,
+        start: impl Into<Point<2>>,
+        e23: Index<HalfEdge>,
+    ) -> Sketch<3> {
+        let _ = start;
+
         let [e01, e12] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {

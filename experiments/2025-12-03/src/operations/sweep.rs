@@ -90,7 +90,7 @@ pub fn face_to_solid(
         Sketch::new()
             .push_half_edge([0., 0.], e01)
             .push_half_edge([1., 0.], e12)
-            .push_half_edge(e23)
+            .push_half_edge([1., 1.], e23)
             .push_half_edge(e30)
             .build(vertices, half_edges, triangles, faces)
     };
@@ -130,7 +130,7 @@ pub fn face_to_solid(
             Sketch::new()
                 .push_half_edge([0., 0.], bottom)
                 .push_half_edge([1., 0.], right)
-                .push_half_edge(top)
+                .push_half_edge([1., 1.], top)
                 .push_half_edge(left)
                 .build(vertices, half_edges, triangles, faces)
         });
