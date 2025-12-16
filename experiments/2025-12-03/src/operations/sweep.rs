@@ -6,7 +6,10 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::{sketch, reverse},
+    operations::{
+        reverse,
+        sketch::{self, Sketch},
+    },
     store::{Index, Store},
 };
 
@@ -87,13 +90,15 @@ pub fn face_to_solid(
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
 
-    let top = sketch::from_four_half_edges(
-        top_edges_for_top,
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    );
+    let top = {
+        let [e01, e12, e23, e30] = top_edges_for_top;
+        Sketch::new()
+            .push_half_edge(e01)
+            .push_half_edge(e12)
+            .push_half_edge(e23)
+            .push_half_edge(e30)
+            .build(vertices, half_edges, triangles, faces)
+    };
 
     let side_edges_going_up = bottom_vertices
         .iter()
@@ -127,13 +132,12 @@ pub fn face_to_solid(
             let top = half_edges.push(top);
             let left = half_edges.push(left);
 
-            sketch::from_four_half_edges(
-                [bottom, right, top, left],
-                vertices,
-                half_edges,
-                triangles,
-                faces,
-            )
+            Sketch::new()
+                .push_half_edge(bottom)
+                .push_half_edge(right)
+                .push_half_edge(top)
+                .push_half_edge(left)
+                .build(vertices, half_edges, triangles, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();

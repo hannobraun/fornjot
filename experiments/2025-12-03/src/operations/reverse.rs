@@ -5,7 +5,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
-    operations::sketch,
+    operations::sketch::Sketch,
     store::{Index, Store},
 };
 
@@ -32,11 +32,10 @@ pub fn face(
         .collect_array::<4>()
         .unwrap();
 
-    sketch::from_four_half_edges(
-        [e03, e32, e21, e10],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    )
+    Sketch::new()
+        .push_half_edge(e03)
+        .push_half_edge(e32)
+        .push_half_edge(e21)
+        .push_half_edge(e10)
+        .build(vertices, half_edges, triangles, faces)
 }

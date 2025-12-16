@@ -20,22 +20,6 @@ pub fn from_half_edge_and_two_vertices(
     let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
     let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
-    from_four_half_edges(
-        [e01, e12, e23, e30],
-        vertices,
-        half_edges,
-        triangles,
-        faces,
-    )
-}
-
-pub fn from_four_half_edges(
-    [e01, e12, e23, e30]: [Index<HalfEdge>; 4],
-    vertices: &Store<Vertex>,
-    half_edges: &Store<HalfEdge>,
-    triangles: &mut Triangles,
-    faces: &mut Faces,
-) -> Index<Face> {
     Sketch::new()
         .push_half_edge(e01)
         .push_half_edge(e12)
