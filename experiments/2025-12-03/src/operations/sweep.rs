@@ -6,10 +6,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::{
-        reverse,
-        sketch::{self, Sketch},
-    },
+    operations::{reverse, sketch::Sketch},
     store::{Index, Store},
 };
 
@@ -39,14 +36,12 @@ pub fn half_edge_to_face(
         .boundary
         .map(|v| vertices.push(vertices[v].position + path));
 
-    sketch::from_half_edge_and_two_vertices(
-        e01,
-        [v2, v3],
-        vertices,
-        triangles,
-        half_edges,
-        faces,
-    )
+    Sketch::new()
+        .push_half_edge(e01)
+        .push_vertex(v2, half_edges)
+        .push_vertex(v3, half_edges)
+        .close_with_half_edge(half_edges)
+        .build(vertices, half_edges, triangles, faces)
 }
 
 pub fn face_to_solid(

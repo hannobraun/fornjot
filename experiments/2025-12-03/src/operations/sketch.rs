@@ -6,22 +6,6 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn from_half_edge_and_two_vertices(
-    e01: Index<HalfEdge>,
-    [v2, v3]: [Index<Vertex>; 2],
-    vertices: &Store<Vertex>,
-    triangles: &mut Triangles,
-    half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
-) -> Index<Face> {
-    Sketch::new()
-        .push_half_edge(e01)
-        .push_vertex(v2, half_edges)
-        .push_vertex(v3, half_edges)
-        .close_with_half_edge(half_edges)
-        .build(vertices, half_edges, triangles, faces)
-}
-
 pub struct Sketch<const SIZE: usize> {
     boundary: [Index<HalfEdge>; SIZE],
 }
