@@ -7,6 +7,7 @@ edition = "2024"
 [dependencies]
 anyhow = "*"
 itertools = "*"
+spade = "*"
 
 [dependencies.fj-export]
 path = "../../crates/fj-export"

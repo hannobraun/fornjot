@@ -566,6 +566,7 @@ dependencies = [
  "fj-math",
  "fj-viewer",
  "itertools",
+ "spade",
 ]
 
 [[package]]
