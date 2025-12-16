@@ -89,14 +89,13 @@ impl Sketch<2> {
     ) -> Sketch<3> {
         let _ = position.into();
 
-        let [e01, e12] = self.boundary.map(|segment| segment.half_edge);
+        let [e01, e12] = self.boundary;
 
-        let [_, v2] = half_edges[e12].boundary;
+        let [_, v2] = half_edges[e12.half_edge].boundary;
         let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
         Sketch {
-            boundary: [e01, e12, e23]
-                .map(|half_edge| SketchSegment { half_edge }),
+            boundary: [e01, e12, SketchSegment { half_edge: e23 }],
         }
     }
 }
