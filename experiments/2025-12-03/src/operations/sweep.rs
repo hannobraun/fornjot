@@ -39,7 +39,7 @@ pub fn half_edge_to_face(
     Sketch::new()
         .push_half_edge([0., 0.], e01)
         .push_vertex([1., 0.], v2, half_edges)
-        .push_vertex(v3, half_edges)
+        .push_vertex([1., 1.], v3, half_edges)
         .close_with_half_edge(half_edges)
         .build(vertices, half_edges, triangles, faces)
 }

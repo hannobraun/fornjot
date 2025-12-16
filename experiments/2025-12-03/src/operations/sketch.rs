@@ -84,9 +84,12 @@ impl Sketch<2> {
 
     pub fn push_vertex(
         self,
+        position: impl Into<Point<2>>,
         v3: Index<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<3> {
+        let _ = position;
+
         let [e01, e12] = self.boundary.map(|segment| segment.half_edge);
 
         let [_, v2] = half_edges[e12].boundary;
