@@ -7,7 +7,7 @@ use crate::{
 };
 
 pub struct Sketch<const SIZE: usize> {
-    boundary: [Index<HalfEdge>; SIZE],
+    boundary: [SketchSegment; SIZE],
 }
 
 impl Sketch<0> {
@@ -16,18 +16,20 @@ impl Sketch<0> {
     }
 
     pub fn push_half_edge(self, e01: Index<HalfEdge>) -> Sketch<1> {
-        let [] = self.boundary;
+        let [] = self.boundary.map(|segment| segment.half_edge);
 
-        Sketch { boundary: [e01] }
+        Sketch {
+            boundary: [e01].map(|half_edge| SketchSegment { half_edge }),
+        }
     }
 }
 
 impl Sketch<1> {
     pub fn push_half_edge(self, e12: Index<HalfEdge>) -> Sketch<2> {
-        let [e01] = self.boundary;
+        let [e01] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {
-            boundary: [e01, e12],
+            boundary: [e01, e12].map(|half_edge| SketchSegment { half_edge }),
         }
     }
 
@@ -36,23 +38,24 @@ impl Sketch<1> {
         v2: Index<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<2> {
-        let [e01] = self.boundary;
+        let [e01] = self.boundary.map(|segment| segment.half_edge);
 
         let [_, v1] = half_edges[e01].boundary;
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
         Sketch {
-            boundary: [e01, e12],
+            boundary: [e01, e12].map(|half_edge| SketchSegment { half_edge }),
         }
     }
 }
 
 impl Sketch<2> {
     pub fn push_half_edge(self, e23: Index<HalfEdge>) -> Sketch<3> {
-        let [e01, e12] = self.boundary;
+        let [e01, e12] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {
-            boundary: [e01, e12, e23],
+            boundary: [e01, e12, e23]
+                .map(|half_edge| SketchSegment { half_edge }),
         }
     }
 
@@ -61,13 +64,14 @@ impl Sketch<2> {
         v3: Index<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<3> {
-        let [e01, e12] = self.boundary;
+        let [e01, e12] = self.boundary.map(|segment| segment.half_edge);
 
         let [_, v2] = half_edges[e12].boundary;
         let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
         Sketch {
-            boundary: [e01, e12, e23],
+            boundary: [e01, e12, e23]
+                .map(|half_edge| SketchSegment { half_edge }),
         }
     }
 }
@@ -77,7 +81,7 @@ impl Sketch<3> {
         self,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<4> {
-        let [e01, e12, e23] = self.boundary;
+        let [e01, e12, e23] = self.boundary.map(|segment| segment.half_edge);
 
         let [v0, _] = half_edges[e01].boundary;
         let [_, v3] = half_edges[e23].boundary;
@@ -85,15 +89,17 @@ impl Sketch<3> {
         let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
         Sketch {
-            boundary: [e01, e12, e23, e30],
+            boundary: [e01, e12, e23, e30]
+                .map(|half_edge| SketchSegment { half_edge }),
         }
     }
 
     pub fn push_half_edge(self, e30: Index<HalfEdge>) -> Sketch<4> {
-        let [e01, e12, e23] = self.boundary;
+        let [e01, e12, e23] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {
-            boundary: [e01, e12, e23, e30],
+            boundary: [e01, e12, e23, e30]
+                .map(|half_edge| SketchSegment { half_edge }),
         }
     }
 }
@@ -106,7 +112,8 @@ impl Sketch<4> {
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
-        let [e01, e12, e23, e30] = self.boundary;
+        let [e01, e12, e23, e30] =
+            self.boundary.map(|segment| segment.half_edge);
 
         let [v0, v1b] = half_edges[e01].boundary;
         let [v1, v2b] = half_edges[e12].boundary;
@@ -126,4 +133,8 @@ impl Sketch<4> {
             triangles: vec![t012, t123],
         })
     }
+}
+
+struct SketchSegment {
+    pub half_edge: Index<HalfEdge>,
 }
