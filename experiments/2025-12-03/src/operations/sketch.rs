@@ -17,6 +17,7 @@ impl Sketch<0> {
 
     pub fn push_half_edge(self, e01: Index<HalfEdge>) -> Sketch<1> {
         let [] = self.boundary;
+
         Sketch { boundary: [e01] }
     }
 }
