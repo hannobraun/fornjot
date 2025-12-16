@@ -1,13 +1,18 @@
-use itertools::Itertools;
-
 use crate::{
     objects::{
-        geometry::{Triangles, Vertex},
+        geometry::{Triangle, Triangles, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
-    operations::sketch::Sketch,
     store::{Index, Store},
 };
+
+pub fn triangle(t012: Index<Triangle>, triangles: &Triangles) -> Triangle {
+    let [v0, v1, v2] = triangles[t012].vertices;
+
+    Triangle {
+        vertices: [v0, v2, v1],
+    }
+}
 
 pub fn half_edge(
     e01: Index<HalfEdge>,
@@ -24,7 +29,7 @@ pub fn face(
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
 ) -> Index<Face> {
-    let [e10, e21, e32, e03] = faces[f0123]
+    let boundary = faces[f0123]
         .boundary
         .iter()
         .copied()
@@ -32,13 +37,22 @@ pub fn face(
             let half_edge = half_edge(e, half_edges);
             half_edges.push(half_edge)
         })
-        .collect_array::<4>()
-        .unwrap();
+        .rev()
+        .collect();
 
-    Sketch::new()
-        .push_half_edge(e03)
-        .push_half_edge(e32)
-        .push_half_edge(e21)
-        .push_half_edge(e10)
-        .build(vertices, half_edges, triangles, faces)
+    let triangles = faces[f0123]
+        .triangles
+        .iter()
+        .copied()
+        .map(|t| {
+            let triangle = triangle(t, triangles);
+            triangles.push(triangle, vertices)
+        })
+        .rev()
+        .collect();
+
+    faces.push(Face {
+        boundary,
+        triangles,
+    })
 }
