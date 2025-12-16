@@ -157,7 +157,7 @@ impl Sketch<4> {
         let t123 = triangles.push([v0, v2, v3], vertices);
 
         faces.push(Face {
-            boundary: vec![e01, e12, e23, e30],
+            boundary: [e01, e12, e23, e30].into_iter().collect(),
             triangles: vec![t012, t123],
         })
     }
