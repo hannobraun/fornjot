@@ -6,7 +6,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::{face, reverse},
+    operations::{sketch, reverse},
     store::{Index, Store},
 };
 
@@ -36,7 +36,7 @@ pub fn half_edge_to_face(
         .boundary
         .map(|v| vertices.push(vertices[v].position + path));
 
-    face::from_half_edge_and_two_vertices(
+    sketch::from_half_edge_and_two_vertices(
         e01,
         [v2, v3],
         vertices,
@@ -87,7 +87,7 @@ pub fn face_to_solid(
         .collect_array()
         .expect("Original array had four entries; output must have the same.");
 
-    let top = face::from_four_half_edges(
+    let top = sketch::from_four_half_edges(
         top_edges_for_top,
         vertices,
         half_edges,
@@ -127,7 +127,7 @@ pub fn face_to_solid(
             let top = half_edges.push(top);
             let left = half_edges.push(left);
 
-            face::from_four_half_edges(
+            sketch::from_four_half_edges(
                 [bottom, right, top, left],
                 vertices,
                 half_edges,

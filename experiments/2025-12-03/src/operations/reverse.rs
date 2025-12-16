@@ -5,7 +5,7 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
-    operations::face,
+    operations::sketch,
     store::{Index, Store},
 };
 
@@ -32,7 +32,7 @@ pub fn face(
         .collect_array::<4>()
         .unwrap();
 
-    face::from_four_half_edges(
+    sketch::from_four_half_edges(
         [e03, e32, e21, e10],
         vertices,
         half_edges,
