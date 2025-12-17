@@ -32,6 +32,7 @@ impl Sketch {
             to: position.into(),
             half_edge,
         });
+
         self
     }
 
