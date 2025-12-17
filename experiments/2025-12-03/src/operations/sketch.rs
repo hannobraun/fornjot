@@ -191,6 +191,7 @@ impl Sketch<4> {
     }
 }
 
+#[derive(Clone, Copy)]
 struct SketchSegment {
     pub to: Point<2>,
     pub half_edge: Index<HalfEdge>,
