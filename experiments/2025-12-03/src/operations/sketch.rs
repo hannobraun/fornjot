@@ -22,12 +22,12 @@ impl Sketch<0> {
         to: impl Into<Point<2>>,
         e01: Index<HalfEdge>,
     ) -> Sketch<1> {
-        let _ = to.into();
+        let to = to.into();
 
         let [] = self.boundary.map(|segment| segment.half_edge);
 
         Sketch {
-            boundary: [e01].map(|half_edge| SketchSegment { half_edge }),
+            boundary: [e01].map(|half_edge| SketchSegment { to, half_edge }),
         }
     }
 }
@@ -38,12 +38,12 @@ impl Sketch<1> {
         to: impl Into<Point<2>>,
         e12: Index<HalfEdge>,
     ) -> Sketch<2> {
-        let _ = to.into();
+        let to = to.into();
 
         let [e01] = self.boundary;
 
         Sketch {
-            boundary: [e01, SketchSegment { half_edge: e12 }],
+            boundary: [e01, SketchSegment { to, half_edge: e12 }],
         }
     }
 
@@ -53,7 +53,7 @@ impl Sketch<1> {
         v2: Index<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<2> {
-        let _ = position.into();
+        let position = position.into();
 
         let [e01] = self.boundary;
 
@@ -61,7 +61,13 @@ impl Sketch<1> {
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
         Sketch {
-            boundary: [e01, SketchSegment { half_edge: e12 }],
+            boundary: [
+                e01,
+                SketchSegment {
+                    to: position,
+                    half_edge: e12,
+                },
+            ],
         }
     }
 }
@@ -72,12 +78,12 @@ impl Sketch<2> {
         to: impl Into<Point<2>>,
         e23: Index<HalfEdge>,
     ) -> Sketch<3> {
-        let _ = to.into();
+        let to = to.into();
 
         let [e01, e12] = self.boundary;
 
         Sketch {
-            boundary: [e01, e12, SketchSegment { half_edge: e23 }],
+            boundary: [e01, e12, SketchSegment { to, half_edge: e23 }],
         }
     }
 
@@ -87,7 +93,7 @@ impl Sketch<2> {
         v3: Index<Vertex>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<3> {
-        let _ = position.into();
+        let position = position.into();
 
         let [e01, e12] = self.boundary;
 
@@ -95,7 +101,14 @@ impl Sketch<2> {
         let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
         Sketch {
-            boundary: [e01, e12, SketchSegment { half_edge: e23 }],
+            boundary: [
+                e01,
+                e12,
+                SketchSegment {
+                    to: position,
+                    half_edge: e23,
+                },
+            ],
         }
     }
 }
@@ -113,7 +126,15 @@ impl Sketch<3> {
         let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
         Sketch {
-            boundary: [e01, e12, e23, SketchSegment { half_edge: e30 }],
+            boundary: [
+                e01,
+                e12,
+                e23,
+                SketchSegment {
+                    to: Point::from([0., 0.]),
+                    half_edge: e30,
+                },
+            ],
         }
     }
 
@@ -122,12 +143,12 @@ impl Sketch<3> {
         to: impl Into<Point<2>>,
         e30: Index<HalfEdge>,
     ) -> Sketch<4> {
-        let _ = to.into();
+        let to = to.into();
 
         let [e01, e12, e23] = self.boundary;
 
         Sketch {
-            boundary: [e01, e12, e23, SketchSegment { half_edge: e30 }],
+            boundary: [e01, e12, e23, SketchSegment { to, half_edge: e30 }],
         }
     }
 }
@@ -141,6 +162,11 @@ impl Sketch<4> {
         faces: &mut Faces,
     ) -> Index<Face> {
         let [e01, e12, e23, e30] = self.boundary;
+
+        let _ = e01.to;
+        let _ = e12.to;
+        let _ = e23.to;
+        let _ = e30.to;
 
         let [v0, v1b] = half_edges[e01.half_edge].boundary;
         let [v1, v2b] = half_edges[e12.half_edge].boundary;
@@ -166,5 +192,6 @@ impl Sketch<4> {
 }
 
 struct SketchSegment {
+    pub to: Point<2>,
     pub half_edge: Index<HalfEdge>,
 }
