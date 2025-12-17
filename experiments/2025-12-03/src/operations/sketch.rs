@@ -57,7 +57,12 @@ impl Sketch<1> {
     ) -> Sketch<2> {
         let position = position.into();
 
-        let [e01] = self.segments;
+        let Some(e01) = self.segments.last().copied() else {
+            panic!(
+                "Can't push single vertex to sketch, unless at least one \
+                half-edge is already available."
+            );
+        };
 
         let [_, v1] = half_edges[e01.half_edge].boundary;
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
