@@ -93,6 +93,17 @@ impl Sketch {
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
+        let boundary = self
+            .segments
+            .iter()
+            .copied()
+            .map(|segment| {
+                let SketchSegmentAttachment::HalfEdge { half_edge } =
+                    segment.attachment;
+                half_edge
+            })
+            .collect();
+
         for (a, b) in self.segments.iter().circular_tuple_windows() {
             let a = {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
@@ -128,15 +139,7 @@ impl Sketch {
             .collect();
 
         faces.push(Face {
-            boundary: self
-                .segments
-                .into_iter()
-                .map(|segment| {
-                    let SketchSegmentAttachment::HalfEdge { half_edge } =
-                        segment.attachment;
-                    half_edge
-                })
-                .collect(),
+            boundary,
             triangles,
         })
     }
