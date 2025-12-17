@@ -19,10 +19,10 @@ impl Sketch<0> {
 
     pub fn push_half_edge(
         self,
-        start: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         e01: Index<HalfEdge>,
     ) -> Sketch<1> {
-        let _ = start.into();
+        let _ = to.into();
 
         let [] = self.boundary.map(|segment| segment.half_edge);
 
@@ -35,10 +35,10 @@ impl Sketch<0> {
 impl Sketch<1> {
     pub fn push_half_edge(
         self,
-        start: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         e12: Index<HalfEdge>,
     ) -> Sketch<2> {
-        let _ = start.into();
+        let _ = to.into();
 
         let [e01] = self.boundary;
 
@@ -69,10 +69,10 @@ impl Sketch<1> {
 impl Sketch<2> {
     pub fn push_half_edge(
         self,
-        start: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         e23: Index<HalfEdge>,
     ) -> Sketch<3> {
-        let _ = start.into();
+        let _ = to.into();
 
         let [e01, e12] = self.boundary;
 
@@ -119,10 +119,10 @@ impl Sketch<3> {
 
     pub fn push_half_edge(
         self,
-        start: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         e30: Index<HalfEdge>,
     ) -> Sketch<4> {
-        let _ = start.into();
+        let _ = to.into();
 
         let [e01, e12, e23] = self.boundary;
 
