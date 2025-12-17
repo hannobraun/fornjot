@@ -36,7 +36,7 @@ impl Sketch {
         self
     }
 
-    pub fn push_vertex(
+    pub fn line_to_vertex(
         self,
         position: impl Into<Point<2>>,
         v2: Index<Vertex>,
