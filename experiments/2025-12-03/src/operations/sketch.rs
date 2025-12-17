@@ -164,11 +164,6 @@ impl Sketch<4> {
     ) -> Index<Face> {
         let [e01, e12, e23, e30] = self.boundary;
 
-        let _ = e01.to;
-        let _ = e12.to;
-        let _ = e23.to;
-        let _ = e30.to;
-
         let [v0, v1b] = half_edges[e01.half_edge].boundary;
         let [v1, v2b] = half_edges[e12.half_edge].boundary;
         let [v2, v3b] = half_edges[e23.half_edge].boundary;
