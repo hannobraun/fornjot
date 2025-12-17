@@ -93,7 +93,7 @@ impl Sketch {
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
-        let boundary = self
+        let positions_and_half_edges = self
             .segments
             .iter()
             .copied()
@@ -105,8 +105,10 @@ impl Sketch {
             })
             .collect::<Vec<_>>();
 
-        for ((_, a), (_, b)) in
-            boundary.iter().copied().circular_tuple_windows()
+        for ((_, a), (_, b)) in positions_and_half_edges
+            .iter()
+            .copied()
+            .circular_tuple_windows()
         {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
@@ -131,7 +133,7 @@ impl Sketch {
             .collect();
 
         faces.push(Face {
-            boundary: boundary
+            boundary: positions_and_half_edges
                 .into_iter()
                 .map(|(_, half_edge)| half_edge)
                 .collect(),
