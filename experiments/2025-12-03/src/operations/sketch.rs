@@ -95,8 +95,7 @@ impl Sketch {
     ) -> Index<Face> {
         let positions_and_half_edges = self
             .segments
-            .iter()
-            .copied()
+            .into_iter()
             .map(|segment| {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
                     segment.attachment;
