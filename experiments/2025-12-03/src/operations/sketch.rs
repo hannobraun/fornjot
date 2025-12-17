@@ -104,17 +104,9 @@ impl Sketch {
             })
             .collect::<Vec<_>>();
 
-        for (a, b) in self.segments.iter().circular_tuple_windows() {
-            let a = {
-                let SketchSegmentAttachment::HalfEdge { half_edge } =
-                    a.attachment;
-                half_edges[half_edge]
-            };
-            let b = {
-                let SketchSegmentAttachment::HalfEdge { half_edge } =
-                    b.attachment;
-                half_edges[half_edge]
-            };
+        for (a, b) in boundary.iter().copied().circular_tuple_windows() {
+            let a = half_edges[a];
+            let b = half_edges[b];
 
             assert_eq!(a.boundary[1], b.boundary[0]);
         }
