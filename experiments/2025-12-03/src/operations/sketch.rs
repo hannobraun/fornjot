@@ -101,11 +101,13 @@ impl Sketch {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
                     segment.attachment;
 
-                half_edge
+                (segment.to, half_edge)
             })
             .collect::<Vec<_>>();
 
-        for (a, b) in boundary.iter().copied().circular_tuple_windows() {
+        for ((_, a), (_, b)) in
+            boundary.iter().copied().circular_tuple_windows()
+        {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
@@ -129,7 +131,10 @@ impl Sketch {
             .collect();
 
         faces.push(Face {
-            boundary,
+            boundary: boundary
+                .into_iter()
+                .map(|(_, half_edge)| half_edge)
+                .collect(),
             triangles,
         })
     }
