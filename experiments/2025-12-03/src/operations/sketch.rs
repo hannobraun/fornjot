@@ -117,9 +117,10 @@ impl Sketch<3> {
         self,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<4> {
-        let [_, _, e23] = self.segments;
-
-        let Some(e01) = self.segments.first().copied() else {
+        let [Some(e01), Some(e23)] = [
+            self.segments.first().copied(),
+            self.segments.last().copied(),
+        ] else {
             panic!(
                 "Can't close sketch, if there's not already at least one \
                 half-edge."
