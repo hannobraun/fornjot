@@ -113,17 +113,12 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let delaunay_points = self.segments.iter().map(|segment| {
-            let [_, vertex] = {
-                let SketchSegmentAttachment::HalfEdge { half_edge } =
-                    segment.attachment;
-                half_edges[half_edge].boundary
-            };
-            DelaunayPoint {
-                position: segment.to,
-                vertex,
-            }
-        });
+        let delaunay_points = positions_and_half_edges.iter().copied().map(
+            |(position, half_edge)| {
+                let [_, vertex] = half_edges[half_edge].boundary;
+                DelaunayPoint { position, vertex }
+            },
+        );
         let triangles = delaunay(delaunay_points)
             .into_iter()
             .map(|triangle| {
