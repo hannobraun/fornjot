@@ -100,6 +100,7 @@ impl Sketch {
             .map(|segment| {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
                     segment.attachment;
+
                 half_edge
             })
             .collect::<Vec<_>>();
