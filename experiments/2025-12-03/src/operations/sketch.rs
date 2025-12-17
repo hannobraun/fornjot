@@ -11,12 +11,14 @@ use crate::{
 };
 
 pub struct Sketch {
+    start: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
-    pub fn new() -> Self {
+    pub fn new(start: impl Into<Point<2>>) -> Self {
         Self {
+            start: start.into(),
             segments: Vec::new(),
         }
     }
@@ -67,7 +69,9 @@ impl Sketch {
         let [_, v2] = half_edges[e12.half_edge].boundary;
 
         let e20 = half_edges.push(HalfEdge { boundary: [v2, v0] });
-        self.push_half_edge([0., 0.], e20)
+
+        let start = self.start;
+        self.push_half_edge(start, e20)
     }
 
     pub fn build(
