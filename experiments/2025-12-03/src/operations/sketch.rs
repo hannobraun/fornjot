@@ -52,10 +52,7 @@ impl Sketch {
         self.push_half_edge(position, e01)
     }
 
-    pub fn close_with_half_edge(
-        self,
-        half_edges: &mut Store<HalfEdge>,
-    ) -> Sketch {
+    pub fn close(self, half_edges: &mut Store<HalfEdge>) -> Sketch {
         let [Some(e01), Some(e12)] =
             [self.segments.first(), self.segments.last()]
                 .map(|opt| opt.copied())

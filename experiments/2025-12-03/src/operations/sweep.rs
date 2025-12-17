@@ -40,7 +40,7 @@ pub fn half_edge_to_face(
         .push_half_edge([1., 0.], e01)
         .push_vertex([1., 1.], v2, half_edges)
         .push_vertex([0., 1.], v3, half_edges)
-        .close_with_half_edge(half_edges)
+        .close(half_edges)
         .build(vertices, half_edges, triangles, faces)
 }
 
