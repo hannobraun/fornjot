@@ -28,8 +28,11 @@ impl Sketch {
         position: impl Into<Point<2>>,
         half_edge: Index<HalfEdge>,
     ) -> Sketch {
-        let to = position.into();
-        self.segments.push(SketchSegment { to, half_edge });
+        let position = position.into();
+        self.segments.push(SketchSegment {
+            to: position,
+            half_edge,
+        });
         self
     }
 
