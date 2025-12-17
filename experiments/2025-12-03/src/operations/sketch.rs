@@ -128,9 +128,9 @@ impl Sketch<3> {
         };
 
         let [v0, _] = half_edges[e01.half_edge].boundary;
-        let [_, v3] = half_edges[e12.half_edge].boundary;
+        let [_, v2] = half_edges[e12.half_edge].boundary;
 
-        let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
+        let e30 = half_edges.push(HalfEdge { boundary: [v2, v0] });
 
         self.push_half_edge([0., 0.], e30)
     }
