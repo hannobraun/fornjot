@@ -16,9 +16,9 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn start_at(start: impl Into<Point<2>>) -> Self {
+    pub fn start_at(position: impl Into<Point<2>>) -> Self {
         Self {
-            start: start.into(),
+            start: position.into(),
             segments: Vec::new(),
         }
     }
