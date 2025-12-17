@@ -37,7 +37,7 @@ pub fn half_edge_to_face(
         .map(|v| vertices.push(vertices[v].position + path));
 
     Sketch::start_at([0., 0.])
-        .push_half_edge([1., 0.], e01)
+        .line_to_with([1., 0.], e01)
         .push_vertex([1., 1.], v2, half_edges)
         .push_vertex([0., 1.], v3, half_edges)
         .close(half_edges)
@@ -88,10 +88,10 @@ pub fn face_to_solid(
     let top = {
         let [e01, e12, e23, e30] = top_edges_for_top;
         Sketch::start_at([0., 0.])
-            .push_half_edge([1., 0.], e01)
-            .push_half_edge([1., 1.], e12)
-            .push_half_edge([0., 1.], e23)
-            .push_half_edge([0., 0.], e30)
+            .line_to_with([1., 0.], e01)
+            .line_to_with([1., 1.], e12)
+            .line_to_with([0., 1.], e23)
+            .line_to_with([0., 0.], e30)
             .build(vertices, half_edges, triangles, faces)
     };
 
@@ -128,10 +128,10 @@ pub fn face_to_solid(
             let left = half_edges.push(left);
 
             Sketch::start_at([0., 0.])
-                .push_half_edge([1., 0.], bottom)
-                .push_half_edge([1., 1.], right)
-                .push_half_edge([0., 1.], top)
-                .push_half_edge([0., 0.], left)
+                .line_to_with([1., 0.], bottom)
+                .line_to_with([1., 1.], right)
+                .line_to_with([0., 1.], top)
+                .line_to_with([0., 0.], left)
                 .build(vertices, half_edges, triangles, faces)
         });
 

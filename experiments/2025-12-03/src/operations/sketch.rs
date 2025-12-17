@@ -23,7 +23,7 @@ impl Sketch {
         }
     }
 
-    pub fn push_half_edge(
+    pub fn line_to_with(
         mut self,
         to: impl Into<Point<2>>,
         half_edge: Index<HalfEdge>,
@@ -51,7 +51,7 @@ impl Sketch {
         let [_, v1] = half_edges[e01.half_edge].boundary;
         let e01 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
-        self.push_half_edge(position, e01)
+        self.line_to_with(position, e01)
     }
 
     pub fn close(self, half_edges: &mut Store<HalfEdge>) -> Sketch {
@@ -71,7 +71,7 @@ impl Sketch {
         let e20 = half_edges.push(HalfEdge { boundary: [v2, v0] });
 
         let start = self.start;
-        self.push_half_edge(start, e20)
+        self.line_to_with(start, e20)
     }
 
     pub fn build(
