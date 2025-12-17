@@ -1,4 +1,5 @@
 use fj_math::Point;
+use spade::Triangulation;
 
 use crate::{
     objects::{
@@ -178,15 +179,27 @@ impl Sketch<4> {
         assert_eq!(v2, v2b);
         assert_eq!(v3, v3b);
 
-        let t012 = triangles.push([v0, v1, v2], vertices);
-        let t123 = triangles.push([v0, v2, v3], vertices);
+        let delaunay_points = self.boundary.iter().map(|segment| {
+            let [_, vertex] = half_edges[segment.half_edge].boundary;
+            DelaunayPoint {
+                position: segment.to,
+                vertex,
+            }
+        });
+        let triangles = delaunay(delaunay_points)
+            .into_iter()
+            .map(|triangle| {
+                let [v0, v1, v2] = triangle.map(|point| point.vertex);
+                triangles.push([v0, v1, v2], vertices)
+            })
+            .collect();
 
         faces.push(Face {
             boundary: [e01, e12, e23, e30]
                 .into_iter()
                 .map(|segment| segment.half_edge)
                 .collect(),
-            triangles: vec![t012, t123],
+            triangles,
         })
     }
 }
@@ -195,4 +208,32 @@ impl Sketch<4> {
 struct SketchSegment {
     pub to: Point<2>,
     pub half_edge: Index<HalfEdge>,
+}
+
+fn delaunay(
+    points: impl IntoIterator<Item = DelaunayPoint>,
+) -> Vec<[DelaunayPoint; 3]> {
+    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
+
+    triangulation.add_constraint_edges(points, true).unwrap();
+
+    triangulation
+        .inner_faces()
+        .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
+        .collect()
+}
+
+#[derive(Clone, Copy)]
+struct DelaunayPoint {
+    pub position: Point<2>,
+    pub vertex: Index<Vertex>,
+}
+
+impl spade::HasPosition for DelaunayPoint {
+    type Scalar = f64;
+
+    fn position(&self) -> spade::Point2<Self::Scalar> {
+        let [x, y] = self.position.coords.components.map(|s| s.into_f64());
+        spade::Point2 { x, y }
+    }
 }
