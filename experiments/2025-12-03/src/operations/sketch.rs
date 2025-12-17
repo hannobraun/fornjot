@@ -94,10 +94,10 @@ impl Sketch {
         faces: &mut Faces,
     ) -> Index<Face> {
         for (a, b) in self.segments.iter().circular_tuple_windows() {
-            let [_, a] = {
+            let a = {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
                     a.attachment;
-                half_edges[half_edge].boundary
+                half_edges[half_edge]
             };
             let [b, _] = {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
@@ -105,7 +105,7 @@ impl Sketch {
                 half_edges[half_edge].boundary
             };
 
-            assert_eq!(a, b);
+            assert_eq!(a.boundary[1], b);
         }
 
         let delaunay_points = self.segments.iter().map(|segment| {
