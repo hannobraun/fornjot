@@ -117,24 +117,14 @@ impl Sketch<3> {
         self,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<4> {
-        let [e01, e12, e23] = self.segments;
+        let [e01, _, e23] = self.segments;
 
         let [v0, _] = half_edges[e01.half_edge].boundary;
         let [_, v3] = half_edges[e23.half_edge].boundary;
 
         let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
-        Sketch {
-            segments: [
-                e01,
-                e12,
-                e23,
-                SketchSegment {
-                    to: Point::from([0., 0.]),
-                    half_edge: e30,
-                },
-            ],
-        }
+        self.push_half_edge([0., 0.], e30)
     }
 
     pub fn push_half_edge(
