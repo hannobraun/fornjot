@@ -25,10 +25,10 @@ impl Sketch {
 
     pub fn line_to_with(
         mut self,
-        to: impl Into<Point<2>>,
+        position: impl Into<Point<2>>,
         half_edge: Index<HalfEdge>,
     ) -> Sketch {
-        let to = to.into();
+        let to = position.into();
         self.segments.push(SketchSegment { to, half_edge });
         self
     }
