@@ -30,7 +30,7 @@ impl Sketch {
     ) -> Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
-            attachment: half_edge,
+            attachment: SketchSegmentAttachment::HalfEdge { half_edge },
         });
 
         self
@@ -51,7 +51,8 @@ impl Sketch {
             );
         };
 
-        let [_, v1] = half_edges[e01.attachment].boundary;
+        let SketchSegmentAttachment::HalfEdge { half_edge } = e01.attachment;
+        let [_, v1] = half_edges[half_edge].boundary;
         let e01 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
         self.line_to_with_half_edge(position, e01)
@@ -68,8 +69,16 @@ impl Sketch {
             );
         };
 
-        let [v0, _] = half_edges[e01.attachment].boundary;
-        let [_, v2] = half_edges[e12.attachment].boundary;
+        let [v0, _] = {
+            let SketchSegmentAttachment::HalfEdge { half_edge } =
+                e01.attachment;
+            half_edges[half_edge].boundary
+        };
+        let [_, v2] = {
+            let SketchSegmentAttachment::HalfEdge { half_edge } =
+                e12.attachment;
+            half_edges[half_edge].boundary
+        };
 
         let e20 = half_edges.push(HalfEdge { boundary: [v2, v0] });
 
@@ -85,14 +94,26 @@ impl Sketch {
         faces: &mut Faces,
     ) -> Index<Face> {
         for (a, b) in self.segments.iter().circular_tuple_windows() {
-            let [_, a] = half_edges[a.attachment].boundary;
-            let [b, _] = half_edges[b.attachment].boundary;
+            let [_, a] = {
+                let SketchSegmentAttachment::HalfEdge { half_edge } =
+                    a.attachment;
+                half_edges[half_edge].boundary
+            };
+            let [b, _] = {
+                let SketchSegmentAttachment::HalfEdge { half_edge } =
+                    b.attachment;
+                half_edges[half_edge].boundary
+            };
 
             assert_eq!(a, b);
         }
 
         let delaunay_points = self.segments.iter().map(|segment| {
-            let [_, vertex] = half_edges[segment.attachment].boundary;
+            let [_, vertex] = {
+                let SketchSegmentAttachment::HalfEdge { half_edge } =
+                    segment.attachment;
+                half_edges[half_edge].boundary
+            };
             DelaunayPoint {
                 position: segment.to,
                 vertex,
@@ -110,7 +131,11 @@ impl Sketch {
             boundary: self
                 .segments
                 .into_iter()
-                .map(|segment| segment.attachment)
+                .map(|segment| {
+                    let SketchSegmentAttachment::HalfEdge { half_edge } =
+                        segment.attachment;
+                    half_edge
+                })
                 .collect(),
             triangles,
         })
@@ -120,7 +145,12 @@ impl Sketch {
 #[derive(Clone, Copy)]
 struct SketchSegment {
     pub to: Point<2>,
-    pub attachment: Index<HalfEdge>,
+    pub attachment: SketchSegmentAttachment,
+}
+
+#[derive(Clone, Copy)]
+enum SketchSegmentAttachment {
+    HalfEdge { half_edge: Index<HalfEdge> },
 }
 
 fn delaunay(
