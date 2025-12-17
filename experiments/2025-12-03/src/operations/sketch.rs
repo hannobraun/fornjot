@@ -105,9 +105,7 @@ impl Sketch {
             .collect::<Vec<_>>();
 
         for (a, b) in boundary.iter().copied().circular_tuple_windows() {
-            let b = half_edges[b];
-
-            assert_eq!(half_edges[a].boundary[1], b.boundary[0]);
+            assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
         let delaunay_points = self.segments.iter().map(|segment| {
