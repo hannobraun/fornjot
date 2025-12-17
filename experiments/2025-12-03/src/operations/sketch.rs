@@ -11,12 +11,12 @@ use crate::{
 };
 
 pub struct Sketch<const SIZE: usize> {
-    boundary: [SketchSegment; SIZE],
+    segments: [SketchSegment; SIZE],
 }
 
 impl Sketch<0> {
     pub fn new() -> Self {
-        Self { boundary: [] }
+        Self { segments: [] }
     }
 
     pub fn push_half_edge(
@@ -26,10 +26,10 @@ impl Sketch<0> {
     ) -> Sketch<1> {
         let to = to.into();
 
-        let [] = self.boundary.map(|segment| segment.half_edge);
+        let [] = self.segments.map(|segment| segment.half_edge);
 
         Sketch {
-            boundary: [e01].map(|half_edge| SketchSegment { to, half_edge }),
+            segments: [e01].map(|half_edge| SketchSegment { to, half_edge }),
         }
     }
 }
@@ -42,10 +42,10 @@ impl Sketch<1> {
     ) -> Sketch<2> {
         let to = to.into();
 
-        let [e01] = self.boundary;
+        let [e01] = self.segments;
 
         Sketch {
-            boundary: [e01, SketchSegment { to, half_edge: e12 }],
+            segments: [e01, SketchSegment { to, half_edge: e12 }],
         }
     }
 
@@ -57,13 +57,13 @@ impl Sketch<1> {
     ) -> Sketch<2> {
         let position = position.into();
 
-        let [e01] = self.boundary;
+        let [e01] = self.segments;
 
         let [_, v1] = half_edges[e01.half_edge].boundary;
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
         Sketch {
-            boundary: [
+            segments: [
                 e01,
                 SketchSegment {
                     to: position,
@@ -82,10 +82,10 @@ impl Sketch<2> {
     ) -> Sketch<3> {
         let to = to.into();
 
-        let [e01, e12] = self.boundary;
+        let [e01, e12] = self.segments;
 
         Sketch {
-            boundary: [e01, e12, SketchSegment { to, half_edge: e23 }],
+            segments: [e01, e12, SketchSegment { to, half_edge: e23 }],
         }
     }
 
@@ -97,13 +97,13 @@ impl Sketch<2> {
     ) -> Sketch<3> {
         let position = position.into();
 
-        let [e01, e12] = self.boundary;
+        let [e01, e12] = self.segments;
 
         let [_, v2] = half_edges[e12.half_edge].boundary;
         let e23 = half_edges.push(HalfEdge { boundary: [v2, v3] });
 
         Sketch {
-            boundary: [
+            segments: [
                 e01,
                 e12,
                 SketchSegment {
@@ -120,7 +120,7 @@ impl Sketch<3> {
         self,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<4> {
-        let [e01, e12, e23] = self.boundary;
+        let [e01, e12, e23] = self.segments;
 
         let [v0, _] = half_edges[e01.half_edge].boundary;
         let [_, v3] = half_edges[e23.half_edge].boundary;
@@ -128,7 +128,7 @@ impl Sketch<3> {
         let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
         Sketch {
-            boundary: [
+            segments: [
                 e01,
                 e12,
                 e23,
@@ -147,10 +147,10 @@ impl Sketch<3> {
     ) -> Sketch<4> {
         let to = to.into();
 
-        let [e01, e12, e23] = self.boundary;
+        let [e01, e12, e23] = self.segments;
 
         Sketch {
-            boundary: [e01, e12, e23, SketchSegment { to, half_edge: e30 }],
+            segments: [e01, e12, e23, SketchSegment { to, half_edge: e30 }],
         }
     }
 }
@@ -163,14 +163,14 @@ impl Sketch<4> {
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
-        for (a, b) in self.boundary.iter().circular_tuple_windows() {
+        for (a, b) in self.segments.iter().circular_tuple_windows() {
             let [_, a] = half_edges[a.half_edge].boundary;
             let [b, _] = half_edges[b.half_edge].boundary;
 
             assert_eq!(a, b);
         }
 
-        let delaunay_points = self.boundary.iter().map(|segment| {
+        let delaunay_points = self.segments.iter().map(|segment| {
             let [_, vertex] = half_edges[segment.half_edge].boundary;
             DelaunayPoint {
                 position: segment.to,
@@ -187,7 +187,7 @@ impl Sketch<4> {
 
         faces.push(Face {
             boundary: self
-                .boundary
+                .segments
                 .into_iter()
                 .map(|segment| segment.half_edge)
                 .collect(),
