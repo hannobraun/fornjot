@@ -117,7 +117,7 @@ impl Sketch<3> {
         self,
         half_edges: &mut Store<HalfEdge>,
     ) -> Sketch<4> {
-        let [Some(e01), Some(e23)] =
+        let [Some(e01), Some(e12)] =
             [self.segments.first(), self.segments.last()]
                 .map(|opt| opt.copied())
         else {
@@ -128,7 +128,7 @@ impl Sketch<3> {
         };
 
         let [v0, _] = half_edges[e01.half_edge].boundary;
-        let [_, v3] = half_edges[e23.half_edge].boundary;
+        let [_, v3] = half_edges[e12.half_edge].boundary;
 
         let e30 = half_edges.push(HalfEdge { boundary: [v3, v0] });
 
