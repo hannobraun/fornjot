@@ -102,7 +102,7 @@ impl Sketch {
                     segment.attachment;
                 half_edge
             })
-            .collect();
+            .collect::<Vec<_>>();
 
         for (a, b) in self.segments.iter().circular_tuple_windows() {
             let a = {
