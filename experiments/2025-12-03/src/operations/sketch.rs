@@ -67,15 +67,7 @@ impl Sketch<1> {
         let [_, v1] = half_edges[e01.half_edge].boundary;
         let e12 = half_edges.push(HalfEdge { boundary: [v1, v2] });
 
-        Sketch {
-            segments: [
-                e01,
-                SketchSegment {
-                    to: position,
-                    half_edge: e12,
-                },
-            ],
-        }
+        self.push_half_edge(position, e12)
     }
 }
 
