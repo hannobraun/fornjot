@@ -1,4 +1,5 @@
 use fj_math::Point;
+use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
@@ -164,15 +165,12 @@ impl Sketch<4> {
     ) -> Index<Face> {
         let [e01, e12, e23, e30] = self.boundary;
 
-        let [v0, v1b] = half_edges[e01.half_edge].boundary;
-        let [v1, v2b] = half_edges[e12.half_edge].boundary;
-        let [v2, v3b] = half_edges[e23.half_edge].boundary;
-        let [v3, v0b] = half_edges[e30.half_edge].boundary;
+        for (a, b) in self.boundary.iter().circular_tuple_windows() {
+            let [_, a] = half_edges[a.half_edge].boundary;
+            let [b, _] = half_edges[b.half_edge].boundary;
 
-        assert_eq!(v0, v0b);
-        assert_eq!(v1, v1b);
-        assert_eq!(v2, v2b);
-        assert_eq!(v3, v3b);
+            assert_eq!(a, b);
+        }
 
         let delaunay_points = self.boundary.iter().map(|segment| {
             let [_, vertex] = half_edges[segment.half_edge].boundary;
