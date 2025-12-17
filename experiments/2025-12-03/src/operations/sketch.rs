@@ -99,13 +99,13 @@ impl Sketch {
                     a.attachment;
                 half_edges[half_edge]
             };
-            let [b, _] = {
+            let b = {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
                     b.attachment;
-                half_edges[half_edge].boundary
+                half_edges[half_edge]
             };
 
-            assert_eq!(a.boundary[1], b);
+            assert_eq!(a.boundary[1], b.boundary[0]);
         }
 
         let delaunay_points = self.segments.iter().map(|segment| {
