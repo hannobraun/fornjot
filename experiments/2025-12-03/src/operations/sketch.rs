@@ -30,60 +30,34 @@ impl Sketch {
     ) -> Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
-            attachment: SketchSegmentAttachment::HalfEdge { half_edge },
+            attachment: Some(SketchSegmentAttachment::HalfEdge { half_edge }),
         });
 
         self
     }
 
     pub fn line_to_vertex(
-        self,
+        mut self,
         position: impl Into<Point<2>>,
         v2: Index<Vertex>,
-        half_edges: &mut Store<HalfEdge>,
+        _: &mut Store<HalfEdge>,
     ) -> Sketch {
         let position = position.into();
+        self.segments.push(SketchSegment {
+            to: position,
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex: v2 }),
+        });
 
-        let Some(e01) = self.segments.last().copied() else {
-            panic!(
-                "Can't push single vertex to sketch, unless at least one \
-                half-edge is already available."
-            );
-        };
-
-        let SketchSegmentAttachment::HalfEdge { half_edge } = e01.attachment;
-        let [_, v1] = half_edges[half_edge].boundary;
-        let e01 = half_edges.push(HalfEdge { boundary: [v1, v2] });
-
-        self.line_to_with_half_edge(position, e01)
+        self
     }
 
-    pub fn close(self, half_edges: &mut Store<HalfEdge>) -> Sketch {
-        let [Some(e01), Some(e12)] =
-            [self.segments.first(), self.segments.last()]
-                .map(|opt| opt.copied())
-        else {
-            panic!(
-                "Can't close sketch, if there's not already at least one \
-                half-edge."
-            );
-        };
+    pub fn close(mut self, _: &mut Store<HalfEdge>) -> Sketch {
+        self.segments.push(SketchSegment {
+            to: self.start,
+            attachment: None,
+        });
 
-        let [v0, _] = {
-            let SketchSegmentAttachment::HalfEdge { half_edge } =
-                e01.attachment;
-            half_edges[half_edge].boundary
-        };
-        let [_, v2] = {
-            let SketchSegmentAttachment::HalfEdge { half_edge } =
-                e12.attachment;
-            half_edges[half_edge].boundary
-        };
-
-        let e20 = half_edges.push(HalfEdge { boundary: [v2, v0] });
-
-        let start = self.start;
-        self.line_to_with_half_edge(start, e20)
+        self
     }
 
     pub fn into_face(
@@ -98,13 +72,66 @@ impl Sketch {
             .segments
             .into_iter()
             .circular_tuple_windows()
-            .map(|(_, current, _)| {
-                let _ = surface.origin;
-                let _ = surface.axes;
-
+            .map(|(prev, current, next)| {
                 let half_edge = match current.attachment {
-                    SketchSegmentAttachment::HalfEdge { half_edge } => {
+                    Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                         half_edge
+                    }
+                    Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
+                        let v0 = match prev.attachment {
+                            Some(SketchSegmentAttachment::HalfEdge {
+                                half_edge,
+                            }) => {
+                                let [_, vertex] =
+                                    half_edges[half_edge].boundary;
+                                vertex
+                            }
+                            Some(SketchSegmentAttachment::Vertex {
+                                vertex,
+                            }) => vertex,
+                            None => {
+                                let position = surface.local_to_global(prev.to);
+                                vertices.push(Vertex { position })
+                            }
+                        };
+
+                        half_edges.push(HalfEdge { boundary: [v0, v1] })
+                    }
+                    None => {
+                        let v0 = match prev.attachment {
+                            Some(SketchSegmentAttachment::HalfEdge {
+                                half_edge,
+                            }) => {
+                                let [_, vertex] =
+                                    half_edges[half_edge].boundary;
+                                vertex
+                            }
+                            Some(SketchSegmentAttachment::Vertex {
+                                vertex,
+                            }) => vertex,
+                            None => {
+                                let position = surface.local_to_global(prev.to);
+                                vertices.push(Vertex { position })
+                            }
+                        };
+                        let v1 = match next.attachment {
+                            Some(SketchSegmentAttachment::HalfEdge {
+                                half_edge,
+                            }) => {
+                                let [vertex, _] =
+                                    half_edges[half_edge].boundary;
+                                vertex
+                            }
+                            Some(SketchSegmentAttachment::Vertex {
+                                vertex: _,
+                            })
+                            | None => {
+                                let position = surface.local_to_global(prev.to);
+                                vertices.push(Vertex { position })
+                            }
+                        };
+
+                        half_edges.push(HalfEdge { boundary: [v0, v1] })
                     }
                 };
 
@@ -149,15 +176,25 @@ pub struct Surface {
     pub axes: [Vector<3>; 2],
 }
 
+impl Surface {
+    pub fn local_to_global(&self, local: Point<2>) -> Point<3> {
+        let [u, v] = local.coords.components;
+        let [axis_u, axis_v] = self.axes;
+
+        self.origin + axis_u * u + axis_v * v
+    }
+}
+
 #[derive(Clone, Copy)]
 struct SketchSegment {
     pub to: Point<2>,
-    pub attachment: SketchSegmentAttachment,
+    pub attachment: Option<SketchSegmentAttachment>,
 }
 
 #[derive(Clone, Copy)]
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
+    Vertex { vertex: Index<Vertex> },
 }
 
 fn delaunay(
