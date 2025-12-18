@@ -47,7 +47,7 @@ fn model() -> TriMesh {
     );
 
     // Sweep lower-left edge into bottom face.
-    let f0264 = sweep::half_edge_to_face(
+    let bottom_face = sweep::half_edge_to_face(
         lower_left_edge,
         [1., 0., 0.],
         &mut vertices,
@@ -58,7 +58,7 @@ fn model() -> TriMesh {
 
     // Sweep bottom face into cube.
     let s01234567 = sweep::face_to_solid(
-        f0264,
+        bottom_face,
         [0., 0., 1.],
         &mut vertices,
         &mut triangles,
