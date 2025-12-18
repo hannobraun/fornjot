@@ -97,11 +97,11 @@ impl Sketch {
             .segments
             .into_iter()
             .circular_tuple_windows()
-            .map(|(segment, _)| {
+            .map(|(current, _)| {
                 let SketchSegmentAttachment::HalfEdge { half_edge } =
-                    segment.attachment;
+                    current.attachment;
 
-                (segment.to, half_edge)
+                (current.to, half_edge)
             })
             .collect::<Vec<_>>();
 
