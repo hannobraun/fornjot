@@ -27,7 +27,7 @@ impl Sketch {
         mut self,
         position: impl Into<Point<2>>,
         half_edge: Index<HalfEdge>,
-    ) -> Sketch {
+    ) -> Self {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::HalfEdge { half_edge }),
@@ -40,7 +40,7 @@ impl Sketch {
         mut self,
         position: impl Into<Point<2>>,
         vertex: Index<Vertex>,
-    ) -> Sketch {
+    ) -> Self {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
@@ -49,7 +49,7 @@ impl Sketch {
         self
     }
 
-    pub fn close(mut self) -> Sketch {
+    pub fn close(mut self) -> Self {
         self.segments.push(SketchSegment {
             to: self.start,
             attachment: None,
