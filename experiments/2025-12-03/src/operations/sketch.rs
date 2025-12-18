@@ -88,7 +88,7 @@ impl Sketch {
 
     pub fn into_face(
         self,
-        _: Surface,
+        surface: Surface,
         vertices: &mut Store<Vertex>,
         triangles: &mut Triangles,
         half_edges: &mut Store<HalfEdge>,
@@ -99,6 +99,8 @@ impl Sketch {
             .into_iter()
             .circular_tuple_windows()
             .map(|(_, current, _)| {
+                let _ = surface;
+
                 let half_edge = match current.attachment {
                     SketchSegmentAttachment::HalfEdge { half_edge } => {
                         half_edge
