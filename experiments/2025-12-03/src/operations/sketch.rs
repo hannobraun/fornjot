@@ -88,7 +88,7 @@ impl Sketch {
 
     pub fn build(
         self,
-        vertices: &Store<Vertex>,
+        vertices: &mut Store<Vertex>,
         half_edges: &Store<HalfEdge>,
         triangles: &mut Triangles,
         faces: &mut Faces,
