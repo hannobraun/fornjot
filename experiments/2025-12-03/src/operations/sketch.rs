@@ -98,8 +98,11 @@ impl Sketch {
             .into_iter()
             .circular_tuple_windows()
             .map(|(_, current, _)| {
-                let SketchSegmentAttachment::HalfEdge { half_edge } =
-                    current.attachment;
+                let half_edge = match current.attachment {
+                    SketchSegmentAttachment::HalfEdge { half_edge } => {
+                        half_edge
+                    }
+                };
 
                 (current.to, half_edge)
             })
