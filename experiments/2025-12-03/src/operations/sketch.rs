@@ -39,13 +39,13 @@ impl Sketch {
     pub fn line_to_vertex(
         mut self,
         position: impl Into<Point<2>>,
-        v2: Index<Vertex>,
+        vertex: Index<Vertex>,
         _: &mut Store<HalfEdge>,
     ) -> Sketch {
         let position = position.into();
         self.segments.push(SketchSegment {
             to: position,
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex: v2 }),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
         self
