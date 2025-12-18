@@ -59,7 +59,7 @@ impl Sketch {
     }
 
     pub fn into_face(
-        self,
+        mut self,
         surface: Surface,
         vertices: &mut Store<Vertex>,
         triangles: &mut Triangles,
@@ -139,6 +139,8 @@ impl Sketch {
             };
 
             positions_and_half_edges.push((current.to, half_edge));
+            self.segments[i].attachment =
+                Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
         for ((_, a), (_, b)) in positions_and_half_edges
