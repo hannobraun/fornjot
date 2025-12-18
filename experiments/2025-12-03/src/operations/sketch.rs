@@ -89,7 +89,7 @@ impl Sketch {
     pub fn build(
         self,
         vertices: &mut Store<Vertex>,
-        half_edges: &Store<HalfEdge>,
+        half_edges: &mut Store<HalfEdge>,
         triangles: &mut Triangles,
         faces: &mut Faces,
     ) -> Index<Face> {
