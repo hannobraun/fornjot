@@ -1,11 +1,15 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
+use fj_math::{Point, Vector};
 
 use crate::{
     objects::{
         geometry::{Triangle, Triangles},
         topology::Faces,
     },
-    operations::sweep,
+    operations::{
+        sketch::{Sketch, Surface},
+        sweep,
+    },
     store::Store,
 };
 
@@ -35,23 +39,21 @@ fn model() -> TriMesh {
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let bottom_front_left_vertex = vertices.push([0., 0., 0.]);
-
-    let bottom_left_edge = sweep::vertex_to_half_edge(
-        bottom_front_left_vertex,
-        [0., 1., 0.],
-        &mut vertices,
-        &mut half_edges,
-    );
-
-    let bottom_face = sweep::half_edge_to_face(
-        bottom_left_edge,
-        [1., 0., 0.],
-        &mut vertices,
-        &mut triangles,
-        &mut half_edges,
-        &mut faces,
-    );
+    let bottom_face = Sketch::start_at([0., 0.])
+        .line_to([1., 0.])
+        .line_to([1., 1.])
+        .line_to([0., 1.])
+        .close()
+        .into_face(
+            Surface {
+                origin: Point::from([0., 0., 0.]),
+                axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
+            },
+            &mut vertices,
+            &mut triangles,
+            &mut half_edges,
+            &mut faces,
+        );
 
     let cube = sweep::face_to_solid(
         bottom_face,

@@ -13,52 +13,6 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn vertex_to_half_edge(
-    v0: Index<Vertex>,
-    path: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    half_edges: &mut Store<HalfEdge>,
-) -> Index<HalfEdge> {
-    let path = path.into();
-
-    let v1 = vertices.push(vertices[v0].position + path);
-    half_edges.push(HalfEdge { boundary: [v0, v1] })
-}
-
-pub fn half_edge_to_face(
-    e01: Index<HalfEdge>,
-    path: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    triangles: &mut Triangles,
-    half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
-) -> Index<Face> {
-    let path = path.into();
-
-    let [v3, v2] = half_edges[e01]
-        .boundary
-        .map(|v| vertices.push(vertices[v].position + path));
-
-    let surface = {
-        let [v0, v1] = half_edges[e01].boundary;
-
-        Surface {
-            origin: vertices[v0].position,
-            axes: [
-                vertices[v1].position - vertices[v0].position,
-                vertices[v3].position - vertices[v0].position,
-            ],
-        }
-    };
-
-    Sketch::start_at([0., 0.])
-        .line_to_with_half_edge([1., 0.], e01)
-        .line_to_vertex([1., 1.], v2)
-        .line_to_vertex([0., 1.], v3)
-        .close()
-        .into_face(surface, vertices, triangles, half_edges, faces)
-}
-
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
