@@ -49,7 +49,7 @@ impl Sketch {
         self
     }
 
-    pub fn close(mut self, _: &mut Store<HalfEdge>) -> Sketch {
+    pub fn close(mut self) -> Sketch {
         self.segments.push(SketchSegment {
             to: self.start,
             attachment: None,

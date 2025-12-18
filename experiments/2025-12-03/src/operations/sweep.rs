@@ -55,7 +55,7 @@ pub fn half_edge_to_face(
         .line_to_with_half_edge([1., 0.], e01)
         .line_to_vertex([1., 1.], v2)
         .line_to_vertex([0., 1.], v3)
-        .close(half_edges)
+        .close()
         .into_face(surface, vertices, triangles, half_edges, faces)
 }
 
