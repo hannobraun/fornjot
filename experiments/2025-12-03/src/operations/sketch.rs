@@ -66,77 +66,80 @@ impl Sketch {
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Faces,
     ) -> Index<Face> {
-        let positions_and_half_edges = self
-            .segments
-            .into_iter()
-            .circular_tuple_windows()
-            .map(|(prev, current, next)| {
-                let half_edge = match current.attachment {
-                    Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                        half_edge
-                    }
-                    Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                        let v0 = match prev.attachment {
-                            Some(SketchSegmentAttachment::HalfEdge {
-                                half_edge,
-                            }) => {
-                                let [_, vertex] =
-                                    half_edges[half_edge].boundary;
-                                vertex
-                            }
-                            Some(SketchSegmentAttachment::Vertex {
-                                vertex,
-                            }) => vertex,
-                            None => {
-                                let position = surface.local_to_global(prev.to);
-                                vertices.push(Vertex { position })
-                            }
-                        };
+        let Some(last_segment_index) = self.segments.len().checked_sub(1)
+        else {
+            panic!("Empty sketches are not supported at this point.");
+        };
 
-                        half_edges.push(HalfEdge { boundary: [v0, v1] })
-                    }
-                    None => {
-                        let v0 = match prev.attachment {
-                            Some(SketchSegmentAttachment::HalfEdge {
-                                half_edge,
-                            }) => {
-                                let [_, vertex] =
-                                    half_edges[half_edge].boundary;
-                                vertex
-                            }
-                            Some(SketchSegmentAttachment::Vertex {
-                                vertex,
-                            }) => vertex,
-                            None => {
-                                let position = surface.local_to_global(prev.to);
-                                vertices.push(Vertex { position })
-                            }
-                        };
-                        let v1 = match next.attachment {
-                            Some(SketchSegmentAttachment::HalfEdge {
-                                half_edge,
-                            }) => {
-                                let [vertex, _] =
-                                    half_edges[half_edge].boundary;
-                                vertex
-                            }
-                            Some(SketchSegmentAttachment::Vertex {
-                                vertex: _,
-                            })
-                            | None => {
-                                let position =
-                                    surface.local_to_global(current.to);
-                                vertices.push(Vertex { position })
-                            }
-                        };
+        let mut positions_and_half_edges = Vec::new();
 
-                        half_edges.push(HalfEdge { boundary: [v0, v1] })
-                    }
-                };
+        for i in 0..=last_segment_index {
+            let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
+            let next_i = if i == last_segment_index { 0 } else { i + 1 };
 
-                (current.to, half_edge)
-            })
-            .collect::<Vec<_>>();
+            let current = self.segments[i];
+            let prev = self.segments[prev_i];
+            let next = self.segments[next_i];
+
+            let half_edge = match current.attachment {
+                Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                    half_edge
+                }
+                Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
+                    let v0 = match prev.attachment {
+                        Some(SketchSegmentAttachment::HalfEdge {
+                            half_edge,
+                        }) => {
+                            let [_, vertex] = half_edges[half_edge].boundary;
+                            vertex
+                        }
+                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
+                            vertex
+                        }
+                        None => {
+                            let position = surface.local_to_global(prev.to);
+                            vertices.push(Vertex { position })
+                        }
+                    };
+
+                    half_edges.push(HalfEdge { boundary: [v0, v1] })
+                }
+                None => {
+                    let v0 = match prev.attachment {
+                        Some(SketchSegmentAttachment::HalfEdge {
+                            half_edge,
+                        }) => {
+                            let [_, vertex] = half_edges[half_edge].boundary;
+                            vertex
+                        }
+                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
+                            vertex
+                        }
+                        None => {
+                            let position = surface.local_to_global(prev.to);
+                            vertices.push(Vertex { position })
+                        }
+                    };
+                    let v1 = match next.attachment {
+                        Some(SketchSegmentAttachment::HalfEdge {
+                            half_edge,
+                        }) => {
+                            let [vertex, _] = half_edges[half_edge].boundary;
+                            vertex
+                        }
+                        Some(SketchSegmentAttachment::Vertex { vertex: _ })
+                        | None => {
+                            let position = surface.local_to_global(current.to);
+                            vertices.push(Vertex { position })
+                        }
+                    };
+
+                    half_edges.push(HalfEdge { boundary: [v0, v1] })
+                }
+            };
+
+            positions_and_half_edges.push((current.to, half_edge));
+        }
 
         for ((_, a), (_, b)) in positions_and_half_edges
             .iter()
