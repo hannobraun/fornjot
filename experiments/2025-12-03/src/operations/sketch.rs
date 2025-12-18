@@ -183,13 +183,13 @@ impl Surface {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct SketchSegment {
     pub to: Point<2>,
     pub attachment: Option<SketchSegmentAttachment>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
     Vertex { vertex: Index<Vertex> },
