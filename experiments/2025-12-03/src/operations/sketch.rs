@@ -88,6 +88,7 @@ impl Sketch {
 
     pub fn into_face(
         self,
+        _: Surface,
         vertices: &mut Store<Vertex>,
         triangles: &mut Triangles,
         half_edges: &mut Store<HalfEdge>,
@@ -139,6 +140,8 @@ impl Sketch {
         })
     }
 }
+
+pub struct Surface {}
 
 #[derive(Clone, Copy)]
 struct SketchSegment {

@@ -6,7 +6,10 @@ use crate::{
         geometry::{Triangles, Vertex},
         topology::{Face, Faces, HalfEdge, Solid},
     },
-    operations::{reverse, sketch::Sketch},
+    operations::{
+        reverse,
+        sketch::{Sketch, Surface},
+    },
     store::{Index, Store},
 };
 
@@ -36,12 +39,14 @@ pub fn half_edge_to_face(
         .boundary
         .map(|v| vertices.push(vertices[v].position + path));
 
+    let surface = Surface {};
+
     Sketch::start_at([0., 0.])
         .line_to_with_half_edge([1., 0.], e01)
         .line_to_vertex([1., 1.], v2, half_edges)
         .line_to_vertex([0., 1.], v3, half_edges)
         .close(half_edges)
-        .into_face(vertices, triangles, half_edges, faces)
+        .into_face(surface, vertices, triangles, half_edges, faces)
 }
 
 pub fn face_to_solid(
@@ -88,12 +93,14 @@ pub fn face_to_solid(
     let top = {
         let [e01, e12, e23, e30] = top_edges_for_top;
 
+        let surface = Surface {};
+
         Sketch::start_at([0., 0.])
             .line_to_with_half_edge([1., 0.], e01)
             .line_to_with_half_edge([1., 1.], e12)
             .line_to_with_half_edge([0., 1.], e23)
             .line_to_with_half_edge([0., 0.], e30)
-            .into_face(vertices, triangles, half_edges, faces)
+            .into_face(surface, vertices, triangles, half_edges, faces)
     };
 
     let side_edges_going_up = bottom_vertices
@@ -128,12 +135,14 @@ pub fn face_to_solid(
             let top = half_edges.push(top);
             let left = half_edges.push(left);
 
+            let surface = Surface {};
+
             Sketch::start_at([0., 0.])
                 .line_to_with_half_edge([1., 0.], bottom)
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .into_face(vertices, triangles, half_edges, faces)
+                .into_face(surface, vertices, triangles, half_edges, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
