@@ -57,7 +57,7 @@ fn model() -> TriMesh {
     );
 
     // Sweep bottom face into cube.
-    let s01234567 = sweep::face_to_solid(
+    let cube = sweep::face_to_solid(
         bottom_face,
         [0., 0., 1.],
         &mut vertices,
@@ -69,7 +69,7 @@ fn model() -> TriMesh {
 
     let mut tri_mesh = TriMesh::new();
 
-    let triangles = solids[s01234567]
+    let triangles = solids[cube]
         .boundary
         .iter()
         .copied()
