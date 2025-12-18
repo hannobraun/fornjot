@@ -99,7 +99,7 @@ impl Sketch {
             .into_iter()
             .circular_tuple_windows()
             .map(|(_, current, _)| {
-                let _ = surface;
+                let _ = surface.origin;
 
                 let half_edge = match current.attachment {
                     SketchSegmentAttachment::HalfEdge { half_edge } => {
@@ -143,7 +143,9 @@ impl Sketch {
     }
 }
 
-pub struct Surface {}
+pub struct Surface {
+    pub origin: Point<3>,
+}
 
 #[derive(Clone, Copy)]
 struct SketchSegment {
