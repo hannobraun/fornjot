@@ -41,7 +41,7 @@ pub fn half_edge_to_face(
         .line_to_vertex([1., 1.], v2, half_edges)
         .line_to_vertex([0., 1.], v3, half_edges)
         .close(half_edges)
-        .build(vertices, half_edges, triangles, faces)
+        .build(vertices, triangles, half_edges, faces)
 }
 
 pub fn face_to_solid(
@@ -92,7 +92,7 @@ pub fn face_to_solid(
             .line_to_with_half_edge([1., 1.], e12)
             .line_to_with_half_edge([0., 1.], e23)
             .line_to_with_half_edge([0., 0.], e30)
-            .build(vertices, half_edges, triangles, faces)
+            .build(vertices, triangles, half_edges, faces)
     };
 
     let side_edges_going_up = bottom_vertices
@@ -132,7 +132,7 @@ pub fn face_to_solid(
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .build(vertices, half_edges, triangles, faces)
+                .build(vertices, triangles, half_edges, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();

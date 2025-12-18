@@ -89,8 +89,8 @@ impl Sketch {
     pub fn build(
         self,
         vertices: &mut Store<Vertex>,
-        half_edges: &mut Store<HalfEdge>,
         triangles: &mut Triangles,
+        half_edges: &mut Store<HalfEdge>,
         faces: &mut Faces,
     ) -> Index<Face> {
         let positions_and_half_edges = self
