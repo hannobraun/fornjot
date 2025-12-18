@@ -35,10 +35,8 @@ fn model() -> TriMesh {
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    // Push initial vertex.
     let bottom_front_left_vertex = vertices.push([0., 0., 0.]);
 
-    // Sweep initial vertex into lower-left edge.
     let bottom_left_edge = sweep::vertex_to_half_edge(
         bottom_front_left_vertex,
         [0., 1., 0.],
@@ -46,7 +44,6 @@ fn model() -> TriMesh {
         &mut half_edges,
     );
 
-    // Sweep lower-left edge into bottom face.
     let bottom_face = sweep::half_edge_to_face(
         bottom_left_edge,
         [1., 0., 0.],
@@ -56,7 +53,6 @@ fn model() -> TriMesh {
         &mut faces,
     );
 
-    // Sweep bottom face into cube.
     let cube = sweep::face_to_solid(
         bottom_face,
         [0., 0., 1.],
