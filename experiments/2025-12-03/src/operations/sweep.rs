@@ -87,6 +87,7 @@ pub fn face_to_solid(
 
     let top = {
         let [e01, e12, e23, e30] = top_edges_for_top;
+
         Sketch::start_at([0., 0.])
             .line_to_with_half_edge([1., 0.], e01)
             .line_to_with_half_edge([1., 1.], e12)
