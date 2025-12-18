@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj_math::{Point, Vector};
 use itertools::Itertools;
 use spade::Triangulation;
 
@@ -100,6 +100,7 @@ impl Sketch {
             .circular_tuple_windows()
             .map(|(_, current, _)| {
                 let _ = surface.origin;
+                let _ = surface.axes;
 
                 let half_edge = match current.attachment {
                     SketchSegmentAttachment::HalfEdge { half_edge } => {
@@ -145,6 +146,7 @@ impl Sketch {
 
 pub struct Surface {
     pub origin: Point<3>,
+    pub axes: [Vector<3>; 2],
 }
 
 #[derive(Clone, Copy)]

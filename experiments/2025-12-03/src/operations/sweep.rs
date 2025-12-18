@@ -40,10 +40,14 @@ pub fn half_edge_to_face(
         .map(|v| vertices.push(vertices[v].position + path));
 
     let surface = {
-        let [v0, _] = half_edges[e01].boundary;
+        let [v0, v1] = half_edges[e01].boundary;
 
         Surface {
             origin: vertices[v0].position,
+            axes: [
+                vertices[v1].position - vertices[v0].position,
+                vertices[v3].position - vertices[v0].position,
+            ],
         }
     };
 
@@ -99,10 +103,15 @@ pub fn face_to_solid(
     let top = {
         let [e01, e12, e23, e30] = top_edges_for_top;
 
-        let [v0, _] = half_edges[e01].boundary;
+        let [v0, v1] = half_edges[e01].boundary;
+        let [_, v3] = half_edges[e23].boundary;
 
         let surface = Surface {
             origin: vertices[v0].position,
+            axes: [
+                vertices[v1].position - vertices[v0].position,
+                vertices[v3].position - vertices[v0].position,
+            ],
         };
 
         Sketch::start_at([0., 0.])
@@ -141,7 +150,8 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let [v0, _] = half_edges[bottom].boundary;
+            let [v0, v1] = half_edges[bottom].boundary;
+            let [_, v3] = top.boundary;
 
             let right = half_edges.push(right);
             let top = half_edges.push(top);
@@ -149,6 +159,10 @@ pub fn face_to_solid(
 
             let surface = Surface {
                 origin: vertices[v0].position,
+                axes: [
+                    vertices[v1].position - vertices[v0].position,
+                    vertices[v3].position - vertices[v0].position,
+                ],
             };
 
             Sketch::start_at([0., 0.])
