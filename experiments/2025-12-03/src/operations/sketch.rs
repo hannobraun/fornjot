@@ -124,7 +124,8 @@ impl Sketch {
                                 vertex: _,
                             })
                             | None => {
-                                let position = surface.local_to_global(prev.to);
+                                let position =
+                                    surface.local_to_global(current.to);
                                 vertices.push(Vertex { position })
                             }
                         };
