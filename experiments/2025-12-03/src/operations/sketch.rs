@@ -41,9 +41,8 @@ impl Sketch {
         position: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Sketch {
-        let position = position.into();
         self.segments.push(SketchSegment {
-            to: position,
+            to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
