@@ -53,8 +53,8 @@ pub fn half_edge_to_face(
 
     Sketch::start_at([0., 0.])
         .line_to_with_half_edge([1., 0.], e01)
-        .line_to_vertex([1., 1.], v2, half_edges)
-        .line_to_vertex([0., 1.], v3, half_edges)
+        .line_to_vertex([1., 1.], v2)
+        .line_to_vertex([0., 1.], v3)
         .close(half_edges)
         .into_face(surface, vertices, triangles, half_edges, faces)
 }

@@ -40,7 +40,6 @@ impl Sketch {
         mut self,
         position: impl Into<Point<2>>,
         vertex: Index<Vertex>,
-        _: &mut Store<HalfEdge>,
     ) -> Sketch {
         let position = position.into();
         self.segments.push(SketchSegment {
