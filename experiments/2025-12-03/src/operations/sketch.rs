@@ -86,7 +86,7 @@ impl Sketch {
         self.line_to_with_half_edge(start, e20)
     }
 
-    pub fn build(
+    pub fn into_face(
         self,
         vertices: &mut Store<Vertex>,
         triangles: &mut Triangles,
