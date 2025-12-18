@@ -36,11 +36,11 @@ fn model() -> TriMesh {
     let mut solids = Store::default();
 
     // Push initial vertex.
-    let lower_front_left_vertex = vertices.push([0., 0., 0.]);
+    let bottom_front_left_vertex = vertices.push([0., 0., 0.]);
 
     // Sweep initial vertex into lower-left edge.
     let lower_left_edge = sweep::vertex_to_half_edge(
-        lower_front_left_vertex,
+        bottom_front_left_vertex,
         [0., 1., 0.],
         &mut vertices,
         &mut half_edges,
