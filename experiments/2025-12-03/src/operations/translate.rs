@@ -31,12 +31,12 @@ pub fn vertex(
 }
 
 pub fn face(
-    face: Index<Face>,
+    face: &Face,
     offset: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
-    faces: &Faces,
+    _: &Faces,
 ) -> Face {
     use vertex as translate_vertex;
 
@@ -44,7 +44,7 @@ pub fn face(
 
     let mut vertex_cache = BTreeMap::new();
 
-    let boundary = faces[face]
+    let boundary = face
         .boundary
         .iter()
         .copied()
@@ -61,7 +61,7 @@ pub fn face(
             })
         })
         .collect();
-    let triangles = faces[face]
+    let triangles = face
         .triangles
         .iter()
         .copied()

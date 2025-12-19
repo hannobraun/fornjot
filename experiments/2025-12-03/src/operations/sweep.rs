@@ -39,7 +39,12 @@ pub fn face_to_solid(
 
     let top = {
         let top = translate::face(
-            bottom_inv, path, vertices, triangles, half_edges, faces,
+            &faces[bottom_inv],
+            path,
+            vertices,
+            triangles,
+            half_edges,
+            faces,
         );
         faces.push(top)
     };
