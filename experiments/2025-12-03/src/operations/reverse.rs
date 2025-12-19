@@ -27,7 +27,7 @@ pub fn face(
     vertices: &Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
+    faces: &Faces,
 ) -> Face {
     let boundary = faces[f0123]
         .boundary
