@@ -37,14 +37,16 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let top_vertices = bottom_vertices
-        .iter()
-        .copied()
-        .map(|v| {
-            let position = vertices[v].position + path;
-            vertices.push(Vertex { position })
-        })
-        .collect::<Vec<_>>();
+    let top_vertices = {
+        bottom_vertices
+            .iter()
+            .copied()
+            .map(|v| {
+                let position = vertices[v].position + path;
+                vertices.push(Vertex { position })
+            })
+            .collect::<Vec<_>>()
+    };
 
     let top_edges_for_top = top_vertices
         .iter()
