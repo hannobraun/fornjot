@@ -36,7 +36,7 @@ pub fn face(
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
+    faces: &Faces,
 ) -> Face {
     use vertex as translate_vertex;
 
