@@ -4,6 +4,7 @@ use std::{
     ops, vec,
 };
 
+#[derive(Debug)]
 pub struct Store<T> {
     inner: Vec<T>,
 }
