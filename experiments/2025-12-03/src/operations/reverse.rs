@@ -23,20 +23,20 @@ pub fn half_edge(
 }
 
 pub fn face(
-    face: Index<Face>,
+    face: &Face,
     vertices: &Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
-    faces: &Faces,
+    _: &Faces,
 ) -> Face {
-    let boundary = faces[face]
+    let boundary = face
         .boundary
         .iter()
         .copied()
         .map(|e| {
             let half_edge = half_edge(e, half_edges);
 
-            if let Some(index) = faces[face]
+            if let Some(index) = face
                 .boundary
                 .iter()
                 .copied()
@@ -50,7 +50,7 @@ pub fn face(
         .rev()
         .collect();
 
-    let triangles = faces[face]
+    let triangles = face
         .triangles
         .iter()
         .copied()

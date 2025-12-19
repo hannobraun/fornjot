@@ -25,7 +25,7 @@ pub fn face_to_solid(
     let path = path.into();
 
     let bottom_inv =
-        reverse::face(bottom, vertices, triangles, half_edges, faces);
+        reverse::face(&faces[bottom], vertices, triangles, half_edges, faces);
     let bottom_edges_for_sides = bottom_inv.boundary.clone();
 
     let bottom_vertices = bottom_edges_for_sides
