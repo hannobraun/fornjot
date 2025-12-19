@@ -61,7 +61,7 @@ pub fn face_to_solid(
     };
 
     let top = {
-        let top_edges_for_top = top_vertices
+        let boundary = top_vertices
             .iter()
             .copied()
             .circular_tuple_windows()
@@ -71,7 +71,7 @@ pub fn face_to_solid(
                 "Original array had four entries; output must have the same.",
             );
 
-        let [e01, e12, e23, e30] = top_edges_for_top;
+        let [e01, e12, e23, e30] = boundary;
 
         let [v0, v1] = half_edges[e01].boundary;
         let [_, v3] = half_edges[e23].boundary;
