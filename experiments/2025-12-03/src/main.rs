@@ -39,7 +39,7 @@ fn model() -> TriMesh {
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let left_front_bottom_vertex = vertices.push(Vertex {
+    let left_front_bottom = vertices.push(Vertex {
         position: Point::from([0., 0., 0.]),
     });
 
@@ -47,7 +47,7 @@ fn model() -> TriMesh {
         .line_to([1., 0.])
         .line_to([1., 1.])
         .line_to([0., 1.])
-        .line_to_vertex([0., 0.], left_front_bottom_vertex)
+        .line_to_vertex([0., 0.], left_front_bottom)
         .into_face(
             Surface {
                 origin: Point::from([0., 0., 0.]),
