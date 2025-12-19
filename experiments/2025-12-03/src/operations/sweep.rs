@@ -60,15 +60,17 @@ pub fn face_to_solid(
             .collect::<Vec<_>>()
     };
 
-    let top_edges_for_top = top_vertices
-        .iter()
-        .copied()
-        .circular_tuple_windows()
-        .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
-        .collect_array()
-        .expect("Original array had four entries; output must have the same.");
-
     let top = {
+        let top_edges_for_top = top_vertices
+            .iter()
+            .copied()
+            .circular_tuple_windows()
+            .map(|(v0, v1)| half_edges.push(HalfEdge { boundary: [v0, v1] }))
+            .collect_array()
+            .expect(
+                "Original array had four entries; output must have the same.",
+            );
+
         let [e01, e12, e23, e30] = top_edges_for_top;
 
         let [v0, v1] = half_edges[e01].boundary;
