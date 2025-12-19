@@ -11,14 +11,12 @@ use crate::{
 };
 
 pub struct Sketch {
-    start: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
-    pub fn start_at(position: impl Into<Point<2>>) -> Self {
+    pub fn start_at(_: impl Into<Point<2>>) -> Self {
         Self {
-            start: position.into(),
             segments: Vec::new(),
         }
     }
@@ -40,15 +38,6 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::HalfEdge { half_edge }),
-        });
-
-        self
-    }
-
-    pub fn close(mut self) -> Self {
-        self.segments.push(SketchSegment {
-            to: self.start,
-            attachment: None,
         });
 
         self
