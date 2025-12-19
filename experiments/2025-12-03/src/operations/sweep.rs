@@ -43,15 +43,16 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let top_edges_for_sides = faces[top]
-        .boundary
-        .iter()
-        .copied()
-        .map(|e| {
-            let half_edge = reverse::half_edge(e, half_edges);
-            half_edges.push(half_edge)
-        })
-        .collect::<Vec<_>>();
+    let top_edges_for_sides = {
+        let mut top_edges =
+            reverse::face(&faces[top], vertices, triangles, half_edges)
+                .boundary
+                .clone();
+
+        top_edges.reverse();
+
+        top_edges
+    };
 
     let top_vertices = top_edges_for_sides
         .iter()
