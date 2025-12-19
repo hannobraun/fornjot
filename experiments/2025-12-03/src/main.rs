@@ -43,7 +43,7 @@ fn model() -> TriMesh {
         position: Point::from([0., 0., 0.]),
     });
 
-    let bottom_face = Sketch::new()
+    let bottom = Sketch::new()
         .line_to([1., 0.])
         .line_to([1., 1.])
         .line_to([0., 1.])
@@ -60,7 +60,7 @@ fn model() -> TriMesh {
         );
 
     let cube = sweep::face_to_solid(
-        bottom_face,
+        bottom,
         [0., 0., 1.],
         &mut vertices,
         &mut triangles,
