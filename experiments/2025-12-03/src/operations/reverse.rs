@@ -28,7 +28,7 @@ pub fn face(
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
-) -> Index<Face> {
+) -> Face {
     let boundary = faces[f0123]
         .boundary
         .iter()
@@ -61,8 +61,8 @@ pub fn face(
         .rev()
         .collect();
 
-    faces.push(Face {
+    Face {
         boundary,
         triangles,
-    })
+    }
 }
