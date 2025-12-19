@@ -35,7 +35,17 @@ pub fn face(
         .copied()
         .map(|e| {
             let half_edge = half_edge(e, half_edges);
-            half_edges.push(half_edge)
+
+            if let Some(index) = faces[f0123]
+                .boundary
+                .iter()
+                .copied()
+                .find(|&index| half_edges[index] == half_edge)
+            {
+                index
+            } else {
+                half_edges.push(half_edge)
+            }
         })
         .rev()
         .collect();
