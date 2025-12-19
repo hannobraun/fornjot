@@ -44,7 +44,6 @@ pub fn face_to_solid(
             vertices,
             triangles,
             half_edges,
-            faces,
         );
         faces.push(top)
     };

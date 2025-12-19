@@ -5,7 +5,7 @@ use fj_math::Vector;
 use crate::{
     objects::{
         geometry::{Triangle, Triangles, Vertex},
-        topology::{Face, Faces, HalfEdge},
+        topology::{Face, HalfEdge},
     },
     store::{Index, Store},
 };
@@ -36,7 +36,6 @@ pub fn face(
     vertices: &mut Store<Vertex>,
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
-    _: &Faces,
 ) -> Face {
     use vertex as translate_vertex;
 
