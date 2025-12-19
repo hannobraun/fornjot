@@ -39,28 +39,28 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let top_vertices = {
-        let mut cache = BTreeMap::new();
-
-        bottom_vertices
-            .iter()
-            .copied()
-            .map(|bottom| {
-                if let Some(top) = cache.get(&bottom).copied() {
-                    return top;
-                }
-
-                let top = vertices.push(Vertex {
-                    position: vertices[bottom].position + path,
-                });
-                cache.insert(bottom, top);
-
-                top
-            })
-            .collect::<Vec<_>>()
-    };
-
     let top = {
+        let top_vertices = {
+            let mut cache = BTreeMap::new();
+
+            bottom_vertices
+                .iter()
+                .copied()
+                .map(|bottom| {
+                    if let Some(top) = cache.get(&bottom).copied() {
+                        return top;
+                    }
+
+                    let top = vertices.push(Vertex {
+                        position: vertices[bottom].position + path,
+                    });
+                    cache.insert(bottom, top);
+
+                    top
+                })
+                .collect::<Vec<_>>()
+        };
+
         let boundary = top_vertices
             .iter()
             .copied()
