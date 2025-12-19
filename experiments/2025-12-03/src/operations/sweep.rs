@@ -68,7 +68,7 @@ pub fn face_to_solid(
             ],
         };
 
-        Sketch::start_at([0., 0.])
+        Sketch::start_at()
             .line_to_with_half_edge([1., 0.], e01)
             .line_to_with_half_edge([1., 1.], e12)
             .line_to_with_half_edge([0., 1.], e23)
@@ -119,7 +119,7 @@ pub fn face_to_solid(
                 ],
             };
 
-            Sketch::start_at([0., 0.])
+            Sketch::start_at()
                 .line_to_with_half_edge([1., 0.], bottom)
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)

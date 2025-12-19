@@ -39,7 +39,7 @@ fn model() -> TriMesh {
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let bottom_face = Sketch::start_at([0., 0.])
+    let bottom_face = Sketch::start_at()
         .line_to([1., 0.])
         .line_to([1., 1.])
         .line_to([0., 1.])
