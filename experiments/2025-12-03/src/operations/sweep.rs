@@ -127,11 +127,11 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let [v0, v1] = half_edges[bottom].boundary;
-            let [_, v3] = half_edges[top].boundary;
-
             let right = half_edges.push(right);
             let left = half_edges.push(left);
+
+            let [v0, v1] = half_edges[bottom].boundary;
+            let [_, v3] = half_edges[top].boundary;
 
             let surface = Surface {
                 origin: vertices[v0].position,
