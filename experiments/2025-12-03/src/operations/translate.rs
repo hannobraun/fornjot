@@ -37,7 +37,7 @@ pub fn face(
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
-) -> Index<Face> {
+) -> Face {
     use vertex as translate_vertex;
 
     let offset = offset.into();
@@ -82,8 +82,8 @@ pub fn face(
         })
         .collect();
 
-    faces.push(Face {
+    Face {
         boundary,
         triangles,
-    })
+    }
 }

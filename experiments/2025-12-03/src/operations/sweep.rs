@@ -37,9 +37,12 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let top = translate::face(
-        bottom_inv, path, vertices, triangles, half_edges, faces,
-    );
+    let top = {
+        let top = translate::face(
+            bottom_inv, path, vertices, triangles, half_edges, faces,
+        );
+        faces.push(top)
+    };
 
     let top_edges_for_sides = faces[top]
         .boundary
