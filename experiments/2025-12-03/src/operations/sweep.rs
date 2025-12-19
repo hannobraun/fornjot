@@ -41,8 +41,8 @@ pub fn face_to_solid(
         bottom_vertices
             .iter()
             .copied()
-            .map(|v| {
-                let position = vertices[v].position + path;
+            .map(|bottom| {
+                let position = vertices[bottom].position + path;
                 vertices.push(Vertex { position })
             })
             .collect::<Vec<_>>()
