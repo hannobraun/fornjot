@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use fj_math::Vector;
 use itertools::Itertools;
 
@@ -38,12 +40,22 @@ pub fn face_to_solid(
         .collect::<Vec<_>>();
 
     let top_vertices = {
+        let mut cache = BTreeMap::new();
+
         bottom_vertices
             .iter()
             .copied()
             .map(|bottom| {
+                if let Some(top) = cache.get(&bottom).copied() {
+                    return top;
+                }
+
                 let position = vertices[bottom].position + path;
-                vertices.push(Vertex { position })
+                let top = vertices.push(Vertex { position });
+
+                cache.insert(bottom, top);
+
+                top
             })
             .collect::<Vec<_>>()
     };
