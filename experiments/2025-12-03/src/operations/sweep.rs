@@ -92,6 +92,13 @@ pub fn face_to_solid(
             .into_face(surface, vertices, triangles, half_edges, faces)
     };
 
+    let top_edges_for_sides = faces[top]
+        .boundary
+        .iter()
+        .copied()
+        .map(|e| reverse::half_edge(e, half_edges))
+        .collect::<Vec<_>>();
+
     let side_edges_going_up = bottom_vertices
         .iter()
         .copied()
@@ -102,13 +109,6 @@ pub fn face_to_solid(
         .cycle()
         .skip(1)
         .take(bottom_vertices.len())
-        .collect::<Vec<_>>();
-
-    let top_edges_for_sides = faces[top]
-        .boundary
-        .iter()
-        .copied()
-        .map(|e| reverse::half_edge(e, half_edges))
         .collect::<Vec<_>>();
 
     let side_edges_going_down = top_vertices
