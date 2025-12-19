@@ -43,6 +43,19 @@ impl Sketch {
         self
     }
 
+    pub fn line_to_vertex(
+        mut self,
+        position: impl Into<Point<2>>,
+        vertex: Index<Vertex>,
+    ) -> Self {
+        self.segments.push(SketchSegment {
+            to: position.into(),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+        });
+
+        self
+    }
+
     pub fn into_face(
         mut self,
         surface: Surface,
@@ -70,12 +83,34 @@ impl Sketch {
                 Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                     half_edge
                 }
+                Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
+                    let v0 = match prev.attachment {
+                        Some(SketchSegmentAttachment::HalfEdge {
+                            half_edge,
+                        }) => {
+                            let [_, vertex] = half_edges[half_edge].boundary;
+                            vertex
+                        }
+                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
+                            vertex
+                        }
+                        None => {
+                            let position = surface.local_to_global(prev.to);
+                            vertices.push(Vertex { position })
+                        }
+                    };
+
+                    half_edges.push(HalfEdge { boundary: [v0, v1] })
+                }
                 None => {
                     let v0 = match prev.attachment {
                         Some(SketchSegmentAttachment::HalfEdge {
                             half_edge,
                         }) => {
                             let [_, vertex] = half_edges[half_edge].boundary;
+                            vertex
+                        }
+                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
                             vertex
                         }
                         None => {
@@ -90,7 +125,8 @@ impl Sketch {
                             let [vertex, _] = half_edges[half_edge].boundary;
                             vertex
                         }
-                        None => {
+                        Some(SketchSegmentAttachment::Vertex { vertex: _ })
+                        | None => {
                             let position = surface.local_to_global(current.to);
                             vertices.push(Vertex { position })
                         }
@@ -160,6 +196,7 @@ struct SketchSegment {
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
+    Vertex { vertex: Index<Vertex> },
 }
 
 fn delaunay(
