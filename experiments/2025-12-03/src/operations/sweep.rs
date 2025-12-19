@@ -53,7 +53,6 @@ pub fn face_to_solid(
                 let top = vertices.push(Vertex {
                     position: vertices[bottom].position + path,
                 });
-
                 cache.insert(bottom, top);
 
                 top
