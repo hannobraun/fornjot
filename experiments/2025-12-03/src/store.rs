@@ -73,6 +73,15 @@ impl<T> Copy for Index<T> {}
 
 impl<T> fmt::Debug for Index<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Index<{}>({})", type_name::<T>(), self.inner)
+        let type_name = {
+            let full_name = type_name::<T>();
+
+            full_name
+                .rsplit_once("::")
+                .map(|(_, name)| name)
+                .unwrap_or(full_name)
+        };
+
+        write!(f, "Index<{}>({})", type_name, self.inner)
     }
 }
