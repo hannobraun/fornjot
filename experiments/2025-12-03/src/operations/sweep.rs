@@ -70,6 +70,9 @@ pub fn face_to_solid(
         .map(|(v_bottom, v_top)| HalfEdge {
             boundary: [v_bottom, v_top],
         })
+        // Both lists of side edges need to line up, so that the same index
+        // refers to an edge for the same face. This makes some shuffling
+        // necessary.
         .cycle()
         .skip(1)
         .take(bottom_vertices.len())
