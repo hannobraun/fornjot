@@ -1,4 +1,5 @@
 use std::{
+    any::type_name,
     fmt::{self, Debug},
     marker::PhantomData,
     ops, vec,
@@ -56,7 +57,7 @@ impl<T> IntoIterator for Store<T> {
     }
 }
 
-#[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Eq, Ord, PartialOrd, PartialEq)]
 pub struct Index<T> {
     inner: usize,
     _t: PhantomData<T>,
@@ -69,3 +70,9 @@ impl<T> Clone for Index<T> {
 }
 
 impl<T> Copy for Index<T> {}
+
+impl<T> fmt::Debug for Index<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Index<{}>({})", type_name::<T>(), self.inner)
+    }
+}
