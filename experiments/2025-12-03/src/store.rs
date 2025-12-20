@@ -81,7 +81,8 @@ impl<T> fmt::Debug for Index<T> {
                 .map(|(_, name)| name)
                 .unwrap_or(full_name)
         };
+        let index = self.inner;
 
-        write!(f, "Index<{type_name}>({index})", index = self.inner)
+        write!(f, "Index<{type_name}>({index})")
     }
 }
