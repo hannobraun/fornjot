@@ -25,7 +25,7 @@ pub fn face_to_solid(
 ) -> Index<Solid> {
     let path = path.into();
 
-    let mut connect = Connect {};
+    let mut connect = Connect::new();
 
     let bottom_inv =
         reverse::face(&faces[bottom], vertices, triangles, half_edges);

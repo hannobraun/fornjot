@@ -6,6 +6,10 @@ use crate::{
 pub struct Connect {}
 
 impl Connect {
+    pub fn new() -> Self {
+        Self {}
+    }
+
     pub fn vertices_along_line(
         &mut self,
         vertices: [Index<Vertex>; 2],
