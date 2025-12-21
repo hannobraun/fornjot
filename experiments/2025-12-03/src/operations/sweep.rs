@@ -87,7 +87,8 @@ pub fn face_to_solid(
         .zip(bottom_vertices)
         .map(|(v_top, v_bottom)| HalfEdge {
             boundary: [v_top, v_bottom],
-        });
+        })
+        .collect::<Vec<_>>();
 
     let side_faces = bottom_edges_for_sides
         .into_iter()
