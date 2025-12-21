@@ -62,20 +62,22 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let side_edges_going_up = bottom_vertices
-        .iter()
-        .copied()
-        .zip(top_vertices.iter().copied())
-        .map(|(v_bottom, v_top)| HalfEdge {
-            boundary: [v_bottom, v_top],
-        })
-        // Both lists of side edges need to line up, so that the same index
-        // refers to an edge for the same face. This makes some shuffling
-        // necessary.
-        .cycle()
-        .skip(1)
-        .take(bottom_vertices.len())
-        .collect::<Vec<_>>();
+    let side_edges_going_up = {
+        bottom_vertices
+            .iter()
+            .copied()
+            .zip(top_vertices.iter().copied())
+            .map(|(v_bottom, v_top)| HalfEdge {
+                boundary: [v_bottom, v_top],
+            })
+            // Both lists of side edges need to line up, so that the same index
+            // refers to an edge for the same face. This makes some shuffling
+            // necessary.
+            .cycle()
+            .skip(1)
+            .take(bottom_vertices.len())
+            .collect::<Vec<_>>()
+    };
 
     let side_edges_going_down = top_vertices
         .into_iter()
