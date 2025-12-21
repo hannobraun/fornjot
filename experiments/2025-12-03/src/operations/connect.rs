@@ -1,13 +1,19 @@
+use std::collections::BTreeMap;
+
 use crate::{
     objects::{geometry::Vertex, topology::HalfEdge},
     store::{Index, Store},
 };
 
-pub struct Connect {}
+pub struct Connect {
+    vertices_along_line: BTreeMap<[Index<Vertex>; 2], Index<HalfEdge>>,
+}
 
 impl Connect {
     pub fn new() -> Self {
-        Self {}
+        Self {
+            vertices_along_line: BTreeMap::new(),
+        }
     }
 
     pub fn vertices_along_line(
@@ -15,6 +21,15 @@ impl Connect {
         vertices: [Index<Vertex>; 2],
         half_edges: &mut Store<HalfEdge>,
     ) -> Index<HalfEdge> {
-        half_edges.push(HalfEdge { boundary: vertices })
+        if let Some(half_edge) =
+            self.vertices_along_line.get(&vertices).copied()
+        {
+            return half_edge;
+        }
+
+        let half_edge = half_edges.push(HalfEdge { boundary: vertices });
+        self.vertices_along_line.insert(vertices, half_edge);
+
+        half_edge
     }
 }
