@@ -67,8 +67,10 @@ pub fn face_to_solid(
             .iter()
             .copied()
             .zip(top_vertices.iter().copied())
-            .map(|(v_bottom, v_top)| HalfEdge {
-                boundary: [v_bottom, v_top],
+            .map(|(v_bottom, v_top)| {
+                half_edges.push(HalfEdge {
+                    boundary: [v_bottom, v_top],
+                })
             })
             .collect::<Vec<_>>();
 
@@ -93,7 +95,6 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let right = half_edges.push(right);
             let left = half_edges.push(left);
 
             let [v0, v1] = half_edges[bottom].boundary;
