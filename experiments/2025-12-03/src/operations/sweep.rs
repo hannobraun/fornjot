@@ -6,7 +6,8 @@ use crate::{
         topology::{Face, Faces, HalfEdge, Solid},
     },
     operations::{
-        connect, reverse,
+        connect::Connect,
+        reverse,
         sketch::{Sketch, Surface},
         translate,
     },
@@ -23,6 +24,8 @@ pub fn face_to_solid(
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
     let path = path.into();
+
+    let mut connect = Connect {};
 
     let bottom_inv =
         reverse::face(&faces[bottom], vertices, triangles, half_edges);
@@ -68,7 +71,7 @@ pub fn face_to_solid(
             .copied()
             .zip(top_vertices.iter().copied())
             .map(|(v_bottom, v_top)| {
-                connect::vertices_along_line([v_bottom, v_top], half_edges)
+                connect.vertices_along_line([v_bottom, v_top], half_edges)
             })
             .collect::<Vec<_>>();
 
@@ -84,7 +87,7 @@ pub fn face_to_solid(
         .into_iter()
         .zip(bottom_vertices)
         .map(|(v_top, v_bottom)| {
-            connect::vertices_along_line([v_top, v_bottom], half_edges)
+            connect.vertices_along_line([v_top, v_bottom], half_edges)
         })
         .collect::<Vec<_>>();
 
