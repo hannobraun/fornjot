@@ -53,7 +53,6 @@ pub fn face_to_solid(
             v
         })
         .collect::<Vec<_>>();
-
     let top_vertices = top_edges_for_sides
         .iter()
         .copied()
