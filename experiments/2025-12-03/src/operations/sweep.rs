@@ -26,7 +26,6 @@ pub fn face_to_solid(
 
     let bottom_inv =
         reverse::face(&faces[bottom], vertices, triangles, half_edges);
-    let bottom_edges_for_sides = bottom_inv.boundary.clone();
 
     let top = {
         let top =
@@ -34,15 +33,7 @@ pub fn face_to_solid(
         faces.push(top)
     };
 
-    let bottom_vertices = bottom_edges_for_sides
-        .iter()
-        .copied()
-        .map(|e| {
-            let [v, _] = half_edges[e].boundary;
-            v
-        })
-        .collect::<Vec<_>>();
-
+    let bottom_edges_for_sides = bottom_inv.boundary.clone();
     let top_edges_for_sides = {
         let mut top_edges =
             reverse::face(&faces[top], vertices, triangles, half_edges)
@@ -53,6 +44,15 @@ pub fn face_to_solid(
 
         top_edges
     };
+
+    let bottom_vertices = bottom_edges_for_sides
+        .iter()
+        .copied()
+        .map(|e| {
+            let [v, _] = half_edges[e].boundary;
+            v
+        })
+        .collect::<Vec<_>>();
 
     let top_vertices = top_edges_for_sides
         .iter()
