@@ -2,7 +2,7 @@
 
 ## About
 
-This document presents a new architecture that could solve the problems that previous experiments have failed to address. So far, this only exists as a concept. I may or may not turn this into a full experiment.
+This experiment prototypes a new architecture that could solve the problems that previous experiments have failed to address. It is packaged as a single application, which you can run with `cargo run`.
 
 ## Context
 
@@ -161,3 +161,7 @@ Maybe the core problem of the old approach, is that it builds up a full topologi
 This new approach would do that, and it would do that in a way that seems to preserve the advantages of b-rep. Maybe it also has hidden problems that would make it unworkable. But so far, I haven't seen any.
 
 Currently, I'm still undecided. But maybe this is worth a try.
+
+## Results
+
+The experiment is still ongoing, and could still fail due to unforeseen problems. But so far, everything's looking good.
