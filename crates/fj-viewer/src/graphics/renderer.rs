@@ -55,7 +55,8 @@ impl Renderer {
         let surface = instance.create_surface(window)?;
 
         #[cfg(not(target_arch = "wasm32"))]
-        for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
+        for adapter in instance.enumerate_adapters(wgpu::Backends::all()).await
+        {
             tracing::debug!("Available adapter: {:?}", adapter.get_info());
         }
 
@@ -181,7 +182,7 @@ impl Renderer {
             &wgpu::PipelineLayoutDescriptor {
                 label: None,
                 bind_group_layouts: &[&bind_group_layout],
-                push_constant_ranges: &[],
+                immediate_size: 0,
             },
         );
 
@@ -320,6 +321,7 @@ impl Renderer {
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &self.frame_buffer,
+                            depth_slice: None,
                             resolve_target: Some(&color_view),
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),

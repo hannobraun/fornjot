@@ -24,7 +24,7 @@ raw-window-handle = "0.6.0"
 thiserror = "2.0.17"
 tracing = "0.1.43"
 winit = "0.30.12"
-glyphon = "0.9.0"
+glyphon = "0.10.0"
 itertools = "0.14.0"
 
 [dependencies.bytemuck]
@@ -37,7 +37,7 @@ default-features = false
 features = ["png", "jpeg"]
 
 [dependencies.wgpu]
-version = "25.0.2" # not on the latest version to stay compatible with glyphon
+version = "28.0.0" # must always stay compatible with glyphon
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the

@@ -98,7 +98,7 @@ impl NavigationCubeRenderer {
                     &texture_bind_group_layout,
                     &mvp_matrix_bind_group_layout,
                 ],
-                push_constant_ranges: &[],
+                immediate_size: 0,
             });
 
         let render_pipeline =
@@ -145,7 +145,7 @@ impl NavigationCubeRenderer {
                     mask: !0,
                     alpha_to_coverage_enabled: false,
                 },
-                multiview: None,
+                multiview_mask: None,
                 cache: None,
             });
 
@@ -180,6 +180,7 @@ impl NavigationCubeRenderer {
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                     view,
+                    depth_slice: None,
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Load,

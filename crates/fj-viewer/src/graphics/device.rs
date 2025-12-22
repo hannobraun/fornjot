@@ -35,6 +35,7 @@ impl Device {
 
             let mut all_adapters = instance
                 .enumerate_adapters(wgpu::Backends::all())
+                .await
                 .into_iter();
 
             let result = loop {
@@ -109,6 +110,7 @@ impl Device {
                 label: None,
                 required_features,
                 required_limits,
+                experimental_features: wgpu::ExperimentalFeatures::disabled(),
 
                 // Here we give a memory hint to preserve memory usage. This
                 // should allow us to run in as much devices as possible.

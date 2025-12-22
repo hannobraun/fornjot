@@ -66,6 +66,7 @@ impl TextRenderer {
             text,
             &glyphon::Attrs::new(),
             glyphon::Shaping::Advanced,
+            None,
         );
 
         Label { buffer, position }
