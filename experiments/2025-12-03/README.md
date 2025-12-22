@@ -113,8 +113,8 @@ But wait, that's not all! We can get more information out of the sketch and the 
 ```
 e0 = [v0, v1]
 e1 = [v1, v2]
-e2 = [v3, v4]
-e3 = [v4, v0]
+e2 = [v2, v3]
+e3 = [v3, v0]
 ```
 
 And of course we could store how all of the above relates to the face.
