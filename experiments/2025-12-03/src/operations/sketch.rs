@@ -1,4 +1,10 @@
-use fj_math::{Point, Vector};
+use std::{
+    collections::{BTreeSet, VecDeque},
+    mem,
+};
+
+use fj_math::{Point, Triangle, Vector};
+use geo::{Contains, Coord, LineString, Polygon};
 use itertools::Itertools;
 use spade::Triangulation;
 
@@ -157,10 +163,27 @@ impl Sketch {
                 DelaunayPoint { position, vertex }
             },
         );
-        let _ = self.start;
+        let polygon = polygon(
+            [self.start].into_iter().chain(
+                positions_and_half_edges
+                    .iter()
+                    .copied()
+                    .map(|(position, _)| position),
+            ),
+        );
 
         let triangles = delaunay(delaunay_points)
             .into_iter()
+            .filter(|triangle| {
+                let points = triangle.map(|point| point.position);
+                let [x, y] = Triangle::from_points(points)
+                    .center()
+                    .coords
+                    .components
+                    .map(|s| s.into_f64());
+
+                polygon.contains(&Coord { x, y })
+            })
             .map(|triangle| {
                 let [v0, v1, v2] = triangle.map(|point| point.vertex);
                 triangles.push([v0, v1, v2], vertices)
@@ -201,6 +224,46 @@ struct SketchSegment {
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
     Vertex { vertex: Index<Vertex> },
+}
+
+fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
+    let mut line_strings = VecDeque::new();
+    let mut current_line_string = Vec::new();
+    let mut visited_points = BTreeSet::new();
+
+    for point in points {
+        if visited_points.contains(&point) {
+            line_strings.push_back(mem::take(&mut current_line_string));
+            continue;
+        }
+
+        let [x, y] = point.coords.components.map(|s| s.into_f64());
+        current_line_string.push(Coord { x, y });
+        visited_points.insert(point);
+    }
+
+    let (exterior, interiors) = if let Some(exterior) = line_strings.pop_front()
+    {
+        line_strings.push_back(mem::take(&mut current_line_string));
+
+        let exterior = LineString::new(exterior);
+        let interiors = line_strings
+            .into_iter()
+            .filter_map(|line_string| {
+                (!line_string.is_empty())
+                    .then_some(LineString::new(line_string))
+            })
+            .collect();
+
+        (exterior, interiors)
+    } else {
+        let exterior = LineString::new(current_line_string);
+        let interiors = Vec::new();
+
+        (exterior, interiors)
+    };
+
+    Polygon::new(exterior, interiors)
 }
 
 fn delaunay(
