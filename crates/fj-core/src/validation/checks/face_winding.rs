@@ -117,12 +117,11 @@ mod tests {
                 .region()
                 .interiors()
                 .iter()
-                .cloned()
                 .map(|cycle| {
                     cycle
                         .reverse(&mut core)
                         .insert(&mut core)
-                        .derive_from(&cycle, &mut core)
+                        .derive_from(cycle, &mut core)
                 })
                 .collect::<Vec<_>>();
 
