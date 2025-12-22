@@ -1,4 +1,4 @@
-use tracing::{debug, error};
+use tracing::debug;
 
 #[derive(Debug)]
 pub struct Device {
@@ -31,6 +31,8 @@ impl Device {
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
         #[cfg(not(target_arch = "wasm32"))]
         {
+            use tracing::error;
+
             let mut all_adapters = instance
                 .enumerate_adapters(wgpu::Backends::all())
                 .into_iter();
