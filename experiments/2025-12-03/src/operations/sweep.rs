@@ -108,7 +108,7 @@ pub fn face_to_solid(
                 ],
             };
 
-            Sketch::new([0., 0.])
+            Sketch::start_at([0., 0.])
                 .line_to_with_half_edge([1., 0.], bottom)
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)

@@ -15,7 +15,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn new(_: impl Into<Point<2>>) -> Self {
+    pub fn start_at(_: impl Into<Point<2>>) -> Self {
         Self {
             segments: Vec::new(),
         }

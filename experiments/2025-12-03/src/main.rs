@@ -43,7 +43,7 @@ fn model() -> TriMesh {
         position: Point::from([0., 0., 0.]),
     });
 
-    let bottom = Sketch::new([0., 0.])
+    let bottom = Sketch::start_at([0., 0.])
         .line_to([1., 0.])
         .line_to([1., 1.])
         .line_to([0., 1.])
