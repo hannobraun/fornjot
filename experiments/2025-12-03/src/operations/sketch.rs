@@ -11,12 +11,14 @@ use crate::{
 };
 
 pub struct Sketch {
+    start: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
-    pub fn start_at(_: impl Into<Point<2>>) -> Self {
+    pub fn start_at(start: impl Into<Point<2>>) -> Self {
         Self {
+            start: start.into(),
             segments: Vec::new(),
         }
     }
@@ -155,6 +157,8 @@ impl Sketch {
                 DelaunayPoint { position, vertex }
             },
         );
+        let _ = self.start;
+
         let triangles = delaunay(delaunay_points)
             .into_iter()
             .map(|triangle| {
