@@ -42,11 +42,20 @@ fn model() -> TriMesh {
     let left_front_bottom = vertices.push(Vertex {
         position: Point::from([0., 0., 0.]),
     });
+    let left_front_bottom_inner = vertices.push(Vertex {
+        position: Point::from([0.25, 0.25, 0.]),
+    });
 
     let bottom = Sketch::start_at([0., 0.])
         .line_to([1., 0.])
         .line_to([1., 1.])
         .line_to([0., 1.])
+        .line_to_vertex([0., 0.], left_front_bottom)
+        .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
+        .line_to([0.25, 0.75])
+        .line_to([0.75, 0.75])
+        .line_to([0.75, 0.25])
+        .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
         .line_to_vertex([0., 0.], left_front_bottom)
         .into_face(
             Surface {
