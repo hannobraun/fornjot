@@ -44,8 +44,9 @@ impl Translate {
     ) -> Index<Triangle> {
         let offset = offset.into();
 
+        let original = geometry.triangles[triangle];
         let translated = Triangle {
-            vertices: geometry.triangles[triangle].vertices.map(|vertex| {
+            vertices: original.vertices.map(|vertex| {
                 self.vertex(vertex, offset, &mut geometry.vertices)
             }),
         };
