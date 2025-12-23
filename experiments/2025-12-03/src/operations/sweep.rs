@@ -34,13 +34,7 @@ pub fn face_to_solid(
     );
 
     let top = {
-        let top = translate::face(
-            &bottom_inv,
-            path,
-            &mut geometry.vertices,
-            &mut geometry.triangles,
-            half_edges,
-        );
+        let top = translate::face(&bottom_inv, path, geometry, half_edges);
         faces.push(top)
     };
 

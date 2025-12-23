@@ -4,7 +4,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{
-        geometry::{Triangle, Triangles, Vertex},
+        geometry::{Geometry, Triangle, Triangles, Vertex},
         topology::{Face, HalfEdge},
     },
     store::{Index, Store},
@@ -59,8 +59,7 @@ impl Translate {
 pub fn face(
     face: &Face,
     offset: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    triangles: &mut Triangles,
+    geometry: &mut Geometry,
     half_edges: &mut Store<HalfEdge>,
 ) -> Face {
     let offset = offset.into();
@@ -73,9 +72,9 @@ pub fn face(
         .copied()
         .map(|half_edge| {
             half_edges.push(HalfEdge {
-                boundary: half_edges[half_edge]
-                    .boundary
-                    .map(|vertex| translate.vertex(vertex, offset, vertices)),
+                boundary: half_edges[half_edge].boundary.map(|vertex| {
+                    translate.vertex(vertex, offset, &mut geometry.vertices)
+                }),
             })
         })
         .collect();
@@ -84,7 +83,12 @@ pub fn face(
         .iter()
         .copied()
         .map(|triangle| {
-            translate.triangle(triangle, offset, vertices, triangles)
+            translate.triangle(
+                triangle,
+                offset,
+                &mut geometry.vertices,
+                &mut geometry.triangles,
+            )
         })
         .collect();
 
