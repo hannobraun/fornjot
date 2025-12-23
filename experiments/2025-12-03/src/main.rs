@@ -3,7 +3,7 @@ use fj_math::{Point, Vector};
 
 use crate::{
     objects::{
-        geometry::{Triangle, Triangles},
+        geometry::{Geometry, Triangle},
         topology::Faces,
     },
     operations::{
@@ -30,17 +30,15 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    // Geometry
-    let mut vertices = Store::default();
-    let mut triangles = Triangles::default();
+    let mut geometry = Geometry::default();
 
     // Topology
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let left_front_bottom_outer = vertices.push([0., 0., 0.]);
-    let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
+    let left_front_bottom_outer = geometry.vertices.push([0., 0., 0.]);
+    let left_front_bottom_inner = geometry.vertices.push([0.25, 0.25, 0.]);
 
     let bottom = Sketch::start_at([0., 0.])
         .line_to([1., 0.])
@@ -58,8 +56,8 @@ fn model() -> TriMesh {
                 origin: Point::from([0., 0., 0.]),
                 axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
             },
-            &mut vertices,
-            &mut triangles,
+            &mut geometry.vertices,
+            &mut geometry.triangles,
             &mut half_edges,
             &mut faces,
         );
@@ -67,8 +65,8 @@ fn model() -> TriMesh {
     let cube = sweep::face_to_solid(
         bottom,
         [0., 0., 1.],
-        &mut vertices,
-        &mut triangles,
+        &mut geometry.vertices,
+        &mut geometry.triangles,
         &mut half_edges,
         &mut faces,
         &mut solids,
@@ -81,7 +79,7 @@ fn model() -> TriMesh {
         .iter()
         .copied()
         .flat_map(|f0123| faces[f0123].triangles.iter().copied())
-        .map(|t012| &triangles[t012]);
+        .map(|t012| &geometry.triangles[t012]);
 
     for &Triangle {
         vertices: [a, b, c],
@@ -89,9 +87,9 @@ fn model() -> TriMesh {
     {
         tri_mesh.triangles.push(MeshTriangle {
             inner: fj_math::Triangle::from_points([
-                vertices[a].position,
-                vertices[b].position,
-                vertices[c].position,
+                geometry.vertices[a].position,
+                geometry.vertices[b].position,
+                geometry.vertices[c].position,
             ]),
             is_internal: false,
             color: Color::default(),
