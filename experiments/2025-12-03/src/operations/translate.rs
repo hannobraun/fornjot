@@ -11,17 +11,18 @@ use crate::{
 };
 
 #[derive(Default)]
-pub struct Translate {}
+pub struct Translate {
+    vertex: BTreeMap<Index<Vertex>, Index<Vertex>>,
+}
 
 impl Translate {
     pub fn vertex(
         &mut self,
         vertex: Index<Vertex>,
         offset: impl Into<Vector<3>>,
-        cache: &mut BTreeMap<Index<Vertex>, Index<Vertex>>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {
-        if let Some(translated) = cache.get(&vertex).copied() {
+        if let Some(translated) = self.vertex.get(&vertex).copied() {
             return translated;
         }
 
@@ -30,7 +31,7 @@ impl Translate {
             position: position + offset.into(),
         });
 
-        cache.insert(vertex, translated);
+        self.vertex.insert(vertex, translated);
 
         translated
     }
@@ -46,7 +47,6 @@ pub fn face(
     let offset = offset.into();
 
     let mut translate = Translate::default();
-    let mut vertex_cache = BTreeMap::new();
 
     let boundary = face
         .boundary
@@ -54,14 +54,9 @@ pub fn face(
         .copied()
         .map(|half_edge| {
             half_edges.push(HalfEdge {
-                boundary: half_edges[half_edge].boundary.map(|vertex| {
-                    translate.vertex(
-                        vertex,
-                        offset,
-                        &mut vertex_cache,
-                        vertices,
-                    )
-                }),
+                boundary: half_edges[half_edge]
+                    .boundary
+                    .map(|vertex| translate.vertex(vertex, offset, vertices)),
             })
         })
         .collect();
@@ -73,12 +68,7 @@ pub fn face(
             triangles.push(
                 Triangle {
                     vertices: triangles[triangle].vertices.map(|vertex| {
-                        translate.vertex(
-                            vertex,
-                            offset,
-                            &mut vertex_cache,
-                            vertices,
-                        )
+                        translate.vertex(vertex, offset, vertices)
                     }),
                 },
                 vertices,
