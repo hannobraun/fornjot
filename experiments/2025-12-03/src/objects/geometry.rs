@@ -1,10 +1,12 @@
 use std::ops;
 
+use fj_math::Point;
+
 use crate::store::{Index, Store};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {
-    pub position: fj_math::Point<3>,
+    pub position: Point<3>,
 }
 
 impl From<[f64; 3]> for Vertex {
@@ -14,8 +16,8 @@ impl From<[f64; 3]> for Vertex {
     }
 }
 
-impl From<fj_math::Point<3>> for Vertex {
-    fn from(position: fj_math::Point<3>) -> Self {
+impl From<Point<3>> for Vertex {
+    fn from(position: Point<3>) -> Self {
         Self { position }
     }
 }
