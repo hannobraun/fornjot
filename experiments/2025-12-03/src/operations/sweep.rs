@@ -2,7 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{
-        geometry::{Triangles, Vertex},
+        geometry::Geometry,
         topology::{Face, Faces, HalfEdge, Solid},
     },
     operations::{
@@ -17,8 +17,7 @@ use crate::{
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    triangles: &mut Triangles,
+    geometry: &mut Geometry,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
     solids: &mut Store<Solid>,
@@ -27,21 +26,34 @@ pub fn face_to_solid(
 
     let mut connect = Connect::new();
 
-    let bottom_inv =
-        reverse::face(&faces[bottom], vertices, triangles, half_edges);
+    let bottom_inv = reverse::face(
+        &faces[bottom],
+        &geometry.vertices,
+        &mut geometry.triangles,
+        half_edges,
+    );
 
     let top = {
-        let top =
-            translate::face(&bottom_inv, path, vertices, triangles, half_edges);
+        let top = translate::face(
+            &bottom_inv,
+            path,
+            &mut geometry.vertices,
+            &mut geometry.triangles,
+            half_edges,
+        );
         faces.push(top)
     };
 
     let bottom_edges_for_sides = bottom_inv.boundary.clone();
     let top_edges_for_sides = {
-        let mut top_edges =
-            reverse::face(&faces[top], vertices, triangles, half_edges)
-                .boundary
-                .clone();
+        let mut top_edges = reverse::face(
+            &faces[top],
+            &geometry.vertices,
+            &mut geometry.triangles,
+            half_edges,
+        )
+        .boundary
+        .clone();
 
         top_edges.reverse();
 
@@ -101,10 +113,12 @@ pub fn face_to_solid(
             let [_, v3] = half_edges[top].boundary;
 
             let surface = Surface {
-                origin: vertices[v0].position,
+                origin: geometry.vertices[v0].position,
                 axes: [
-                    vertices[v1].position - vertices[v0].position,
-                    vertices[v3].position - vertices[v0].position,
+                    geometry.vertices[v1].position
+                        - geometry.vertices[v0].position,
+                    geometry.vertices[v3].position
+                        - geometry.vertices[v0].position,
                 ],
             };
 
@@ -113,7 +127,13 @@ pub fn face_to_solid(
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .into_face(surface, vertices, triangles, half_edges, faces)
+                .into_face(
+                    surface,
+                    &mut geometry.vertices,
+                    &mut geometry.triangles,
+                    half_edges,
+                    faces,
+                )
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();

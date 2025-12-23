@@ -65,8 +65,7 @@ fn model() -> TriMesh {
     let cube = sweep::face_to_solid(
         bottom,
         [0., 0., 1.],
-        &mut geometry.vertices,
-        &mut geometry.triangles,
+        &mut geometry,
         &mut half_edges,
         &mut faces,
         &mut solids,
