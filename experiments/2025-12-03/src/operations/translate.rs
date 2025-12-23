@@ -10,24 +10,29 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn vertex(
-    vertex: Index<Vertex>,
-    offset: impl Into<Vector<3>>,
-    cache: &mut BTreeMap<Index<Vertex>, Index<Vertex>>,
-    vertices: &mut Store<Vertex>,
-) -> Index<Vertex> {
-    if let Some(translated) = cache.get(&vertex).copied() {
-        return translated;
+pub struct Translate {}
+
+impl Translate {
+    pub fn vertex(
+        &mut self,
+        vertex: Index<Vertex>,
+        offset: impl Into<Vector<3>>,
+        cache: &mut BTreeMap<Index<Vertex>, Index<Vertex>>,
+        vertices: &mut Store<Vertex>,
+    ) -> Index<Vertex> {
+        if let Some(translated) = cache.get(&vertex).copied() {
+            return translated;
+        }
+
+        let position = vertices[vertex].position;
+        let translated = vertices.push(Vertex {
+            position: position + offset.into(),
+        });
+
+        cache.insert(vertex, translated);
+
+        translated
     }
-
-    let position = vertices[vertex].position;
-    let translated = vertices.push(Vertex {
-        position: position + offset.into(),
-    });
-
-    cache.insert(vertex, translated);
-
-    translated
 }
 
 pub fn face(
@@ -37,10 +42,9 @@ pub fn face(
     triangles: &mut Triangles,
     half_edges: &mut Store<HalfEdge>,
 ) -> Face {
-    use vertex as translate_vertex;
-
     let offset = offset.into();
 
+    let mut translate = Translate {};
     let mut vertex_cache = BTreeMap::new();
 
     let boundary = face
@@ -50,7 +54,7 @@ pub fn face(
         .map(|half_edge| {
             half_edges.push(HalfEdge {
                 boundary: half_edges[half_edge].boundary.map(|vertex| {
-                    translate_vertex(
+                    translate.vertex(
                         vertex,
                         offset,
                         &mut vertex_cache,
@@ -68,7 +72,7 @@ pub fn face(
             triangles.push(
                 Triangle {
                     vertices: triangles[triangle].vertices.map(|vertex| {
-                        translate_vertex(
+                        translate.vertex(
                             vertex,
                             offset,
                             &mut vertex_cache,
