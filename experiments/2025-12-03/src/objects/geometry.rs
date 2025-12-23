@@ -29,7 +29,11 @@ pub struct Triangle {
 
 impl From<[Index<Vertex>; 3]> for Triangle {
     fn from(vertices: [Index<Vertex>; 3]) -> Self {
-        Self { vertices }
+        let [v0, v1, v2] = vertices;
+
+        Self {
+            vertices: [v0, v1, v2],
+        }
     }
 }
 
