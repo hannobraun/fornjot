@@ -10,6 +10,7 @@ use crate::{
     store::{Index, Store},
 };
 
+#[derive(Default)]
 pub struct Translate {}
 
 impl Translate {
@@ -44,7 +45,7 @@ pub fn face(
 ) -> Face {
     let offset = offset.into();
 
-    let mut translate = Translate {};
+    let mut translate = Translate::default();
     let mut vertex_cache = BTreeMap::new();
 
     let boundary = face
