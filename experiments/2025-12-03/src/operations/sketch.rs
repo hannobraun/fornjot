@@ -10,7 +10,7 @@ use spade::Triangulation;
 
 use crate::{
     objects::{
-        geometry::{Triangles, Vertex},
+        geometry::{Geometry, Vertex},
         topology::{Face, Faces, HalfEdge},
     },
     store::{Index, Store},
@@ -67,8 +67,7 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Surface,
-        vertices: &mut Store<Vertex>,
-        triangles: &mut Triangles,
+        geometry: &mut Geometry,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Faces,
     ) -> Index<Face> {
@@ -104,7 +103,7 @@ impl Sketch {
                         }
                         None => {
                             let position = surface.local_to_global(prev.to);
-                            vertices.push(Vertex { position })
+                            geometry.vertices.push(Vertex { position })
                         }
                     };
 
@@ -123,7 +122,7 @@ impl Sketch {
                         }
                         None => {
                             let position = surface.local_to_global(prev.to);
-                            vertices.push(Vertex { position })
+                            geometry.vertices.push(Vertex { position })
                         }
                     };
                     let v1 = match next.attachment {
@@ -136,7 +135,7 @@ impl Sketch {
                         Some(SketchSegmentAttachment::Vertex { vertex: _ })
                         | None => {
                             let position = surface.local_to_global(current.to);
-                            vertices.push(Vertex { position })
+                            geometry.vertices.push(Vertex { position })
                         }
                     };
 
@@ -186,7 +185,7 @@ impl Sketch {
             })
             .map(|triangle| {
                 let [v0, v1, v2] = triangle.map(|point| point.vertex);
-                triangles.push([v0, v1, v2], vertices)
+                geometry.triangles.push([v0, v1, v2], &geometry.vertices)
             })
             .collect();
 

@@ -56,8 +56,7 @@ fn model() -> TriMesh {
                 origin: Point::from([0., 0., 0.]),
                 axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
             },
-            &mut geometry.vertices,
-            &mut geometry.triangles,
+            &mut geometry,
             &mut half_edges,
             &mut faces,
         );
