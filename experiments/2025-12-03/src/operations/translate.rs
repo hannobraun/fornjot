@@ -35,6 +35,25 @@ impl Translate {
 
         translated
     }
+
+    pub fn triangle(
+        &mut self,
+        triangle: Index<Triangle>,
+        offset: impl Into<Vector<3>>,
+        vertices: &mut Store<Vertex>,
+        triangles: &mut Triangles,
+    ) -> Index<Triangle> {
+        let offset = offset.into();
+
+        triangles.push(
+            Triangle {
+                vertices: triangles[triangle]
+                    .vertices
+                    .map(|vertex| self.vertex(vertex, offset, vertices)),
+            },
+            vertices,
+        )
+    }
 }
 
 pub fn face(
@@ -65,14 +84,7 @@ pub fn face(
         .iter()
         .copied()
         .map(|triangle| {
-            triangles.push(
-                Triangle {
-                    vertices: triangles[triangle].vertices.map(|vertex| {
-                        translate.vertex(vertex, offset, vertices)
-                    }),
-                },
-                vertices,
-            )
+            translate.triangle(triangle, offset, vertices, triangles)
         })
         .collect();
 
