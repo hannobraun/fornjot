@@ -41,15 +41,13 @@ impl Translate {
         &mut self,
         triangle: Triangle<3>,
         offset: impl Into<Vector<3>>,
-        geometry: &mut Geometry,
-    ) -> Index<Triangle<3>> {
+        _: &mut Geometry,
+    ) -> Triangle<3> {
         let offset = offset.into();
 
-        let translated = Triangle {
+        Triangle {
             points: triangle.points.map(|point| point + offset),
-        };
-
-        geometry.triangles.push(translated)
+        }
     }
 }
 
@@ -80,7 +78,12 @@ pub fn face(
         .iter()
         .copied()
         .map(|triangle| {
-            translate.triangle(geometry.triangles[triangle], offset, geometry)
+            let triangle = translate.triangle(
+                geometry.triangles[triangle],
+                offset,
+                geometry,
+            );
+            geometry.triangles.push(triangle)
         })
         .collect();
 
