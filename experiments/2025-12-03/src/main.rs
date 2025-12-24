@@ -1,5 +1,5 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Triangle, Vector};
+use fj_math::{Point, Vector};
 
 use crate::{
     objects::{
@@ -83,9 +83,9 @@ fn model() -> TriMesh {
         .flat_map(|f0123| faces[f0123].triangles.iter().copied())
         .map(|t012| &geometry.triangles[t012]);
 
-    for &Triangle { points } in triangles {
+    for &triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
-            inner: Triangle::from_points(points),
+            inner: triangle,
             is_internal: false,
             color: Color::default(),
         });
