@@ -14,10 +14,10 @@ pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
 }
 
 pub fn half_edge(
-    e01: Index<HalfEdge>,
+    half_edge: Index<HalfEdge>,
     half_edges: &Store<HalfEdge>,
 ) -> HalfEdge {
-    let [v0, v1] = half_edges[e01].boundary;
+    let [v0, v1] = half_edges[half_edge].boundary;
     HalfEdge { boundary: [v1, v0] }
 }
 
