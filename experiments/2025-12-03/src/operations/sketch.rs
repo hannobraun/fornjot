@@ -104,7 +104,10 @@ impl Sketch {
                         }
                     };
 
-                    half_edges.push(HalfEdge { boundary: [v0, v1] })
+                    half_edges.push(HalfEdge {
+                        boundary: [v0, v1],
+                        approx: Vec::new(),
+                    })
                 }
                 None => {
                     let v0 = match prev.attachment {
@@ -136,7 +139,10 @@ impl Sketch {
                         }
                     };
 
-                    half_edges.push(HalfEdge { boundary: [v0, v1] })
+                    half_edges.push(HalfEdge {
+                        boundary: [v0, v1],
+                        approx: Vec::new(),
+                    })
                 }
             };
 

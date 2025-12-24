@@ -10,6 +10,7 @@ pub struct Vertex {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
     pub boundary: [Index<Vertex>; 2],
+    pub approx: Vec<Point<3>>,
 }
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]

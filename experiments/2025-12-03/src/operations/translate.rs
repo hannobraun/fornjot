@@ -66,6 +66,12 @@ pub fn face(
                 boundary: half_edges[half_edge]
                     .boundary
                     .map(|vertex| translate.vertex(vertex, offset, vertices)),
+                approx: half_edges[half_edge]
+                    .approx
+                    .iter()
+                    .copied()
+                    .rev()
+                    .collect(),
             })
         })
         .collect();

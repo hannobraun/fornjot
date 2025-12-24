@@ -27,7 +27,10 @@ impl Connect {
             return half_edge;
         }
 
-        let half_edge = half_edges.push(HalfEdge { boundary: vertices });
+        let half_edge = half_edges.push(HalfEdge {
+            boundary: vertices,
+            approx: Vec::new(),
+        });
         self.vertices_along_line.insert(vertices, half_edge);
 
         half_edge
