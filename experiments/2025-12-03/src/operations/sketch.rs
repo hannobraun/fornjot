@@ -9,7 +9,7 @@ use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
-    objects::topology::{Face, Faces, HalfEdge, Vertex},
+    objects::topology::{Face, HalfEdge, Vertex},
     store::{Index, Store},
 };
 
@@ -66,7 +66,7 @@ impl Sketch {
         surface: Surface,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
-        faces: &mut Faces,
+        faces: &mut Store<Face>,
     ) -> Index<Face> {
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {

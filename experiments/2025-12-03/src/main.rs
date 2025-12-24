@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Vector};
 
 use crate::{
-    objects::topology::{Faces, Vertex},
+    objects::topology::Vertex,
     operations::{
         sketch::{Sketch, Surface},
         sweep,
@@ -29,7 +29,7 @@ fn main() -> anyhow::Result<()> {
 fn model() -> TriMesh {
     let mut vertices = Store::default();
     let mut half_edges = Store::default();
-    let mut faces = Faces::default();
+    let mut faces = Store::default();
     let mut solids = Store::default();
 
     let left_front_bottom_outer = vertices.push(Vertex {

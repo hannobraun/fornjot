@@ -1,7 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::topology::{Face, Faces, HalfEdge, Solid, Vertex},
+    objects::topology::{Face, HalfEdge, Solid, Vertex},
     operations::{
         connect::Connect,
         reverse,
@@ -16,7 +16,7 @@ pub fn face_to_solid(
     path: impl Into<Vector<3>>,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
-    faces: &mut Faces,
+    faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
     let path = path.into();
