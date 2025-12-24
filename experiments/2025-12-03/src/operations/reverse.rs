@@ -26,7 +26,7 @@ pub fn half_edge(
 
 pub fn face(
     face: &Face,
-    geometry: &mut Geometry,
+    _: &mut Geometry,
     half_edges: &mut Store<HalfEdge>,
 ) -> Face {
     let boundary = face
@@ -50,16 +50,8 @@ pub fn face(
         .rev()
         .collect();
 
-    let triangles = face
-        .triangles
-        .iter()
-        .copied()
-        .map(|t| {
-            let triangle = triangle(geometry.triangles[t]);
-            geometry.triangles.push(triangle)
-        })
-        .rev()
-        .collect();
+    let triangles =
+        face.triangles.iter().copied().map(triangle).rev().collect();
 
     Face {
         boundary,

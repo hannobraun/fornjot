@@ -76,11 +76,7 @@ pub fn face(
         .triangles
         .iter()
         .copied()
-        .map(|triangle| {
-            let triangle =
-                translate.triangle(geometry.triangles[triangle], offset);
-            geometry.triangles.push(triangle)
-        })
+        .map(|triangle| translate.triangle(triangle, offset))
         .collect();
 
     Face {
