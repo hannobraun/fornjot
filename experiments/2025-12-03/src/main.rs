@@ -39,11 +39,9 @@ fn model() -> TriMesh {
 
     let left_front_bottom_outer = geometry.vertices.push(Vertex {
         point: geometry.points.push([0., 0., 0.]),
-        position: Point::from([0., 0., 0.]),
     });
     let left_front_bottom_inner = geometry.vertices.push(Vertex {
         point: geometry.points.push([0.25, 0.25, 0.]),
-        position: Point::from([0.25, 0.25, 0.]),
     });
 
     let bottom = Sketch::start_at([0., 0.])

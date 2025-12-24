@@ -46,10 +46,8 @@ impl Translate {
             return translated;
         }
 
-        let position = vertices[vertex].position;
         let translated = vertices.push(Vertex {
             point: self.point(vertices[vertex].point, offset, points),
-            position: position + offset,
         });
 
         self.vertex.insert(vertex, translated);

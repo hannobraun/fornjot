@@ -14,7 +14,6 @@ pub struct Geometry {
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {
     pub point: Index<Point<3>>,
-    pub position: Point<3>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
