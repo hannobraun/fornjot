@@ -13,7 +13,7 @@ pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
     }
 }
 
-pub fn half_edge(half_edge: &HalfEdge, _: &Store<HalfEdge>) -> HalfEdge {
+pub fn half_edge(half_edge: &HalfEdge) -> HalfEdge {
     let [v0, v1] = half_edge.boundary;
     HalfEdge { boundary: [v1, v0] }
 }
@@ -24,7 +24,7 @@ pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
         .iter()
         .copied()
         .map(|e| {
-            let half_edge = half_edge(&half_edges[e], half_edges);
+            let half_edge = half_edge(&half_edges[e]);
 
             if let Some(index) = face
                 .boundary
