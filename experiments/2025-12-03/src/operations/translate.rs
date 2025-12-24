@@ -12,10 +12,27 @@ use crate::{
 
 #[derive(Default)]
 pub struct Translate {
+    points: BTreeMap<Index<Point<3>>, Index<Point<3>>>,
     vertex: BTreeMap<Index<Vertex>, Index<Vertex>>,
 }
 
 impl Translate {
+    pub fn point(
+        &mut self,
+        point: Index<Point<3>>,
+        offset: impl Into<Vector<3>>,
+        points: &mut Store<Point<3>>,
+    ) -> Index<Point<3>> {
+        if let Some(translated) = self.points.get(&point).copied() {
+            return translated;
+        }
+
+        let translated = points.push(points[point] + offset.into());
+        self.points.insert(point, translated);
+
+        translated
+    }
+
     pub fn vertex(
         &mut self,
         vertex: Index<Vertex>,
@@ -31,7 +48,7 @@ impl Translate {
 
         let position = vertices[vertex].position;
         let translated = vertices.push(Vertex {
-            point: points.push(position + offset),
+            point: self.point(vertices[vertex].point, offset, points),
             position: position + offset,
         });
 
