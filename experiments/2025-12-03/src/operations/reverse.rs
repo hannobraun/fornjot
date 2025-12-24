@@ -7,9 +7,11 @@ use crate::{
 };
 
 pub fn triangle(t012: Index<Triangle>, triangles: &Triangles) -> Triangle {
+    let [p0, p1, p2] = triangles[t012].points;
     let [v0, v1, v2] = triangles[t012].vertices;
 
     Triangle {
+        points: [p0, p2, p1],
         vertices: [v0, v2, v1],
     }
 }

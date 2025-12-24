@@ -74,7 +74,10 @@ impl Translate {
                 &mut geometry.vertices,
             )
         });
-        let translated = Triangle { vertices };
+        let translated = Triangle {
+            points: vertices.map(|vertex| geometry.vertices[vertex].point),
+            vertices,
+        };
 
         geometry.triangles.push(translated, &geometry.vertices)
     }

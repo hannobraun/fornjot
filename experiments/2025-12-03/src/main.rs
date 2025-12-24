@@ -86,6 +86,7 @@ fn model() -> TriMesh {
         .map(|t012| &geometry.triangles[t012]);
 
     for &Triangle {
+        points: _,
         vertices: [a, b, c],
     } in triangles
     {
