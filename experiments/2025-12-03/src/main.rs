@@ -3,7 +3,7 @@ use fj_math::{Point, Vector};
 
 use crate::{
     objects::{
-        geometry::{Geometry, Triangle},
+        geometry::{Geometry, Triangle, Vertex},
         topology::Faces,
     },
     operations::{
@@ -37,8 +37,12 @@ fn model() -> TriMesh {
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let left_front_bottom_outer = geometry.vertices.push([0., 0., 0.]);
-    let left_front_bottom_inner = geometry.vertices.push([0.25, 0.25, 0.]);
+    let left_front_bottom_outer = geometry.vertices.push(Vertex {
+        position: Point::from([0., 0., 0.]),
+    });
+    let left_front_bottom_inner = geometry.vertices.push(Vertex {
+        position: Point::from([0.25, 0.25, 0.]),
+    });
 
     let bottom = Sketch::start_at([0., 0.])
         .line_to([1., 0.])
