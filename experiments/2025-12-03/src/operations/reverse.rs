@@ -1,10 +1,7 @@
 use fj_math::Triangle;
 
 use crate::{
-    objects::{
-        geometry::Geometry,
-        topology::{Face, HalfEdge},
-    },
+    objects::topology::{Face, HalfEdge},
     store::{Index, Store},
 };
 
@@ -24,11 +21,7 @@ pub fn half_edge(
     HalfEdge { boundary: [v1, v0] }
 }
 
-pub fn face(
-    face: &Face,
-    _: &mut Geometry,
-    half_edges: &mut Store<HalfEdge>,
-) -> Face {
+pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
     let boundary = face
         .boundary
         .iter()
