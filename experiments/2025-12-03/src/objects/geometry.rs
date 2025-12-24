@@ -24,11 +24,7 @@ pub struct Triangle {
 
 impl From<[Index<Point<3>>; 3]> for Triangle {
     fn from(points: [Index<Point<3>>; 3]) -> Self {
-        let [p0, p1, p2] = points;
-
-        Self {
-            points: [p0, p1, p2],
-        }
+        Self { points }
     }
 }
 
