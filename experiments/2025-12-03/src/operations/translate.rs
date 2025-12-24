@@ -66,19 +66,10 @@ impl Translate {
         let offset = offset.into();
 
         let original = geometry.triangles[triangle];
-        let vertices = original.vertices.map(|vertex| {
-            self.vertex(
-                vertex,
-                offset,
-                &mut geometry.points,
-                &mut geometry.vertices,
-            )
-        });
         let translated = Triangle {
             points: original
                 .points
                 .map(|point| self.point(point, offset, &mut geometry.points)),
-            vertices,
         };
 
         geometry.triangles.push(translated, &geometry.points)
