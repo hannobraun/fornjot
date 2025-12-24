@@ -8,8 +8,8 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn triangle(t012: Triangle<3>) -> Triangle<3> {
-    let [p0, p1, p2] = t012.points;
+pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
+    let [p0, p1, p2] = triangle.points;
 
     Triangle {
         points: [p0, p2, p1],
