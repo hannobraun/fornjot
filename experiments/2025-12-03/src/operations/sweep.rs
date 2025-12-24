@@ -2,7 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{
-        geometry::Geometry,
+        geometry::Vertex,
         topology::{Face, Faces, HalfEdge, Solid},
     },
     operations::{
@@ -17,7 +17,7 @@ use crate::{
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
-    geometry: &mut Geometry,
+    vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Faces,
     solids: &mut Store<Solid>,
@@ -29,12 +29,7 @@ pub fn face_to_solid(
     let bottom_inv = reverse::face(&faces[bottom], half_edges);
 
     let top = {
-        let top = translate::face(
-            &bottom_inv,
-            path,
-            &mut geometry.vertices,
-            half_edges,
-        );
+        let top = translate::face(&bottom_inv, path, vertices, half_edges);
         faces.push(top)
     };
 
@@ -100,7 +95,7 @@ pub fn face_to_solid(
             let [[p0, p1], [_, p3]] = [bottom, top].map(|half_edge| {
                 half_edges[half_edge]
                     .boundary
-                    .map(|vertex| geometry.vertices[vertex].point)
+                    .map(|vertex| vertices[vertex].point)
             });
 
             let surface = Surface {
@@ -113,7 +108,7 @@ pub fn face_to_solid(
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .into_face(surface, &mut geometry.vertices, half_edges, faces)
+                .into_face(surface, vertices, half_edges, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
