@@ -160,14 +160,11 @@ impl Sketch {
         }
 
         let delaunay_points = positions_and_half_edges.iter().copied().map(
-            |(position, half_edge)| {
+            |(local, half_edge)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = geometry.vertices[vertex].point;
 
-                DelaunayPoint {
-                    local: position,
-                    global,
-                }
+                DelaunayPoint { local, global }
             },
         );
         let polygon = polygon(
