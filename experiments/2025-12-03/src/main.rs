@@ -81,9 +81,9 @@ fn model() -> TriMesh {
         .iter()
         .copied()
         .flat_map(|f0123| faces[f0123].triangles.iter().copied())
-        .map(|t012| &geometry.triangles[t012]);
+        .map(|t012| geometry.triangles[t012]);
 
-    for &triangle in triangles {
+    for triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: triangle,
             is_internal: false,
