@@ -70,7 +70,7 @@ pub fn face(
         })
         .collect();
     let triangles = face
-        .triangles
+        .approx
         .iter()
         .copied()
         .map(|triangle| translate.triangle(triangle, offset))
@@ -78,6 +78,6 @@ pub fn face(
 
     Face {
         boundary,
-        triangles,
+        approx: triangles,
     }
 }

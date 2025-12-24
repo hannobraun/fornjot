@@ -193,7 +193,7 @@ impl Sketch {
                 .into_iter()
                 .map(|(_, half_edge)| half_edge)
                 .collect(),
-            triangles,
+            approx: triangles,
         })
     }
 }

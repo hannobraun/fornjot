@@ -75,7 +75,7 @@ fn model() -> TriMesh {
         .boundary
         .iter()
         .copied()
-        .flat_map(|f0123| faces[f0123].triangles.iter().copied());
+        .flat_map(|f0123| faces[f0123].approx.iter().copied());
 
     for triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
