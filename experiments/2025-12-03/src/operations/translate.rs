@@ -75,7 +75,9 @@ impl Translate {
             )
         });
         let translated = Triangle {
-            points: vertices.map(|vertex| geometry.vertices[vertex].point),
+            points: original
+                .points
+                .map(|point| self.point(point, offset, &mut geometry.points)),
             vertices,
         };
 
