@@ -121,8 +121,8 @@ impl Sketch {
                             vertex
                         }
                         None => {
-                            let global = surface.local_to_global(prev.to);
-                            geometry.vertices.push(Vertex { point: global })
+                            let point = surface.local_to_global(prev.to);
+                            geometry.vertices.push(Vertex { point })
                         }
                     };
                     let v1 = match next.attachment {
