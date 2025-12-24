@@ -22,9 +22,9 @@ pub struct Triangle {
     pub points: [Index<Point<3>>; 3],
 }
 
-impl From<[(Index<Point<3>>, Index<Vertex>); 3]> for Triangle {
-    fn from(vertices: [(Index<Point<3>>, Index<Vertex>); 3]) -> Self {
-        let [p0, p1, p2] = vertices.map(|(p, _)| p);
+impl From<[Index<Point<3>>; 3]> for Triangle {
+    fn from(vertices: [Index<Point<3>>; 3]) -> Self {
+        let [p0, p1, p2] = vertices;
 
         Self {
             points: [p0, p1, p2],
