@@ -1,6 +1,6 @@
 use crate::{
     objects::{
-        geometry::{Triangle, Triangles, Vertex},
+        geometry::{Geometry, Triangle, Triangles},
         topology::{Face, HalfEdge},
     },
     store::{Index, Store},
@@ -26,8 +26,7 @@ pub fn half_edge(
 
 pub fn face(
     face: &Face,
-    vertices: &Store<Vertex>,
-    triangles: &mut Triangles,
+    geometry: &mut Geometry,
     half_edges: &mut Store<HalfEdge>,
 ) -> Face {
     let boundary = face
@@ -56,8 +55,8 @@ pub fn face(
         .iter()
         .copied()
         .map(|t| {
-            let triangle = triangle(t, triangles);
-            triangles.push(triangle, vertices)
+            let triangle = triangle(t, &geometry.triangles);
+            geometry.triangles.push(triangle, &geometry.vertices)
         })
         .rev()
         .collect();

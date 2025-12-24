@@ -26,12 +26,7 @@ pub fn face_to_solid(
 
     let mut connect = Connect::new();
 
-    let bottom_inv = reverse::face(
-        &faces[bottom],
-        &geometry.vertices,
-        &mut geometry.triangles,
-        half_edges,
-    );
+    let bottom_inv = reverse::face(&faces[bottom], geometry, half_edges);
 
     let top = {
         let top = translate::face(&bottom_inv, path, geometry, half_edges);
@@ -40,14 +35,9 @@ pub fn face_to_solid(
 
     let bottom_edges_for_sides = bottom_inv.boundary.clone();
     let top_edges_for_sides = {
-        let mut top_edges = reverse::face(
-            &faces[top],
-            &geometry.vertices,
-            &mut geometry.triangles,
-            half_edges,
-        )
-        .boundary
-        .clone();
+        let mut top_edges = reverse::face(&faces[top], geometry, half_edges)
+            .boundary
+            .clone();
 
         top_edges.reverse();
 
