@@ -1,12 +1,17 @@
+use fj_math::Triangle;
+
 use crate::{
     objects::{
-        geometry::{Geometry, Triangle, Triangles},
+        geometry::{Geometry, Triangles},
         topology::{Face, HalfEdge},
     },
     store::{Index, Store},
 };
 
-pub fn triangle(t012: Index<Triangle>, triangles: &Triangles) -> Triangle {
+pub fn triangle(
+    t012: Index<Triangle<3>>,
+    triangles: &Triangles,
+) -> Triangle<3> {
     let [p0, p1, p2] = triangles[t012].points;
 
     Triangle {

@@ -1,9 +1,9 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Vector};
+use fj_math::{Point, Triangle, Vector};
 
 use crate::{
     objects::{
-        geometry::{Geometry, Triangle, Vertex},
+        geometry::{Geometry, Vertex},
         topology::Faces,
     },
     operations::{

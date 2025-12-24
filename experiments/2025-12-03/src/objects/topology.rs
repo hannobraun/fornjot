@@ -1,7 +1,9 @@
 use std::ops;
 
+use fj_math::Triangle;
+
 use crate::{
-    objects::geometry::{Triangle, Vertex},
+    objects::geometry::Vertex,
     store::{Index, Store},
 };
 
@@ -13,7 +15,7 @@ pub struct HalfEdge {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
     pub boundary: Vec<Index<HalfEdge>>,
-    pub triangles: Vec<Index<Triangle>>,
+    pub triangles: Vec<Index<Triangle<3>>>,
 }
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]

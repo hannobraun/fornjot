@@ -1,6 +1,6 @@
 use std::ops;
 
-use fj_math::Point;
+use fj_math::{Point, Triangle};
 
 use crate::store::{Index, Store};
 
@@ -16,29 +16,18 @@ pub struct Vertex {
     pub point: Index<Point<3>>,
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
-pub struct Triangle {
-    pub points: [Point<3>; 3],
-}
-
-impl From<[Point<3>; 3]> for Triangle {
-    fn from(points: [Point<3>; 3]) -> Self {
-        Self { points }
-    }
-}
-
 #[derive(Default)]
 pub struct Triangles {
-    store: Store<Triangle>,
+    store: Store<Triangle<3>>,
 }
 
 impl Triangles {
     #[track_caller]
     pub fn push(
         &mut self,
-        triangle: impl Into<Triangle>,
+        triangle: impl Into<Triangle<3>>,
         _: &Store<Point<3>>,
-    ) -> Index<Triangle> {
+    ) -> Index<Triangle<3>> {
         let triangle = triangle.into();
 
         let [a, b, c] = triangle.points;
@@ -50,10 +39,10 @@ impl Triangles {
     }
 }
 
-impl ops::Index<Index<Triangle>> for Triangles {
-    type Output = Triangle;
+impl ops::Index<Index<Triangle<3>>> for Triangles {
+    type Output = Triangle<3>;
 
-    fn index(&self, index: Index<Triangle>) -> &Self::Output {
+    fn index(&self, index: Index<Triangle<3>>) -> &Self::Output {
         &self.store[index]
     }
 }

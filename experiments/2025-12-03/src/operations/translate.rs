@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 
-use fj_math::{Point, Vector};
+use fj_math::{Point, Triangle, Vector};
 
 use crate::{
     objects::{
-        geometry::{Geometry, Triangle, Vertex},
+        geometry::{Geometry, Vertex},
         topology::{Face, HalfEdge},
     },
     store::{Index, Store},
@@ -57,10 +57,10 @@ impl Translate {
 
     pub fn triangle(
         &mut self,
-        triangle: Index<Triangle>,
+        triangle: Index<Triangle<3>>,
         offset: impl Into<Vector<3>>,
         geometry: &mut Geometry,
-    ) -> Index<Triangle> {
+    ) -> Index<Triangle<3>> {
         let offset = offset.into();
 
         let translated = Triangle {
