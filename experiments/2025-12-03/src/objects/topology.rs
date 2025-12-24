@@ -7,7 +7,7 @@ pub struct Vertex {
     pub point: Point<3>,
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
     pub boundary: [Index<Vertex>; 2],
 }
