@@ -189,7 +189,8 @@ impl Sketch {
                 polygon.contains(&Coord { x, y })
             })
             .map(|triangle| {
-                let [p0, p1, p2] = triangle.map(|point| point.global);
+                let [p0, p1, p2] =
+                    triangle.map(|point| geometry.points[point.global]);
                 geometry.triangles.push([p0, p1, p2], &geometry.points)
             })
             .collect();

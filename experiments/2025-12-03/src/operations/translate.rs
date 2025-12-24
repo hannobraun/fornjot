@@ -66,7 +66,7 @@ impl Translate {
         let translated = Triangle {
             points: geometry.triangles[triangle]
                 .points
-                .map(|point| self.point(point, offset, &mut geometry.points)),
+                .map(|point| point + offset),
         };
 
         geometry.triangles.push(translated, &geometry.points)

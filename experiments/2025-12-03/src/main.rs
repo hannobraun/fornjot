@@ -85,11 +85,7 @@ fn model() -> TriMesh {
 
     for &Triangle { points: [a, b, c] } in triangles {
         tri_mesh.triangles.push(MeshTriangle {
-            inner: fj_math::Triangle::from_points([
-                geometry.points[a],
-                geometry.points[b],
-                geometry.points[c],
-            ]),
+            inner: fj_math::Triangle::from_points([a, b, c]),
             is_internal: false,
             color: Color::default(),
         });

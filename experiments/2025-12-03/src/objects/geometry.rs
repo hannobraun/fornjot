@@ -18,11 +18,11 @@ pub struct Vertex {
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Triangle {
-    pub points: [Index<Point<3>>; 3],
+    pub points: [Point<3>; 3],
 }
 
-impl From<[Index<Point<3>>; 3]> for Triangle {
-    fn from(points: [Index<Point<3>>; 3]) -> Self {
+impl From<[Point<3>; 3]> for Triangle {
+    fn from(points: [Point<3>; 3]) -> Self {
         Self { points }
     }
 }
@@ -37,11 +37,11 @@ impl Triangles {
     pub fn push(
         &mut self,
         triangle: impl Into<Triangle>,
-        points: &Store<Point<3>>,
+        _: &Store<Point<3>>,
     ) -> Index<Triangle> {
         let triangle = triangle.into();
 
-        let [a, b, c] = triangle.points.map(|p| points[p]);
+        let [a, b, c] = triangle.points;
         if a == b || a == c || b == c {
             panic!("Invalid triangle: {:?}", [a, b, c]);
         }
