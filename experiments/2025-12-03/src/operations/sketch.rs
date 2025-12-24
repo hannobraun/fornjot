@@ -187,7 +187,7 @@ impl Sketch {
             })
             .map(|triangle| {
                 let [p0, p1, p2] = triangle.map(|point| point.global);
-                geometry.triangles.push([p0, p1, p2], &geometry.points)
+                geometry.triangles.push([p0, p1, p2])
             })
             .collect();
 

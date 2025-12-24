@@ -52,7 +52,7 @@ impl Translate {
                 .map(|point| point + offset),
         };
 
-        geometry.triangles.push(translated, &geometry.points)
+        geometry.triangles.push(translated)
     }
 }
 
