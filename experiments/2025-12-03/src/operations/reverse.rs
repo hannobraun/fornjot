@@ -2,13 +2,13 @@ use fj_math::Triangle;
 
 use crate::{
     objects::{
-        geometry::{Geometry, Triangles},
+        geometry::Geometry,
         topology::{Face, HalfEdge},
     },
     store::{Index, Store},
 };
 
-pub fn triangle(t012: Triangle<3>, _: &Triangles) -> Triangle<3> {
+pub fn triangle(t012: Triangle<3>) -> Triangle<3> {
     let [p0, p1, p2] = t012.points;
 
     Triangle {
@@ -55,7 +55,7 @@ pub fn face(
         .iter()
         .copied()
         .map(|t| {
-            let triangle = triangle(geometry.triangles[t], &geometry.triangles);
+            let triangle = triangle(geometry.triangles[t]);
             geometry.triangles.push(triangle)
         })
         .rev()
