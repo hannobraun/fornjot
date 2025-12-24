@@ -2,7 +2,7 @@ use fj_math::Triangle;
 
 use crate::{
     objects::topology::{Face, HalfEdge},
-    store::{Index, Store},
+    store::Store,
 };
 
 pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
@@ -13,11 +13,8 @@ pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
     }
 }
 
-pub fn half_edge(
-    half_edge: Index<HalfEdge>,
-    half_edges: &Store<HalfEdge>,
-) -> HalfEdge {
-    let [v0, v1] = half_edges[half_edge].boundary;
+pub fn half_edge(half_edge: &HalfEdge, _: &Store<HalfEdge>) -> HalfEdge {
+    let [v0, v1] = half_edge.boundary;
     HalfEdge { boundary: [v1, v0] }
 }
 
@@ -27,7 +24,7 @@ pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
         .iter()
         .copied()
         .map(|e| {
-            let half_edge = half_edge(e, half_edges);
+            let half_edge = half_edge(&half_edges[e], half_edges);
 
             if let Some(index) = face
                 .boundary
