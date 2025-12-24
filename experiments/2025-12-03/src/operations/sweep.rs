@@ -96,12 +96,12 @@ pub fn face_to_solid(
             let [[v0, v1], [_, v3]] = [bottom, top].map(|half_edge| {
                 half_edges[half_edge]
                     .boundary
-                    .map(|vertex| geometry.vertices[vertex])
+                    .map(|vertex| geometry.vertices[vertex].position)
             });
 
             let surface = Surface {
-                origin: v0.position,
-                axes: [v1.position - v0.position, v3.position - v0.position],
+                origin: v0,
+                axes: [v1 - v0, v3 - v0],
             };
 
             Sketch::start_at([0., 0.])
