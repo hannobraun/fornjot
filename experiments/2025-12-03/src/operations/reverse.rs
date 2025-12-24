@@ -56,7 +56,11 @@ pub fn face(
         .copied()
         .map(|t| {
             let triangle = triangle(t, &geometry.triangles);
-            geometry.triangles.push(triangle, &geometry.vertices)
+            geometry.triangles.push(
+                triangle,
+                &geometry.points,
+                &geometry.vertices,
+            )
         })
         .rev()
         .collect();

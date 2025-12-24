@@ -45,6 +45,7 @@ impl Triangles {
     pub fn push(
         &mut self,
         triangle: impl Into<Triangle>,
+        _: &Store<Point<3>>,
         vertices: &Store<Vertex>,
     ) -> Index<Triangle> {
         let triangle = triangle.into();
