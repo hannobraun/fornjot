@@ -38,9 +38,11 @@ fn model() -> TriMesh {
     let mut solids = Store::default();
 
     let left_front_bottom_outer = geometry.vertices.push(Vertex {
+        point: geometry.points.push([0., 0., 0.]),
         position: Point::from([0., 0., 0.]),
     });
     let left_front_bottom_inner = geometry.vertices.push(Vertex {
+        point: geometry.points.push([0.25, 0.25, 0.]),
         position: Point::from([0.25, 0.25, 0.]),
     });
 

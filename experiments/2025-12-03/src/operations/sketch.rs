@@ -103,7 +103,8 @@ impl Sketch {
                         }
                         None => {
                             let position = surface.local_to_global(prev.to);
-                            geometry.vertices.push(Vertex { position })
+                            let point = geometry.points.push(position);
+                            geometry.vertices.push(Vertex { point, position })
                         }
                     };
 
@@ -122,7 +123,8 @@ impl Sketch {
                         }
                         None => {
                             let position = surface.local_to_global(prev.to);
-                            geometry.vertices.push(Vertex { position })
+                            let point = geometry.points.push(position);
+                            geometry.vertices.push(Vertex { point, position })
                         }
                     };
                     let v1 = match next.attachment {
@@ -135,7 +137,8 @@ impl Sketch {
                         Some(SketchSegmentAttachment::Vertex { vertex: _ })
                         | None => {
                             let position = surface.local_to_global(current.to);
-                            geometry.vertices.push(Vertex { position })
+                            let point = geometry.points.push(position);
+                            geometry.vertices.push(Vertex { point, position })
                         }
                     };
 

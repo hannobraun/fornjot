@@ -20,7 +20,7 @@ impl Translate {
         &mut self,
         vertex: Index<Vertex>,
         offset: impl Into<Vector<3>>,
-        _: &mut Store<Point<3>>,
+        points: &mut Store<Point<3>>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {
         let offset = offset.into();
@@ -31,6 +31,7 @@ impl Translate {
 
         let position = vertices[vertex].position;
         let translated = vertices.push(Vertex {
+            point: points.push(position + offset),
             position: position + offset,
         });
 
