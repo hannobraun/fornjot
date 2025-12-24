@@ -27,7 +27,6 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    // Topology
     let mut vertices = Store::default();
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
