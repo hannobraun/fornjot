@@ -2,10 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Vector};
 
 use crate::{
-    objects::{
-        geometry::{Geometry, Vertex},
-        topology::Faces,
-    },
+    objects::{geometry::Vertex, topology::Faces},
     operations::{
         sketch::{Sketch, Surface},
         sweep,
@@ -30,17 +27,16 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    let mut geometry = Geometry::default();
-
     // Topology
+    let mut vertices = Store::default();
     let mut half_edges = Store::default();
     let mut faces = Faces::default();
     let mut solids = Store::default();
 
-    let left_front_bottom_outer = geometry.vertices.push(Vertex {
+    let left_front_bottom_outer = vertices.push(Vertex {
         point: Point::from([0., 0., 0.]),
     });
-    let left_front_bottom_inner = geometry.vertices.push(Vertex {
+    let left_front_bottom_inner = vertices.push(Vertex {
         point: Point::from([0.25, 0.25, 0.]),
     });
 
@@ -60,7 +56,7 @@ fn model() -> TriMesh {
                 origin: Point::from([0., 0., 0.]),
                 axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
             },
-            &mut geometry.vertices,
+            &mut vertices,
             &mut half_edges,
             &mut faces,
         );
@@ -68,7 +64,7 @@ fn model() -> TriMesh {
     let cube = sweep::face_to_solid(
         bottom,
         [0., 0., 1.],
-        &mut geometry.vertices,
+        &mut vertices,
         &mut half_edges,
         &mut faces,
         &mut solids,
