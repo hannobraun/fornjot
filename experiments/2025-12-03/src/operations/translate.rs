@@ -23,13 +23,15 @@ impl Translate {
         _: &mut Store<Point<3>>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {
+        let offset = offset.into();
+
         if let Some(translated) = self.vertex.get(&vertex).copied() {
             return translated;
         }
 
         let position = vertices[vertex].position;
         let translated = vertices.push(Vertex {
-            position: position + offset.into(),
+            position: position + offset,
         });
 
         self.vertex.insert(vertex, translated);
