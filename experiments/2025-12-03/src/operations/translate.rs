@@ -16,15 +16,6 @@ pub struct Translate {
 }
 
 impl Translate {
-    pub fn point(
-        &mut self,
-        point: Index<Point<3>>,
-        offset: impl Into<Vector<3>>,
-        points: &mut Store<Point<3>>,
-    ) -> Index<Point<3>> {
-        points.push(points[point] + offset.into())
-    }
-
     pub fn vertex(
         &mut self,
         vertex: Index<Vertex>,
@@ -39,7 +30,7 @@ impl Translate {
         }
 
         let translated = vertices.push(Vertex {
-            point: self.point(vertices[vertex].point, offset, points),
+            point: points.push(points[vertices[vertex].point] + offset),
         });
 
         self.vertices.insert(vertex, translated);
