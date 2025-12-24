@@ -136,8 +136,8 @@ impl Sketch {
                         }
                         Some(SketchSegmentAttachment::Vertex { vertex: _ })
                         | None => {
-                            let position = surface.local_to_global(current.to);
-                            let point = geometry.points.push(position);
+                            let global = surface.local_to_global(current.to);
+                            let point = geometry.points.push(global);
                             geometry.vertices.push(Vertex { point })
                         }
                     };
