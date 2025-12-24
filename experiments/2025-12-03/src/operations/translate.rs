@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use fj_math::Vector;
+use fj_math::{Point, Vector};
 
 use crate::{
     objects::{
@@ -20,6 +20,7 @@ impl Translate {
         &mut self,
         vertex: Index<Vertex>,
         offset: impl Into<Vector<3>>,
+        _: &mut Store<Point<3>>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {
         if let Some(translated) = self.vertex.get(&vertex).copied() {
@@ -47,7 +48,12 @@ impl Translate {
         let original = geometry.triangles[triangle];
         let translated = Triangle {
             vertices: original.vertices.map(|vertex| {
-                self.vertex(vertex, offset, &mut geometry.vertices)
+                self.vertex(
+                    vertex,
+                    offset,
+                    &mut geometry.points,
+                    &mut geometry.vertices,
+                )
             }),
         };
 
@@ -72,7 +78,12 @@ pub fn face(
         .map(|half_edge| {
             half_edges.push(HalfEdge {
                 boundary: half_edges[half_edge].boundary.map(|vertex| {
-                    translate.vertex(vertex, offset, &mut geometry.vertices)
+                    translate.vertex(
+                        vertex,
+                        offset,
+                        &mut geometry.points,
+                        &mut geometry.vertices,
+                    )
                 }),
             })
         })
