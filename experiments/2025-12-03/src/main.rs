@@ -83,9 +83,9 @@ fn model() -> TriMesh {
         .flat_map(|f0123| faces[f0123].triangles.iter().copied())
         .map(|t012| &geometry.triangles[t012]);
 
-    for &Triangle { points: [a, b, c] } in triangles {
+    for &Triangle { points } in triangles {
         tri_mesh.triangles.push(MeshTriangle {
-            inner: Triangle::from_points([a, b, c]),
+            inner: Triangle::from_points(points),
             is_internal: false,
             color: Color::default(),
         });
