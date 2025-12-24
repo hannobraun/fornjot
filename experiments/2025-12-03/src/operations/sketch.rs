@@ -164,7 +164,10 @@ impl Sketch {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = geometry.vertices[vertex].point;
 
-                DelaunayPoint { position, global }
+                DelaunayPoint {
+                    local: position,
+                    global,
+                }
             },
         );
         let polygon = polygon(
@@ -179,7 +182,7 @@ impl Sketch {
         let triangles = delaunay(delaunay_points)
             .into_iter()
             .filter(|triangle| {
-                let points = triangle.map(|point| point.position);
+                let points = triangle.map(|point| point.local);
                 let [x, y] = Triangle::from_points(points)
                     .center()
                     .coords
@@ -285,7 +288,7 @@ fn delaunay(
 
 #[derive(Clone, Copy)]
 struct DelaunayPoint {
-    pub position: Point<2>,
+    pub local: Point<2>,
     pub global: Index<Point<3>>,
 }
 
@@ -293,7 +296,7 @@ impl spade::HasPosition for DelaunayPoint {
     type Scalar = f64;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
-        let [x, y] = self.position.coords.components.map(|s| s.into_f64());
+        let [x, y] = self.local.coords.components.map(|s| s.into_f64());
         spade::Point2 { x, y }
     }
 }
