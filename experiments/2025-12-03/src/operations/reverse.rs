@@ -43,10 +43,7 @@ pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
         .rev()
         .collect();
 
-    let triangles = face.approx.iter().copied().map(triangle).rev().collect();
+    let approx = face.approx.iter().copied().map(triangle).rev().collect();
 
-    Face {
-        boundary,
-        approx: triangles,
-    }
+    Face { boundary, approx }
 }
