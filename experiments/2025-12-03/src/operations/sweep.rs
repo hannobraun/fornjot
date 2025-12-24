@@ -93,7 +93,7 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let [[p0, v1], [_, v3]] = [bottom, top].map(|half_edge| {
+            let [[p0, p1], [_, v3]] = [bottom, top].map(|half_edge| {
                 half_edges[half_edge].boundary.map(|vertex| {
                     let point = geometry.vertices[vertex].point;
                     geometry.points[point]
@@ -102,7 +102,7 @@ pub fn face_to_solid(
 
             let surface = Surface {
                 origin: p0,
-                axes: [v1 - p0, v3 - p0],
+                axes: [p1 - p0, v3 - p0],
             };
 
             Sketch::start_at([0., 0.])
