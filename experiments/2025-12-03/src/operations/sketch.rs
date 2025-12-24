@@ -170,7 +170,7 @@ impl Sketch {
             ),
         );
 
-        let triangles = delaunay(delaunay_points)
+        let approx = delaunay(delaunay_points)
             .into_iter()
             .filter(|triangle| {
                 let points = triangle.map(|point| point.local);
@@ -193,7 +193,7 @@ impl Sketch {
                 .into_iter()
                 .map(|(_, half_edge)| half_edge)
                 .collect(),
-            approx: triangles,
+            approx,
         })
     }
 }
