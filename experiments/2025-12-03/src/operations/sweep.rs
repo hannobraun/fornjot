@@ -108,7 +108,7 @@ pub fn face_to_solid(
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .into_face(surface, geometry, half_edges, faces)
+                .into_face(surface, &mut geometry.vertices, half_edges, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();

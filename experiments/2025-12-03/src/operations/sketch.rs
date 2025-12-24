@@ -10,7 +10,7 @@ use spade::Triangulation;
 
 use crate::{
     objects::{
-        geometry::{Geometry, Vertex},
+        geometry::Vertex,
         topology::{Face, Faces, HalfEdge},
     },
     store::{Index, Store},
@@ -67,7 +67,7 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Surface,
-        geometry: &mut Geometry,
+        vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Faces,
     ) -> Index<Face> {
@@ -103,7 +103,7 @@ impl Sketch {
                         }
                         None => {
                             let point = surface.local_to_global(prev.to);
-                            geometry.vertices.push(Vertex { point })
+                            vertices.push(Vertex { point })
                         }
                     };
 
@@ -122,7 +122,7 @@ impl Sketch {
                         }
                         None => {
                             let point = surface.local_to_global(prev.to);
-                            geometry.vertices.push(Vertex { point })
+                            vertices.push(Vertex { point })
                         }
                     };
                     let v1 = match next.attachment {
@@ -135,7 +135,7 @@ impl Sketch {
                         Some(SketchSegmentAttachment::Vertex { vertex: _ })
                         | None => {
                             let point = surface.local_to_global(current.to);
-                            geometry.vertices.push(Vertex { point })
+                            vertices.push(Vertex { point })
                         }
                     };
 
@@ -159,7 +159,7 @@ impl Sketch {
         let delaunay_points = positions_and_half_edges.iter().copied().map(
             |(local, half_edge)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
-                let global = geometry.vertices[vertex].point;
+                let global = vertices[vertex].point;
 
                 DelaunayPoint { local, global }
             },
