@@ -65,9 +65,8 @@ impl Translate {
     ) -> Index<Triangle> {
         let offset = offset.into();
 
-        let original = geometry.triangles[triangle];
         let translated = Triangle {
-            points: original
+            points: geometry.triangles[triangle]
                 .points
                 .map(|point| self.point(point, offset, &mut geometry.points)),
         };
