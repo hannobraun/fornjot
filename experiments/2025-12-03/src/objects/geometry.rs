@@ -46,7 +46,6 @@ impl Triangles {
         &mut self,
         triangle: impl Into<Triangle>,
         points: &Store<Point<3>>,
-        _: &Store<Vertex>,
     ) -> Index<Triangle> {
         let triangle = triangle.into();
 

@@ -196,11 +196,9 @@ impl Sketch {
                 let [p0, p1, p2] = triangle.map(|point| point.global);
                 let [v0, v1, v2] = triangle.map(|point| point.vertex);
 
-                geometry.triangles.push(
-                    [(p0, v0), (p1, v1), (p2, v2)],
-                    &geometry.points,
-                    &geometry.vertices,
-                )
+                geometry
+                    .triangles
+                    .push([(p0, v0), (p1, v1), (p2, v2)], &geometry.points)
             })
             .collect();
 

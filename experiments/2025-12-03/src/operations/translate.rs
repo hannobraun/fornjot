@@ -79,11 +79,7 @@ impl Translate {
             vertices,
         };
 
-        geometry.triangles.push(
-            translated,
-            &geometry.points,
-            &geometry.vertices,
-        )
+        geometry.triangles.push(translated, &geometry.points)
     }
 }
 
