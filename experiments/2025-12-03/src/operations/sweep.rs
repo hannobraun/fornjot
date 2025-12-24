@@ -94,10 +94,9 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let [[p0, p1], [_, p3]] = [bottom, top].map(|half_edge| {
-                half_edges[half_edge].boundary.map(|vertex| {
-                    let point = geometry.vertices[vertex].point;
-                    geometry.points[point]
-                })
+                half_edges[half_edge]
+                    .boundary
+                    .map(|vertex| geometry.vertices[vertex].point)
             });
 
             let surface = Surface {

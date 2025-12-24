@@ -103,8 +103,7 @@ impl Sketch {
                         }
                         None => {
                             let global = surface.local_to_global(prev.to);
-                            let point = geometry.points.push(global);
-                            geometry.vertices.push(Vertex { point })
+                            geometry.vertices.push(Vertex { point: global })
                         }
                     };
 
@@ -123,8 +122,7 @@ impl Sketch {
                         }
                         None => {
                             let global = surface.local_to_global(prev.to);
-                            let point = geometry.points.push(global);
-                            geometry.vertices.push(Vertex { point })
+                            geometry.vertices.push(Vertex { point: global })
                         }
                     };
                     let v1 = match next.attachment {
@@ -137,8 +135,7 @@ impl Sketch {
                         Some(SketchSegmentAttachment::Vertex { vertex: _ })
                         | None => {
                             let global = surface.local_to_global(current.to);
-                            let point = geometry.points.push(global);
-                            geometry.vertices.push(Vertex { point })
+                            geometry.vertices.push(Vertex { point: global })
                         }
                     };
 
@@ -162,7 +159,7 @@ impl Sketch {
         let delaunay_points = positions_and_half_edges.iter().copied().map(
             |(local, half_edge)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
-                let global = geometry.points[geometry.vertices[vertex].point];
+                let global = geometry.vertices[vertex].point;
 
                 DelaunayPoint { local, global }
             },
