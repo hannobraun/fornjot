@@ -14,10 +14,10 @@ pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
 }
 
 pub fn half_edge(half_edge: &HalfEdge) -> HalfEdge {
-    let mut half_edge = half_edge.clone();
-    half_edge.boundary.reverse();
+    let HalfEdge { mut boundary } = half_edge.clone();
+    boundary.reverse();
 
-    half_edge
+    HalfEdge { boundary }
 }
 
 pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
