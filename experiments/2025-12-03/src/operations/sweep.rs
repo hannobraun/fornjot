@@ -29,7 +29,12 @@ pub fn face_to_solid(
     let bottom_inv = reverse::face(&faces[bottom], half_edges);
 
     let top = {
-        let top = translate::face(&bottom_inv, path, geometry, half_edges);
+        let top = translate::face(
+            &bottom_inv,
+            path,
+            &mut geometry.vertices,
+            half_edges,
+        );
         faces.push(top)
     };
 
