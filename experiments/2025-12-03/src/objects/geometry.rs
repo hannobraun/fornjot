@@ -45,12 +45,12 @@ impl Triangles {
     pub fn push(
         &mut self,
         triangle: impl Into<Triangle>,
-        _: &Store<Point<3>>,
-        vertices: &Store<Vertex>,
+        points: &Store<Point<3>>,
+        _: &Store<Vertex>,
     ) -> Index<Triangle> {
         let triangle = triangle.into();
 
-        let [a, b, c] = triangle.vertices.map(|v| vertices[v].position);
+        let [a, b, c] = triangle.points.map(|p| points[p]);
         if a == b || a == c || b == c {
             panic!("Invalid triangle: {:?}", [a, b, c]);
         }
