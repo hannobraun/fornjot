@@ -6,7 +6,6 @@ use crate::store::{Index, Store};
 
 #[derive(Default)]
 pub struct Geometry {
-    pub points: Store<Point<3>>,
     pub vertices: Store<Vertex>,
     pub triangles: Triangles,
 }
