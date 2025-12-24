@@ -1,10 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{
-        geometry::Vertex,
-        topology::{Face, Faces, HalfEdge, Solid},
-    },
+    objects::topology::{Face, Faces, HalfEdge, Solid, Vertex},
     operations::{
         connect::Connect,
         reverse,

@@ -1,11 +1,13 @@
 use std::ops;
 
-use fj_math::Triangle;
+use fj_math::{Point, Triangle};
 
-use crate::{
-    objects::geometry::Vertex,
-    store::{Index, Store},
-};
+use crate::store::{Index, Store};
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub struct Vertex {
+    pub point: Point<3>,
+}
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {

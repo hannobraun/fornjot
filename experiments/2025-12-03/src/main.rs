@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Vector};
 
 use crate::{
-    objects::{geometry::Vertex, topology::Faces},
+    objects::topology::{Faces, Vertex},
     operations::{
         sketch::{Sketch, Surface},
         sweep,

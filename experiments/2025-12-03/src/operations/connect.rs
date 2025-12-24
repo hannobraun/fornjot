@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    objects::{geometry::Vertex, topology::HalfEdge},
+    objects::topology::{HalfEdge, Vertex},
     store::{Index, Store},
 };
 

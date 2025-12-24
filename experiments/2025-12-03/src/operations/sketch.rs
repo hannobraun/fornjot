@@ -9,10 +9,7 @@ use itertools::Itertools;
 use spade::Triangulation;
 
 use crate::{
-    objects::{
-        geometry::Vertex,
-        topology::{Face, Faces, HalfEdge},
-    },
+    objects::topology::{Face, Faces, HalfEdge, Vertex},
     store::{Index, Store},
 };
 
