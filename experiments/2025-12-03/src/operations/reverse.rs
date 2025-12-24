@@ -8,11 +8,8 @@ use crate::{
     store::{Index, Store},
 };
 
-pub fn triangle(
-    t012: Index<Triangle<3>>,
-    triangles: &Triangles,
-) -> Triangle<3> {
-    let [p0, p1, p2] = triangles[t012].points;
+pub fn triangle(t012: Triangle<3>, _: &Triangles) -> Triangle<3> {
+    let [p0, p1, p2] = t012.points;
 
     Triangle {
         points: [p0, p2, p1],
@@ -58,7 +55,7 @@ pub fn face(
         .iter()
         .copied()
         .map(|t| {
-            let triangle = triangle(t, &geometry.triangles);
+            let triangle = triangle(geometry.triangles[t], &geometry.triangles);
             geometry.triangles.push(triangle)
         })
         .rev()
