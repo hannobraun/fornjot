@@ -39,26 +39,31 @@ fn model() -> TriMesh {
         point: Point::from([0.25, 0.25, 0.]),
     });
 
-    let bottom = Sketch::start_at([0., 0.])
-        .line_to([1., 0.])
-        .line_to([1., 1.])
-        .line_to([0., 1.])
-        .line_to_vertex([0., 0.], left_front_bottom_outer)
-        .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
-        .line_to([0.25, 0.75])
-        .line_to([0.75, 0.75])
-        .line_to([0.75, 0.25])
-        .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
-        .line_to_vertex([0., 0.], left_front_bottom_outer)
-        .into_face(
-            Surface {
-                origin: Point::from([0., 0., 0.]),
-                axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
-            },
-            &mut vertices,
-            &mut half_edges,
-            &mut faces,
-        );
+    let bottom = {
+        Sketch::start_at([0., 0.])
+            .line_to([1., 0.])
+            .line_to([1., 1.])
+            .line_to([0., 1.])
+            .line_to_vertex([0., 0.], left_front_bottom_outer)
+            .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
+            .line_to([0.25, 0.75])
+            .line_to([0.75, 0.75])
+            .line_to([0.75, 0.25])
+            .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
+            .line_to_vertex([0., 0.], left_front_bottom_outer)
+            .into_face(
+                Surface {
+                    origin: Point::from([0., 0., 0.]),
+                    axes: [
+                        Vector::from([0., 1., 0.]),
+                        Vector::from([1., 0., 0.]),
+                    ],
+                },
+                &mut vertices,
+                &mut half_edges,
+                &mut faces,
+            )
+    };
 
     let cube = sweep::face_to_solid(
         bottom,
