@@ -52,7 +52,12 @@ fn model() -> TriMesh {
             .arc_to([0.25, 0.75], radius, tolerance)
             .arc_to([0.75, 0.75], radius, tolerance)
             .arc_to([0.75, 0.25], radius, tolerance)
-            .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
+            .arc_to_vertex(
+                [0.25, 0.25],
+                left_front_bottom_inner,
+                radius,
+                tolerance,
+            )
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .into_face(
                 Surface {

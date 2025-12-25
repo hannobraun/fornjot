@@ -43,6 +43,24 @@ impl Sketch {
         self
     }
 
+    pub fn arc_to_vertex(
+        mut self,
+        position: impl Into<Point<2>>,
+        vertex: Index<Vertex>,
+        radius: impl Into<Scalar>,
+        tolerance: impl Into<Scalar>,
+    ) -> Self {
+        let _ = radius;
+        let _ = tolerance;
+
+        self.segments.push(SketchSegment {
+            to: position.into(),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+        });
+
+        self
+    }
+
     pub fn line_to(mut self, position: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
             to: position.into(),
