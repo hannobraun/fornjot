@@ -39,6 +39,9 @@ fn model() -> TriMesh {
         point: Point::from([0.25, 0.25, 0.]),
     });
 
+    let radius = 1.;
+    let tolerance = 0.001;
+
     let bottom = {
         Sketch::start_at([0., 0.])
             .line_to([1., 0.])
@@ -46,9 +49,9 @@ fn model() -> TriMesh {
             .line_to([0., 1.])
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
-            .line_to([0.25, 0.75])
-            .line_to([0.75, 0.75])
-            .line_to([0.75, 0.25])
+            .arc_to([0.25, 0.75], radius, tolerance)
+            .arc_to([0.75, 0.75], radius, tolerance)
+            .arc_to([0.75, 0.25], radius, tolerance)
             .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .into_face(

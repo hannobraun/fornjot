@@ -3,7 +3,7 @@ use std::{
     mem,
 };
 
-use fj_math::{Point, Triangle, Vector};
+use fj_math::{Point, Scalar, Triangle, Vector};
 use geo::{Contains, Coord, LineString, Polygon};
 use itertools::Itertools;
 use spade::Triangulation;
@@ -24,6 +24,23 @@ impl Sketch {
             start: start.into(),
             segments: Vec::new(),
         }
+    }
+
+    pub fn arc_to(
+        mut self,
+        position: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+        tolerance: impl Into<Scalar>,
+    ) -> Self {
+        let _ = radius;
+        let _ = tolerance;
+
+        self.segments.push(SketchSegment {
+            to: position.into(),
+            attachment: None,
+        });
+
+        self
     }
 
     pub fn line_to(mut self, position: impl Into<Point<2>>) -> Self {
