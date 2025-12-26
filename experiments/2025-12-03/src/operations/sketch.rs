@@ -140,7 +140,7 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let delaunay_points = positions_and_half_edges.iter().copied().map(
+        let delaunay_points = positions_and_half_edges.iter().cloned().map(
             |(local, half_edge)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = vertices[vertex].point;
