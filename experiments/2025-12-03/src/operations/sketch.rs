@@ -123,7 +123,7 @@ impl Sketch {
             let prev = self.segments[prev_i];
             let next = self.segments[next_i];
 
-            let half_edge = current
+            let (half_edge, _) = current
                 .to_half_edge(prev, next, &surface, half_edges, vertices);
 
             positions_and_half_edges.push((current.to, half_edge));
@@ -213,12 +213,12 @@ impl SketchSegment {
         surface: &Surface,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
-    ) -> Index<HalfEdge> {
+    ) -> (Index<HalfEdge>, Vec<Point<2>>) {
         let approx = self.geometry.approx(prev.to, self.to, surface);
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                return half_edge;
+                return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
@@ -234,14 +234,16 @@ impl SketchSegment {
             }
         };
 
-        half_edges.push(HalfEdge {
+        let half_edge = half_edges.push(HalfEdge {
             boundary,
             approx: approx
                 .iter()
                 .copied()
                 .map(|local| surface.local_to_global(local))
                 .collect(),
-        })
+        });
+
+        (half_edge, approx)
     }
 
     pub fn to_start_vertex(
