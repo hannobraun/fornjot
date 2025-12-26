@@ -32,9 +32,6 @@ impl Sketch {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
-        let _ = radius;
-        let _ = tolerance;
-
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: None,
@@ -54,9 +51,6 @@ impl Sketch {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
-        let _ = radius;
-        let _ = tolerance;
-
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
