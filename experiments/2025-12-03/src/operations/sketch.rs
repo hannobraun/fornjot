@@ -123,8 +123,9 @@ impl Sketch {
             let prev = self.segments[prev_i];
             let next = self.segments[next_i];
 
-            let (half_edge, _) = current
-                .to_half_edge(prev, next, &surface, half_edges, vertices);
+            let (half_edge, _) = current.to_half_edge_and_approx(
+                prev, next, &surface, half_edges, vertices,
+            );
 
             positions_and_half_edges.push((current.to, half_edge));
             self.segments[i].attachment =
@@ -206,7 +207,7 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn to_half_edge(
+    pub fn to_half_edge_and_approx(
         self,
         prev: SketchSegment,
         next: SketchSegment,
