@@ -140,6 +140,11 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
+        let boundary = positions_and_half_edges_and_approx
+            .iter()
+            .map(|&(_, half_edge, _)| half_edge)
+            .collect();
+
         let polygon = polygon(
             [self.start].into_iter().chain(
                 positions_and_half_edges_and_approx
@@ -174,13 +179,7 @@ impl Sketch {
             })
             .collect();
 
-        faces.push(Face {
-            boundary: positions_and_half_edges_and_approx
-                .iter()
-                .map(|&(_, half_edge, _)| half_edge)
-                .collect(),
-            approx,
-        })
+        faces.push(Face { boundary, approx })
     }
 }
 
