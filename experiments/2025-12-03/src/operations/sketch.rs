@@ -152,14 +152,14 @@ impl Sketch {
                     .map(|&(position, _, _)| position),
             ),
         );
-        let delaunay_points = positions_and_half_edges_and_approx.iter().map(
-            |&(local, half_edge, _)| {
+        let delaunay_points = positions_and_half_edges_and_approx
+            .into_iter()
+            .map(|(local, half_edge, _)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = vertices[vertex].point;
 
                 DelaunayPoint { local, global }
-            },
-        );
+            });
 
         let approx = delaunay(delaunay_points)
             .into_iter()
