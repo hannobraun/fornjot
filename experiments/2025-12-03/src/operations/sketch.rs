@@ -38,7 +38,10 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: None,
-            geometry: SketchSegmentGeometry::Line,
+            geometry: SketchSegmentGeometry::Arc {
+                radius: radius.into(),
+                tolerance: tolerance.into(),
+            },
         });
 
         self
@@ -57,7 +60,10 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Line,
+            geometry: SketchSegmentGeometry::Arc {
+                radius: radius.into(),
+                tolerance: tolerance.into(),
+            },
         });
 
         self
@@ -233,6 +239,12 @@ impl SketchSegment {
         };
 
         let approx = match self.geometry {
+            SketchSegmentGeometry::Arc { radius, tolerance } => {
+                let _ = radius;
+                let _ = tolerance;
+
+                Vec::new()
+            }
             SketchSegmentGeometry::Line => Vec::new(),
         };
 
@@ -286,6 +298,7 @@ enum SketchSegmentAttachment {
 
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentGeometry {
+    Arc { radius: Scalar, tolerance: Scalar },
     Line,
 }
 
