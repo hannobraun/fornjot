@@ -134,7 +134,7 @@ impl Sketch {
 
         for ((_, a), (_, b)) in positions_and_half_edges
             .iter()
-            .copied()
+            .cloned()
             .circular_tuple_windows()
         {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
