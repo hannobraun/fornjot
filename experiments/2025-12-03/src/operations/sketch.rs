@@ -152,7 +152,7 @@ impl Sketch {
             [self.start].into_iter().chain(
                 positions_and_half_edges
                     .iter()
-                    .copied()
+                    .cloned()
                     .map(|(position, _)| position),
             ),
         );
