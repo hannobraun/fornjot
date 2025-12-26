@@ -300,7 +300,7 @@ impl SketchSegmentGeometry {
         let _ = end;
         let _ = surface;
 
-        match self {
+        match *self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let _ = radius;
                 let _ = tolerance;
