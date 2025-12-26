@@ -232,9 +232,10 @@ impl SketchSegment {
             }
         };
 
-        let approx = self.geometry.approx();
-
-        half_edges.push(HalfEdge { boundary, approx })
+        half_edges.push(HalfEdge {
+            boundary,
+            approx: self.geometry.approx(),
+        })
     }
 
     pub fn to_start_vertex(
