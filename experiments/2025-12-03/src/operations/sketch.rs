@@ -123,21 +123,7 @@ impl Sketch {
                     half_edge
                 }
                 Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                    let v0 = match prev.attachment {
-                        Some(SketchSegmentAttachment::HalfEdge {
-                            half_edge,
-                        }) => {
-                            let [_, vertex] = half_edges[half_edge].boundary;
-                            vertex
-                        }
-                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
-                            vertex
-                        }
-                        None => {
-                            let point = surface.local_to_global(prev.to);
-                            vertices.push(Vertex { point })
-                        }
-                    };
+                    let v0 = prev.to_end_vertex(&surface, half_edges, vertices);
 
                     half_edges.push(HalfEdge {
                         boundary: [v0, v1],
@@ -145,21 +131,7 @@ impl Sketch {
                     })
                 }
                 None => {
-                    let v0 = match prev.attachment {
-                        Some(SketchSegmentAttachment::HalfEdge {
-                            half_edge,
-                        }) => {
-                            let [_, vertex] = half_edges[half_edge].boundary;
-                            vertex
-                        }
-                        Some(SketchSegmentAttachment::Vertex { vertex }) => {
-                            vertex
-                        }
-                        None => {
-                            let point = surface.local_to_global(prev.to);
-                            vertices.push(Vertex { point })
-                        }
-                    };
+                    let v0 = prev.to_end_vertex(&surface, half_edges, vertices);
                     let v1 = match next.attachment {
                         Some(SketchSegmentAttachment::HalfEdge {
                             half_edge,
@@ -257,6 +229,27 @@ impl Surface {
 struct SketchSegment {
     pub to: Point<2>,
     pub attachment: Option<SketchSegmentAttachment>,
+}
+
+impl SketchSegment {
+    pub fn to_end_vertex(
+        self,
+        surface: &Surface,
+        half_edges: &Store<HalfEdge>,
+        vertices: &mut Store<Vertex>,
+    ) -> Index<Vertex> {
+        match self.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                let [_, vertex] = half_edges[half_edge].boundary;
+                vertex
+            }
+            Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
+            None => {
+                let point = surface.local_to_global(self.to);
+                vertices.push(Vertex { point })
+            }
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
