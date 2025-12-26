@@ -214,6 +214,8 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> Index<HalfEdge> {
+        let approx = self.geometry.approx(prev.to, self.to, surface);
+
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 return half_edge;
@@ -231,8 +233,6 @@ impl SketchSegment {
                 [v0, v1]
             }
         };
-
-        let approx = self.geometry.approx(prev.to, self.to, surface);
 
         half_edges.push(HalfEdge {
             boundary,
