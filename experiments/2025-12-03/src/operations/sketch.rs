@@ -38,6 +38,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: None,
+            geometry: SketchSegmentGeometry::Line,
         });
 
         self
@@ -56,6 +57,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+            geometry: SketchSegmentGeometry::Line,
         });
 
         self
@@ -65,6 +67,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: None,
+            geometry: SketchSegmentGeometry::Line,
         });
 
         self
@@ -78,6 +81,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::HalfEdge { half_edge }),
+            geometry: SketchSegmentGeometry::Line,
         });
 
         self
@@ -91,6 +95,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to: position.into(),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+            geometry: SketchSegmentGeometry::Line,
         });
 
         self
@@ -197,6 +202,7 @@ impl Surface {
 struct SketchSegment {
     pub to: Point<2>,
     pub attachment: Option<SketchSegmentAttachment>,
+    pub geometry: SketchSegmentGeometry,
 }
 
 impl SketchSegment {
@@ -226,7 +232,9 @@ impl SketchSegment {
             }
         };
 
-        let approx = Vec::new();
+        let approx = match self.geometry {
+            SketchSegmentGeometry::Line => Vec::new(),
+        };
 
         half_edges.push(HalfEdge { boundary, approx })
     }
@@ -274,6 +282,11 @@ impl SketchSegment {
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
     Vertex { vertex: Index<Vertex> },
+}
+
+#[derive(Clone, Copy, Debug)]
+enum SketchSegmentGeometry {
+    Line,
 }
 
 fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
