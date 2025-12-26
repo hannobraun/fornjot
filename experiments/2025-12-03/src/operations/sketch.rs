@@ -232,15 +232,7 @@ impl SketchSegment {
             }
         };
 
-        let approx = match self.geometry {
-            SketchSegmentGeometry::Arc { radius, tolerance } => {
-                let _ = radius;
-                let _ = tolerance;
-
-                Vec::new()
-            }
-            SketchSegmentGeometry::Line => Vec::new(),
-        };
+        let approx = self.geometry.approx();
 
         half_edges.push(HalfEdge { boundary, approx })
     }
@@ -294,6 +286,20 @@ enum SketchSegmentAttachment {
 enum SketchSegmentGeometry {
     Arc { radius: Scalar, tolerance: Scalar },
     Line,
+}
+
+impl SketchSegmentGeometry {
+    pub fn approx(&self) -> Vec<Point<3>> {
+        match self {
+            SketchSegmentGeometry::Arc { radius, tolerance } => {
+                let _ = radius;
+                let _ = tolerance;
+
+                Vec::new()
+            }
+            SketchSegmentGeometry::Line => Vec::new(),
+        }
+    }
 }
 
 fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
