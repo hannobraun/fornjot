@@ -123,33 +123,35 @@ impl Sketch {
             let prev = self.segments[prev_i];
             let next = self.segments[next_i];
 
-            let (half_edge, _) = current.to_half_edge_and_approx(
+            let (half_edge, approx) = current.to_half_edge_and_approx(
                 prev, next, &surface, half_edges, vertices,
             );
 
-            positions_and_half_edges.push((current.to, half_edge));
+            positions_and_half_edges.push((current.to, half_edge, approx));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
-        for (&(_, a), &(_, b)) in
+        for (&(_, a, _), &(_, b, _)) in
             positions_and_half_edges.iter().circular_tuple_windows()
         {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
         let delaunay_points =
-            positions_and_half_edges.iter().map(|&(local, half_edge)| {
-                let [_, vertex] = half_edges[half_edge].boundary;
-                let global = vertices[vertex].point;
+            positions_and_half_edges
+                .iter()
+                .map(|&(local, half_edge, _)| {
+                    let [_, vertex] = half_edges[half_edge].boundary;
+                    let global = vertices[vertex].point;
 
-                DelaunayPoint { local, global }
-            });
+                    DelaunayPoint { local, global }
+                });
         let polygon = polygon(
             [self.start].into_iter().chain(
                 positions_and_half_edges
                     .iter()
-                    .map(|&(position, _)| position),
+                    .map(|&(position, _, _)| position),
             ),
         );
 
@@ -174,7 +176,7 @@ impl Sketch {
         faces.push(Face {
             boundary: positions_and_half_edges
                 .into_iter()
-                .map(|(_, half_edge)| half_edge)
+                .map(|(_, half_edge, _)| half_edge)
                 .collect(),
             approx,
         })
