@@ -118,40 +118,8 @@ impl Sketch {
             let prev = self.segments[prev_i];
             let next = self.segments[next_i];
 
-            let half_edge = match current.attachment {
-                Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                    half_edge
-                }
-                Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                    let v0 = prev.to_end_vertex(&surface, half_edges, vertices);
-
-                    half_edges.push(HalfEdge {
-                        boundary: [v0, v1],
-                        approx: Vec::new(),
-                    })
-                }
-                None => {
-                    let v0 = prev.to_end_vertex(&surface, half_edges, vertices);
-                    let v1 = match next.attachment {
-                        Some(SketchSegmentAttachment::HalfEdge {
-                            half_edge,
-                        }) => {
-                            let [vertex, _] = half_edges[half_edge].boundary;
-                            vertex
-                        }
-                        Some(SketchSegmentAttachment::Vertex { vertex: _ })
-                        | None => {
-                            let point = surface.local_to_global(current.to);
-                            vertices.push(Vertex { point })
-                        }
-                    };
-
-                    half_edges.push(HalfEdge {
-                        boundary: [v0, v1],
-                        approx: Vec::new(),
-                    })
-                }
-            };
+            let half_edge = current
+                .to_half_edge(prev, next, &surface, half_edges, vertices);
 
             positions_and_half_edges.push((current.to, half_edge));
             self.segments[i].attachment =
@@ -232,6 +200,46 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
+    pub fn to_half_edge(
+        self,
+        prev: SketchSegment,
+        next: SketchSegment,
+        surface: &Surface,
+        half_edges: &mut Store<HalfEdge>,
+        vertices: &mut Store<Vertex>,
+    ) -> Index<HalfEdge> {
+        match self.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => half_edge,
+            Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
+
+                half_edges.push(HalfEdge {
+                    boundary: [v0, v1],
+                    approx: Vec::new(),
+                })
+            }
+            None => {
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
+                let v1 = match next.attachment {
+                    Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                        let [vertex, _] = half_edges[half_edge].boundary;
+                        vertex
+                    }
+                    Some(SketchSegmentAttachment::Vertex { vertex: _ })
+                    | None => {
+                        let point = surface.local_to_global(self.to);
+                        vertices.push(Vertex { point })
+                    }
+                };
+
+                half_edges.push(HalfEdge {
+                    boundary: [v0, v1],
+                    approx: Vec::new(),
+                })
+            }
+        }
+    }
+
     pub fn to_end_vertex(
         self,
         surface: &Surface,
