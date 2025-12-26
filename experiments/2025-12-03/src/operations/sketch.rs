@@ -132,10 +132,8 @@ impl Sketch {
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
-        for ((_, a), (_, b)) in positions_and_half_edges
-            .iter()
-            .cloned()
-            .circular_tuple_windows()
+        for (&(_, a), &(_, b)) in
+            positions_and_half_edges.iter().circular_tuple_windows()
         {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
