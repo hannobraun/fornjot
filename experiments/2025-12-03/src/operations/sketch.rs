@@ -237,7 +237,8 @@ impl SketchSegment {
         half_edges.push(HalfEdge {
             boundary,
             approx: approx
-                .into_iter()
+                .iter()
+                .copied()
                 .map(|local| surface.local_to_global(local))
                 .collect(),
         })
