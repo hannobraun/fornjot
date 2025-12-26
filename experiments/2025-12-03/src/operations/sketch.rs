@@ -232,14 +232,15 @@ impl SketchSegment {
             }
         };
 
-        let approx = self
-            .geometry
-            .approx(prev.to, self.to, surface)
-            .into_iter()
-            .map(|local| surface.local_to_global(local))
-            .collect();
+        let approx = self.geometry.approx(prev.to, self.to, surface);
 
-        half_edges.push(HalfEdge { boundary, approx })
+        half_edges.push(HalfEdge {
+            boundary,
+            approx: approx
+                .into_iter()
+                .map(|local| surface.local_to_global(local))
+                .collect(),
+        })
     }
 
     pub fn to_start_vertex(
