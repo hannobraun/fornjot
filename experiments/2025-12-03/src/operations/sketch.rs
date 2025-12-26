@@ -232,7 +232,12 @@ impl SketchSegment {
             }
         };
 
-        let approx = self.geometry.approx(prev.to, self.to, surface);
+        let approx = self
+            .geometry
+            .approx(prev.to, self.to, surface)
+            .into_iter()
+            .map(|local| surface.local_to_global(local))
+            .collect();
 
         half_edges.push(HalfEdge { boundary, approx })
     }
@@ -294,7 +299,7 @@ impl SketchSegmentGeometry {
         start: Point<2>,
         end: Point<2>,
         surface: &Surface,
-    ) -> Vec<Point<3>> {
+    ) -> Vec<Point<2>> {
         let _ = start;
         let _ = end;
         let _ = surface;
