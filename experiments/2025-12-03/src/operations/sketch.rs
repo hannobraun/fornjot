@@ -208,15 +208,17 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> Index<HalfEdge> {
-        match self.attachment {
-            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => half_edge,
+        let half_edge = match self.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                return half_edge;
+            }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
 
-                half_edges.push(HalfEdge {
+                HalfEdge {
                     boundary: [v0, v1],
                     approx: Vec::new(),
-                })
+                }
             }
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
@@ -232,12 +234,14 @@ impl SketchSegment {
                     }
                 };
 
-                half_edges.push(HalfEdge {
+                HalfEdge {
                     boundary: [v0, v1],
                     approx: Vec::new(),
-                })
+                }
             }
-        }
+        };
+
+        half_edges.push(half_edge)
     }
 
     pub fn to_end_vertex(
