@@ -234,7 +234,7 @@ impl SketchSegment {
 
         half_edges.push(HalfEdge {
             boundary,
-            approx: self.geometry.approx(),
+            approx: self.geometry.approx(prev.to, self.to, surface),
         })
     }
 
@@ -290,7 +290,16 @@ enum SketchSegmentGeometry {
 }
 
 impl SketchSegmentGeometry {
-    pub fn approx(&self) -> Vec<Point<3>> {
+    pub fn approx(
+        &self,
+        start: Point<2>,
+        end: Point<2>,
+        surface: &Surface,
+    ) -> Vec<Point<3>> {
+        let _ = start;
+        let _ = end;
+        let _ = surface;
+
         match self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let _ = radius;
