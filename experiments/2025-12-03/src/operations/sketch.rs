@@ -140,6 +140,13 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
+        let polygon = polygon(
+            [self.start].into_iter().chain(
+                positions_and_half_edges_and_approx
+                    .iter()
+                    .map(|&(position, _, _)| position),
+            ),
+        );
         let delaunay_points = positions_and_half_edges_and_approx.iter().map(
             |&(local, half_edge, _)| {
                 let [_, vertex] = half_edges[half_edge].boundary;
@@ -147,13 +154,6 @@ impl Sketch {
 
                 DelaunayPoint { local, global }
             },
-        );
-        let polygon = polygon(
-            [self.start].into_iter().chain(
-                positions_and_half_edges_and_approx
-                    .iter()
-                    .map(|&(position, _, _)| position),
-            ),
         );
 
         let approx = delaunay(delaunay_points)
