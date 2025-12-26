@@ -113,7 +113,7 @@ impl Sketch {
             panic!("Empty sketches are not supported at this point.");
         };
 
-        let mut positions_and_half_edges = Vec::new();
+        let mut positions_and_half_edges_and_approx = Vec::new();
 
         for i in 0..=last_segment_index {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
@@ -127,29 +127,30 @@ impl Sketch {
                 prev, next, &surface, half_edges, vertices,
             );
 
-            positions_and_half_edges.push((current.to, half_edge, approx));
+            positions_and_half_edges_and_approx
+                .push((current.to, half_edge, approx));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
-        for (&(_, a, _), &(_, b, _)) in
-            positions_and_half_edges.iter().circular_tuple_windows()
+        for (&(_, a, _), &(_, b, _)) in positions_and_half_edges_and_approx
+            .iter()
+            .circular_tuple_windows()
         {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let delaunay_points =
-            positions_and_half_edges
-                .iter()
-                .map(|&(local, half_edge, _)| {
-                    let [_, vertex] = half_edges[half_edge].boundary;
-                    let global = vertices[vertex].point;
+        let delaunay_points = positions_and_half_edges_and_approx.iter().map(
+            |&(local, half_edge, _)| {
+                let [_, vertex] = half_edges[half_edge].boundary;
+                let global = vertices[vertex].point;
 
-                    DelaunayPoint { local, global }
-                });
+                DelaunayPoint { local, global }
+            },
+        );
         let polygon = polygon(
             [self.start].into_iter().chain(
-                positions_and_half_edges
+                positions_and_half_edges_and_approx
                     .iter()
                     .map(|&(position, _, _)| position),
             ),
@@ -174,7 +175,7 @@ impl Sketch {
             .collect();
 
         faces.push(Face {
-            boundary: positions_and_half_edges
+            boundary: positions_and_half_edges_and_approx
                 .into_iter()
                 .map(|(_, half_edge, _)| half_edge)
                 .collect(),
