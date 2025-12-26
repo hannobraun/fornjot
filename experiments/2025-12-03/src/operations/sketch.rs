@@ -226,10 +226,9 @@ impl SketchSegment {
             }
         };
 
-        half_edges.push(HalfEdge {
-            boundary,
-            approx: Vec::new(),
-        })
+        let approx = Vec::new();
+
+        half_edges.push(HalfEdge { boundary, approx })
     }
 
     pub fn to_start_vertex(
