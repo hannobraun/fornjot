@@ -219,6 +219,9 @@ impl SketchSegment {
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                // We just assume that the approximation of the sketch segment
+                // and the existing approximation of the half-edge match. We
+                // should make sure by checking it here.
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
