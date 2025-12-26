@@ -176,8 +176,8 @@ impl Sketch {
 
         faces.push(Face {
             boundary: positions_and_half_edges_and_approx
-                .into_iter()
-                .map(|(_, half_edge, _)| half_edge)
+                .iter()
+                .map(|&(_, half_edge, _)| half_edge)
                 .collect(),
             approx,
         })
