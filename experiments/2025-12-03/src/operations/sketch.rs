@@ -145,39 +145,12 @@ impl Sketch {
             .map(|&(_, half_edge, _)| half_edge)
             .collect();
 
-        let polygon = polygon(
-            [self.start].into_iter().chain(
-                positions_and_half_edges_and_approx
-                    .iter()
-                    .map(|&(position, _, _)| position),
-            ),
+        let approx = approx(
+            self.start,
+            positions_and_half_edges_and_approx,
+            vertices,
+            half_edges,
         );
-        let delaunay_points = positions_and_half_edges_and_approx
-            .into_iter()
-            .map(|(local, half_edge, _)| {
-                let [_, vertex] = half_edges[half_edge].boundary;
-                let global = vertices[vertex].point;
-
-                DelaunayPoint { local, global }
-            });
-
-        let approx = delaunay(delaunay_points)
-            .into_iter()
-            .filter(|triangle| {
-                let points = triangle.map(|point| point.local);
-                let [x, y] = Triangle::from_points(points)
-                    .center()
-                    .coords
-                    .components
-                    .map(|s| s.into_f64());
-
-                polygon.contains(&Coord { x, y })
-            })
-            .map(|triangle| {
-                let [p0, p1, p2] = triangle.map(|point| point.global);
-                Triangle::from([p0, p1, p2])
-            })
-            .collect();
 
         faces.push(Face { boundary, approx })
     }
@@ -320,6 +293,51 @@ impl SketchSegmentGeometry {
             SketchSegmentGeometry::Line => Vec::new(),
         }
     }
+}
+
+fn approx(
+    start: Point<2>,
+    positions_and_half_edges_and_approx: Vec<(
+        Point<2>,
+        Index<HalfEdge>,
+        Vec<Point<2>>,
+    )>,
+    vertices: &Store<Vertex>,
+    half_edges: &Store<HalfEdge>,
+) -> Vec<Triangle<3>> {
+    let polygon = polygon(
+        [start].into_iter().chain(
+            positions_and_half_edges_and_approx
+                .iter()
+                .map(|&(position, _, _)| position),
+        ),
+    );
+    let delaunay_points = positions_and_half_edges_and_approx.into_iter().map(
+        |(local, half_edge, _)| {
+            let [_, vertex] = half_edges[half_edge].boundary;
+            let global = vertices[vertex].point;
+
+            DelaunayPoint { local, global }
+        },
+    );
+
+    delaunay(delaunay_points)
+        .into_iter()
+        .filter(|triangle| {
+            let points = triangle.map(|point| point.local);
+            let [x, y] = Triangle::from_points(points)
+                .center()
+                .coords
+                .components
+                .map(|s| s.into_f64());
+
+            polygon.contains(&Coord { x, y })
+        })
+        .map(|triangle| {
+            let [p0, p1, p2] = triangle.map(|point| point.global);
+            Triangle::from([p0, p1, p2])
+        })
+        .collect()
 }
 
 fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
