@@ -309,7 +309,7 @@ fn approx(
         [start].into_iter().chain(
             positions_and_half_edges_and_approx
                 .iter()
-                .flat_map(|(position, _, _)| [*position].into_iter()),
+                .flat_map(|(position, _, _)| [position].into_iter().copied()),
         ),
     );
     let delaunay_points = positions_and_half_edges_and_approx.into_iter().map(
