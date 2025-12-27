@@ -87,10 +87,9 @@ fn model() -> TriMesh {
     let triangles = solids[cube]
         .boundary
         .iter()
-        .flat_map(|&face| &faces[face].approx)
-        .copied();
+        .flat_map(|&face| &faces[face].approx);
 
-    for triangle in triangles {
+    for &triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: triangle,
             is_internal: false,
