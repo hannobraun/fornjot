@@ -1,4 +1,4 @@
-use fj_math::Vector;
+use fj_math::{Scalar, Vector};
 
 use crate::{
     objects::topology::{Face, HalfEdge, Solid, Vertex},
@@ -14,12 +14,14 @@ use crate::{
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
+    tolerance: impl Into<Scalar>,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
     let path = path.into();
+    let _ = tolerance.into();
 
     let mut connect = Connect::new();
 
