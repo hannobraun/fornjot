@@ -306,8 +306,6 @@ fn approx(
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
-    let _ = tolerance;
-
     let polygon = polygon([start].into_iter().chain(
         positions_and_half_edges_and_approx.iter().flat_map(
             |(position, _, approx)| approx.iter().chain([position]).copied(),
