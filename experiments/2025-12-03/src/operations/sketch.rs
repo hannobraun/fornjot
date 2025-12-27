@@ -314,9 +314,8 @@ fn approx(
                 .flat_map(|(position, _, _)| [position].into_iter().copied()),
         ),
     );
-    let delaunay_points = positions_and_half_edges_and_approx
-        .into_iter()
-        .flat_map(|(local, half_edge, _)| {
+    let points = positions_and_half_edges_and_approx.into_iter().flat_map(
+        |(local, half_edge, _)| {
             let point_from_vertex = {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = vertices[vertex].point;
@@ -325,9 +324,10 @@ fn approx(
             };
 
             [point_from_vertex]
-        });
+        },
+    );
 
-    delaunay(delaunay_points)
+    delaunay(points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
