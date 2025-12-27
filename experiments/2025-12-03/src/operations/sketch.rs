@@ -297,7 +297,7 @@ impl SketchSegmentGeometry {
 }
 
 fn approx(
-    _: Surface,
+    surface: Surface,
     start: Point<2>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
@@ -307,16 +307,19 @@ fn approx(
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
-    let polygon = polygon(
-        [start].into_iter().chain(
-            positions_and_half_edges_and_approx
-                .iter()
-                .flat_map(|(position, _, _)| [position].into_iter().copied()),
+    let polygon = polygon([start].into_iter().chain(
+        positions_and_half_edges_and_approx.iter().flat_map(
+            |(position, _, approx)| approx.iter().chain([position]).copied(),
         ),
-    );
+    ));
 
     let points = positions_and_half_edges_and_approx.into_iter().flat_map(
-        |(local, half_edge, _)| {
+        |(local, half_edge, approx)| {
+            let points_from_approx = approx.into_iter().map(|local| {
+                let global = surface.local_to_global(local);
+
+                DelaunayPoint { local, global }
+            });
             let point_from_vertex = {
                 let [_, vertex] = half_edges[half_edge].boundary;
                 let global = vertices[vertex].point;
@@ -324,7 +327,7 @@ fn approx(
                 DelaunayPoint { local, global }
             };
 
-            [point_from_vertex]
+            points_from_approx.into_iter().chain([point_from_vertex])
         },
     );
 
