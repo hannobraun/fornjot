@@ -400,7 +400,7 @@ fn delaunay(
         .collect()
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct DelaunayPoint {
     pub local: Point<2>,
     pub global: Point<3>,
