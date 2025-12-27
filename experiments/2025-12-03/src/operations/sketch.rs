@@ -309,7 +309,9 @@ fn approx(
 
     let points = positions_and_half_edges_and_approx.into_iter().flat_map(
         |(local, half_edge, approx)| {
-            assert_eq!(half_edges[half_edge].approx.len(), approx.len());
+            let half_edge = &half_edges[half_edge];
+
+            assert_eq!(half_edge.approx.len(), approx.len());
 
             let points_from_approx = approx.into_iter().map(|local| {
                 let global = surface.local_to_global(local);
@@ -317,7 +319,7 @@ fn approx(
                 DelaunayPoint { local, global }
             });
             let point_from_vertex = {
-                let [_, vertex] = half_edges[half_edge].boundary;
+                let [_, vertex] = half_edge.boundary;
                 let global = vertices[vertex].point;
 
                 DelaunayPoint { local, global }
