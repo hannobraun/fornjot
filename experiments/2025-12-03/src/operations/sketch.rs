@@ -320,11 +320,17 @@ fn approx(
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let points_from_approx = approx.into_iter().map(|local| {
-                let global = surface.local_to_global(local);
+            let points_from_approx = approx
+                .into_iter()
+                .zip(half_edge.approx.iter().copied())
+                .map(|(local, global)| {
+                    assert!(
+                        (global - surface.local_to_global(local)).magnitude()
+                            <= tolerance
+                    );
 
-                DelaunayPoint { local, global }
-            });
+                    DelaunayPoint { local, global }
+                });
             let point_from_vertex = {
                 let [_, vertex] = half_edge.boundary;
                 let global = vertices[vertex].point;
