@@ -315,10 +315,14 @@ fn approx(
     let delaunay_points = positions_and_half_edges_and_approx
         .into_iter()
         .flat_map(|(local, half_edge, _)| {
-            let [_, vertex] = half_edges[half_edge].boundary;
-            let global = vertices[vertex].point;
+            let point_from_vertex = {
+                let [_, vertex] = half_edges[half_edge].boundary;
+                let global = vertices[vertex].point;
 
-            [DelaunayPoint { local, global }]
+                DelaunayPoint { local, global }
+            };
+
+            [point_from_vertex]
         });
 
     delaunay(delaunay_points)
