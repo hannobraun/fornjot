@@ -44,7 +44,7 @@ fn model() -> TriMesh {
         point: Point::from([0.25, 0.25, 0.]),
     });
 
-    let radius = 1.;
+    let radius = 0.5;
     let tolerance = 0.001;
 
     let bottom = {
