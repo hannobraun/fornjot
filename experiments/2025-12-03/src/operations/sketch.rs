@@ -146,6 +146,7 @@ impl Sketch {
             .collect();
 
         let approx = approx(
+            surface,
             self.start,
             positions_and_half_edges_and_approx,
             vertices,
@@ -296,6 +297,7 @@ impl SketchSegmentGeometry {
 }
 
 fn approx(
+    _: Surface,
     start: Point<2>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
