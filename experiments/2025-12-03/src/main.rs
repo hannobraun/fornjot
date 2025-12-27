@@ -82,12 +82,12 @@ fn model() -> TriMesh {
         &mut solids,
     );
 
-    let mut tri_mesh = TriMesh::new();
-
     let triangles = solids[cube]
         .boundary
         .iter()
         .flat_map(|&face| &faces[face].approx);
+
+    let mut tri_mesh = TriMesh::new();
 
     for &triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
