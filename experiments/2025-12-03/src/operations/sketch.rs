@@ -309,6 +309,8 @@ fn approx(
 
     let points = positions_and_half_edges_and_approx.into_iter().flat_map(
         |(local, half_edge, approx)| {
+            assert_eq!(half_edges[half_edge].approx.len(), approx.len());
+
             let points_from_approx = approx.into_iter().map(|local| {
                 let global = surface.local_to_global(local);
 
