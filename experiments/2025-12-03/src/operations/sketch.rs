@@ -104,10 +104,13 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Surface,
+        tolerance: impl Into<Scalar>,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
+        let _ = tolerance.into();
+
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported at this point.");

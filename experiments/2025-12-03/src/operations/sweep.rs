@@ -21,7 +21,7 @@ pub fn face_to_solid(
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
     let path = path.into();
-    let _ = tolerance.into();
+    let tolerance = tolerance.into();
 
     let mut connect = Connect::new();
 
@@ -107,7 +107,7 @@ pub fn face_to_solid(
                 .line_to_with_half_edge([1., 1.], right)
                 .line_to_with_half_edge([0., 1.], top)
                 .line_to_with_half_edge([0., 0.], left)
-                .into_face(surface, vertices, half_edges, faces)
+                .into_face(surface, tolerance, vertices, half_edges, faces)
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
