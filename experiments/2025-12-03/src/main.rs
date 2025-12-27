@@ -88,7 +88,8 @@ fn model() -> TriMesh {
         .boundary
         .iter()
         .copied()
-        .flat_map(|face| faces[face].approx.iter().copied());
+        .flat_map(|face| &faces[face].approx)
+        .copied();
 
     for triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
