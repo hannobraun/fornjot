@@ -109,7 +109,7 @@ impl Sketch {
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
-        let _ = tolerance.into();
+        let tolerance = tolerance.into();
 
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
@@ -152,6 +152,7 @@ impl Sketch {
             surface,
             self.start,
             positions_and_half_edges_and_approx,
+            tolerance,
             vertices,
             half_edges,
         );
@@ -301,9 +302,12 @@ fn approx(
         Index<HalfEdge>,
         Vec<Point<2>>,
     )>,
+    tolerance: Scalar,
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
+    let _ = tolerance;
+
     let polygon = polygon([start].into_iter().chain(
         positions_and_half_edges_and_approx.iter().flat_map(
             |(position, _, approx)| approx.iter().chain([position]).copied(),
