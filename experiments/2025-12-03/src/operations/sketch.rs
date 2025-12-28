@@ -90,13 +90,11 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Surface,
-        tolerance: impl Into<Scalar>,
+        _: impl Into<Scalar>,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
-        let tolerance = tolerance.into();
-
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported at this point.");
@@ -135,10 +133,8 @@ impl Sketch {
             .collect();
 
         let approx = approx(
-            surface,
             self.start,
             positions_and_half_edges_and_approx,
-            tolerance,
             vertices,
             half_edges,
         );
@@ -281,14 +277,12 @@ impl SketchSegmentGeometry {
 }
 
 fn approx(
-    _: Surface,
     start: Point<2>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
         Index<HalfEdge>,
         Vec<Point<2>>,
     )>,
-    _: Scalar,
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
