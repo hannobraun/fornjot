@@ -67,7 +67,9 @@ pub fn approx_face(
             let [p0, p1, p2] = triangle.map(|point| point.global);
             let triangle = Triangle::from([p0, p1, p2]);
 
-            assert!(triangle.is_valid());
+            if !triangle.is_valid() {
+                panic!("Expected valid triangle; got: {triangle:?}");
+            }
 
             triangle
         })
