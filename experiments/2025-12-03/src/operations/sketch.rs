@@ -90,7 +90,6 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Surface,
-        _: impl Into<Scalar>,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,

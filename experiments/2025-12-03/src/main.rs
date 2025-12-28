@@ -72,7 +72,6 @@ fn model() -> TriMesh {
                         Vector::from([1., 0., 0.]),
                     ],
                 },
-                tolerance,
                 &mut vertices,
                 &mut half_edges,
                 &mut faces,
