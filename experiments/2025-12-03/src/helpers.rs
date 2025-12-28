@@ -65,7 +65,11 @@ pub fn approx_face(
         })
         .map(|triangle| {
             let [p0, p1, p2] = triangle.map(|point| point.global);
-            Triangle::from([p0, p1, p2])
+            let triangle = Triangle::from([p0, p1, p2]);
+
+            assert!(triangle.is_valid());
+
+            triangle
         })
         .collect()
 }
