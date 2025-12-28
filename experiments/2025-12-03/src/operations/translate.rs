@@ -45,6 +45,28 @@ impl Translate {
 
         translated
     }
+
+    pub fn half_eldge(
+        &mut self,
+        half_edge: Index<HalfEdge>,
+        offset: impl Into<Vector<3>>,
+        vertices: &mut Store<Vertex>,
+        half_edges: &mut Store<HalfEdge>,
+    ) -> Index<HalfEdge> {
+        let offset = offset.into();
+
+        half_edges.push(HalfEdge {
+            boundary: half_edges[half_edge]
+                .boundary
+                .map(|vertex| self.vertex(vertex, offset, vertices)),
+            approx: half_edges[half_edge]
+                .approx
+                .iter()
+                .copied()
+                .rev()
+                .collect(),
+        })
+    }
 }
 
 pub fn face(
@@ -62,17 +84,7 @@ pub fn face(
         .iter()
         .copied()
         .map(|half_edge| {
-            half_edges.push(HalfEdge {
-                boundary: half_edges[half_edge]
-                    .boundary
-                    .map(|vertex| translate.vertex(vertex, offset, vertices)),
-                approx: half_edges[half_edge]
-                    .approx
-                    .iter()
-                    .copied()
-                    .rev()
-                    .collect(),
-            })
+            translate.half_eldge(half_edge, offset, vertices, half_edges)
         })
         .collect();
     let approx = face
