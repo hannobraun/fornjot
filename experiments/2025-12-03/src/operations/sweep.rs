@@ -1,4 +1,4 @@
-use fj_math::{Scalar, Triangle, Vector};
+use fj_math::{Triangle, Vector};
 
 use crate::{
     objects::topology::{Face, HalfEdge, Solid, Vertex},
@@ -9,7 +9,6 @@ use crate::{
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
-    _: impl Into<Scalar>,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
