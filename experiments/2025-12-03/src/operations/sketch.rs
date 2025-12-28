@@ -131,7 +131,7 @@ impl Sketch {
             .map(|&(_, half_edge, _)| half_edge)
             .collect();
 
-        let approx = approx(
+        let approx = approx_face(
             self.start,
             positions_and_half_edges_and_approx,
             vertices,
@@ -275,7 +275,7 @@ impl SketchSegmentGeometry {
     }
 }
 
-fn approx(
+fn approx_face(
     start: Point<2>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
