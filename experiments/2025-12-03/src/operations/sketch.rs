@@ -73,20 +73,6 @@ impl Sketch {
         self
     }
 
-    pub fn line_to_with_half_edge(
-        mut self,
-        position: impl Into<Point<2>>,
-        half_edge: Index<HalfEdge>,
-    ) -> Self {
-        self.segments.push(SketchSegment {
-            to: position.into(),
-            attachment: Some(SketchSegmentAttachment::HalfEdge { half_edge }),
-            geometry: SketchSegmentGeometry::Line,
-        });
-
-        self
-    }
-
     pub fn line_to_vertex(
         mut self,
         position: impl Into<Point<2>>,

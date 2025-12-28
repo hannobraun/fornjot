@@ -1,27 +1,21 @@
-use fj_math::{Scalar, Vector};
+use fj_math::{Scalar, Triangle, Vector};
 
 use crate::{
     objects::topology::{Face, HalfEdge, Solid, Vertex},
-    operations::{
-        connect::Connect,
-        reverse,
-        sketch::{Sketch, Surface},
-        translate,
-    },
+    operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
 };
 
 pub fn face_to_solid(
     bottom: Index<Face>,
     path: impl Into<Vector<3>>,
-    tolerance: impl Into<Scalar>,
+    _: impl Into<Scalar>,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
     let path = path.into();
-    let tolerance = tolerance.into();
 
     let mut connect = Connect::new();
 
@@ -91,23 +85,23 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let [[p0, p1], [_, p3]] = [bottom, top].map(|half_edge| {
+            let [[p0, p1], [p2, p3]] = [bottom, top].map(|half_edge| {
                 half_edges[half_edge]
                     .boundary
                     .map(|vertex| vertices[vertex].point)
             });
 
-            let surface = Surface {
-                origin: p0,
-                axes: [p1 - p0, p3 - p0],
-            };
-
-            Sketch::start_at([0., 0.])
-                .line_to_with_half_edge([1., 0.], bottom)
-                .line_to_with_half_edge([1., 1.], right)
-                .line_to_with_half_edge([0., 1.], top)
-                .line_to_with_half_edge([0., 0.], left)
-                .into_face(surface, tolerance, vertices, half_edges, faces)
+            faces.push(Face {
+                boundary: vec![bottom, right, top, left],
+                approx: vec![
+                    Triangle {
+                        points: [p0, p1, p2],
+                    },
+                    Triangle {
+                        points: [p0, p2, p3],
+                    },
+                ],
+            })
         });
 
     let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
