@@ -13,6 +13,18 @@ pub struct Translate {
 }
 
 impl Translate {
+    pub fn triangle(
+        &mut self,
+        triangle: Triangle<3>,
+        offset: impl Into<Vector<3>>,
+    ) -> Triangle<3> {
+        let offset = offset.into();
+
+        Triangle {
+            points: triangle.points.map(|point| point + offset),
+        }
+    }
+
     pub fn vertex(
         &mut self,
         vertex: Index<Vertex>,
@@ -32,18 +44,6 @@ impl Translate {
         self.vertices.insert(vertex, translated);
 
         translated
-    }
-
-    pub fn triangle(
-        &mut self,
-        triangle: Triangle<3>,
-        offset: impl Into<Vector<3>>,
-    ) -> Triangle<3> {
-        let offset = offset.into();
-
-        Triangle {
-            points: triangle.points.map(|point| point + offset),
-        }
     }
 }
 
