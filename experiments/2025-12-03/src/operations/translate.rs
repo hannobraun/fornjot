@@ -63,7 +63,7 @@ impl Translate {
                 .approx
                 .iter()
                 .copied()
-                .rev()
+                .map(|point| point + offset)
                 .collect(),
         })
     }
