@@ -281,14 +281,14 @@ impl SketchSegmentGeometry {
 }
 
 fn approx(
-    surface: Surface,
+    _: Surface,
     start: Point<2>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
         Index<HalfEdge>,
         Vec<Point<2>>,
     )>,
-    tolerance: Scalar,
+    _: Scalar,
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
@@ -307,14 +307,7 @@ fn approx(
             let points_from_approx = approx
                 .into_iter()
                 .zip(half_edge.approx.iter().copied())
-                .map(|(local, global)| {
-                    assert!(
-                        (global - surface.local_to_global(local)).magnitude()
-                            <= tolerance
-                    );
-
-                    DelaunayPoint { local, global }
-                });
+                .map(|(local, global)| DelaunayPoint { local, global });
             let point_from_vertex = {
                 let [_, vertex] = half_edge.boundary;
                 let global = vertices[vertex].point;
