@@ -1,6 +1,7 @@
-use fj_math::{Triangle, Vector};
+use fj_math::{Point, Vector};
 
 use crate::{
+    helpers::approx_face,
     objects::topology::{Face, HalfEdge, Solid, Vertex},
     operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
@@ -84,22 +85,30 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let [[p0, p1], [p2, p3]] = [bottom, top].map(|half_edge| {
-                half_edges[half_edge]
-                    .boundary
-                    .map(|vertex| vertices[vertex].point)
-            });
+            let approx = approx_face(
+                [0., 0.],
+                vec![
+                    (
+                        Point::from([1., 0.]),
+                        bottom,
+                        local_approx_coords(bottom, 0., half_edges),
+                    ),
+                    (Point::from([1., 1.]), right, Vec::new()),
+                    (Point::from([0., 1.]), top, {
+                        let mut approx =
+                            local_approx_coords(top, 1., half_edges);
+                        approx.reverse();
+                        approx
+                    }),
+                    (Point::from([0., 0.]), left, Vec::new()),
+                ],
+                vertices,
+                half_edges,
+            );
 
             faces.push(Face {
                 boundary: vec![bottom, right, top, left],
-                approx: vec![
-                    Triangle {
-                        points: [p0, p1, p2],
-                    },
-                    Triangle {
-                        points: [p0, p2, p3],
-                    },
-                ],
+                approx,
             })
         });
 
@@ -108,4 +117,20 @@ pub fn face_to_solid(
     solids.push(Solid {
         boundary: all_faces,
     })
+}
+
+fn local_approx_coords(
+    half_edge: Index<HalfEdge>,
+    v: f64,
+    half_edges: &Store<HalfEdge>,
+) -> Vec<Point<2>> {
+    let len = half_edges[half_edge].approx.len();
+    let increment = 1. / (len as f64 + 1.);
+
+    (1..=len)
+        .map(|i| {
+            let u = increment * i as f64;
+            Point::from([u, v])
+        })
+        .collect()
 }
