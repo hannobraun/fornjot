@@ -254,9 +254,6 @@ enum SketchSegmentGeometry {
 
 impl SketchSegmentGeometry {
     pub fn approx(&self, start: Point<2>, end: Point<2>) -> Vec<Point<2>> {
-        let _ = start;
-        let _ = end;
-
         match *self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let _ = radius;
