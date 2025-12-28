@@ -11,6 +11,7 @@ use crate::{
 };
 
 mod debug;
+mod helpers;
 mod objects;
 mod operations;
 mod store;
