@@ -256,9 +256,6 @@ impl SketchSegmentGeometry {
     pub fn approx(&self, start: Point<2>, end: Point<2>) -> Vec<Point<2>> {
         match *self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
-                let _ = radius;
-                let _ = tolerance;
-
                 let start_to_end = end - start;
                 let midpoint = start + start_to_end * 0.5;
 
