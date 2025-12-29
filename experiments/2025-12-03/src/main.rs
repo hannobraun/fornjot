@@ -2,7 +2,6 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Vector};
 
 use crate::{
-    objects::topology::Vertex,
     operations::{
         sketch::{Sketch, Surface},
         sweep,
@@ -41,12 +40,8 @@ fn model() -> TriMesh {
     let mut faces = Store::default();
     let mut solids = Store::default();
 
-    let left_front_bottom_outer = vertices.push(Vertex {
-        point: Point::from([0., 0., 0.]),
-    });
-    let left_front_bottom_inner = vertices.push(Vertex {
-        point: Point::from([0.25, 0.25, 0.]),
-    });
+    let left_front_bottom_outer = vertices.push([0., 0., 0.]);
+    let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
 
     let radius = 0.5;
     let tolerance = 0.001;
