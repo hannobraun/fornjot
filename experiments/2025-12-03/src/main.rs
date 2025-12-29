@@ -19,12 +19,15 @@ mod store;
 use debug::DEBUG_WINDOW;
 
 fn main() -> anyhow::Result<()> {
-    let tri_mesh = fj_viewer::make_viewer_and_spawn_thread(|viewer| {
-        DEBUG_WINDOW.initialize(&viewer);
+    let tri_mesh = model();
 
-        let tri_mesh = model();
-        viewer.open_window().display_mesh(tri_mesh.clone());
-        tri_mesh
+    fj_viewer::make_viewer_and_spawn_thread({
+        let tri_mesh = tri_mesh.clone();
+
+        |viewer| {
+            DEBUG_WINDOW.initialize(&viewer);
+            viewer.open_window().display_mesh(tri_mesh);
+        }
     })?;
 
     fj_export::export(tri_mesh.external_triangles(), "output.3mf")?;
