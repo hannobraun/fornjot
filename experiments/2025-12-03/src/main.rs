@@ -11,9 +11,9 @@ use crate::{
 
 mod debug;
 mod helpers;
-mod objects;
 mod operations;
 mod store;
+mod topology;
 
 use debug::DEBUG_WINDOW;
 

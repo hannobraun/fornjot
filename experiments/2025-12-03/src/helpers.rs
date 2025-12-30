@@ -8,8 +8,8 @@ use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 use crate::{
-    objects::topology::{HalfEdge, Vertex},
     store::{Index, Store},
+    topology::{HalfEdge, Vertex},
 };
 
 pub fn approx_face(

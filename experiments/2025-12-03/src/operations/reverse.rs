@@ -1,8 +1,8 @@
 use fj_math::Triangle;
 
 use crate::{
-    objects::topology::{Face, HalfEdge},
     store::Store,
+    topology::{Face, HalfEdge},
 };
 
 pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {

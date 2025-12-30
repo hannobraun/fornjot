@@ -3,8 +3,8 @@ use itertools::Itertools;
 
 use crate::{
     helpers::approx_face,
-    objects::topology::{Face, HalfEdge, Vertex},
     store::{Index, Store},
+    topology::{Face, HalfEdge, Vertex},
 };
 
 pub struct Sketch {

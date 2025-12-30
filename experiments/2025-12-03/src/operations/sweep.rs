@@ -2,9 +2,9 @@ use fj_math::{Point, Vector};
 
 use crate::{
     helpers::approx_face,
-    objects::topology::{Face, HalfEdge, Solid, Vertex},
     operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
+    topology::{Face, HalfEdge, Solid, Vertex},
 };
 
 pub fn face_to_solid(

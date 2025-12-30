@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    objects::topology::{HalfEdge, Vertex},
     store::{Index, Store},
+    topology::{HalfEdge, Vertex},
 };
 
 pub struct Connect {

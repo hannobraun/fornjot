@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use fj_math::{Triangle, Vector};
 
 use crate::{
-    objects::topology::{Face, HalfEdge, Vertex},
     store::{Index, Store},
+    topology::{Face, HalfEdge, Vertex},
 };
 
 #[derive(Default)]
