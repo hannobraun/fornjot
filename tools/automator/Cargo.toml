@@ -8,10 +8,10 @@ publish = false
 anyhow = "1.0.100"
 chrono = "0.4.42"
 map-macro = "0.3.0"
-octocrab = "0.49.2"
+octocrab = "0.49.4"
 semver = "1.0.27"
 serde = "1.0.228"
-serde_json = "1.0.146"
+serde_json = "1.0.148"
 tracing = "0.1.44"
 url = "2.5.7"
 
