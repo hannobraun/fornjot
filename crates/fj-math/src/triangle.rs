@@ -163,6 +163,16 @@ impl<const D: usize> Triangle<D> {
         a + ab * v + ac * w
     }
 
+    /// # Reverse the triangle
+    ///
+    /// Return a new `Triangle` with the order of points modified such, that it
+    /// starts with the same point, but the other two are switched. This can be
+    /// interpreted as the triangle facing in the opposite direction.
+    pub fn reverse(self) -> Self {
+        let [a, b, c] = self.points;
+        Triangle { points: [a, c, b] }
+    }
+
     /// # Normalize the triangle
     ///
     /// Returns a new `Triangle` instance with the same points, but the points
