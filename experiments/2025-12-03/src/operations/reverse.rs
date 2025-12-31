@@ -5,14 +5,6 @@ use crate::{
     topology::{Face, HalfEdge},
 };
 
-pub fn triangle(triangle: Triangle<3>) -> Triangle<3> {
-    let [p0, p1, p2] = triangle.points;
-
-    Triangle {
-        points: [p0, p2, p1],
-    }
-}
-
 pub fn half_edge(half_edge: &HalfEdge) -> HalfEdge {
     let HalfEdge {
         mut boundary,
@@ -47,7 +39,13 @@ pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
         .rev()
         .collect();
 
-    let approx = face.approx.iter().copied().map(triangle).rev().collect();
+    let approx = face
+        .approx
+        .iter()
+        .copied()
+        .map(Triangle::reverse)
+        .rev()
+        .collect();
 
     Face { boundary, approx }
 }
