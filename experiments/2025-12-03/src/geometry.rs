@@ -7,6 +7,11 @@ pub struct Arc {
     pub tolerance: Scalar,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct Line {
+    pub to: Point<2>,
+}
+
 pub struct Surface {
     pub origin: Point<3>,
     pub axes: [Vector<3>; 2],

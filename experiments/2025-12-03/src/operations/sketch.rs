@@ -2,7 +2,7 @@ use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Arc, Surface},
+    geometry::{Arc, Line, Surface},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -61,9 +61,9 @@ impl Sketch {
     pub fn line_to(mut self, position: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: SketchSegmentGeometry::Line {
+            geometry: SketchSegmentGeometry::Line(Line {
                 to: position.into(),
-            },
+            }),
         });
 
         self
@@ -76,9 +76,9 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Line {
+            geometry: SketchSegmentGeometry::Line(Line {
                 to: position.into(),
-            },
+            }),
         });
 
         self
@@ -244,14 +244,14 @@ enum SketchSegmentAttachment {
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentGeometry {
     Arc(Arc),
-    Line { to: Point<2> },
+    Line(Line),
 }
 
 impl SketchSegmentGeometry {
     pub fn to(&self) -> Point<2> {
         match *self {
             Self::Arc(Arc { to, .. }) => to,
-            Self::Line { to } => to,
+            Self::Line(Line { to }) => to,
         }
     }
 
@@ -332,7 +332,7 @@ impl SketchSegmentGeometry {
 
                 approx
             }
-            SketchSegmentGeometry::Line { to: _ } => Vec::new(),
+            SketchSegmentGeometry::Line(Line { to: _ }) => Vec::new(),
         }
     }
 }
