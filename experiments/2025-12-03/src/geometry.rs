@@ -8,6 +8,10 @@ pub struct Arc {
 }
 
 impl Arc {
+    pub fn end(&self) -> Point<2> {
+        self.end
+    }
+
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         let start_to_end = self.end - start;
         let midpoint = start + start_to_end * 0.5;
