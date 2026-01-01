@@ -43,7 +43,7 @@ fn model() -> TriMesh {
     let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
 
     let radius = Scalar::from(0.5);
-    let tolerance = 0.001;
+    let tolerance = Scalar::from(0.001);
 
     let bottom = {
         Sketch::start_at([0., 0.])
