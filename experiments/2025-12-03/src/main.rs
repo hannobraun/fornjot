@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::Surface,
+    geometry::{Arc, Surface},
     operations::{sketch::Sketch, sweep},
     store::Store,
 };
@@ -52,9 +52,21 @@ fn model() -> TriMesh {
             .line_to([0., 1.])
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
-            .arc_to([0.25, 0.75], radius, tolerance)
-            .arc_to([0.75, 0.75], radius, tolerance)
-            .arc_to([0.75, 0.25], radius, tolerance)
+            .arc_to(Arc {
+                end: Point::from([0.25, 0.75]),
+                radius,
+                tolerance,
+            })
+            .arc_to(Arc {
+                end: Point::from([0.75, 0.75]),
+                radius,
+                tolerance,
+            })
+            .arc_to(Arc {
+                end: Point::from([0.75, 0.25]),
+                radius,
+                tolerance,
+            })
             .arc_to_vertex(
                 [0.25, 0.25],
                 left_front_bottom_inner,

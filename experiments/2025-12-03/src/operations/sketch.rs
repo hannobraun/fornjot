@@ -21,19 +21,10 @@ impl Sketch {
         }
     }
 
-    pub fn arc_to(
-        mut self,
-        position: impl Into<Point<2>>,
-        radius: impl Into<Scalar>,
-        tolerance: impl Into<Scalar>,
-    ) -> Self {
+    pub fn arc_to(mut self, arc: Arc) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: Box::new(Arc {
-                end: position.into(),
-                radius: radius.into(),
-                tolerance: tolerance.into(),
-            }),
+            geometry: Box::new(arc),
         });
 
         self
