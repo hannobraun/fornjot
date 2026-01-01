@@ -9,8 +9,6 @@ pub struct Arc {
 
 impl Arc {
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let Arc { tolerance, .. } = *self;
-
         let start_to_end = self.to - start;
         let midpoint = start + start_to_end * 0.5;
 
@@ -60,7 +58,7 @@ impl Arc {
         };
 
         let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI / (Scalar::ONE - (tolerance / self.radius)).acos(),
+            Scalar::PI / (Scalar::ONE - (self.tolerance / self.radius)).acos(),
             3.,
         )
         .ceil();
