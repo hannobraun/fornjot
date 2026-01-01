@@ -83,7 +83,7 @@ impl Arc {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
-    pub to: Point<2>,
+    pub end: Point<2>,
 }
 
 impl Line {

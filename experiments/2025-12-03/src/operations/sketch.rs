@@ -62,7 +62,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             attachment: None,
             geometry: SketchSegmentGeometry::Line(Line {
-                to: position.into(),
+                end: position.into(),
             }),
         });
 
@@ -77,7 +77,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: SketchSegmentGeometry::Line(Line {
-                to: position.into(),
+                end: position.into(),
             }),
         });
 
@@ -249,7 +249,7 @@ impl SketchSegmentGeometry {
     pub fn end(&self) -> Point<2> {
         match *self {
             Self::Arc(Arc { end, .. }) => end,
-            Self::Line(Line { to }) => to,
+            Self::Line(Line { end: to }) => to,
         }
     }
 
