@@ -256,16 +256,14 @@ enum SketchSegmentGeometry {
 }
 
 impl SketchSegmentGeometry {
-    pub fn approx(&self, start: Point<2>, end: Point<2>) -> Vec<Point<2>> {
+    pub fn approx(&self, start: Point<2>, _: Point<2>) -> Vec<Point<2>> {
         match *self {
             SketchSegmentGeometry::Arc {
                 to,
                 radius,
                 tolerance,
             } => {
-                let _ = to;
-
-                let start_to_end = end - start;
+                let start_to_end = to - start;
                 let midpoint = start + start_to_end * 0.5;
 
                 let midpoint_towards_center =
@@ -291,7 +289,7 @@ impl SketchSegmentGeometry {
                         panic!(
                             "Radius of arc (`{radius}`) is too small: Must be \
                             at least half the distance between start \
-                            (`{start:?}`) and end (`{end:?}`) points, or the \
+                            (`{start:?}`) and end (`{to:?}`) points, or the \
                             arc is not possible."
                         );
                     }
@@ -323,7 +321,7 @@ impl SketchSegmentGeometry {
                 ]);
 
                 let start = circle.point_to_circle_coords(start);
-                let end = circle.point_to_circle_coords(end);
+                let end = circle.point_to_circle_coords(to);
 
                 let mut approx = Vec::new();
 
