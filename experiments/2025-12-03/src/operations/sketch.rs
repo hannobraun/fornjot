@@ -2,7 +2,7 @@ use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    geometry::Surface,
+    geometry::{Arc, Surface},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -29,11 +29,11 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: SketchSegmentGeometry::Arc {
+            geometry: SketchSegmentGeometry::Arc(Arc {
                 to: position.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
-            },
+            }),
         });
 
         self
@@ -48,11 +48,11 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Arc {
+            geometry: SketchSegmentGeometry::Arc(Arc {
                 to: position.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
-            },
+            }),
         });
 
         self
@@ -243,31 +243,25 @@ enum SketchSegmentAttachment {
 
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentGeometry {
-    Arc {
-        to: Point<2>,
-        radius: Scalar,
-        tolerance: Scalar,
-    },
-    Line {
-        to: Point<2>,
-    },
+    Arc(Arc),
+    Line { to: Point<2> },
 }
 
 impl SketchSegmentGeometry {
     pub fn to(&self) -> Point<2> {
         match *self {
-            Self::Arc { to, .. } => to,
+            Self::Arc(Arc { to, .. }) => to,
             Self::Line { to } => to,
         }
     }
 
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         match *self {
-            SketchSegmentGeometry::Arc {
+            SketchSegmentGeometry::Arc(Arc {
                 to,
                 radius,
                 tolerance,
-            } => {
+            }) => {
                 let start_to_end = to - start;
                 let midpoint = start + start_to_end * 0.5;
 

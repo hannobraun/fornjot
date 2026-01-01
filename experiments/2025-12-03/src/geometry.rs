@@ -1,4 +1,11 @@
-use fj_math::{Point, Vector};
+use fj_math::{Point, Scalar, Vector};
+
+#[derive(Clone, Copy, Debug)]
+pub struct Arc {
+    pub to: Point<2>,
+    pub radius: Scalar,
+    pub tolerance: Scalar,
+}
 
 pub struct Surface {
     pub origin: Point<3>,
