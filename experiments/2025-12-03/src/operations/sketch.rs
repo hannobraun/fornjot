@@ -2,6 +2,7 @@ use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
+    geometry::Surface,
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -133,20 +134,6 @@ impl Sketch {
         );
 
         faces.push(Face { boundary, approx })
-    }
-}
-
-pub struct Surface {
-    pub origin: Point<3>,
-    pub axes: [Vector<3>; 2],
-}
-
-impl Surface {
-    pub fn local_to_global(&self, local: Point<2>) -> Point<3> {
-        let [u, v] = local.coords.components;
-        let [axis_u, axis_v] = self.axes;
-
-        self.origin + axis_u * u + axis_v * v
     }
 }
 

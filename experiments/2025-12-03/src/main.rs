@@ -2,14 +2,13 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Vector};
 
 use crate::{
-    operations::{
-        sketch::{Sketch, Surface},
-        sweep,
-    },
+    geometry::Surface,
+    operations::{sketch::Sketch, sweep},
     store::Store,
 };
 
 mod debug;
+mod geometry;
 mod helpers;
 mod operations;
 mod store;
