@@ -23,8 +23,8 @@ impl Sketch {
 
     pub fn add_segment(mut self, curve: impl Curve + 'static) -> Self {
         self.segments.push(SketchSegment {
-            attachment: None,
             geometry: Box::new(curve),
+            attachment: None,
         });
 
         self
@@ -36,8 +36,8 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: Box::new(curve),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
         self
@@ -102,8 +102,8 @@ impl Sketch {
 }
 
 struct SketchSegment {
-    pub attachment: Option<SketchSegmentAttachment>,
     pub geometry: Box<dyn Curve>,
+    pub attachment: Option<SketchSegmentAttachment>,
 }
 
 impl SketchSegment {
