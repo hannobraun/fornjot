@@ -142,7 +142,7 @@ impl Sketch {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct SketchSegment {
     pub attachment: Option<SketchSegmentAttachment>,
     pub geometry: SketchSegmentGeometry,
@@ -241,7 +241,7 @@ enum SketchSegmentAttachment {
     Vertex { vertex: Index<Vertex> },
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 enum SketchSegmentGeometry {
     Arc(Arc),
     Line(Line),
