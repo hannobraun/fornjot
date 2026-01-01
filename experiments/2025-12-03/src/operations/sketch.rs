@@ -27,12 +27,10 @@ impl Sketch {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
-        let to = position.into();
-
         self.segments.push(SketchSegment {
             attachment: None,
             geometry: SketchSegmentGeometry::Arc {
-                to,
+                to: position.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
