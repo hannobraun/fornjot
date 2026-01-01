@@ -91,6 +91,10 @@ pub struct Line {
 }
 
 impl Line {
+    pub fn end(&self) -> Point<2> {
+        self.end
+    }
+
     pub fn approx(&self, _: Point<2>) -> Vec<Point<2>> {
         Vec::new()
     }
