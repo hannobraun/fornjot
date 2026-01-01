@@ -102,7 +102,7 @@ impl Sketch {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
             let next_i = if i == last_segment_index { 0 } else { i + 1 };
 
-            let current = self.segments[i];
+            let current = &self.segments[i];
             let prev = self.segments[prev_i];
             let next = self.segments[next_i];
 
