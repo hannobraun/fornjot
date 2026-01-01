@@ -68,10 +68,12 @@ fn model() -> TriMesh {
                 tolerance,
             })
             .arc_to_vertex(
-                [0.25, 0.25],
+                Arc {
+                    end: Point::from([0.25, 0.25]),
+                    radius,
+                    tolerance,
+                },
                 left_front_bottom_inner,
-                radius,
-                tolerance,
             )
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .into_face(

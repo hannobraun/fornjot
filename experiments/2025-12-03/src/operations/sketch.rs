@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar};
+use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
@@ -30,20 +30,10 @@ impl Sketch {
         self
     }
 
-    pub fn arc_to_vertex(
-        mut self,
-        position: impl Into<Point<2>>,
-        vertex: Index<Vertex>,
-        radius: impl Into<Scalar>,
-        tolerance: impl Into<Scalar>,
-    ) -> Self {
+    pub fn arc_to_vertex(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: Box::new(Arc {
-                end: position.into(),
-                radius: radius.into(),
-                tolerance: tolerance.into(),
-            }),
+            geometry: Box::new(arc),
         });
 
         self
