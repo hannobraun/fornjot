@@ -2,14 +2,14 @@ use fj_math::{Circle, Point, Scalar, Vector};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Arc {
-    pub to: Point<2>,
+    pub end: Point<2>,
     pub radius: Scalar,
     pub tolerance: Scalar,
 }
 
 impl Arc {
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let start_to_end = self.to - start;
+        let start_to_end = self.end - start;
         let midpoint = start + start_to_end * 0.5;
 
         let midpoint_towards_center =
@@ -38,7 +38,7 @@ impl Arc {
                     (`{start:?}`) and end (`{to:?}`) points, or the \
                     arc is not possible.",
                     radius = self.radius,
-                    to = self.to,
+                    to = self.end,
                 );
             }
 
@@ -67,7 +67,7 @@ impl Arc {
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
         let start = circle.point_to_circle_coords(start);
-        let end = circle.point_to_circle_coords(self.to);
+        let end = circle.point_to_circle_coords(self.end);
 
         let mut approx = Vec::new();
 

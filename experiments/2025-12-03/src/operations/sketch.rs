@@ -30,7 +30,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             attachment: None,
             geometry: SketchSegmentGeometry::Arc(Arc {
-                to: position.into(),
+                end: position.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             }),
@@ -49,7 +49,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: SketchSegmentGeometry::Arc(Arc {
-                to: position.into(),
+                end: position.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             }),
@@ -248,7 +248,7 @@ enum SketchSegmentGeometry {
 impl SketchSegmentGeometry {
     pub fn to(&self) -> Point<2> {
         match *self {
-            Self::Arc(Arc { to, .. }) => to,
+            Self::Arc(Arc { end: to, .. }) => to,
             Self::Line(Line { to }) => to,
         }
     }
