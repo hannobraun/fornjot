@@ -30,7 +30,6 @@ impl Sketch {
         let to = position.into();
 
         self.segments.push(SketchSegment {
-            to,
             attachment: None,
             geometry: SketchSegmentGeometry::Arc {
                 to,
@@ -52,7 +51,6 @@ impl Sketch {
         let to = position.into();
 
         self.segments.push(SketchSegment {
-            to,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: SketchSegmentGeometry::Arc {
                 to,
@@ -68,7 +66,6 @@ impl Sketch {
         let to = position.into();
 
         self.segments.push(SketchSegment {
-            to,
             attachment: None,
             geometry: SketchSegmentGeometry::Line { to },
         });
@@ -84,7 +81,6 @@ impl Sketch {
         let to = position.into();
 
         self.segments.push(SketchSegment {
-            to,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: SketchSegmentGeometry::Line { to },
         });
@@ -152,7 +148,6 @@ impl Sketch {
 
 #[derive(Clone, Copy, Debug)]
 struct SketchSegment {
-    pub to: Point<2>,
     pub attachment: Option<SketchSegmentAttachment>,
     pub geometry: SketchSegmentGeometry,
 }
@@ -166,8 +161,6 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let _ = self.to;
-
         let approx = self.geometry.approx(prev.geometry.to());
 
         let boundary = match self.attachment {
