@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Arc, Surface},
+    geometry::{Arc, Line, Surface},
     operations::{sketch::Sketch, sweep},
     store::Store,
 };
@@ -47,9 +47,15 @@ fn model() -> TriMesh {
 
     let bottom = {
         Sketch::start_at([0., 0.])
-            .line_to([1., 0.])
-            .line_to([1., 1.])
-            .line_to([0., 1.])
+            .line_to(Line {
+                end: Point::from([1., 0.]),
+            })
+            .line_to(Line {
+                end: Point::from([1., 1.]),
+            })
+            .line_to(Line {
+                end: Point::from([0., 1.]),
+            })
             .line_to_vertex([0., 0.], left_front_bottom_outer)
             .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
             .arc_to(Arc {
