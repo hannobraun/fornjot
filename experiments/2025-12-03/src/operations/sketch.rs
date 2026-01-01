@@ -249,7 +249,7 @@ impl SketchSegmentGeometry {
     pub fn end(&self) -> Point<2> {
         match *self {
             Self::Arc(Arc { end, .. }) => end,
-            Self::Line(Line { end: to }) => to,
+            Self::Line(Line { end }) => end,
         }
     }
 
