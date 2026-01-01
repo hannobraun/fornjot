@@ -163,7 +163,7 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.geometry.approx(prev.to, self.to);
+        let approx = self.geometry.approx(prev.to);
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
@@ -256,7 +256,7 @@ enum SketchSegmentGeometry {
 }
 
 impl SketchSegmentGeometry {
-    pub fn approx(&self, start: Point<2>, _: Point<2>) -> Vec<Point<2>> {
+    pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         match *self {
             SketchSegmentGeometry::Arc {
                 to,
