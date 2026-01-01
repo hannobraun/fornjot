@@ -107,7 +107,7 @@ impl Sketch {
             let next = self.segments[next_i];
 
             let (half_edge, approx) = current.to_half_edge_and_approx(
-                &prev, next, &surface, half_edges, vertices,
+                &prev, &next, &surface, half_edges, vertices,
             );
 
             positions_and_half_edges_and_approx.push((
@@ -152,7 +152,7 @@ impl SketchSegment {
     pub fn to_half_edge_and_approx(
         self,
         prev: &SketchSegment,
-        next: SketchSegment,
+        next: &SketchSegment,
         surface: &Surface,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
