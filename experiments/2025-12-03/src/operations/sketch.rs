@@ -2,7 +2,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{curve::Curve, surface::Surface},
+    geometry::{curve::Curve, surface::Plane},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -45,7 +45,7 @@ impl Sketch {
 
     pub fn into_face(
         mut self,
-        surface: Surface,
+        surface: Plane,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
@@ -111,7 +111,7 @@ impl SketchSegment {
         &self,
         prev: &SketchSegment,
         next: &SketchSegment,
-        surface: &Surface,
+        surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
@@ -157,7 +157,7 @@ impl SketchSegment {
     pub fn to_start_vertex(
         &self,
         position: Point<2>,
-        surface: &Surface,
+        surface: &Plane,
         half_edges: &Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {
@@ -175,7 +175,7 @@ impl SketchSegment {
 
     pub fn to_end_vertex(
         &self,
-        surface: &Surface,
+        surface: &Plane,
         half_edges: &Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> Index<Vertex> {

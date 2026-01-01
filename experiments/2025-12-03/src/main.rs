@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     geometry::{
         curve::{Arc, Line},
-        surface::Surface,
+        surface::Plane,
     },
     operations::{sketch::Sketch, sweep},
     store::Store,
@@ -101,7 +101,7 @@ fn model() -> TriMesh {
                 left_front_bottom_outer,
             )
             .into_face(
-                Surface {
+                Plane {
                     origin: Point::from([0., 0., 0.]),
                     axes: [
                         Vector::from([0., 1., 0.]),
