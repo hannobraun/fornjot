@@ -3,8 +3,8 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{
-        Surface,
         curve::{Arc, Line},
+        surface::Surface,
     },
     operations::{sketch::Sketch, sweep},
     store::Store,
