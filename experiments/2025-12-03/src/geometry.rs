@@ -86,6 +86,12 @@ pub struct Line {
     pub to: Point<2>,
 }
 
+impl Line {
+    pub fn approx(&self, _: Point<2>) -> Vec<Point<2>> {
+        Vec::new()
+    }
+}
+
 pub struct Surface {
     pub origin: Point<3>,
     pub axes: [Vector<3>; 2],

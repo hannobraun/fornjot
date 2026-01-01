@@ -256,7 +256,7 @@ impl SketchSegmentGeometry {
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         match *self {
             SketchSegmentGeometry::Arc(arc) => arc.approx(start),
-            SketchSegmentGeometry::Line(Line { to: _ }) => Vec::new(),
+            SketchSegmentGeometry::Line(line) => line.approx(start),
         }
     }
 }
