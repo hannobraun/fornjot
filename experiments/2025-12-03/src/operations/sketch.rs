@@ -2,7 +2,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Arc, Curve, Line, Surface},
+    geometry::{Curve, Surface},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -30,19 +30,14 @@ impl Sketch {
         self
     }
 
-    pub fn arc_to_vertex(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
+    pub fn add_segment_to(
+        mut self,
+        curve: impl Curve + 'static,
+        vertex: Index<Vertex>,
+    ) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: Box::new(arc),
-        });
-
-        self
-    }
-
-    pub fn line_to_vertex(mut self, line: Line, vertex: Index<Vertex>) -> Self {
-        self.segments.push(SketchSegment {
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: Box::new(line),
+            geometry: Box::new(curve),
         });
 
         self
