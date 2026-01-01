@@ -9,18 +9,14 @@ pub struct Arc {
 
 impl Arc {
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let Arc {
-            to,
-            radius,
-            tolerance,
-        } = *self;
+        let Arc { tolerance, .. } = *self;
 
-        let start_to_end = to - start;
+        let start_to_end = self.to - start;
         let midpoint = start + start_to_end * 0.5;
 
         let midpoint_towards_center =
             start_to_end.to_perpendicular().normalize()
-                * radius.sign().to_scalar();
+                * self.radius.sign().to_scalar();
 
         let distance_from_midpoint_to_center = {
             // We're computing the required distance from a right
@@ -33,7 +29,7 @@ impl Arc {
             //   `radius`)
 
             let a = start_to_end.magnitude() / 2.;
-            let c = radius;
+            let c = self.radius;
 
             let b_squared = c * c - a * a;
 
@@ -42,7 +38,9 @@ impl Arc {
                     "Radius of arc (`{radius}`) is too small: Must be \
                     at least half the distance between start \
                     (`{start:?}`) and end (`{to:?}`) points, or the \
-                    arc is not possible."
+                    arc is not possible.",
+                    radius = self.radius,
+                    to = self.to,
                 );
             }
 
@@ -62,7 +60,7 @@ impl Arc {
         };
 
         let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI / (Scalar::ONE - (tolerance / radius)).acos(),
+            Scalar::PI / (Scalar::ONE - (tolerance / self.radius)).acos(),
             3.,
         )
         .ceil();
@@ -71,7 +69,7 @@ impl Arc {
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
         let start = circle.point_to_circle_coords(start);
-        let end = circle.point_to_circle_coords(to);
+        let end = circle.point_to_circle_coords(self.to);
 
         let mut approx = Vec::new();
 
