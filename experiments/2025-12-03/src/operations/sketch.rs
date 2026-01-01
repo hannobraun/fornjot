@@ -2,7 +2,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Curve, Surface},
+    geometry::{Surface, curve::Curve},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},

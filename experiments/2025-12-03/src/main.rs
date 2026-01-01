@@ -2,7 +2,10 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Arc, Line, Surface},
+    geometry::{
+        Surface,
+        curve::{Arc, Line},
+    },
     operations::{sketch::Sketch, sweep},
     store::Store,
 };
