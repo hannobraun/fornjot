@@ -74,11 +74,11 @@ impl Sketch {
         position: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Self {
-        let to = position.into();
-
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Line { to },
+            geometry: SketchSegmentGeometry::Line {
+                to: position.into(),
+            },
         });
 
         self
