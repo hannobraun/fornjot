@@ -56,8 +56,18 @@ fn model() -> TriMesh {
             .line_to(Line {
                 end: Point::from([0., 1.]),
             })
-            .line_to_vertex([0., 0.], left_front_bottom_outer)
-            .line_to_vertex([0.25, 0.25], left_front_bottom_inner)
+            .line_to_vertex(
+                Line {
+                    end: Point::from([0., 0.]),
+                },
+                left_front_bottom_outer,
+            )
+            .line_to_vertex(
+                Line {
+                    end: Point::from([0.25, 0.25]),
+                },
+                left_front_bottom_inner,
+            )
             .arc_to(Arc {
                 end: Point::from([0.25, 0.75]),
                 radius,
@@ -81,7 +91,12 @@ fn model() -> TriMesh {
                 },
                 left_front_bottom_inner,
             )
-            .line_to_vertex([0., 0.], left_front_bottom_outer)
+            .line_to_vertex(
+                Line {
+                    end: Point::from([0., 0.]),
+                },
+                left_front_bottom_outer,
+            )
             .into_face(
                 Surface {
                     origin: Point::from([0., 0., 0.]),

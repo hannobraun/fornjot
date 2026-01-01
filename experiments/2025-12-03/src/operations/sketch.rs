@@ -42,24 +42,16 @@ impl Sketch {
     pub fn line_to(mut self, line: Line) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: Box::new(Line {
-                end: position.into(),
-            }),
+            geometry: Box::new(line),
         });
 
         self
     }
 
-    pub fn line_to_vertex(
-        mut self,
-        position: impl Into<Point<2>>,
-        vertex: Index<Vertex>,
-    ) -> Self {
+    pub fn line_to_vertex(mut self, line: Line, vertex: Index<Vertex>) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: Box::new(Line {
-                end: position.into(),
-            }),
+            geometry: Box::new(line),
         });
 
         self
