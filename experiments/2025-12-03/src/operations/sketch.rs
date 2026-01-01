@@ -248,7 +248,7 @@ enum SketchSegmentGeometry {
 impl SketchSegmentGeometry {
     pub fn end(&self) -> Point<2> {
         match *self {
-            Self::Arc(Arc { end: to, .. }) => to,
+            Self::Arc(Arc { end, .. }) => end,
             Self::Line(Line { to }) => to,
         }
     }
