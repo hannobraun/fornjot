@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
-    geometry::{Arc, Line, Surface},
+    geometry::{Arc, Curve, Line, Surface},
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -29,11 +29,13 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: SketchSegmentGeometry::Arc(Arc {
-                end: position.into(),
-                radius: radius.into(),
-                tolerance: tolerance.into(),
-            }),
+            geometry: SketchSegmentGeometry {
+                inner: Box::new(Arc {
+                    end: position.into(),
+                    radius: radius.into(),
+                    tolerance: tolerance.into(),
+                }),
+            },
         });
 
         self
@@ -48,11 +50,13 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Arc(Arc {
-                end: position.into(),
-                radius: radius.into(),
-                tolerance: tolerance.into(),
-            }),
+            geometry: SketchSegmentGeometry {
+                inner: Box::new(Arc {
+                    end: position.into(),
+                    radius: radius.into(),
+                    tolerance: tolerance.into(),
+                }),
+            },
         });
 
         self
@@ -61,9 +65,11 @@ impl Sketch {
     pub fn line_to(mut self, position: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: SketchSegmentGeometry::Line(Line {
-                end: position.into(),
-            }),
+            geometry: SketchSegmentGeometry {
+                inner: Box::new(Line {
+                    end: position.into(),
+                }),
+            },
         });
 
         self
@@ -76,9 +82,11 @@ impl Sketch {
     ) -> Self {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Line(Line {
-                end: position.into(),
-            }),
+            geometry: SketchSegmentGeometry {
+                inner: Box::new(Line {
+                    end: position.into(),
+                }),
+            },
         });
 
         self
@@ -240,23 +248,16 @@ enum SketchSegmentAttachment {
     Vertex { vertex: Index<Vertex> },
 }
 
-enum SketchSegmentGeometry {
-    Arc(Arc),
-    Line(Line),
+struct SketchSegmentGeometry {
+    inner: Box<dyn Curve>,
 }
 
 impl SketchSegmentGeometry {
     pub fn end(&self) -> Point<2> {
-        match *self {
-            Self::Arc(arc) => arc.end(),
-            Self::Line(line) => line.end(),
-        }
+        self.inner.end()
     }
 
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        match *self {
-            SketchSegmentGeometry::Arc(arc) => arc.approx(start),
-            SketchSegmentGeometry::Line(line) => line.approx(start),
-        }
+        self.inner.approx(start)
     }
 }
