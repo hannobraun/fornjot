@@ -118,8 +118,11 @@ impl Sketch {
                 prev, next, &surface, half_edges, vertices,
             );
 
-            positions_and_half_edges_and_approx
-                .push((current.to, half_edge, approx));
+            positions_and_half_edges_and_approx.push((
+                current.geometry.to(),
+                half_edge,
+                approx,
+            ));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
@@ -163,7 +166,9 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.geometry.approx(prev.to);
+        let _ = self.to;
+
+        let approx = self.geometry.approx(prev.geometry.to());
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
@@ -179,8 +184,12 @@ impl SketchSegment {
             }
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
-                let v1 = next
-                    .to_start_vertex(self.to, surface, half_edges, vertices);
+                let v1 = next.to_start_vertex(
+                    self.geometry.to(),
+                    surface,
+                    half_edges,
+                    vertices,
+                );
 
                 [v0, v1]
             }
@@ -230,7 +239,7 @@ impl SketchSegment {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.to);
+                let point = surface.local_to_global(self.geometry.to());
                 vertices.push(Vertex { point })
             }
         }
@@ -256,6 +265,13 @@ enum SketchSegmentGeometry {
 }
 
 impl SketchSegmentGeometry {
+    pub fn to(&self) -> Point<2> {
+        match *self {
+            Self::Arc { to, .. } => to,
+            Self::Line { to } => to,
+        }
+    }
+
     pub fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         match *self {
             SketchSegmentGeometry::Arc {
