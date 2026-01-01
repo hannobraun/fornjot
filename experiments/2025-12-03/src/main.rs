@@ -1,5 +1,5 @@
 use fj_interop::{Color, MeshTriangle, TriMesh};
-use fj_math::{Point, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::Surface,
@@ -42,7 +42,7 @@ fn model() -> TriMesh {
     let left_front_bottom_outer = vertices.push([0., 0., 0.]);
     let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
 
-    let radius = 0.5;
+    let radius = Scalar::from(0.5);
     let tolerance = 0.001;
 
     let bottom = {
