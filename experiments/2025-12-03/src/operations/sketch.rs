@@ -21,10 +21,10 @@ impl Sketch {
         }
     }
 
-    pub fn arc_to(mut self, arc: Arc) -> Self {
+    pub fn add_segment(mut self, curve: impl Curve + 'static) -> Self {
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: Box::new(arc),
+            geometry: Box::new(curve),
         });
 
         self
@@ -34,15 +34,6 @@ impl Sketch {
         self.segments.push(SketchSegment {
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: Box::new(arc),
-        });
-
-        self
-    }
-
-    pub fn line_to(mut self, line: Line) -> Self {
-        self.segments.push(SketchSegment {
-            attachment: None,
-            geometry: Box::new(line),
         });
 
         self
