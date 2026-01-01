@@ -142,7 +142,7 @@ impl Sketch {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 struct SketchSegment {
     pub attachment: Option<SketchSegmentAttachment>,
     pub geometry: SketchSegmentGeometry,
@@ -150,7 +150,7 @@ struct SketchSegment {
 
 impl SketchSegment {
     pub fn to_half_edge_and_approx(
-        self,
+        &self,
         prev: &SketchSegment,
         next: &SketchSegment,
         surface: &Surface,
@@ -197,7 +197,7 @@ impl SketchSegment {
     }
 
     pub fn to_start_vertex(
-        self,
+        &self,
         position: Point<2>,
         surface: &Surface,
         half_edges: &Store<HalfEdge>,
@@ -216,7 +216,7 @@ impl SketchSegment {
     }
 
     pub fn to_end_vertex(
-        self,
+        &self,
         surface: &Surface,
         half_edges: &Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
@@ -241,7 +241,7 @@ enum SketchSegmentAttachment {
     Vertex { vertex: Index<Vertex> },
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 enum SketchSegmentGeometry {
     Arc(Arc),
     Line(Line),
