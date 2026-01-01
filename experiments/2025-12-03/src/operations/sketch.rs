@@ -59,11 +59,11 @@ impl Sketch {
     }
 
     pub fn line_to(mut self, position: impl Into<Point<2>>) -> Self {
-        let to = position.into();
-
         self.segments.push(SketchSegment {
             attachment: None,
-            geometry: SketchSegmentGeometry::Line { to },
+            geometry: SketchSegmentGeometry::Line {
+                to: position.into(),
+            },
         });
 
         self
