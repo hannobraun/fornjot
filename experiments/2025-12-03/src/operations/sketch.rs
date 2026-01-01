@@ -338,11 +338,7 @@ impl SketchSegmentGeometry {
 
                 approx
             }
-            SketchSegmentGeometry::Line { to } => {
-                let _ = to;
-
-                Vec::new()
-            }
+            SketchSegmentGeometry::Line { to: _ } => Vec::new(),
         }
     }
 }
