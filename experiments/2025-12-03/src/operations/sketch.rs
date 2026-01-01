@@ -33,6 +33,7 @@ impl Sketch {
             to,
             attachment: None,
             geometry: SketchSegmentGeometry::Arc {
+                to,
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
@@ -54,6 +55,7 @@ impl Sketch {
             to,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
             geometry: SketchSegmentGeometry::Arc {
+                to,
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
@@ -68,7 +70,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to,
             attachment: None,
-            geometry: SketchSegmentGeometry::Line,
+            geometry: SketchSegmentGeometry::Line { to },
         });
 
         self
@@ -84,7 +86,7 @@ impl Sketch {
         self.segments.push(SketchSegment {
             to,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-            geometry: SketchSegmentGeometry::Line,
+            geometry: SketchSegmentGeometry::Line { to },
         });
 
         self
@@ -243,14 +245,26 @@ enum SketchSegmentAttachment {
 
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentGeometry {
-    Arc { radius: Scalar, tolerance: Scalar },
-    Line,
+    Arc {
+        to: Point<2>,
+        radius: Scalar,
+        tolerance: Scalar,
+    },
+    Line {
+        to: Point<2>,
+    },
 }
 
 impl SketchSegmentGeometry {
     pub fn approx(&self, start: Point<2>, end: Point<2>) -> Vec<Point<2>> {
         match *self {
-            SketchSegmentGeometry::Arc { radius, tolerance } => {
+            SketchSegmentGeometry::Arc {
+                to,
+                radius,
+                tolerance,
+            } => {
+                let _ = to;
+
                 let start_to_end = end - start;
                 let midpoint = start + start_to_end * 0.5;
 
@@ -321,7 +335,11 @@ impl SketchSegmentGeometry {
 
                 approx
             }
-            SketchSegmentGeometry::Line => Vec::new(),
+            SketchSegmentGeometry::Line { to } => {
+                let _ = to;
+
+                Vec::new()
+            }
         }
     }
 }
