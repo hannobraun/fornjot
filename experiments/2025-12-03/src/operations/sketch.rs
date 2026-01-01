@@ -103,11 +103,11 @@ impl Sketch {
             let next_i = if i == last_segment_index { 0 } else { i + 1 };
 
             let current = &self.segments[i];
-            let prev = self.segments[prev_i];
+            let prev = &self.segments[prev_i];
             let next = self.segments[next_i];
 
             let (half_edge, approx) = current.to_half_edge_and_approx(
-                &prev, &next, &surface, half_edges, vertices,
+                prev, &next, &surface, half_edges, vertices,
             );
 
             positions_and_half_edges_and_approx.push((
