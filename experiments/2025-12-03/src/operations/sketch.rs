@@ -23,7 +23,7 @@ impl Sketch {
 
     pub fn add_segment(mut self, curve: impl Curve + 'static) -> Self {
         self.segments.push(SketchSegment {
-            geometry: Box::new(curve),
+            curve: Box::new(curve),
             attachment: None,
         });
 
@@ -36,7 +36,7 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            geometry: Box::new(curve),
+            curve: Box::new(curve),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
@@ -70,7 +70,7 @@ impl Sketch {
             );
 
             positions_and_half_edges_and_approx.push((
-                current.geometry.end(),
+                current.curve.end(),
                 half_edge,
                 approx,
             ));
@@ -102,7 +102,7 @@ impl Sketch {
 }
 
 struct SketchSegment {
-    pub geometry: Box<dyn Curve>,
+    pub curve: Box<dyn Curve>,
     pub attachment: Option<SketchSegmentAttachment>,
 }
 
@@ -115,7 +115,7 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.geometry.approx(prev.geometry.end());
+        let approx = self.curve.approx(prev.curve.end());
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
@@ -132,7 +132,7 @@ impl SketchSegment {
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next.to_start_vertex(
-                    self.geometry.end(),
+                    self.curve.end(),
                     surface,
                     half_edges,
                     vertices,
@@ -186,7 +186,7 @@ impl SketchSegment {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.geometry.end());
+                let point = surface.local_to_global(self.curve.end());
                 vertices.push(Vertex { point })
             }
         }
