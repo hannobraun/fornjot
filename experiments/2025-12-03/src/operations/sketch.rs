@@ -24,9 +24,20 @@ impl Sketch {
         }
     }
 
-    pub fn add_arc(mut self, arc: Arc) -> Self {
+    pub fn add_arc(
+        mut self,
+        Arc {
+            end,
+            radius,
+            tolerance,
+        }: Arc,
+    ) -> Self {
         self.segments.push(SketchSegment {
-            curve: Box::new(arc),
+            curve: Box::new(Arc {
+                end,
+                radius,
+                tolerance,
+            }),
             attachment: None,
         });
 
