@@ -67,7 +67,12 @@ impl Sketch {
 
     pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
         let attachment = None;
-        self.line_to_inner(destination, attachment)
+        self.add_segment(
+            Line {
+                end: destination.into(),
+            },
+            attachment,
+        )
     }
 
     pub fn line_to_at(
@@ -76,16 +81,12 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.line_to_inner(destination, attachment)
-    }
-
-    fn line_to_inner(
-        self,
-        destination: impl Into<Point<2>>,
-        attachment: Option<SketchSegmentAttachment>,
-    ) -> Self {
-        let end = destination.into();
-        self.add_segment(Line { end }, attachment)
+        self.add_segment(
+            Line {
+                end: destination.into(),
+            },
+            attachment,
+        )
     }
 
     fn add_segment(
