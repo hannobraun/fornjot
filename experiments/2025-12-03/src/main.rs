@@ -65,7 +65,7 @@ fn model() -> TriMesh {
             .arc_to([0.25, 0.75], radius, tolerance)
             .arc_to([0.75, 0.75], radius, tolerance)
             .arc_to([0.75, 0.25], radius, tolerance)
-            .add_arc_to(
+            .arc_to_with(
                 [0.25, 0.25],
                 radius,
                 tolerance,

@@ -33,7 +33,7 @@ impl Sketch {
         self.add_arc_inner(destination, radius, tolerance, None)
     }
 
-    pub fn add_arc_to(
+    pub fn arc_to_with(
         self,
         to: impl Into<Point<2>>,
         radius: Scalar,
