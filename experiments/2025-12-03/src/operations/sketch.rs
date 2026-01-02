@@ -24,7 +24,7 @@ impl Sketch {
         }
     }
 
-    pub fn add_arc(
+    pub fn arc_to(
         self,
         to: impl Into<Point<2>>,
         radius: Scalar,
