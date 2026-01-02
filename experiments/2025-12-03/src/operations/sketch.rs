@@ -47,8 +47,8 @@ impl Sketch {
     pub fn arc_to_at(
         self,
         destination: impl Into<Point<2>>,
-        radius: Scalar,
-        tolerance: Scalar,
+        radius: impl Into<Scalar>,
+        tolerance: impl Into<Scalar>,
         vertex: Index<Vertex>,
     ) -> Self {
         let arc = Arc::from_start_and_end(
