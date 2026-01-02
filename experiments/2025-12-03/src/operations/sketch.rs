@@ -32,10 +32,11 @@ impl Sketch {
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
+        let end = destination.into();
         let attachment = None;
         self.add_segment(
             Arc {
-                end: destination.into(),
+                end,
                 radius,
                 tolerance,
             },
