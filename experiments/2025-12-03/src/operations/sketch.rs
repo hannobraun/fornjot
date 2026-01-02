@@ -46,14 +46,14 @@ impl Sketch {
 
     fn arc_to_inner(
         mut self,
-        to: impl Into<Point<2>>,
+        destination: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
-                end: to.into(),
+                end: destination.into(),
                 radius,
                 tolerance,
             }),
