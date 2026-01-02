@@ -32,9 +32,8 @@ impl Sketch {
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
-        let end = destination.into();
         let arc = Arc {
-            end,
+            end: destination.into(),
             radius,
             tolerance,
         };
