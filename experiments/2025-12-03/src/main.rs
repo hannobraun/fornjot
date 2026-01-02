@@ -71,9 +71,9 @@ fn model() -> TriMesh {
                 },
                 left_front_bottom_inner,
             )
-            .add_arc(Point::from([0.25, 0.75]), radius, tolerance)
-            .add_arc(Point::from([0.75, 0.75]), radius, tolerance)
-            .add_arc(Point::from([0.75, 0.25]), radius, tolerance)
+            .add_arc([0.25, 0.75], radius, tolerance)
+            .add_arc([0.75, 0.75], radius, tolerance)
+            .add_arc([0.75, 0.25], radius, tolerance)
             .add_arc_to(
                 Arc {
                     end: Point::from([0.25, 0.25]),

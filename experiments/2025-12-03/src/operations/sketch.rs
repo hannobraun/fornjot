@@ -26,13 +26,13 @@ impl Sketch {
 
     pub fn add_arc(
         mut self,
-        to: Point<2>,
+        to: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
-                end: to,
+                end: to.into(),
                 radius,
                 tolerance,
             }),
