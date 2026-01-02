@@ -33,13 +33,15 @@ impl Sketch {
         self.add_arc_inner(to, radius, tolerance, None)
     }
 
-    pub fn add_arc_to(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
-        self.segments.push(SketchSegment {
-            curve: Box::new(arc),
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-        });
-
-        self
+    pub fn add_arc_to(
+        self,
+        to: impl Into<Point<2>>,
+        radius: Scalar,
+        tolerance: Scalar,
+        vertex: Index<Vertex>,
+    ) -> Self {
+        let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
+        self.add_arc_inner(to, radius, tolerance, attachment)
     }
 
     fn add_arc_inner(
