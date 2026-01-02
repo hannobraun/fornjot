@@ -26,11 +26,11 @@ impl Sketch {
 
     pub fn arc_to(
         self,
-        to: impl Into<Point<2>>,
+        destination: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
-        self.add_arc_inner(to, radius, tolerance, None)
+        self.add_arc_inner(destination, radius, tolerance, None)
     }
 
     pub fn add_arc_to(
