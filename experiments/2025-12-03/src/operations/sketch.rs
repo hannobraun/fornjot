@@ -18,8 +18,10 @@ pub struct Sketch {
 
 impl Sketch {
     pub fn start_at(start: impl Into<Point<2>>) -> Self {
+        let start = start.into();
+
         Self {
-            start: start.into(),
+            start,
             segments: Vec::new(),
         }
     }
