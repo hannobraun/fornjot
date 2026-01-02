@@ -35,13 +35,13 @@ impl Sketch {
 
     pub fn arc_to_with(
         self,
-        to: impl Into<Point<2>>,
+        destination: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
         vertex: Index<Vertex>,
     ) -> Self {
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_arc_inner(to, radius, tolerance, attachment)
+        self.add_arc_inner(destination, radius, tolerance, attachment)
     }
 
     fn add_arc_inner(
