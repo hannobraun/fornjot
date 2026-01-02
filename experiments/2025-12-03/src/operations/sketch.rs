@@ -52,9 +52,11 @@ impl Sketch {
         tolerance: Scalar,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
+        let end = destination.into();
+
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
-                end: destination.into(),
+                end,
                 radius,
                 tolerance,
             }),
