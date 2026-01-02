@@ -33,7 +33,7 @@ impl Sketch {
         self.arc_to_inner(destination, radius, tolerance, None)
     }
 
-    pub fn arc_to_with(
+    pub fn arc_to_at(
         self,
         destination: impl Into<Point<2>>,
         radius: Scalar,
