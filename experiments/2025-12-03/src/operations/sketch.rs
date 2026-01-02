@@ -30,7 +30,8 @@ impl Sketch {
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
-        self.arc_to_inner(destination, radius, tolerance, None)
+        let attachment = None;
+        self.arc_to_inner(destination, radius, tolerance, attachment)
     }
 
     pub fn arc_to_at(
