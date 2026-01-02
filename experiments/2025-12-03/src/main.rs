@@ -47,9 +47,9 @@ fn model() -> TriMesh {
 
     let bottom = {
         Sketch::start_at([0., 0.])
-            .add_line(Point::from([1., 0.]))
-            .add_line(Point::from([1., 1.]))
-            .add_line(Point::from([0., 1.]))
+            .add_line([1., 0.])
+            .add_line([1., 1.])
+            .add_line([0., 1.])
             .add_line_to(
                 Line {
                     end: Point::from([0., 0.]),
