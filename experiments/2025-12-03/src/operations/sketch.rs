@@ -25,10 +25,29 @@ impl Sketch {
     }
 
     pub fn add_arc(
+        self,
+        to: impl Into<Point<2>>,
+        radius: Scalar,
+        tolerance: Scalar,
+    ) -> Self {
+        self.add_arc_inner(to, radius, tolerance, None)
+    }
+
+    pub fn add_arc_to(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
+        self.segments.push(SketchSegment {
+            curve: Box::new(arc),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+        });
+
+        self
+    }
+
+    fn add_arc_inner(
         mut self,
         to: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
+        attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
@@ -36,16 +55,7 @@ impl Sketch {
                 radius,
                 tolerance,
             }),
-            attachment: None,
-        });
-
-        self
-    }
-
-    pub fn add_arc_to(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
-        self.segments.push(SketchSegment {
-            curve: Box::new(arc),
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+            attachment,
         });
 
         self
