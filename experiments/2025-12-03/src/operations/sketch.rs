@@ -30,7 +30,7 @@ impl Sketch {
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
-        self.add_arc_inner(destination, radius, tolerance, None)
+        self.arc_to_inner(destination, radius, tolerance, None)
     }
 
     pub fn arc_to_with(
@@ -41,10 +41,10 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_arc_inner(destination, radius, tolerance, attachment)
+        self.arc_to_inner(destination, radius, tolerance, attachment)
     }
 
-    fn add_arc_inner(
+    fn arc_to_inner(
         mut self,
         to: impl Into<Point<2>>,
         radius: Scalar,
