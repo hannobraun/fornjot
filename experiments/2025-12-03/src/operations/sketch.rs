@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
@@ -26,11 +26,9 @@ impl Sketch {
 
     pub fn add_arc(
         mut self,
-        Arc {
-            end: to,
-            radius,
-            tolerance,
-        }: Arc,
+        to: Point<2>,
+        radius: Scalar,
+        tolerance: Scalar,
     ) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
