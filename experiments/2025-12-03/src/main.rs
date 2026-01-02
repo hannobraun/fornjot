@@ -50,13 +50,13 @@ fn model() -> TriMesh {
 
     let bottom = {
         Sketch::start_at([0., 0.])
-            .add_segment(Line {
+            .add_line(Line {
                 end: Point::from([1., 0.]),
             })
-            .add_segment(Line {
+            .add_line(Line {
                 end: Point::from([1., 1.]),
             })
-            .add_segment(Line {
+            .add_line(Line {
                 end: Point::from([0., 1.]),
             })
             .add_segment_to(
@@ -71,17 +71,17 @@ fn model() -> TriMesh {
                 },
                 left_front_bottom_inner,
             )
-            .add_segment(Arc {
+            .add_arc(Arc {
                 end: Point::from([0.25, 0.75]),
                 radius,
                 tolerance,
             })
-            .add_segment(Arc {
+            .add_arc(Arc {
                 end: Point::from([0.75, 0.75]),
                 radius,
                 tolerance,
             })
-            .add_segment(Arc {
+            .add_arc(Arc {
                 end: Point::from([0.75, 0.25]),
                 radius,
                 tolerance,
