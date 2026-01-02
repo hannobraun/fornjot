@@ -63,21 +63,30 @@ impl Sketch {
         self
     }
 
-    pub fn line_to(mut self, destination: impl Into<Point<2>>) -> Self {
-        self.segments.push(SketchSegment {
-            curve: Box::new(Line {
-                end: destination.into(),
-            }),
-            attachment: None,
-        });
-
-        self
+    pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
+        let attachment = None;
+        self.line_to_inner(destination, attachment)
     }
 
     pub fn line_to_at(mut self, line: Line, vertex: Index<Vertex>) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(line),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+        });
+
+        self
+    }
+
+    fn line_to_inner(
+        mut self,
+        destination: impl Into<Point<2>>,
+        attachment: Option<SketchSegmentAttachment>,
+    ) -> Self {
+        self.segments.push(SketchSegment {
+            curve: Box::new(Line {
+                end: destination.into(),
+            }),
+            attachment,
         });
 
         self
