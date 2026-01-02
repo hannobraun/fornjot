@@ -74,7 +74,7 @@ impl Sketch {
         self
     }
 
-    pub fn add_line_to(mut self, line: Line, vertex: Index<Vertex>) -> Self {
+    pub fn line_to_with(mut self, line: Line, vertex: Index<Vertex>) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(line),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
