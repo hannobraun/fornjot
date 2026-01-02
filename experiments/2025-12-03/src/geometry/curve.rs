@@ -75,8 +75,8 @@ impl Curve for Arc {
         let increment =
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
-        let start = circle.point_to_circle_coords(start);
         let end = circle.point_to_circle_coords(self.end);
+        let start = circle.point_to_circle_coords(start);
 
         let mut approx = Vec::new();
 
