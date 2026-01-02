@@ -63,7 +63,7 @@ impl Sketch {
         self
     }
 
-    pub fn add_line(mut self, Line { end }: Line) -> Self {
+    pub fn add_line(mut self, end: Point<2>) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Line { end }),
             attachment: None,
