@@ -27,14 +27,14 @@ impl Sketch {
     pub fn add_arc(
         mut self,
         Arc {
-            end,
+            end: to,
             radius,
             tolerance,
         }: Arc,
     ) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(Arc {
-                end,
+                end: to,
                 radius,
                 tolerance,
             }),
