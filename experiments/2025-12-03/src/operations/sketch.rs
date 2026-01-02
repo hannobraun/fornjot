@@ -51,10 +51,11 @@ impl Sketch {
         tolerance: Scalar,
         vertex: Index<Vertex>,
     ) -> Self {
+        let end = destination.into();
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
         self.add_segment(
             Arc {
-                end: destination.into(),
+                end,
                 radius,
                 tolerance,
             },
