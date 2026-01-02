@@ -33,7 +33,14 @@ impl Sketch {
         tolerance: Scalar,
     ) -> Self {
         let attachment = None;
-        self.arc_to_inner(destination, radius, tolerance, attachment)
+        self.add_segment(
+            Arc {
+                end: destination.into(),
+                radius,
+                tolerance,
+            },
+            attachment,
+        )
     }
 
     pub fn arc_to_at(
@@ -44,20 +51,9 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.arc_to_inner(destination, radius, tolerance, attachment)
-    }
-
-    fn arc_to_inner(
-        self,
-        destination: impl Into<Point<2>>,
-        radius: Scalar,
-        tolerance: Scalar,
-        attachment: Option<SketchSegmentAttachment>,
-    ) -> Self {
-        let end = destination.into();
         self.add_segment(
             Arc {
-                end,
+                end: destination.into(),
                 radius,
                 tolerance,
             },
