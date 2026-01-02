@@ -49,15 +49,13 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         let end = destination.into();
+        let arc = Arc {
+            end,
+            radius,
+            tolerance,
+        };
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_segment(
-            Arc {
-                end,
-                radius,
-                tolerance,
-            },
-            attachment,
-        )
+        self.add_segment(arc, attachment)
     }
 
     pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
