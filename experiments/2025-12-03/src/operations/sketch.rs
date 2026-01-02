@@ -33,15 +33,13 @@ impl Sketch {
         tolerance: Scalar,
     ) -> Self {
         let end = destination.into();
+        let arc = Arc {
+            end,
+            radius,
+            tolerance,
+        };
         let attachment = None;
-        self.add_segment(
-            Arc {
-                end,
-                radius,
-                tolerance,
-            },
-            attachment,
-        )
+        self.add_segment(arc, attachment)
     }
 
     pub fn arc_to_at(
