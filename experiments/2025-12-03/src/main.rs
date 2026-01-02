@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{curve::Line, surface::Plane},
+    geometry::surface::Plane,
     operations::{sketch::Sketch, sweep},
     store::Store,
 };
@@ -50,33 +50,13 @@ fn model() -> TriMesh {
             .line_to([1., 0.])
             .line_to([1., 1.])
             .line_to([0., 1.])
-            .line_to_at(
-                Line {
-                    end: Point::from([0., 0.]),
-                },
-                left_front_bottom_outer,
-            )
-            .line_to_at(
-                Line {
-                    end: Point::from([0.25, 0.25]),
-                },
-                left_front_bottom_inner,
-            )
+            .line_to_at([0., 0.], left_front_bottom_outer)
+            .line_to_at([0.25, 0.25], left_front_bottom_inner)
             .arc_to([0.25, 0.75], radius, tolerance)
             .arc_to([0.75, 0.75], radius, tolerance)
             .arc_to([0.75, 0.25], radius, tolerance)
-            .arc_to_at(
-                [0.25, 0.25],
-                radius,
-                tolerance,
-                left_front_bottom_inner,
-            )
-            .line_to_at(
-                Line {
-                    end: Point::from([0., 0.]),
-                },
-                left_front_bottom_outer,
-            )
+            .arc_to_at([0.25, 0.25], radius, tolerance, left_front_bottom_inner)
+            .line_to_at([0., 0.], left_front_bottom_outer)
             .into_face(
                 Plane {
                     origin: Point::from([0., 0., 0.]),

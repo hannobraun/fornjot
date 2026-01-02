@@ -69,13 +69,13 @@ impl Sketch {
         self.line_to_inner(destination, attachment)
     }
 
-    pub fn line_to_at(mut self, line: Line, vertex: Index<Vertex>) -> Self {
-        self.segments.push(SketchSegment {
-            curve: Box::new(line),
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
-        });
-
-        self
+    pub fn line_to_at(
+        self,
+        destination: impl Into<Point<2>>,
+        vertex: Index<Vertex>,
+    ) -> Self {
+        let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
+        self.line_to_inner(destination, attachment)
     }
 
     fn line_to_inner(
