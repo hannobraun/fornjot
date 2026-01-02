@@ -31,8 +31,8 @@ impl Sketch {
     pub fn arc_to(
         self,
         destination: impl Into<Point<2>>,
-        radius: Scalar,
-        tolerance: Scalar,
+        radius: impl Into<Scalar>,
+        tolerance: impl Into<Scalar>,
     ) -> Self {
         let arc = Arc::from_start_and_end(
             self.current,
