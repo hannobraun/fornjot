@@ -50,13 +50,13 @@ fn model() -> TriMesh {
             .line_to([1., 0.])
             .line_to([1., 1.])
             .line_to([0., 1.])
-            .line_to_with(
+            .line_to_at(
                 Line {
                     end: Point::from([0., 0.]),
                 },
                 left_front_bottom_outer,
             )
-            .line_to_with(
+            .line_to_at(
                 Line {
                     end: Point::from([0.25, 0.25]),
                 },
@@ -71,7 +71,7 @@ fn model() -> TriMesh {
                 tolerance,
                 left_front_bottom_inner,
             )
-            .line_to_with(
+            .line_to_at(
                 Line {
                     end: Point::from([0., 0.]),
                 },
