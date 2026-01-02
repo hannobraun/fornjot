@@ -48,24 +48,21 @@ impl Sketch {
     }
 
     fn arc_to_inner(
-        mut self,
+        self,
         destination: impl Into<Point<2>>,
         radius: Scalar,
         tolerance: Scalar,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
         let end = destination.into();
-
-        self.segments.push(SketchSegment {
-            curve: Box::new(Arc {
+        self.add_segment(
+            Arc {
                 end,
                 radius,
                 tolerance,
-            }),
+            },
             attachment,
-        });
-
-        self
+        )
     }
 
     pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
@@ -83,14 +80,21 @@ impl Sketch {
     }
 
     fn line_to_inner(
-        mut self,
+        self,
         destination: impl Into<Point<2>>,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
         let end = destination.into();
+        self.add_segment(Line { end }, attachment)
+    }
 
+    fn add_segment(
+        mut self,
+        curve: impl Curve + 'static,
+        attachment: Option<SketchSegmentAttachment>,
+    ) -> Self {
         self.segments.push(SketchSegment {
-            curve: Box::new(Line { end }),
+            curve: Box::new(curve),
             attachment,
         });
 
