@@ -13,6 +13,7 @@ use crate::{
 
 pub struct Sketch {
     start: Point<2>,
+    current: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
@@ -22,6 +23,7 @@ impl Sketch {
 
         Self {
             start,
+            current: start,
             segments: Vec::new(),
         }
     }
@@ -32,11 +34,12 @@ impl Sketch {
         radius: Scalar,
         tolerance: Scalar,
     ) -> Self {
-        let arc = Arc {
-            end: destination.into(),
+        let arc = Arc::from_start_and_end(
+            self.current,
+            destination,
             radius,
             tolerance,
-        };
+        );
         let attachment = None;
         self.add_segment(arc, attachment)
     }
@@ -48,11 +51,12 @@ impl Sketch {
         tolerance: Scalar,
         vertex: Index<Vertex>,
     ) -> Self {
-        let arc = Arc {
-            end: destination.into(),
+        let arc = Arc::from_start_and_end(
+            self.current,
+            destination,
             radius,
             tolerance,
-        };
+        );
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
         self.add_segment(arc, attachment)
     }
@@ -86,6 +90,8 @@ impl Sketch {
         curve: impl Curve + 'static,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
+        self.current = curve.end();
+
         self.segments.push(SketchSegment {
             curve: Box::new(curve),
             attachment,

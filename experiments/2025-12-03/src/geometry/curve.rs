@@ -12,6 +12,23 @@ pub struct Arc {
     pub tolerance: Scalar,
 }
 
+impl Arc {
+    pub fn from_start_and_end(
+        start: impl Into<Point<2>>,
+        end: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+        tolerance: impl Into<Scalar>,
+    ) -> Self {
+        let _ = start;
+
+        Self {
+            end: end.into(),
+            radius: radius.into(),
+            tolerance: tolerance.into(),
+        }
+    }
+}
+
 impl Curve for Arc {
     fn end(&self) -> Point<2> {
         self.end
