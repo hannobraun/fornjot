@@ -62,13 +62,11 @@ impl Sketch {
     }
 
     pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
+        let line = Line {
+            end: destination.into(),
+        };
         let attachment = None;
-        self.add_segment(
-            Line {
-                end: destination.into(),
-            },
-            attachment,
-        )
+        self.add_segment(line, attachment)
     }
 
     pub fn line_to_at(
