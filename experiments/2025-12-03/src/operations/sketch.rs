@@ -85,10 +85,10 @@ impl Sketch {
         destination: impl Into<Point<2>>,
         attachment: Option<SketchSegmentAttachment>,
     ) -> Self {
+        let end = destination.into();
+
         self.segments.push(SketchSegment {
-            curve: Box::new(Line {
-                end: destination.into(),
-            }),
+            curve: Box::new(Line { end }),
             attachment,
         });
 
