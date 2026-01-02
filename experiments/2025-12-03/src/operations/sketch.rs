@@ -74,13 +74,11 @@ impl Sketch {
         destination: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Self {
+        let line = Line {
+            end: destination.into(),
+        };
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_segment(
-            Line {
-                end: destination.into(),
-            },
-            attachment,
-        )
+        self.add_segment(line, attachment)
     }
 
     fn add_segment(
