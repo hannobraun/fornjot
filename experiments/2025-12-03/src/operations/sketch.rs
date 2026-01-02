@@ -33,6 +33,15 @@ impl Sketch {
         self
     }
 
+    pub fn add_arc_to(mut self, arc: Arc, vertex: Index<Vertex>) -> Self {
+        self.segments.push(SketchSegment {
+            curve: Box::new(arc),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+        });
+
+        self
+    }
+
     pub fn add_line(mut self, line: Line) -> Self {
         self.segments.push(SketchSegment {
             curve: Box::new(line),
@@ -42,13 +51,9 @@ impl Sketch {
         self
     }
 
-    pub fn add_segment_to(
-        mut self,
-        curve: impl Curve + 'static,
-        vertex: Index<Vertex>,
-    ) -> Self {
+    pub fn add_line_to(mut self, line: Line, vertex: Index<Vertex>) -> Self {
         self.segments.push(SketchSegment {
-            curve: Box::new(curve),
+            curve: Box::new(line),
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 

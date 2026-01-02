@@ -59,13 +59,13 @@ fn model() -> TriMesh {
             .add_line(Line {
                 end: Point::from([0., 1.]),
             })
-            .add_segment_to(
+            .add_line_to(
                 Line {
                     end: Point::from([0., 0.]),
                 },
                 left_front_bottom_outer,
             )
-            .add_segment_to(
+            .add_line_to(
                 Line {
                     end: Point::from([0.25, 0.25]),
                 },
@@ -86,7 +86,7 @@ fn model() -> TriMesh {
                 radius,
                 tolerance,
             })
-            .add_segment_to(
+            .add_arc_to(
                 Arc {
                     end: Point::from([0.25, 0.25]),
                     radius,
@@ -94,7 +94,7 @@ fn model() -> TriMesh {
                 },
                 left_front_bottom_inner,
             )
-            .add_segment_to(
+            .add_line_to(
                 Line {
                     end: Point::from([0., 0.]),
                 },
