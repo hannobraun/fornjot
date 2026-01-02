@@ -112,6 +112,17 @@ pub struct Line {
     pub end: Point<2>,
 }
 
+impl Line {
+    pub fn from_start_and_end(
+        start: impl Into<Point<2>>,
+        end: impl Into<Point<2>>,
+    ) -> Self {
+        let _ = start;
+
+        Self { end: end.into() }
+    }
+}
+
 impl Curve for Line {
     fn end(&self) -> Point<2> {
         self.end

@@ -62,9 +62,7 @@ impl Sketch {
     }
 
     pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
-        let line = Line {
-            end: destination.into(),
-        };
+        let line = Line::from_start_and_end(self.current, destination);
         let attachment = None;
         self.add_segment(line, attachment)
     }
@@ -74,9 +72,7 @@ impl Sketch {
         destination: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Self {
-        let line = Line {
-            end: destination.into(),
-        };
+        let line = Line::from_start_and_end(self.current, destination);
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
         self.add_segment(line, attachment)
     }
