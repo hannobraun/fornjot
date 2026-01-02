@@ -48,9 +48,8 @@ impl Sketch {
         tolerance: Scalar,
         vertex: Index<Vertex>,
     ) -> Self {
-        let end = destination.into();
         let arc = Arc {
-            end,
+            end: destination.into(),
             radius,
             tolerance,
         };
