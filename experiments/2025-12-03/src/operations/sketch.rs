@@ -32,14 +32,13 @@ impl Sketch {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
-        let attachment = None;
         self.segments.push(SketchSegment {
             geometry: SketchSegmentGeometry::Arc {
                 destination: destination.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
-            attachment,
+            attachment: None,
         });
 
         self
