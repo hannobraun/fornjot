@@ -165,7 +165,10 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve(self) -> SketchSegmentAndCurve {
+    pub fn with_curve(self, origin: Point<2>) -> SketchSegmentAndCurve {
+        // TASK: Remove.
+        let _ = origin;
+
         let curve: Box<dyn Curve> = match self.geometry {
             SketchSegmentGeometry::Arc {
                 destination,
