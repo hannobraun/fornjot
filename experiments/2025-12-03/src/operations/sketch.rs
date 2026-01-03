@@ -13,7 +13,6 @@ use crate::{
 
 pub struct Sketch {
     start: Point<2>,
-    current: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
@@ -23,69 +22,71 @@ impl Sketch {
 
         Self {
             start,
-            current: start,
             segments: Vec::new(),
         }
     }
 
     pub fn arc_to(
-        self,
+        mut self,
         destination: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
-        let arc = Arc::from_start_and_end(
-            self.current,
-            destination,
-            radius,
-            tolerance,
-        );
         let attachment = None;
-        self.add_segment(arc, attachment)
+        self.segments.push(SketchSegment {
+            geometry: SketchSegmentGeometry::Arc {
+                destination: destination.into(),
+                radius: radius.into(),
+                tolerance: tolerance.into(),
+            },
+            attachment,
+        });
+
+        self
     }
 
     pub fn arc_to_at(
-        self,
+        mut self,
         destination: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
         vertex: Index<Vertex>,
     ) -> Self {
-        let arc = Arc::from_start_and_end(
-            self.current,
-            destination,
-            radius,
-            tolerance,
-        );
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_segment(arc, attachment)
+        self.segments.push(SketchSegment {
+            geometry: SketchSegmentGeometry::Arc {
+                destination: destination.into(),
+                radius: radius.into(),
+                tolerance: tolerance.into(),
+            },
+            attachment,
+        });
+
+        self
     }
 
-    pub fn line_to(self, destination: impl Into<Point<2>>) -> Self {
-        let line = Line::from_start_and_end(self.current, destination);
+    pub fn line_to(mut self, destination: impl Into<Point<2>>) -> Self {
         let attachment = None;
-        self.add_segment(line, attachment)
+        self.segments.push(SketchSegment {
+            geometry: SketchSegmentGeometry::Line {
+                destination: destination.into(),
+            },
+            attachment,
+        });
+
+        self
     }
 
     pub fn line_to_at(
-        self,
+        mut self,
         destination: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Self {
-        let line = Line::from_start_and_end(self.current, destination);
         let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
-        self.add_segment(line, attachment)
-    }
-
-    fn add_segment(
-        mut self,
-        curve: impl Curve + 'static,
-        attachment: Option<SketchSegmentAttachment>,
-    ) -> Self {
-        self.current = curve.end();
-
         self.segments.push(SketchSegment {
-            curve: Box::new(curve),
+            geometry: SketchSegmentGeometry::Line {
+                destination: destination.into(),
+            },
             attachment,
         });
 
@@ -123,8 +124,13 @@ impl Sketch {
                     vertices,
                 );
 
+            let destination = match current.geometry {
+                SketchSegmentGeometry::Arc { destination, .. } => destination,
+                SketchSegmentGeometry::Line { destination } => destination,
+            };
+
             positions_and_half_edges_and_approx.push((
-                current.curve.end(),
+                destination,
                 half_edge,
                 approx,
             ));
@@ -156,13 +162,26 @@ impl Sketch {
 }
 
 struct SketchSegment {
-    pub curve: Box<dyn Curve>,
+    pub geometry: SketchSegmentGeometry,
     pub attachment: Option<SketchSegmentAttachment>,
 }
 
 impl SketchSegment {
     pub fn with_curve<'r>(&'r self) -> SketchSegmentAndCurve<'r> {
-        let curve = self.curve.as_ref();
+        let curve: Box<dyn Curve> = match self.geometry {
+            SketchSegmentGeometry::Arc {
+                destination,
+                radius,
+                tolerance,
+            } => Box::new(Arc {
+                end: destination,
+                radius,
+                tolerance,
+            }),
+            SketchSegmentGeometry::Line { destination } => {
+                Box::new(Line { end: destination })
+            }
+        };
 
         SketchSegmentAndCurve {
             segment: self,
@@ -190,6 +209,17 @@ impl SketchSegment {
     }
 }
 
+enum SketchSegmentGeometry {
+    Arc {
+        destination: Point<2>,
+        radius: Scalar,
+        tolerance: Scalar,
+    },
+    Line {
+        destination: Point<2>,
+    },
+}
+
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
@@ -198,7 +228,7 @@ enum SketchSegmentAttachment {
 
 struct SketchSegmentAndCurve<'r> {
     segment: &'r SketchSegment,
-    curve: &'r dyn Curve,
+    curve: Box<dyn Curve>,
 }
 
 impl SketchSegmentAndCurve<'_> {
