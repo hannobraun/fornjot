@@ -113,7 +113,7 @@ impl Sketch {
 
             let (half_edge, approx) =
                 current.with_curve().to_half_edge_and_approx(
-                    prev.with_curve(),
+                    &prev.with_curve(),
                     next.with_curve(),
                     &surface,
                     half_edges,
@@ -232,7 +232,7 @@ struct SketchSegmentAndCurve {
 impl SketchSegmentAndCurve {
     pub fn to_half_edge_and_approx(
         &self,
-        prev: SketchSegmentAndCurve,
+        prev: &SketchSegmentAndCurve,
         next: SketchSegmentAndCurve,
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
