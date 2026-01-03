@@ -119,7 +119,7 @@ impl Sketch {
             );
 
             positions_and_half_edges_and_approx.push((
-                current.curve.end(),
+                current.curve().end(),
                 half_edge,
                 approx,
             ));
@@ -156,6 +156,10 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
+    pub fn curve(&self) -> &dyn Curve {
+        self.curve.as_ref()
+    }
+
     pub fn to_half_edge_and_approx(
         &self,
         prev: &SketchSegment,
@@ -164,7 +168,7 @@ impl SketchSegment {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.curve.approx(prev.curve.end());
+        let approx = self.curve().approx(prev.curve().end());
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
@@ -181,7 +185,7 @@ impl SketchSegment {
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next.to_start_vertex(
-                    self.curve.end(),
+                    self.curve().end(),
                     surface,
                     half_edges,
                     vertices,
@@ -235,7 +239,7 @@ impl SketchSegment {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.curve.end());
+                let point = surface.local_to_global(self.curve().end());
                 vertices.push(Vertex { point })
             }
         }
