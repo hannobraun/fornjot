@@ -114,13 +114,14 @@ impl Sketch {
             let prev = &self.segments[prev_i];
             let next = &self.segments[next_i];
 
-            let (half_edge, approx) = current.to_half_edge_and_approx(
-                prev.with_curve(),
-                next.with_curve(),
-                &surface,
-                half_edges,
-                vertices,
-            );
+            let (half_edge, approx) =
+                current.with_curve().to_half_edge_and_approx(
+                    prev.with_curve(),
+                    next.with_curve(),
+                    &surface,
+                    half_edges,
+                    vertices,
+                );
 
             positions_and_half_edges_and_approx.push((
                 current.curve.end(),
@@ -167,55 +168,6 @@ impl SketchSegment {
             segment: self,
             curve,
         }
-    }
-
-    pub fn to_half_edge_and_approx(
-        &self,
-        prev: SketchSegmentAndCurve,
-        next: SketchSegmentAndCurve,
-        surface: &Plane,
-        half_edges: &mut Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
-    ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.curve.approx(prev.curve.end());
-
-        let boundary = match self.attachment {
-            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                // We just assume that the approximation of the sketch segment
-                // and the existing approximation of the half-edge match. We
-                // should make sure by checking it here.
-                return (half_edge, approx);
-            }
-            Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 =
-                    prev.segment.to_end_vertex(surface, half_edges, vertices);
-
-                [v0, v1]
-            }
-            None => {
-                let v0 =
-                    prev.segment.to_end_vertex(surface, half_edges, vertices);
-                let v1 = next.segment.to_start_vertex(
-                    self.curve.end(),
-                    surface,
-                    half_edges,
-                    vertices,
-                );
-
-                [v0, v1]
-            }
-        };
-
-        let half_edge = half_edges.push(HalfEdge {
-            boundary,
-            approx: approx
-                .iter()
-                .copied()
-                .map(|local| surface.local_to_global(local))
-                .collect(),
-        });
-
-        (half_edge, approx)
     }
 
     pub fn to_start_vertex(
@@ -266,4 +218,55 @@ enum SketchSegmentAttachment {
 struct SketchSegmentAndCurve<'r> {
     segment: &'r SketchSegment,
     curve: &'r dyn Curve,
+}
+
+impl SketchSegmentAndCurve<'_> {
+    pub fn to_half_edge_and_approx(
+        &self,
+        prev: SketchSegmentAndCurve,
+        next: SketchSegmentAndCurve,
+        surface: &Plane,
+        half_edges: &mut Store<HalfEdge>,
+        vertices: &mut Store<Vertex>,
+    ) -> (Index<HalfEdge>, Vec<Point<2>>) {
+        let approx = self.curve.approx(prev.curve.end());
+
+        let boundary = match self.segment.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                // We just assume that the approximation of the sketch segment
+                // and the existing approximation of the half-edge match. We
+                // should make sure by checking it here.
+                return (half_edge, approx);
+            }
+            Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
+
+                [v0, v1]
+            }
+            None => {
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
+                let v1 = next.segment.to_start_vertex(
+                    self.curve.end(),
+                    surface,
+                    half_edges,
+                    vertices,
+                );
+
+                [v0, v1]
+            }
+        };
+
+        let half_edge = half_edges.push(HalfEdge {
+            boundary,
+            approx: approx
+                .iter()
+                .copied()
+                .map(|local| surface.local_to_global(local))
+                .collect(),
+        });
+
+        (half_edge, approx)
+    }
 }
