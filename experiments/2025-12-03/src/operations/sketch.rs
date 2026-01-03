@@ -161,9 +161,11 @@ struct SketchSegment {
 
 impl SketchSegment {
     pub fn with_curve<'r>(&'r self) -> SketchSegmentAndCurve<'r> {
+        let curve = self.curve.as_ref();
+
         SketchSegmentAndCurve {
             segment: self,
-            curve: self.curve.as_ref(),
+            curve,
         }
     }
 
