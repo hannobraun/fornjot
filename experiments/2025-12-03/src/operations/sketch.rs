@@ -115,7 +115,17 @@ impl Sketch {
             let next = &self.segments[next_i];
 
             let (half_edge, approx) = current.to_half_edge_and_approx(
-                prev, next, &surface, half_edges, vertices,
+                SketchSegmentAndCurve {
+                    segment: prev,
+                    curve: prev.curve.as_ref(),
+                },
+                SketchSegmentAndCurve {
+                    segment: next,
+                    curve: next.curve.as_ref(),
+                },
+                &surface,
+                half_edges,
+                vertices,
             );
 
             positions_and_half_edges_and_approx.push((
@@ -162,13 +172,13 @@ impl SketchSegment {
 
     pub fn to_half_edge_and_approx(
         &self,
-        prev: &SketchSegment,
-        next: &SketchSegment,
+        prev: SketchSegmentAndCurve,
+        next: SketchSegmentAndCurve,
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.curve().approx(prev.curve().end());
+        let approx = self.curve().approx(prev.curve.end());
 
         let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
@@ -178,13 +188,15 @@ impl SketchSegment {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
 
                 [v0, v1]
             }
             None => {
-                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
-                let v1 = next.to_start_vertex(
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
+                let v1 = next.segment.to_start_vertex(
                     self.curve().end(),
                     surface,
                     half_edges,
@@ -250,4 +262,9 @@ impl SketchSegment {
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
     Vertex { vertex: Index<Vertex> },
+}
+
+struct SketchSegmentAndCurve<'r> {
+    segment: &'r SketchSegment,
+    curve: &'r dyn Curve,
 }
