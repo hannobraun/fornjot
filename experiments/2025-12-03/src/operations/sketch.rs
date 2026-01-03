@@ -79,12 +79,11 @@ impl Sketch {
         destination: impl Into<Point<2>>,
         vertex: Index<Vertex>,
     ) -> Self {
-        let attachment = Some(SketchSegmentAttachment::Vertex { vertex });
         self.segments.push(SketchSegment {
             geometry: SketchSegmentGeometry::Line {
                 destination: destination.into(),
             },
-            attachment,
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
         self
