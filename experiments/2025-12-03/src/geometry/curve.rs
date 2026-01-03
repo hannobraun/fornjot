@@ -1,7 +1,16 @@
 use fj_math::{Circle, Point, Scalar, Vector};
 
+// TASK: The use of `end` here is somewhat confused. It seems to be an absolute
+//       point, and yet we have no start point here. All curves should be
+//       relative, and `end` should be a vector.
+// TASK: Make generic over dimensionality.
 pub trait Curve {
     fn end(&self) -> Vector<2>;
+    // TASK: Once curves are relative, rename this to something that makes more
+    //       sense.
+    fn end(&self) -> Point<2>;
+    // TASK: If curves were truly relative, we could return a `Vec<Vector<2>`
+    //       here and not require `start`.
     fn approx(&self, start: Point<2>) -> Vec<Point<2>>;
 }
 

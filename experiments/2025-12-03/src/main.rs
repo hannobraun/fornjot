@@ -71,6 +71,7 @@ fn model() -> TriMesh {
             )
     };
 
+    // TASK: Sweep along a curve.
     let cube = sweep::face_to_solid(
         bottom,
         [0., 0., 1.],
