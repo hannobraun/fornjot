@@ -90,7 +90,7 @@ impl Sketch {
     }
 
     pub fn into_face(
-        mut self,
+        self,
         surface: Plane,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
@@ -101,26 +101,27 @@ impl Sketch {
             panic!("Empty sketches are not supported at this point.");
         };
 
+        let mut segments_with_curves = self
+            .segments
+            .iter()
+            .map(|segment| segment.with_curve())
+            .collect::<Vec<_>>();
+
         let mut positions_and_half_edges_and_approx = Vec::new();
 
         for i in 0..=last_segment_index {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
             let next_i = if i == last_segment_index { 0 } else { i + 1 };
 
-            let current = &self.segments[i];
-            let prev = &self.segments[prev_i];
-            let next = &self.segments[next_i];
+            let current = &segments_with_curves[i];
+            let prev = &segments_with_curves[prev_i];
+            let next = &segments_with_curves[next_i];
 
-            let (half_edge, approx) =
-                current.with_curve().to_half_edge_and_approx(
-                    &prev.with_curve(),
-                    &next.with_curve(),
-                    &surface,
-                    half_edges,
-                    vertices,
-                );
+            let (half_edge, approx) = current.to_half_edge_and_approx(
+                prev, next, &surface, half_edges, vertices,
+            );
 
-            let destination = match current.geometry {
+            let destination = match current.segment.geometry {
                 SketchSegmentGeometry::Arc { destination, .. } => destination,
                 SketchSegmentGeometry::Line { destination } => destination,
             };
@@ -130,7 +131,7 @@ impl Sketch {
                 half_edge,
                 approx,
             ));
-            self.segments[i].attachment =
+            segments_with_curves[i].segment.attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
