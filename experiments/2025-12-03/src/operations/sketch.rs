@@ -164,7 +164,7 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve<'r>(&'r self) -> SketchSegmentAndCurve<'r> {
+    pub fn with_curve(self) -> SketchSegmentAndCurve {
         let curve: Box<dyn Curve> = match self.geometry {
             SketchSegmentGeometry::Arc {
                 destination,
@@ -224,12 +224,12 @@ enum SketchSegmentAttachment {
     Vertex { vertex: Index<Vertex> },
 }
 
-struct SketchSegmentAndCurve<'r> {
-    segment: &'r SketchSegment,
+struct SketchSegmentAndCurve {
+    segment: SketchSegment,
     curve: Box<dyn Curve>,
 }
 
-impl SketchSegmentAndCurve<'_> {
+impl SketchSegmentAndCurve {
     pub fn to_half_edge_and_approx(
         &self,
         prev: SketchSegmentAndCurve,
