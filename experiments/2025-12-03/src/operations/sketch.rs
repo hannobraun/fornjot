@@ -157,6 +157,7 @@ impl Sketch {
     }
 }
 
+#[derive(Clone, Copy)]
 struct SketchSegment {
     pub geometry: SketchSegmentGeometry,
     pub attachment: Option<SketchSegmentAttachment>,
@@ -186,7 +187,7 @@ impl SketchSegment {
     }
 
     pub fn to_start_vertex(
-        &self,
+        self,
         position: Point<2>,
         surface: &Plane,
         half_edges: &Store<HalfEdge>,
@@ -205,6 +206,7 @@ impl SketchSegment {
     }
 }
 
+#[derive(Clone, Copy)]
 enum SketchSegmentGeometry {
     Arc {
         destination: Point<2>,
