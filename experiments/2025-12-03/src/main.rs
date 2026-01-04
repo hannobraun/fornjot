@@ -52,9 +52,9 @@ fn model() -> TriMesh {
             .line_to([0., 1.])
             .line_to_at([0., 0.], left_front_bottom_outer)
             .line_to_at([0.25, 0.25], left_front_bottom_inner)
-            .arc_to([0.25, 0.75], radius, tolerance)
-            .arc_to([0.75, 0.75], radius, tolerance)
-            .arc_to([0.75, 0.25], radius, tolerance)
+            .arc_to(radius, tolerance, [0.25, 0.75])
+            .arc_to(radius, tolerance, [0.75, 0.75])
+            .arc_to(radius, tolerance, [0.75, 0.25])
             .arc_to_at([0.25, 0.25], radius, tolerance, left_front_bottom_inner)
             .line_to_at([0., 0.], left_front_bottom_outer)
             .into_face(

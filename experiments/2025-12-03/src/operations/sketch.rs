@@ -28,9 +28,9 @@ impl Sketch {
 
     pub fn arc_to(
         mut self,
-        to: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
+        to: impl Into<Point<2>>,
     ) -> Self {
         self.segments.push(SketchSegment {
             to: to.into(),
