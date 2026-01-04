@@ -119,10 +119,8 @@ impl Sketch {
                 prev, next, &surface, half_edges, vertices,
             );
 
-            let destination = current.segment.destination;
-
             positions_and_half_edges_and_approx.push((
-                destination,
+                current.segment.destination,
                 half_edge,
                 approx,
             ));
