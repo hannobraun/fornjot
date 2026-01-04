@@ -28,12 +28,12 @@ impl Sketch {
 
     pub fn arc_to(
         mut self,
-        destination: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            to: destination.into(),
+            to: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
