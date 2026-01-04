@@ -49,7 +49,7 @@ impl Sketch {
         to: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
-        vertex: Index<Vertex>,
+        at: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
             to: to.into(),
@@ -57,7 +57,7 @@ impl Sketch {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex: at }),
         });
 
         self
