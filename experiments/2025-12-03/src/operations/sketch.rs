@@ -76,12 +76,12 @@ impl Sketch {
     pub fn line_to_at(
         mut self,
         to: impl Into<Point<2>>,
-        vertex: Index<Vertex>,
+        at: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
             to: to.into(),
             geometry: SketchSegmentGeometry::Line,
-            attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
+            attachment: Some(SketchSegmentAttachment::Vertex { vertex: at }),
         });
 
         self
