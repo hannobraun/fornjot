@@ -46,13 +46,13 @@ impl Sketch {
 
     pub fn arc_to_at(
         mut self,
-        destination: impl Into<Point<2>>,
+        to: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            to: destination.into(),
+            to: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
