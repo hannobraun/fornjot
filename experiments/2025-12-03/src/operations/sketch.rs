@@ -33,8 +33,8 @@ impl Sketch {
         tolerance: impl Into<Scalar>,
     ) -> Self {
         self.segments.push(SketchSegment {
+            destination: destination.into(),
             geometry: SketchSegmentGeometry::Arc {
-                destination: destination.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
@@ -52,8 +52,8 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
+            destination: destination.into(),
             geometry: SketchSegmentGeometry::Arc {
-                destination: destination.into(),
                 radius: radius.into(),
                 tolerance: tolerance.into(),
             },
@@ -65,9 +65,8 @@ impl Sketch {
 
     pub fn line_to(mut self, destination: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
-            geometry: SketchSegmentGeometry::Line {
-                destination: destination.into(),
-            },
+            destination: destination.into(),
+            geometry: SketchSegmentGeometry::Line,
             attachment: None,
         });
 
@@ -80,9 +79,8 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            geometry: SketchSegmentGeometry::Line {
-                destination: destination.into(),
-            },
+            destination: destination.into(),
+            geometry: SketchSegmentGeometry::Line,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
 
@@ -121,10 +119,7 @@ impl Sketch {
                 prev, next, &surface, half_edges, vertices,
             );
 
-            let destination = match current.segment.geometry {
-                SketchSegmentGeometry::Arc { destination, .. } => destination,
-                SketchSegmentGeometry::Line { destination } => destination,
-            };
+            let destination = current.segment.destination;
 
             positions_and_half_edges_and_approx.push((
                 destination,
@@ -160,6 +155,7 @@ impl Sketch {
 
 #[derive(Clone, Copy)]
 struct SketchSegment {
+    pub destination: Point<2>,
     pub geometry: SketchSegmentGeometry,
     pub attachment: Option<SketchSegmentAttachment>,
 }
@@ -167,18 +163,14 @@ struct SketchSegment {
 impl SketchSegment {
     pub fn with_curve(self) -> SketchSegmentAndCurve {
         let curve: Box<dyn Curve> = match self.geometry {
-            SketchSegmentGeometry::Arc {
-                destination,
-                radius,
-                tolerance,
-            } => Box::new(Arc {
-                end: destination,
+            SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(Arc {
+                end: self.destination,
                 radius,
                 tolerance,
             }),
-            SketchSegmentGeometry::Line { destination } => {
-                Box::new(Line { end: destination })
-            }
+            SketchSegmentGeometry::Line => Box::new(Line {
+                end: self.destination,
+            }),
         };
 
         SketchSegmentAndCurve {
@@ -209,14 +201,8 @@ impl SketchSegment {
 
 #[derive(Clone, Copy)]
 enum SketchSegmentGeometry {
-    Arc {
-        destination: Point<2>,
-        radius: Scalar,
-        tolerance: Scalar,
-    },
-    Line {
-        destination: Point<2>,
-    },
+    Arc { radius: Scalar, tolerance: Scalar },
+    Line,
 }
 
 #[derive(Clone, Copy, Debug)]
