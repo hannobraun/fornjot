@@ -96,7 +96,7 @@ impl Sketch {
     ) -> Index<Face> {
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
-            panic!("Empty sketches are not supported at this point.");
+            panic!("Empty sketches are not supported yet.");
         };
 
         let mut segments_with_curves = self
