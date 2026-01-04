@@ -46,9 +46,9 @@ impl Sketch {
 
     pub fn arc_to_at(
         mut self,
-        to: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
+        to: impl Into<Point<2>>,
         at: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
