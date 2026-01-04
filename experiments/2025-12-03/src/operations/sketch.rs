@@ -33,7 +33,7 @@ impl Sketch {
         tolerance: impl Into<Scalar>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            destination: destination.into(),
+            to: destination.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
@@ -52,7 +52,7 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            destination: destination.into(),
+            to: destination.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
@@ -65,7 +65,7 @@ impl Sketch {
 
     pub fn line_to(mut self, destination: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
-            destination: destination.into(),
+            to: destination.into(),
             geometry: SketchSegmentGeometry::Line,
             attachment: None,
         });
@@ -79,7 +79,7 @@ impl Sketch {
         vertex: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            destination: destination.into(),
+            to: destination.into(),
             geometry: SketchSegmentGeometry::Line,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex }),
         });
@@ -120,7 +120,7 @@ impl Sketch {
             );
 
             positions_and_half_edges_and_approx.push((
-                current.segment.destination,
+                current.segment.to,
                 half_edge,
                 approx,
             ));
@@ -153,7 +153,7 @@ impl Sketch {
 
 #[derive(Clone, Copy)]
 struct SketchSegment {
-    pub destination: Point<2>,
+    pub to: Point<2>,
     pub geometry: SketchSegmentGeometry,
     pub attachment: Option<SketchSegmentAttachment>,
 }
@@ -162,13 +162,11 @@ impl SketchSegment {
     pub fn with_curve(self) -> SketchSegmentAndCurve {
         let curve: Box<dyn Curve> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(Arc {
-                end: self.destination,
+                end: self.to,
                 radius,
                 tolerance,
             }),
-            SketchSegmentGeometry::Line => Box::new(Line {
-                end: self.destination,
-            }),
+            SketchSegmentGeometry::Line => Box::new(Line { end: self.to }),
         };
 
         SketchSegmentAndCurve {
