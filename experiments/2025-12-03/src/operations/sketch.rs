@@ -166,7 +166,7 @@ impl SketchSegment {
 
         let curve: Box<dyn Curve> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(Arc {
-                end,
+                to: end,
                 radius,
                 tolerance,
             }),
