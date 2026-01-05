@@ -1,7 +1,6 @@
 use fj_math::{Circle, Point, Scalar, Vector};
 
 pub trait Curve {
-    fn end(&self) -> Point<2>;
     fn approx(&self, start: Point<2>) -> Vec<Point<2>>;
 }
 
@@ -13,10 +12,6 @@ pub struct Arc {
 }
 
 impl Curve for Arc {
-    fn end(&self) -> Point<2> {
-        self.end
-    }
-
     fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
         let start_to_end = self.end - start;
         let midpoint = start + start_to_end * 0.5;
@@ -91,15 +86,9 @@ impl Curve for Arc {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct Line {
-    pub end: Point<2>,
-}
+pub struct Line {}
 
 impl Curve for Line {
-    fn end(&self) -> Point<2> {
-        self.end
-    }
-
     fn approx(&self, _: Point<2>) -> Vec<Point<2>> {
         Vec::new()
     }

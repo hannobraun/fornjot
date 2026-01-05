@@ -171,7 +171,7 @@ impl SketchSegment {
                 radius,
                 tolerance,
             }),
-            SketchSegmentGeometry::Line => Box::new(Line { end }),
+            SketchSegmentGeometry::Line => Box::new(Line {}),
         };
 
         SketchSegmentAndCurve {
@@ -226,7 +226,7 @@ impl SketchSegmentAndCurve {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.curve.approx(prev.curve.end());
+        let approx = self.curve.approx(prev.segment.to);
 
         let boundary = match self.segment.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
