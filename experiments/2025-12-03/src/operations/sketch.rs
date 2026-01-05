@@ -236,10 +236,7 @@ impl SketchSegmentAndCurve {
                 [v0, v1]
             }
             None => {
-                let v0 = prev
-                    .segment
-                    .with_curve()
-                    .to_end_vertex(surface, half_edges, vertices);
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next.segment.to_start_vertex(
                     self.curve.end(),
                     surface,
