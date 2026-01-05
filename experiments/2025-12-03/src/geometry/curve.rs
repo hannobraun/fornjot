@@ -6,14 +6,14 @@ pub trait Curve {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Arc {
-    pub end: Point<2>,
+    pub end: Vector<2>,
     pub radius: Scalar,
     pub tolerance: Scalar,
 }
 
 impl Curve for Arc {
     fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let start_to_end = self.end - start;
+        let start_to_end = self.end;
         let midpoint = start + start_to_end * 0.5;
 
         let midpoint_towards_center =
@@ -70,7 +70,7 @@ impl Curve for Arc {
         let increment =
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
-        let end = circle.point_to_circle_coords(self.end);
+        let end = circle.point_to_circle_coords(start + self.end);
         let start = circle.point_to_circle_coords(start);
 
         let mut approx = Vec::new();
