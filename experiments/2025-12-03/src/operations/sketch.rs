@@ -99,11 +99,11 @@ impl Sketch {
             panic!("Empty sketches are not supported yet.");
         };
 
-        let mut segments_with_curves = self
-            .segments
-            .iter()
-            .map(|segment| segment.with_curve())
-            .collect::<Vec<_>>();
+        let mut segments_with_curves = Vec::new();
+
+        for segment in &self.segments {
+            segments_with_curves.push(segment.with_curve());
+        }
 
         let mut positions_and_half_edges_and_approx = Vec::new();
 
