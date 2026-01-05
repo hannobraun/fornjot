@@ -163,14 +163,15 @@ struct SketchSegment {
 impl SketchSegment {
     pub fn with_curve(self, from: Point<2>) -> SketchSegmentAndCurve {
         let _ = from;
+        let end = self.to;
 
         let curve: Box<dyn Curve> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(Arc {
-                end: self.to,
+                end,
                 radius,
                 tolerance,
             }),
-            SketchSegmentGeometry::Line => Box::new(Line { end: self.to }),
+            SketchSegmentGeometry::Line => Box::new(Line { end }),
         };
 
         SketchSegmentAndCurve {
