@@ -12,8 +12,8 @@ pub struct Arc {
 }
 
 impl Curve for Arc {
-    fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let midpoint = start + self.to * 0.5;
+    fn approx(&self, from: Point<2>) -> Vec<Point<2>> {
+        let midpoint = from + self.to * 0.5;
 
         let midpoint_towards_center = self.to.to_perpendicular().normalize()
             * self.radius.sign().to_scalar();
@@ -37,7 +37,7 @@ impl Curve for Arc {
                 panic!(
                     "Radius of arc (`{radius}`) is too small: Must be \
                     at least half the distance between start \
-                    (`{start:?}`) and end (`{to:?}`) points, or the \
+                    (`{from:?}`) and end (`{to:?}`) points, or the \
                     arc is not possible.",
                     radius = self.radius,
                     to = self.to,
@@ -53,7 +53,7 @@ impl Curve for Arc {
         // This only works if `surface` is a plane, which checks out for
         // now.
         let circle = {
-            let a = start;
+            let a = from;
             let b = center + (a - center).to_perpendicular();
 
             Circle::new(center, a - center, b - center)
@@ -68,8 +68,8 @@ impl Curve for Arc {
         let increment =
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
-        let end = circle.point_to_circle_coords(start + self.to);
-        let start = circle.point_to_circle_coords(start);
+        let end = circle.point_to_circle_coords(from + self.to);
+        let start = circle.point_to_circle_coords(from);
 
         let mut approx = Vec::new();
 
