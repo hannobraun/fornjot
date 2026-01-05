@@ -278,7 +278,7 @@ impl SketchSegmentAndCurve {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.curve.end());
+                let point = surface.local_to_global(self.segment.to);
                 vertices.push(Vertex { point })
             }
         }
