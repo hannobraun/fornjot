@@ -231,10 +231,7 @@ impl SketchSegmentAndCurve {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 = prev
-                    .segment
-                    .with_curve()
-                    .to_end_vertex(surface, half_edges, vertices);
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
 
                 [v0, v1]
             }
