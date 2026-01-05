@@ -13,12 +13,10 @@ pub struct Arc {
 
 impl Curve for Arc {
     fn approx(&self, start: Point<2>) -> Vec<Point<2>> {
-        let start_to_end = self.end;
-        let midpoint = start + start_to_end * 0.5;
+        let midpoint = start + self.end * 0.5;
 
-        let midpoint_towards_center =
-            start_to_end.to_perpendicular().normalize()
-                * self.radius.sign().to_scalar();
+        let midpoint_towards_center = self.end.to_perpendicular().normalize()
+            * self.radius.sign().to_scalar();
 
         let distance_from_midpoint_to_center = {
             // We're computing the required distance from a right
@@ -30,7 +28,7 @@ impl Curve for Arc {
             // - `c` (hypotenuse): `end` to circle center (which is
             //   `radius`)
 
-            let a = start_to_end.magnitude() / 2.;
+            let a = self.end.magnitude() / 2.;
             let c = self.radius;
 
             let b_squared = c * c - a * a;
