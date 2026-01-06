@@ -225,7 +225,12 @@ impl SketchSegmentAndCurve {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self.curve.approx(prev.segment.to);
+        let approx = self
+            .curve
+            .approx(prev.segment.to)
+            .into_iter()
+            .map(|v| prev.segment.to + v)
+            .collect();
 
         let boundary = match self.segment.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
