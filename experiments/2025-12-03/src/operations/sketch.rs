@@ -227,7 +227,7 @@ impl SketchSegmentAndCurve {
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
         let approx = self
             .curve
-            .approx(prev.segment.to)
+            .approx()
             .into_iter()
             .map(|v| prev.segment.to + v)
             .collect();
