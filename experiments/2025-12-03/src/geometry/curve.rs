@@ -87,8 +87,8 @@ impl Curve<2> for Arc {
 #[derive(Clone, Copy, Debug)]
 pub struct Line<const D: usize> {}
 
-impl Curve<2> for Line<2> {
-    fn approx(&self) -> Vec<Vector<2>> {
+impl<const D: usize> Curve<D> for Line<D> {
+    fn approx(&self) -> Vec<Vector<D>> {
         Vec::new()
     }
 }
