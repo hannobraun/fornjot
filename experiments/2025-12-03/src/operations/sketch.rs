@@ -164,7 +164,7 @@ impl SketchSegment {
     pub fn with_curve(self, from: Point<2>) -> SketchSegmentAndCurve {
         let to = self.to - from;
 
-        let curve: Box<dyn Curve> = match self.geometry {
+        let curve: Box<dyn Curve<2>> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(Arc {
                 to,
                 radius,
@@ -213,7 +213,7 @@ enum SketchSegmentAttachment {
 
 struct SketchSegmentAndCurve {
     segment: SketchSegment,
-    curve: Box<dyn Curve>,
+    curve: Box<dyn Curve<2>>,
 }
 
 impl SketchSegmentAndCurve {
