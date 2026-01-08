@@ -14,7 +14,7 @@ pub struct Arc {
 impl Curve<2> for Arc {
     fn approx(&self) -> Vec<Vector<2>> {
         let start = Point::origin();
-        let midpoint = start + self.start_to_end * 0.5;
+        let straight_midpoint = start + self.start_to_end * 0.5;
 
         let midpoint_towards_center =
             self.start_to_end.to_perpendicular().normalize()
@@ -49,7 +49,7 @@ impl Curve<2> for Arc {
             b_squared.sqrt()
         };
 
-        let center = midpoint
+        let center = straight_midpoint
             + midpoint_towards_center * distance_from_midpoint_to_center;
 
         // This only works if `surface` is a plane, which checks out for
