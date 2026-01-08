@@ -13,8 +13,8 @@ pub struct Arc {
 
 impl Curve<2> for Arc {
     fn approx(&self) -> Vec<Vector<2>> {
-        let from = Point::origin();
-        let midpoint = from + self.start_to_end * 0.5;
+        let start = Point::origin();
+        let midpoint = start + self.start_to_end * 0.5;
 
         let midpoint_towards_center =
             self.start_to_end.to_perpendicular().normalize()
@@ -39,7 +39,7 @@ impl Curve<2> for Arc {
                 panic!(
                     "Radius of arc (`{radius}`) is too small: Must be \
                     at least half the distance between start \
-                    (`{from:?}`) and end (`{to:?}`) points, or the \
+                    (`{start:?}`) and end (`{to:?}`) points, or the \
                     arc is not possible.",
                     radius = self.radius,
                     to = self.start_to_end,
@@ -55,7 +55,7 @@ impl Curve<2> for Arc {
         // This only works if `surface` is a plane, which checks out for
         // now.
         let circle = {
-            let a = from;
+            let a = start;
             let b = center + (a - center).to_perpendicular();
 
             Circle::new(center, a - center, b - center)
@@ -70,14 +70,15 @@ impl Curve<2> for Arc {
         let increment =
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
-        let start_local = circle.point_to_circle_coords(from);
-        let end_local = circle.point_to_circle_coords(from + self.start_to_end);
+        let start_local = circle.point_to_circle_coords(start);
+        let end_local =
+            circle.point_to_circle_coords(start + self.start_to_end);
 
         let mut approx = Vec::new();
 
         let mut point = start_local + increment;
         while point < end_local {
-            approx.push(circle.point_from_circle_coords(point) - from);
+            approx.push(circle.point_from_circle_coords(point) - start);
             point += increment;
         }
 
