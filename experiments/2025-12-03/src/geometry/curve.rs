@@ -14,10 +14,11 @@ pub struct Arc {
 impl Curve<2> for Arc {
     fn approx(&self) -> Vec<Vector<2>> {
         let start = Point::origin();
+        let radius = self.radius;
 
         let midpoint_towards_center =
             self.start_to_end.to_perpendicular().normalize()
-                * self.radius.sign().to_scalar();
+                * radius.sign().to_scalar();
 
         let distance_from_midpoint_to_center = {
             // We're computing the required distance from a right
@@ -30,7 +31,7 @@ impl Curve<2> for Arc {
             //   `radius`)
 
             let a = self.start_to_end.magnitude() / 2.;
-            let c = self.radius;
+            let c = radius;
 
             let b_squared = c * c - a * a;
 
@@ -40,7 +41,7 @@ impl Curve<2> for Arc {
                     at least half the distance between start \
                     (`{start:?}`) and end (`{to:?}`) points, or the \
                     arc is not possible.",
-                    radius = self.radius,
+                    radius = radius,
                     to = self.start_to_end,
                 );
             }
