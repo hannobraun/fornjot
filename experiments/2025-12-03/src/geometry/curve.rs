@@ -71,11 +71,11 @@ impl Curve<2> for Arc {
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
         let end = circle.point_to_circle_coords(from + self.start_to_end);
-        let start = circle.point_to_circle_coords(from);
+        let start_local = circle.point_to_circle_coords(from);
 
         let mut approx = Vec::new();
 
-        let mut point = start + increment;
+        let mut point = start_local + increment;
         while point < end {
             approx.push(circle.point_from_circle_coords(point) - from);
             point += increment;
