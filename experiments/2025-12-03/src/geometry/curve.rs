@@ -16,8 +16,9 @@ impl Curve<2> for Arc {
         let from = Point::origin();
         let midpoint = from + self.start_to_end * 0.5;
 
-        let midpoint_towards_center = self.start_to_end.to_perpendicular().normalize()
-            * self.radius.sign().to_scalar();
+        let midpoint_towards_center =
+            self.start_to_end.to_perpendicular().normalize()
+                * self.radius.sign().to_scalar();
 
         let distance_from_midpoint_to_center = {
             // We're computing the required distance from a right
