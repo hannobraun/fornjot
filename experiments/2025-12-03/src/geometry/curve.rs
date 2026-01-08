@@ -41,7 +41,6 @@ impl Curve<2> for Arc {
                     at least half the distance between start \
                     (`{start:?}`) and end (`{to:?}`) points, or the \
                     arc is not possible.",
-                    radius = radius,
                     to = self.start_to_end,
                 );
             }
