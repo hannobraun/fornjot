@@ -70,8 +70,8 @@ impl Curve<2> for Arc {
         let increment =
             Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
 
-        let end_local = circle.point_to_circle_coords(from + self.start_to_end);
         let start_local = circle.point_to_circle_coords(from);
+        let end_local = circle.point_to_circle_coords(from + self.start_to_end);
 
         let mut approx = Vec::new();
 
