@@ -62,7 +62,7 @@ impl Curve<2> for Arc {
         };
 
         let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI / (Scalar::ONE - (self.tolerance / self.radius)).acos(),
+            Scalar::PI / (Scalar::ONE - (self.tolerance / radius)).acos(),
             3.,
         )
         .ceil();
