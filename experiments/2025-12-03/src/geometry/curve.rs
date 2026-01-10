@@ -17,6 +17,33 @@ pub trait Curve<const D: usize> {
 /// option is. As part of the process of evaluating those options, I'd like to
 /// document them here, to help me figure out which one to choose.
 ///
+/// During my first pass of doing this, I identified the following criteria for
+/// evaluating different representations:
+///
+/// - Needs to work in both 2D and 3D, which the current representation doesn't
+///   meet.
+/// - Should be able to represent all possible arcs. For example, an arc
+///   between points with a radius allows for four interpretations. The circle
+///   center can be left or right of the line between start and end points. For
+///   each variant, the arc can then be left or right.
+///   The current representation can only define two of those options, using the
+///   sign of the radius.
+/// - Should have few, ideally no, constraints to uphold within the
+///   representation. This is not a blocker, as upholding these constraints can
+///   be as easy as making the struct fields private and only writing them in a
+///   constructor. But ideally, I can avoid this complexity.
+/// - Should be straight-forward, maybe even intuitive. Ideally, it is easy to
+///   imagine what effects a change to the representation has on the arc. Bonus
+///   points, if the representation also makes sense graphically; something you
+///   could directly manipulate in a CAD GUI.
+///   This is also not a blocker, as constructors and accessor methods could
+///   translate from and to more intuitive representations, but it would be
+///   nicer to not require that complexity.
+/// - Should be easy to work with from internal code. This is the other side of
+///   the previous point, which makes it easy to work with from the user's code.
+///   Though I guess this isn't a blocker either, since you can always convert
+///   to a more convenient representation and then work with that.
+///
 /// ### Two vectors, from the center point to the start and end points
 ///
 /// This is straight-forward to make generic (just make the two vectors
