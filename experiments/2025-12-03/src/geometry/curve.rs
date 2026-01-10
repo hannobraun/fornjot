@@ -10,7 +10,7 @@ pub trait Curve<const D: usize> {
 ///
 /// This struct only represents 2D arcs. But according to the architecture that
 /// I've started to lay out here, it should be generic over dimension.
-/// Unfortunately this isn't quite as straight-forward as making the vector
+/// Unfortunately, this isn't quite as straight-forward as making the vector
 /// generic, as just a vector and a radius are not enough to define a 3D arc.
 ///
 /// A different representation is required, but I'm not sure what the best
