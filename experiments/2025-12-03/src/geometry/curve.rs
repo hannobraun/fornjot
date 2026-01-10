@@ -14,8 +14,8 @@ pub trait Curve<const D: usize> {
 /// generic, as just a vector and a radius are not enough to define a 3D arc.
 ///
 /// A different representation is required, but I'm not sure what the best
-/// option is. I'd like to document the options I've considered here, to help me
-/// figure out which one to choose.
+/// option is. As part of the process of evaluating those options, I'd like to
+/// document them here, to help me figure out which one to choose.
 ///
 /// ### Two vectors, from the center point to the start and end points
 ///
