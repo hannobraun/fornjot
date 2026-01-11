@@ -46,65 +46,71 @@ pub trait Curve<const D: usize> {
 ///    code. Though I guess this isn't a blocker either, since you can always
 ///    convert to a more convenient representation and then work with that.
 ///
-/// ### Two vectors, from the center point to the start and end points
+/// ### 1. Vectors from the center point to the start and end points
 ///
-/// This is straight-forward to make generic (just make the two vectors
-/// generic), but requires that both vectors have the same length (as both
-/// define the radius).
+/// Evaluation of criteria:
 ///
-/// This constraint is probably fine, but I'd like to consider more options, in
-/// case one of them is more elegant.
+/// 1. Straight-forward to generalize by simply generalizing the vectors.
+/// 2. Completely ambiguous. Would require two additional bits of information.
+/// 3. Both vectors must be of equal length.
+/// 4. Given that the start and end points are probably known in most cases,
+///    having to define a center point while upholding the constraint seems
+///    onerous. Having to pass an enum or two boolean flags adds to the
+///    complication.
+/// 5. Unclear, but needing special-case code for 4 cases seems like it wouldn't
+///    be very elegant.
 ///
-/// ### Two vectors, from the start to the mid and end points
+/// Doesn't seem like a good solution, due to the drawbacks in 2. and 4.,
+/// possibly 5.
+///
+/// ### 2. Vectors from the start point to the mid and end points
 ///
 /// The mid point here would be the mid point of the arc, not the mid point on
 /// the straight line between start and end.
 ///
-/// Also straight-forward to make generic, and has the additional advantage of
-/// doing away with the center point, which in most use cases probably isn't
-/// immediately available and has to be computed. Meanwhile the start and end
-/// points are readily available.
+/// 1. Straight-forward to generalize by simply generalizing the vectors.
+/// 2. Unambiguous. The vector to the mid point obviously defines the side where
+///    the arc is located. Less obviously, the distance of the midpoint from the
+///    direct line between start and end only allows for one interpretation, as
+///    for the location of the circle center.
+/// 3. The mid point must be on a line, orthogonal to the direct line from start
+///    to end, and going through the mid point of the direct line.
+/// 4. Easy to understand, but the constraint probably makes it hard to
+///    construct the second vector without tool assistance.
+/// 5. Unclear.
 ///
-/// And the mid point might even provide a more intuitive definition of the arc
-/// than the radius does.
+/// Seems like a decent option, due to the lack of ambiguity. But 3. (and, as a
+/// result, also 4.) are clear drawbacks.
 ///
-/// However, the constraints that have to be upheld are even more convoluted, as
-/// the second vector has to point to a point on a perpendicular line through
-/// the middle of the second one.
+/// ### 3. Vector from start to end, second one to define plane, plus radius
 ///
-/// ### Start to end vector, radius, and second vector to define the arc plane
+/// A straight-forward expansion of the current representation.
 ///
-/// This would be a straight-forward expansion of the current representation.
-/// The only constraint would be that the second vector must not point in the
-/// same direction as the first one. We could even encode the radius as the
-/// length of the second vector, though that seems a bit convoluted.
+/// 1. Generalizable, by generalizing the vectors, but messy. The second vector
+///    is meaningless in 2D, thus would have to be ignored.
+/// 2. Can be made unambiguous. The sign of the radius can specify one bit of
+///    information, the direction of the second vector the other.
+/// 3. The vectors must not point in the same or opposite directions, or they
+///    won't define a plane. The radius must be at least half half the length of
+///    the first vector.
+/// 4. Seems quite messy, with one vector only relevant for 3D, and multiple
+///    ways to interpret how the second vector and the radius define the arc.
+/// 5. Unclear.
 ///
-/// And I guess that's my only complaint: That either we have one additional
-/// scalar, or that the representation ends up convoluted and non-intuitive.
-/// Neither seems like a blocker, but it would be nice to have something more
-/// elegant.
+/// A very messy option with seemingly no redeeming qualities to recommend it
+/// over the other unambiguous but more elegant options.
 ///
-/// ### Vector from start to end and tangent vector from the start point
+/// ### 4. Vector from start to end and tangent vector from the start point
 ///
-/// Here we get a second vector that defines the tangent of the circle that
-/// defines the arc, at the start point. This seems elegant, and maybe even
-/// intuitive to the user (as in, I could see them manipulating that vector in a
-/// graphical CAD interface).
+/// 1. Straight-forward to generalize by simply generalizing the vectors.
+/// 2. Unambiguous.
+/// 3. The vectors must not point in the same or opposite directions. So barely
+///    a constraint; more like an edge case.
+/// 4. Easy to understand and easy to define. Both vectors have a clear and
+///    direct relation to the arc.
+/// 5. Unclear.
 ///
-/// The only constraint is that the second vector must not point into the same
-/// or opposite direction from the first. Though at least them pointing in the
-/// same direction could be special-cased as a straight line, which seems
-/// somewhat intuitive.
-///
-/// Thinking about this made me realize that, unless I'm missing something, this
-/// representation is also more powerful than the other ones. All of those seem
-/// to assume, that the arc makes up the smaller part of the circle that defines
-/// it, while the larger part is hidden.
-///
-/// While with this representation, both cases can easily be represented. If the
-/// tangent vector points backwards (not completely opposite of the first
-/// vector, but in that general direction), then it's obvious what the circle
-/// and the arc should be.
+/// No drawbacks that I can see. Seems like the best option.
 #[derive(Clone, Copy, Debug)]
 pub struct Arc {
     pub start_to_end: Vector<2>,
