@@ -6,6 +6,8 @@ pub trait Curve<const D: usize> {
 
 /// # An arc
 ///
+/// Like all curves, arcs are relative to a user-managed origin point.
+///
 /// ## Design Note
 ///
 /// This struct only represents 2D arcs. But according to the architecture that
