@@ -73,14 +73,17 @@ pub trait Curve<const D: usize> {
 ///    the arc is located. Less obviously, the distance of the midpoint from the
 ///    direct line between start and end only allows for one interpretation, as
 ///    for the location of the circle center.
-/// 3. The mid point must be on a line, orthogonal to the direct line from start
-///    to end, and going through the mid point of the direct line.
-/// 4. Easy to understand, but the constraint probably makes it hard to
-///    construct the second vector without tool assistance.
+/// 3. The second vector must not be parallel with the first one, which is more
+///    of an edge case than a real constraint. It must not actually point at the
+///    mid point directly, only towards it, as the approach would work either
+///    way.
+/// 4. Easy to understand, but that the second vector must only point in the
+///    direction of the mid point, not directly at it, makes it slightly less
+///    intuitive.
 /// 5. Unclear.
 ///
-/// Seems like a decent option, due to the lack of ambiguity. But 3. (and, as a
-/// result, also 4.) are clear drawbacks.
+/// Seems like a good option. Very similar to option 4., which is a tiny bit
+/// more intuitive though.
 ///
 /// ### 3. Vector from start to end, second one to define plane, plus radius
 ///
