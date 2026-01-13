@@ -109,11 +109,11 @@ pub trait Curve<const D: usize> {
 /// 2. Unambiguous.
 /// 3. The vectors must not point in the same or opposite directions. So barely
 ///    a constraint; more like an edge case.
-/// 4. Easy to understand and easy to define. Both vectors have a clear and
-///    direct relation to the arc.
+/// 4. Easy to understand. Both vectors have a clear and direct relation to the
+///    arc. But defining it is complicated by the fact that the tangent vector
+///    must be relative to the start-to-end vector, and hence must be different
+///    for arcs of the same radius.
 /// 5. Unclear.
-///
-/// No drawbacks that I can see. Seems like the best option.
 #[derive(Clone, Copy, Debug)]
 pub struct Arc {
     pub start_to_end: Vector<2>,
