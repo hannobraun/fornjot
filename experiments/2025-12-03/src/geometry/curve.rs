@@ -121,6 +121,20 @@ pub struct Arc {
     pub tolerance: Scalar,
 }
 
+impl Arc {
+    pub fn from_vector_and_radius(
+        start_to_end: Vector<2>,
+        radius: Scalar,
+        tolerance: Scalar,
+    ) -> Self {
+        Self {
+            start_to_end,
+            radius,
+            tolerance,
+        }
+    }
+}
+
 impl Curve<2> for Arc {
     fn approx(&self) -> Vec<Vector<2>> {
         let start = Point::origin();
