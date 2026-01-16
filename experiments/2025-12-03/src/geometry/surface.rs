@@ -7,9 +7,13 @@ pub struct Plane {
 
 impl Plane {
     pub fn local_point_to_global(&self, local: Point<2>) -> Point<3> {
-        let [u, v] = local.coords.components;
+        self.origin + self.local_vector_to_global(local.coords)
+    }
+
+    pub fn local_vector_to_global(&self, local: Vector<2>) -> Vector<3> {
+        let [u, v] = local.components;
         let [axis_u, axis_v] = self.axes;
 
-        self.origin + axis_u * u + axis_v * v
+        axis_u * u + axis_v * v
     }
 }
