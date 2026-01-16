@@ -100,11 +100,11 @@ impl Sketch {
         };
 
         let mut segments_with_curves = Vec::new();
-        let mut from = self.start;
+        let mut start = self.start;
 
         for segment in &self.segments {
-            segments_with_curves.push(segment.with_curve(from, &surface));
-            from = segment.end;
+            segments_with_curves.push(segment.with_curve(start, &surface));
+            start = segment.end;
         }
 
         let mut positions_and_half_edges_and_approx = Vec::new();
