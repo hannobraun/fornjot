@@ -168,8 +168,10 @@ impl SketchSegment {
     ) -> SketchSegmentAndCurve {
         let curve: Box<dyn Curve<2>> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
+                let end = self.end;
+
                 Box::new(Arc2::from_vector_and_radius(
-                    self.end - start,
+                    end - start,
                     radius,
                     tolerance,
                 ))
