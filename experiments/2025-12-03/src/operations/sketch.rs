@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{
     geometry::{
-        curve::{Arc, Curve, Line},
+        curve::{Arc2, Curve, Line},
         surface::Plane,
     },
     helpers::approx_face,
@@ -166,7 +166,7 @@ impl SketchSegment {
 
         let curve: Box<dyn Curve<2>> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => Box::new(
-                Arc::from_vector_and_radius(start_to_end, radius, tolerance),
+                Arc2::from_vector_and_radius(start_to_end, radius, tolerance),
             ),
             SketchSegmentGeometry::Line => Box::new(Line {}),
         };

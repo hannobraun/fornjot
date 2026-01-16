@@ -115,13 +115,13 @@ pub trait Curve<const D: usize> {
 ///    for arcs of the same radius.
 /// 5. Unclear.
 #[derive(Clone, Copy, Debug)]
-pub struct Arc {
+pub struct Arc2 {
     pub start_to_end: Vector<2>,
     pub radius: Scalar,
     pub tolerance: Scalar,
 }
 
-impl Arc {
+impl Arc2 {
     pub fn from_vector_and_radius(
         start_to_end: Vector<2>,
         radius: Scalar,
@@ -135,7 +135,7 @@ impl Arc {
     }
 }
 
-impl Curve<2> for Arc {
+impl Curve<2> for Arc2 {
     fn approx(&self) -> Vec<Vector<2>> {
         let start = Point::origin();
         let radius = self.radius;
