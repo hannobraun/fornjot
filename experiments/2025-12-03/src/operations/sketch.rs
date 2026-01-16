@@ -33,7 +33,7 @@ impl Sketch {
         to: impl Into<Point<2>>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            to: to.into(),
+            end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
@@ -52,7 +52,7 @@ impl Sketch {
         at: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            to: to.into(),
+            end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
                 tolerance: tolerance.into(),
@@ -65,7 +65,7 @@ impl Sketch {
 
     pub fn line_to(mut self, to: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
-            to: to.into(),
+            end: to.into(),
             geometry: SketchSegmentGeometry::Line,
             attachment: None,
         });
@@ -79,7 +79,7 @@ impl Sketch {
         at: Index<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
-            to: to.into(),
+            end: to.into(),
             geometry: SketchSegmentGeometry::Line,
             attachment: Some(SketchSegmentAttachment::Vertex { vertex: at }),
         });
@@ -104,7 +104,7 @@ impl Sketch {
 
         for segment in &self.segments {
             segments_with_curves.push(segment.with_curve(from, &surface));
-            from = segment.to;
+            from = segment.end;
         }
 
         let mut positions_and_half_edges_and_approx = Vec::new();
@@ -122,7 +122,7 @@ impl Sketch {
             );
 
             positions_and_half_edges_and_approx.push((
-                current.segment.to,
+                current.segment.end,
                 half_edge,
                 approx,
             ));
@@ -155,7 +155,7 @@ impl Sketch {
 
 #[derive(Clone, Copy)]
 struct SketchSegment {
-    pub to: Point<2>,
+    pub end: Point<2>,
     pub geometry: SketchSegmentGeometry,
     pub attachment: Option<SketchSegmentAttachment>,
 }
@@ -169,7 +169,7 @@ impl SketchSegment {
         let curve: Box<dyn Curve<2>> = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 Box::new(Arc2::from_vector_and_radius(
-                    self.to - start,
+                    self.end - start,
                     radius,
                     tolerance,
                 ))
@@ -233,7 +233,7 @@ impl SketchSegmentAndCurve {
             .curve
             .approx()
             .into_iter()
-            .map(|v| prev.segment.to + v)
+            .map(|v| prev.segment.end + v)
             .collect();
 
         let boundary = match self.segment.attachment {
@@ -251,7 +251,7 @@ impl SketchSegmentAndCurve {
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next.segment.to_start_vertex(
-                    self.segment.to,
+                    self.segment.end,
                     surface,
                     half_edges,
                     vertices,
@@ -286,7 +286,7 @@ impl SketchSegmentAndCurve {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.segment.to);
+                let point = surface.local_to_global(self.segment.end);
                 vertices.push(Vertex { point })
             }
         }
