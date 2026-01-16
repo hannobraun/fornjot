@@ -103,7 +103,7 @@ impl Sketch {
         let mut from = self.start;
 
         for segment in &self.segments {
-            segments_with_curves.push(segment.with_curve(from));
+            segments_with_curves.push(segment.with_curve(from, &surface));
             from = segment.to;
         }
 
@@ -161,7 +161,11 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve(self, from: Point<2>) -> SketchSegmentAndCurve {
+    pub fn with_curve(
+        self,
+        from: Point<2>,
+        _: &Plane,
+    ) -> SketchSegmentAndCurve {
         let start_to_end = self.to - from;
 
         let curve: Box<dyn Curve<2>> = match self.geometry {
