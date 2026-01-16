@@ -198,7 +198,7 @@ impl SketchSegment {
                 vertex
             }
             Some(SketchSegmentAttachment::Vertex { vertex: _ }) | None => {
-                let point = surface.local_to_global(position);
+                let point = surface.local_point_to_global(position);
                 vertices.push(Vertex { point })
             }
         }
@@ -268,7 +268,7 @@ impl SketchSegmentAndCurve {
             approx: approx
                 .iter()
                 .copied()
-                .map(|local| surface.local_to_global(local))
+                .map(|local| surface.local_point_to_global(local))
                 .collect(),
         });
 
@@ -288,7 +288,7 @@ impl SketchSegmentAndCurve {
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
-                let point = surface.local_to_global(self.segment.end);
+                let point = surface.local_point_to_global(self.segment.end);
                 vertices.push(Vertex { point })
             }
         }
