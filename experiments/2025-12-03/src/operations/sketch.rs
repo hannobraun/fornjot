@@ -85,7 +85,7 @@ impl Sketch {
     }
 
     pub fn into_face(
-        self,
+        mut self,
         surface: Plane,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
@@ -96,21 +96,15 @@ impl Sketch {
             panic!("Empty sketches are not supported yet.");
         };
 
-        let mut segments_with_curves = Vec::new();
-
-        for segment in &self.segments {
-            segments_with_curves.push(*segment);
-        }
-
         let mut positions_and_half_edges_and_approx = Vec::new();
 
         for i in 0..=last_segment_index {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
             let next_i = if i == last_segment_index { 0 } else { i + 1 };
 
-            let current = &segments_with_curves[i];
-            let prev = &segments_with_curves[prev_i];
-            let next = &segments_with_curves[next_i];
+            let current = &self.segments[i];
+            let prev = &self.segments[prev_i];
+            let next = &self.segments[next_i];
 
             let (half_edge, approx) = current.to_half_edge_and_approx(
                 prev, next, &surface, half_edges, vertices,
@@ -121,7 +115,7 @@ impl Sketch {
                 half_edge,
                 approx,
             ));
-            segments_with_curves[i].attachment =
+            self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
