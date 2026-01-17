@@ -255,12 +255,14 @@ impl SketchSegment {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
 
                 [v0, v1]
             }
             None => {
-                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
+                let v0 =
+                    prev.segment.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next
                     .segment
                     .to_start_vertex(self.end, surface, half_edges, vertices);
@@ -299,6 +301,25 @@ impl SketchSegment {
             }
         }
     }
+
+    pub fn to_end_vertex(
+        self,
+        surface: &Plane,
+        half_edges: &Store<HalfEdge>,
+        vertices: &mut Store<Vertex>,
+    ) -> Index<Vertex> {
+        match self.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                let [_, vertex] = half_edges[half_edge].boundary;
+                vertex
+            }
+            Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
+            None => {
+                let point = surface.local_point_to_global(self.end);
+                vertices.push(Vertex { point })
+            }
+        }
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -316,25 +337,4 @@ enum SketchSegmentAttachment {
 // TASK: Inline.
 struct SketchSegmentAndCurve {
     segment: SketchSegment,
-}
-
-impl SketchSegmentAndCurve {
-    pub fn to_end_vertex(
-        &self,
-        surface: &Plane,
-        half_edges: &Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
-    ) -> Index<Vertex> {
-        match self.segment.attachment {
-            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                let [_, vertex] = half_edges[half_edge].boundary;
-                vertex
-            }
-            Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
-            None => {
-                let point = surface.local_point_to_global(self.segment.end);
-                vertices.push(Vertex { point })
-            }
-        }
-    }
 }
