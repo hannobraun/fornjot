@@ -99,7 +99,7 @@ impl Sketch {
         let mut segments_with_curves = Vec::new();
 
         for segment in &self.segments {
-            segments_with_curves.push(segment.with_curve());
+            segments_with_curves.push(*segment);
         }
 
         let mut positions_and_half_edges_and_approx = Vec::new();
@@ -156,10 +156,6 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve(self) -> Self {
-        self
-    }
-
     pub fn to_half_edge_and_approx(
         self,
         prev: &SketchSegment,
