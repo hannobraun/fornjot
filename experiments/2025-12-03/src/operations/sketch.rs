@@ -1,11 +1,8 @@
-use fj_math::{Point, Scalar};
+use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    geometry::{
-        curve::{Arc2, Curve, Line},
-        surface::Plane,
-    },
+    geometry::surface::Plane,
     helpers::approx_face,
     store::{Index, Store},
     topology::{Face, HalfEdge, Vertex},
@@ -161,28 +158,8 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve(
-        self,
-        start: Point<2>,
-        _: &Plane,
-    ) -> SketchSegmentAndCurve {
-        let curve: Box<dyn Curve<2>> = match self.geometry {
-            SketchSegmentGeometry::Arc { radius, tolerance } => {
-                let start_to_end = self.end - start;
-
-                Box::new(Arc2::from_vector_and_radius(
-                    start_to_end,
-                    radius,
-                    tolerance,
-                ))
-            }
-            SketchSegmentGeometry::Line => Box::new(Line {}),
-        };
-
-        SketchSegmentAndCurve {
-            segment: self,
-            curve,
-        }
+    pub fn with_curve(self, _: Point<2>, _: &Plane) -> SketchSegmentAndCurve {
+        SketchSegmentAndCurve { segment: self }
     }
 
     pub fn to_start_vertex(
@@ -219,7 +196,6 @@ enum SketchSegmentAttachment {
 
 struct SketchSegmentAndCurve {
     segment: SketchSegment,
-    curve: Box<dyn Curve<2>>,
 }
 
 impl SketchSegmentAndCurve {
@@ -231,12 +207,84 @@ impl SketchSegmentAndCurve {
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = self
-            .curve
-            .approx()
-            .into_iter()
-            .map(|v| prev.segment.end + v)
-            .collect();
+        let approx = match self.segment.geometry {
+            SketchSegmentGeometry::Arc { radius, tolerance } => {
+                let start = prev.segment.end;
+                let start_to_end = self.segment.end - start;
+
+                let midpoint_towards_center =
+                    start_to_end.to_perpendicular().normalize()
+                        * radius.sign().to_scalar();
+
+                let distance_from_midpoint_to_center = {
+                    // We're computing the required distance from a right
+                    // triangle:
+                    //
+                    // - `a` (leg): `midpoint` to `end`
+                    // - `b` (leg): `midpoint` to circle center (the distance
+                    //   we're looking for)
+                    // - `c` (hypotenuse): `end` to circle center (which is
+                    //   `radius`)
+
+                    let a = start_to_end.magnitude() / 2.;
+                    let c = radius;
+
+                    let b_squared = c * c - a * a;
+
+                    if b_squared < Scalar::ZERO {
+                        // TASK: Fix.
+                        panic!(
+                            "Radius of arc (`{radius}`) is too small: Must be \
+                            at least half the distance between start \
+                            (`{start:?}`) and end (`{to:?}`) points, or the \
+                            arc is not possible.",
+                            to = start_to_end,
+                        );
+                    }
+
+                    b_squared.sqrt()
+                };
+
+                let center = start
+                    + start_to_end * 0.5
+                    + midpoint_towards_center
+                        * distance_from_midpoint_to_center;
+
+                // This only works if `surface` is a plane, which checks out for
+                // now.
+                let circle = {
+                    let a = start;
+                    let b = center + (a - center).to_perpendicular();
+
+                    Circle::new(center, a - center, b - center)
+                };
+
+                let num_vertices_to_approx_full_circle = Scalar::max(
+                    Scalar::PI / (Scalar::ONE - (tolerance / radius)).acos(),
+                    3.,
+                )
+                .ceil();
+
+                let increment = Vector::from([
+                    Scalar::TAU / num_vertices_to_approx_full_circle
+                ]);
+
+                let start_local = circle.point_to_circle_coords(start);
+                let end_local =
+                    circle.point_to_circle_coords(start + start_to_end);
+
+                let mut approx = Vec::new();
+
+                let mut point = start_local + increment;
+                while point < end_local {
+                    approx.push(circle.point_from_circle_coords(point));
+                    point += increment;
+                }
+
+                approx
+            }
+            SketchSegmentGeometry::Line => Vec::new(),
+        };
 
         let boundary = match self.segment.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
