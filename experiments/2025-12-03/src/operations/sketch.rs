@@ -112,7 +112,7 @@ impl Sketch {
             let prev = &segments_with_curves[prev_i];
             let next = &segments_with_curves[next_i];
 
-            let (half_edge, approx) = current.to_half_edge_and_approx(
+            let (half_edge, approx) = current.segment.to_half_edge_and_approx(
                 prev, next, &surface, half_edges, vertices,
             );
 
@@ -160,55 +160,18 @@ impl SketchSegment {
         SketchSegmentAndCurve { segment: self }
     }
 
-    pub fn to_start_vertex(
-        self,
-        position: Point<2>,
-        surface: &Plane,
-        half_edges: &Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
-    ) -> Index<Vertex> {
-        match self.attachment {
-            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                let [vertex, _] = half_edges[half_edge].boundary;
-                vertex
-            }
-            Some(SketchSegmentAttachment::Vertex { vertex: _ }) | None => {
-                let point = surface.local_point_to_global(position);
-                vertices.push(Vertex { point })
-            }
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
-enum SketchSegmentGeometry {
-    Arc { radius: Scalar, tolerance: Scalar },
-    Line,
-}
-
-#[derive(Clone, Copy, Debug)]
-enum SketchSegmentAttachment {
-    HalfEdge { half_edge: Index<HalfEdge> },
-    Vertex { vertex: Index<Vertex> },
-}
-
-struct SketchSegmentAndCurve {
-    segment: SketchSegment,
-}
-
-impl SketchSegmentAndCurve {
     pub fn to_half_edge_and_approx(
-        &self,
+        self,
         prev: &SketchSegmentAndCurve,
         next: &SketchSegmentAndCurve,
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
-        let approx = match self.segment.geometry {
+        let approx = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let start = prev.segment.end;
-                let start_to_end = self.segment.end - start;
+                let start_to_end = self.end - start;
 
                 let midpoint_towards_center =
                     start_to_end.to_perpendicular().normalize()
@@ -284,7 +247,7 @@ impl SketchSegmentAndCurve {
             SketchSegmentGeometry::Line => Vec::new(),
         };
 
-        let boundary = match self.segment.attachment {
+        let boundary = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 // We just assume that the approximation of the sketch segment
                 // and the existing approximation of the half-edge match. We
@@ -298,12 +261,9 @@ impl SketchSegmentAndCurve {
             }
             None => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
-                let v1 = next.segment.to_start_vertex(
-                    self.segment.end,
-                    surface,
-                    half_edges,
-                    vertices,
-                );
+                let v1 = next
+                    .segment
+                    .to_start_vertex(self.end, surface, half_edges, vertices);
 
                 [v0, v1]
             }
@@ -321,6 +281,44 @@ impl SketchSegmentAndCurve {
         (half_edge, approx)
     }
 
+    pub fn to_start_vertex(
+        self,
+        position: Point<2>,
+        surface: &Plane,
+        half_edges: &Store<HalfEdge>,
+        vertices: &mut Store<Vertex>,
+    ) -> Index<Vertex> {
+        match self.attachment {
+            Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
+                let [vertex, _] = half_edges[half_edge].boundary;
+                vertex
+            }
+            Some(SketchSegmentAttachment::Vertex { vertex: _ }) | None => {
+                let point = surface.local_point_to_global(position);
+                vertices.push(Vertex { point })
+            }
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+enum SketchSegmentGeometry {
+    Arc { radius: Scalar, tolerance: Scalar },
+    Line,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum SketchSegmentAttachment {
+    HalfEdge { half_edge: Index<HalfEdge> },
+    Vertex { vertex: Index<Vertex> },
+}
+
+// TASK: Inline.
+struct SketchSegmentAndCurve {
+    segment: SketchSegment,
+}
+
+impl SketchSegmentAndCurve {
     pub fn to_end_vertex(
         &self,
         surface: &Plane,
