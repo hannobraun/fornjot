@@ -113,7 +113,11 @@ impl Sketch {
             let next = &segments_with_curves[next_i];
 
             let (half_edge, approx) = current.segment.to_half_edge_and_approx(
-                prev, next, &surface, half_edges, vertices,
+                &prev.segment,
+                next,
+                &surface,
+                half_edges,
+                vertices,
             );
 
             positions_and_half_edges_and_approx.push((
@@ -162,7 +166,7 @@ impl SketchSegment {
 
     pub fn to_half_edge_and_approx(
         self,
-        prev: &SketchSegmentAndCurve,
+        prev: &SketchSegment,
         next: &SketchSegmentAndCurve,
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
@@ -170,7 +174,7 @@ impl SketchSegment {
     ) -> (Index<HalfEdge>, Vec<Point<2>>) {
         let approx = match self.geometry {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
-                let start = prev.segment.end;
+                let start = prev.end;
                 let start_to_end = self.end - start;
 
                 let midpoint_towards_center =
@@ -255,14 +259,12 @@ impl SketchSegment {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 =
-                    prev.segment.to_end_vertex(surface, half_edges, vertices);
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
 
                 [v0, v1]
             }
             None => {
-                let v0 =
-                    prev.segment.to_end_vertex(surface, half_edges, vertices);
+                let v0 = prev.to_end_vertex(surface, half_edges, vertices);
                 let v1 = next
                     .segment
                     .to_start_vertex(self.end, surface, half_edges, vertices);
