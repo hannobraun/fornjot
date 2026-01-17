@@ -112,20 +112,16 @@ impl Sketch {
             let prev = &segments_with_curves[prev_i];
             let next = &segments_with_curves[next_i];
 
-            let (half_edge, approx) = current.segment.to_half_edge_and_approx(
-                &prev.segment,
-                &next.segment,
-                &surface,
-                half_edges,
-                vertices,
+            let (half_edge, approx) = current.to_half_edge_and_approx(
+                prev, next, &surface, half_edges, vertices,
             );
 
             positions_and_half_edges_and_approx.push((
-                current.segment.end,
+                current.end,
                 half_edge,
                 approx,
             ));
-            segments_with_curves[i].segment.attachment =
+            segments_with_curves[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
@@ -160,8 +156,8 @@ struct SketchSegment {
 }
 
 impl SketchSegment {
-    pub fn with_curve(self) -> SketchSegmentAndCurve {
-        SketchSegmentAndCurve { segment: self }
+    pub fn with_curve(self) -> Self {
+        self
     }
 
     pub fn to_half_edge_and_approx(
@@ -333,9 +329,4 @@ enum SketchSegmentGeometry {
 enum SketchSegmentAttachment {
     HalfEdge { half_edge: Index<HalfEdge> },
     Vertex { vertex: Index<Vertex> },
-}
-
-// TASK: Inline.
-struct SketchSegmentAndCurve {
-    segment: SketchSegment,
 }
