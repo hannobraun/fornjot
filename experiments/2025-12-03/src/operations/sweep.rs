@@ -10,13 +10,13 @@ use crate::{
 
 pub fn face_to_solid(
     bottom: Index<Face>,
-    path: &LineSegment,
+    curve: &LineSegment,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
-    let path = path.end;
+    let path = curve.end;
 
     let mut connect = Connect::new();
 
