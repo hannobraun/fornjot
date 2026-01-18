@@ -1,6 +1,7 @@
-use fj_math::{Point, Vector};
+use fj_math::Point;
 
 use crate::{
+    geometry::curve::LineSegment,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
@@ -9,13 +10,13 @@ use crate::{
 
 pub fn face_to_solid(
     bottom: Index<Face>,
-    path: impl Into<Vector<3>>,
+    path: &LineSegment,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
-    let path = path.into();
+    let path = path.end;
 
     let mut connect = Connect::new();
 

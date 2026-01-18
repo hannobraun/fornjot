@@ -2,7 +2,7 @@ use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::surface::Plane,
+    geometry::{curve::LineSegment, surface::Plane},
     operations::{sketch::Sketch, sweep},
     store::Store,
 };
@@ -73,7 +73,9 @@ fn model() -> TriMesh {
 
     let cube = sweep::face_to_solid(
         bottom,
-        [0., 0., 1.],
+        &LineSegment {
+            end: Vector::from([0., 0., 1.]),
+        },
         &mut vertices,
         &mut half_edges,
         &mut faces,
