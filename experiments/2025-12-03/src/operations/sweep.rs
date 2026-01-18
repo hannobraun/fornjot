@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::LineSegment,
+    geometry::curve::{Curve, LineSegment},
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
@@ -21,7 +21,8 @@ pub fn face_to_solid(
     let bottom_inv = reverse::face(&faces[bottom], half_edges);
 
     let top = {
-        let top = translate::face(&bottom_inv, curve.end, vertices, half_edges);
+        let top =
+            translate::face(&bottom_inv, curve.end(), vertices, half_edges);
         faces.push(top)
     };
 
