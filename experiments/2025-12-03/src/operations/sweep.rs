@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::{Curve, LineSegment},
+    geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
     store::{Index, Store},
@@ -10,7 +10,7 @@ use crate::{
 
 pub fn face_to_solid(
     bottom: Index<Face>,
-    curve: &LineSegment,
+    curve: &impl Curve,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
