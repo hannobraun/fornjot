@@ -16,14 +16,12 @@ pub fn face_to_solid(
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
-    let path = curve.end;
-
     let mut connect = Connect::new();
 
     let bottom_inv = reverse::face(&faces[bottom], half_edges);
 
     let top = {
-        let top = translate::face(&bottom_inv, path, vertices, half_edges);
+        let top = translate::face(&bottom_inv, curve.end, vertices, half_edges);
         faces.push(top)
     };
 
