@@ -471,7 +471,7 @@ dependencies = [
  "rustversion",
  "serde",
  "serde_derive",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -634,7 +634,7 @@ dependencies = [
  "fj-interop",
  "fj-math",
  "stl",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "threemf",
  "wavefront_rs",
 ]
@@ -644,7 +644,7 @@ name = "fj-interop"
 version = "0.49.0"
 dependencies = [
  "fj-math",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -675,7 +675,7 @@ dependencies = [
  "itertools 0.14.0",
  "nalgebra",
  "raw-window-handle",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "tobj",
  "tracing",
  "wgpu",
@@ -1086,7 +1086,7 @@ dependencies = [
  "hashbrown 0.16.1",
  "log",
  "presser",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "windows",
 ]
 
@@ -1508,7 +1508,7 @@ dependencies = [
  "once_cell",
  "rustc-hash 1.1.0",
  "spirv",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "unicode-ident",
 ]
 
@@ -1959,7 +1959,7 @@ dependencies = [
  "slab",
  "smallvec",
  "spade",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -1986,7 +1986,7 @@ dependencies = [
  "slab",
  "smallvec",
  "spade",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -2628,11 +2628,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.17"
+version = "2.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f63587ca0f12b72a0600bcba1d40081f830876000bb46dd2337a3051618f4fc8"
+checksum = "4288b5bcbc7920c07a1149a35cf9590a2aa808e0bc1eafaade0b80947865fbc4"
 dependencies = [
- "thiserror-impl 2.0.17",
+ "thiserror-impl 2.0.18",
 ]
 
 [[package]]
@@ -2648,9 +2648,9 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.17"
+version = "2.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ff15c8ecd7de3849db632e14d18d2571fa09dfc5ed93479bc4485c7a517c913"
+checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2665,7 +2665,7 @@ checksum = "e7d946000a45b7cd15c3e64d781b2ea4270f30f82c2712de3267195d4fb24475"
 dependencies = [
  "quick-xml 0.37.5",
  "serde",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "zip",
 ]
 
@@ -3109,7 +3109,7 @@ dependencies = [
  "raw-window-handle",
  "rustc-hash 1.1.0",
  "smallvec",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "wgpu-core-deps-apple",
  "wgpu-core-deps-emscripten",
  "wgpu-core-deps-wasm",
@@ -3194,7 +3194,7 @@ dependencies = [
  "raw-window-handle",
  "renderdoc-sys",
  "smallvec",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "wasm-bindgen",
  "web-sys",
  "wgpu-types",
@@ -3676,7 +3676,7 @@ dependencies = [
  "flate2",
  "indexmap",
  "memchr",
- "thiserror 2.0.17",
+ "thiserror 2.0.18",
  "zopfli",
 ]
 
@@ -3700,9 +3700,9 @@ checksum = "cb8a0807f7c01457d0379ba880ba6322660448ddebc890ce29bb64da71fb40f9"
 
 [[package]]
 name = "zune-jpeg"
-version = "0.5.9"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87c86acb70a85b2c16f071f171847d1945e8f44812630463cd14ec83900ad01c"
+checksum = "2959ca473aae96a14ecedf501d20b3608d2825ba280d5adb57d651721885b0c2"
 dependencies = [
  "zune-core",
 ]
