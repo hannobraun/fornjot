@@ -10,7 +10,7 @@ pub struct Arc {
 }
 
 impl Arc {
-    pub fn to(end: impl Into<Vector<3>>) -> Self {
+    pub fn to(end: impl Into<Vector<3>>, _: impl Into<Vector<3>>) -> Self {
         Self { end: end.into() }
     }
 }
