@@ -25,6 +25,8 @@ impl Curve for Arc {
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
+        // This is a placeholder for the actual approximation of the arc that
+        // still needs to happen.
         let _ = self.dir;
         Vec::new()
     }
