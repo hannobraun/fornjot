@@ -7,11 +7,15 @@ pub trait Curve {
 
 pub struct Arc {
     pub end: Vector<3>,
+    pub dir: Vector<3>,
 }
 
 impl Arc {
-    pub fn to(end: impl Into<Vector<3>>, _: impl Into<Vector<3>>) -> Self {
-        Self { end: end.into() }
+    pub fn to(end: impl Into<Vector<3>>, dir: impl Into<Vector<3>>) -> Self {
+        Self {
+            end: end.into(),
+            dir: dir.into(),
+        }
     }
 }
 
@@ -21,6 +25,7 @@ impl Curve for Arc {
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
+        let _ = self.dir;
         Vec::new()
     }
 }
