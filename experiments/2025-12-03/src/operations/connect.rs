@@ -8,13 +8,13 @@ use crate::{
 };
 
 pub struct Connect {
-    vertices_along_line: BTreeMap<[Index<Vertex>; 2], Index<HalfEdge>>,
+    vertices: BTreeMap<[Index<Vertex>; 2], Index<HalfEdge>>,
 }
 
 impl Connect {
     pub fn new() -> Self {
         Self {
-            vertices_along_line: BTreeMap::new(),
+            vertices: BTreeMap::new(),
         }
     }
 
@@ -24,9 +24,7 @@ impl Connect {
         approx: impl IntoIterator<Item = Point<3>>,
         half_edges: &mut Store<HalfEdge>,
     ) -> Index<HalfEdge> {
-        if let Some(half_edge) =
-            self.vertices_along_line.get(&vertices).copied()
-        {
+        if let Some(half_edge) = self.vertices.get(&vertices).copied() {
             return half_edge;
         }
 
@@ -34,7 +32,7 @@ impl Connect {
             boundary: vertices,
             approx: approx.into_iter().collect(),
         });
-        self.vertices_along_line.insert(vertices, half_edge);
+        self.vertices.insert(vertices, half_edge);
 
         half_edge
     }
