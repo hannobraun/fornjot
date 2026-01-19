@@ -54,7 +54,7 @@ pub fn face_to_solid(
         .collect::<Vec<_>>();
 
     let (side_edges_going_up, side_edges_going_down) = {
-        let approx = Vec::new();
+        let approx = curve.approx();
 
         let mut side_edges_going_up = bottom_vertices
             .iter()
@@ -63,7 +63,10 @@ pub fn face_to_solid(
             .map(|(v_bottom, v_top)| {
                 connect.vertices(
                     [v_bottom, v_top],
-                    approx.iter().copied(),
+                    approx
+                        .iter()
+                        .copied()
+                        .map(|vector| vertices[v_bottom].point + vector),
                     half_edges,
                 )
             })
@@ -80,7 +83,11 @@ pub fn face_to_solid(
             .map(|(v_top, v_bottom)| {
                 connect.vertices(
                     [v_top, v_bottom],
-                    approx.iter().copied().rev(),
+                    approx
+                        .iter()
+                        .copied()
+                        .rev()
+                        .map(|vector| vertices[v_bottom].point + vector),
                     half_edges,
                 )
             })

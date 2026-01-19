@@ -2,6 +2,7 @@ use fj_math::Vector;
 
 pub trait Curve {
     fn end(&self) -> Vector<3>;
+    fn approx(&self) -> Vec<Vector<3>>;
 }
 
 pub struct Arc {
@@ -17,5 +18,9 @@ impl Arc {
 impl Curve for Arc {
     fn end(&self) -> Vector<3> {
         self.end
+    }
+
+    fn approx(&self) -> Vec<Vector<3>> {
+        Vec::new()
     }
 }
