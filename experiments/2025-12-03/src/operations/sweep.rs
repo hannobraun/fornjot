@@ -60,7 +60,11 @@ pub fn face_to_solid(
             .zip(top_vertices.iter().copied())
             .map(|(v_bottom, v_top)| {
                 let approx = Vec::new();
-                connect.vertices([v_bottom, v_top], approx, half_edges)
+                connect.vertices(
+                    [v_bottom, v_top],
+                    approx.iter().copied(),
+                    half_edges,
+                )
             })
             .collect::<Vec<_>>();
 
@@ -74,7 +78,11 @@ pub fn face_to_solid(
             .zip(bottom_vertices)
             .map(|(v_top, v_bottom)| {
                 let approx = Vec::new();
-                connect.vertices([v_top, v_bottom], approx, half_edges)
+                connect.vertices(
+                    [v_top, v_bottom],
+                    approx.iter().copied().rev(),
+                    half_edges,
+                )
             })
             .collect::<Vec<_>>();
 
