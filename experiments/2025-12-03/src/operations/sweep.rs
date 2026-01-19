@@ -53,7 +53,7 @@ pub fn face_to_solid(
         })
         .collect::<Vec<_>>();
 
-    let side_edges_going_up = {
+    let (side_edges_going_up, side_edges_going_down) = {
         let mut side_edges_going_up = bottom_vertices
             .iter()
             .copied()
@@ -69,17 +69,17 @@ pub fn face_to_solid(
         // necessary.
         side_edges_going_up.rotate_left(1);
 
-        side_edges_going_up
-    };
+        let side_edges_going_down = top_vertices
+            .into_iter()
+            .zip(bottom_vertices)
+            .map(|(v_top, v_bottom)| {
+                let approx = Vec::new();
+                connect.vertices([v_top, v_bottom], approx, half_edges)
+            })
+            .collect::<Vec<_>>();
 
-    let side_edges_going_down = top_vertices
-        .into_iter()
-        .zip(bottom_vertices)
-        .map(|(v_top, v_bottom)| {
-            let approx = Vec::new();
-            connect.vertices([v_top, v_bottom], approx, half_edges)
-        })
-        .collect::<Vec<_>>();
+        (side_edges_going_up, side_edges_going_down)
+    };
 
     let side_faces = bottom_edges_for_sides
         .into_iter()
