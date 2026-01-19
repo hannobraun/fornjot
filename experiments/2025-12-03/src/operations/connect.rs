@@ -18,7 +18,7 @@ impl Connect {
         }
     }
 
-    pub fn vertices_along_line(
+    pub fn vertices(
         &mut self,
         vertices: [Index<Vertex>; 2],
         approx: impl IntoIterator<Item = Point<3>>,
