@@ -58,7 +58,13 @@ impl Curve for Arc {
         // between them and the center must have the same length:
         //
         // ```
-        // |center| = |center - end| (3)
+        // |center| = |center - end|
+        // |center|² = |center - end|²
+        // center * center = (center - end) * (center - end)
+        // center * center = center * center - 2 * center * end + end * end
+        // 0 = -2 * center * end + end * end
+        // 2 * center * end = end * end
+        // center * end = (end * end) / 2 (3)
         // ```
         //
         // This gives us a system of three equations that we can hopefully
