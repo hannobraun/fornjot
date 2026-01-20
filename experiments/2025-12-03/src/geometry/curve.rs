@@ -29,5 +29,39 @@ impl Curve for Arc {
         // still needs to happen.
         let _ = self.dir;
         Vec::new()
+
+        // Okay, now on to the real approximation. If we had the center and
+        // radius of the circle that the arc was on, we could do that easily.
+        // Both could be defined by a `center` vector that points from the start
+        // to the center.
+        //
+        // We know that the center point must be in the plane that `self.end`
+        // and `self.dir` define. Or in other words, it must be a linear
+        // combination of both:
+        //
+        // ```
+        // center = a * self.end + b * self.dir (1)
+        // ```
+        //
+        // This gives us an equation with two unknowns. Two more, and we should
+        // have a system that we can solve.
+        //
+        // `self.dir` is the direction of the arc at the start point. This is a
+        // tangent of the circle, meaning it and the `center` vector must be
+        // orthogonal:
+        //
+        // ```
+        // center * self.dir = 0 (2)
+        // ```
+        //
+        // And since both start and end are points on the circle, the vectors
+        // between them and the center must have the same length:
+        //
+        // ```
+        // |center| = |center - end| (3)
+        // ```
+        //
+        // This gives us a system of three equations that we can hopefully
+        // solve.
     }
 }
