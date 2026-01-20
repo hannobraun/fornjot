@@ -40,7 +40,7 @@ impl Curve for Arc {
         // combination of both:
         //
         // ```
-        // center = a * self.end + b * self.dir (1)
+        // center = a * end + b * dir (1)
         // ```
         //
         // This gives us an equation with two unknowns. Two more, and we should
@@ -51,7 +51,7 @@ impl Curve for Arc {
         // orthogonal:
         //
         // ```
-        // center * self.dir = 0 (2)
+        // center * dir = 0 (2)
         // ```
         //
         // And since both start and end are points on the circle, the vectors
