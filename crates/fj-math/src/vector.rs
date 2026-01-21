@@ -125,6 +125,11 @@ impl<const D: usize> Vector<D> {
         self.dot(&other.normalize())
     }
 
+    /// # Compute the vector projection of this vector onto another
+    pub fn vector_projecting_onto(&self, other: &Self) -> Self {
+        *other * (self.dot(other) / other.dot(other))
+    }
+
     /// # Transform the vector by calling [`Scalar::floor`] on its components
     pub fn floor(self) -> Self {
         Self {
