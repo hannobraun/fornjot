@@ -68,6 +68,13 @@ impl Curve for Arc {
         // center * end = (end * end) / 2 (2)
         // ```
         //
-        // This gives us a system of two equations that we can hopefully solve.
+        // By substituting `center` from (1) in (2), we get `t`:
+        //
+        // ```
+        // t * dir_perp * end = (end * end) / 2
+        // t = (end * end) / (2 * dir_perp * end)
+        // ```
+        //
+        // By putting that back into (1), we have our solution.
     }
 }
