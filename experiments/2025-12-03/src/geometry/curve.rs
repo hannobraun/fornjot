@@ -25,15 +25,10 @@ impl Curve for Arc {
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
-        // This is a placeholder for the actual approximation of the arc that
-        // still needs to happen.
-        let _ = self.dir;
-        Vec::new()
-
-        // Okay, now on to the real approximation. If we had the center and
-        // radius of the circle that the arc was on, we could do that easily.
-        // Both could be defined by a `center` vector that points from the start
-        // to the center.
+        // To approximate the arc, we need the center point and the radius of
+        // the circle that is is defined on. We would have both, if we had a
+        // `center` vector pointing from the start point of the arc to the
+        // center point of the circle.
         //
         // We know two things about this center vector:
         //
@@ -76,5 +71,9 @@ impl Curve for Arc {
         // ```
         //
         // By putting that back into (1), we have our solution.
+        //
+        // Until we have implemented the above, here's a placeholder.
+        let _ = self.dir;
+        Vec::new()
     }
 }
