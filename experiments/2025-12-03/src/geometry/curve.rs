@@ -30,18 +30,13 @@ impl Curve for Arc {
         // `center` vector pointing from the start point of the arc to the
         // center point of the circle.
         //
-        // We know two things about this center vector:
-        //
-        // 1. It is in the same plane that `self.end` and `self.dir` define.
-        // 2. It is perpendicular to `self.dir`, which defines the tangent of
-        //    the circle at the start point.
-        //
-        // As a first step, we can create a vector that is perpendicular to
-        // `self.dir` and in the right plane, by projecting `self.end` into
-        // `self.dir` and subtracting that projection from `self.end`. Let's
-        // call the resulting vector `dir_perp`.
-        //
-        // The center vector we seek must then be a multiple of `dir_perp`:
+        // We know that this `center` vector must be coplanar with `self.end`
+        // and `self.dir`, and perpendicular to `self.dir`. We can start by
+        // computing a vector that fulfills these requirements.
+        let dir_perp = self.end - self.end.vector_projecting_onto(&self.dir);
+        dbg!(dir_perp);
+
+        // `dir_perp` is colinear with the `center` vector we seek:
         //
         // ```
         // center = t * dir_perp (1)
