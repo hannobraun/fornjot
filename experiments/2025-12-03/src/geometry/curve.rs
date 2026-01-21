@@ -68,8 +68,11 @@ impl Curve for Arc {
         dbg!(t);
 
         // By putting that back into (1), we get `center`.
-        //
-        // Until we have implemented the above, here's a placeholder.
+        let center = dir_perp * t;
+        dbg!(center);
+
+        // With that, we can approximate the arc. Until we've actually done
+        // that, here's a placeholder:
         let _ = self.dir;
         Vec::new()
     }
