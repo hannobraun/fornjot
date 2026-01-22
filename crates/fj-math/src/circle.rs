@@ -1,4 +1,4 @@
-use approx::AbsDiffEq;
+use approx::{AbsDiffEq, assert_relative_eq};
 
 use crate::{Aabb, Point, Scalar, Transform, Vector};
 
@@ -33,11 +33,7 @@ impl<const D: usize> Circle<D> {
         let a = a.into();
         let b = b.into();
 
-        assert_eq!(
-            a.magnitude(),
-            b.magnitude(),
-            "`a` and `b` must be of equal length"
-        );
+        assert_relative_eq!(a.magnitude().into_f64(), b.magnitude().into_f64());
         assert_ne!(
             a.magnitude(),
             Scalar::ZERO,
