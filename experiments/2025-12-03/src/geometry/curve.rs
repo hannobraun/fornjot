@@ -1,4 +1,4 @@
-use fj_math::Vector;
+use fj_math::{Scalar, Vector};
 
 pub trait Curve {
     fn end(&self) -> Vector<3>;
@@ -8,13 +8,19 @@ pub trait Curve {
 pub struct Arc {
     pub end: Vector<3>,
     pub dir: Vector<3>,
+    pub tolerance: Scalar,
 }
 
 impl Arc {
-    pub fn to(end: impl Into<Vector<3>>, dir: impl Into<Vector<3>>) -> Self {
+    pub fn to(
+        end: impl Into<Vector<3>>,
+        dir: impl Into<Vector<3>>,
+        tolerance: impl Into<Scalar>,
+    ) -> Self {
         Self {
             end: end.into(),
             dir: dir.into(),
+            tolerance: tolerance.into(),
         }
     }
 }
@@ -25,6 +31,8 @@ impl Curve for Arc {
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
+        let _ = self.tolerance;
+
         // To approximate the arc, we need the center point and the radius of
         // the circle that is is defined on. We would have both, if we had a
         // `center` vector pointing from the start point of the arc to the
