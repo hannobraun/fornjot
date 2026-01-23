@@ -108,12 +108,19 @@ pub fn face_to_solid(
                     (
                         Point::from([1., 0.]),
                         bottom,
-                        local_approx_coords(bottom, 0., half_edges),
+                        local_approx_coords(
+                            bottom,
+                            FixedCoord::V { value: 0. },
+                            half_edges,
+                        ),
                     ),
                     (Point::from([1., 1.]), right, Vec::new()),
                     (Point::from([0., 1.]), top, {
-                        let mut approx =
-                            local_approx_coords(top, 1., half_edges);
+                        let mut approx = local_approx_coords(
+                            top,
+                            FixedCoord::V { value: 1. },
+                            half_edges,
+                        );
                         approx.reverse();
                         approx
                     }),
@@ -138,7 +145,7 @@ pub fn face_to_solid(
 
 fn local_approx_coords(
     half_edge: Index<HalfEdge>,
-    fixed: f64,
+    fixed: FixedCoord,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Point<2>> {
     let len = half_edges[half_edge].approx.len();
@@ -147,9 +154,13 @@ fn local_approx_coords(
     (1..=len)
         .map(|i| {
             let u = increment * i as f64;
-            let v = fixed;
+            let FixedCoord::V { value: v } = fixed;
 
             Point::from([u, v])
         })
         .collect()
+}
+
+enum FixedCoord {
+    V { value: f64 },
 }
