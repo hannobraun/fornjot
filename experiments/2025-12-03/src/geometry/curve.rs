@@ -40,7 +40,6 @@ impl Curve for Arc {
         // and `self.dir`, and perpendicular to `self.dir`. We can start by
         // computing a vector that fulfills these requirements.
         let dir_perp = self.end - self.end.vector_projecting_onto(&self.dir);
-        dbg!(dir_perp);
 
         // `dir_perp` is colinear with the `center` vector we seek:
         //
@@ -71,12 +70,10 @@ impl Curve for Arc {
         // t = (end * end) / (2 * dir_perp * end)
         // ```
         let t = (self.end.dot(&self.end)) / (dir_perp.dot(&self.end) * 2.);
-        dbg!(t);
 
         // By putting that back into (1), we get `center`.
         let center = dir_perp * t;
         let radius = center.magnitude();
-        dbg!(center);
 
         let start = Point::origin();
 
