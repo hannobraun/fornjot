@@ -1,4 +1,4 @@
-use fj_math::{Scalar, Vector};
+use fj_math::{Circle, Point, Scalar, Vector};
 
 pub trait Curve {
     fn end(&self) -> Vector<3>;
@@ -77,11 +77,41 @@ impl Curve for Arc {
 
         // By putting that back into (1), we get `center`.
         let center = dir_perp * t;
+        let radius = center.magnitude();
         dbg!(center);
 
-        // With that, we can approximate the arc. Until we've actually done
-        // that, here's a placeholder:
-        let _ = self.dir;
-        Vec::new()
+        let start = Point::origin();
+
+        let circle = {
+            let center = start + center;
+            let a = start - center;
+            let b = (self.end - self.end.vector_projecting_onto(&a))
+                .normalize()
+                * radius;
+
+            Circle::new(center, a, b)
+        };
+
+        let num_vertices_to_approx_full_circle = Scalar::max(
+            Scalar::PI / (Scalar::ONE - (self.tolerance / radius)).acos(),
+            3.,
+        )
+        .ceil();
+
+        let increment =
+            Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
+
+        let start_local = circle.point_to_circle_coords(start);
+        let end_local = circle.point_to_circle_coords(start + self.end);
+
+        let mut approx = Vec::new();
+
+        let mut point = start_local + increment;
+        while point < end_local {
+            approx.push(circle.point_from_circle_coords(point) - start);
+            point += increment;
+        }
+
+        approx
     }
 }
