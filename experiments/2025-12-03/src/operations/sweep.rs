@@ -138,7 +138,7 @@ pub fn face_to_solid(
 
 fn local_approx_coords(
     half_edge: Index<HalfEdge>,
-    v: f64,
+    fixed: f64,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Point<2>> {
     let len = half_edges[half_edge].approx.len();
@@ -147,7 +147,7 @@ fn local_approx_coords(
     (1..=len)
         .map(|i| {
             let u = increment * i as f64;
-            Point::from([u, v])
+            Point::from([u, fixed])
         })
         .collect()
 }
