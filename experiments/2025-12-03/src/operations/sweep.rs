@@ -114,7 +114,15 @@ pub fn face_to_solid(
                             half_edges,
                         ),
                     ),
-                    (Point::from([1., 1.]), right, Vec::new()),
+                    (
+                        Point::from([1., 1.]),
+                        right,
+                        local_approx_coords(
+                            right,
+                            FixedCoord::U { value: 1. },
+                            half_edges,
+                        ),
+                    ),
                     (Point::from([0., 1.]), top, {
                         let mut approx = local_approx_coords(
                             top,
@@ -124,7 +132,15 @@ pub fn face_to_solid(
                         approx.reverse();
                         approx
                     }),
-                    (Point::from([0., 0.]), left, Vec::new()),
+                    (Point::from([0., 0.]), left, {
+                        let mut approx = local_approx_coords(
+                            left,
+                            FixedCoord::U { value: 0. },
+                            half_edges,
+                        );
+                        approx.reverse();
+                        approx
+                    }),
                 ],
                 vertices,
                 half_edges,
@@ -156,6 +172,7 @@ fn local_approx_coords(
             let inc = increment * i as f64;
 
             let (u, v) = match fixed {
+                FixedCoord::U { value } => (value, inc),
                 FixedCoord::V { value } => (inc, value),
             };
 
@@ -165,5 +182,6 @@ fn local_approx_coords(
 }
 
 enum FixedCoord {
+    U { value: f64 },
     V { value: f64 },
 }
