@@ -155,8 +155,9 @@ fn local_approx_coords(
         .map(|i| {
             let inc = increment * i as f64;
 
-            let u = inc;
-            let FixedCoord::V { value: v } = fixed;
+            let (u, v) = match fixed {
+                FixedCoord::V { value } => (inc, value),
+            };
 
             Point::from([u, v])
         })
