@@ -31,8 +31,6 @@ impl Curve for Arc {
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
-        let _ = self.tolerance;
-
         // To approximate the arc, we need the center point and the radius of
         // the circle that is is defined on. We would have both, if we had a
         // `center` vector pointing from the start point of the arc to the
