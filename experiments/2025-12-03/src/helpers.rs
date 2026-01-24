@@ -39,12 +39,12 @@ pub fn approx_face(
             let points_from_approx = approx
                 .into_iter()
                 .zip(half_edge.approx.iter().copied())
-                .map(|(local, global)| DelaunayPoint { local, global });
+                .map(|(local, global)| ApproxPoint { local, global });
             let point_from_vertex = {
                 let [_, vertex] = half_edge.boundary;
                 let global = vertices[vertex].point;
 
-                DelaunayPoint { local, global }
+                ApproxPoint { local, global }
             };
 
             points_from_approx.into_iter().chain([point_from_vertex])
@@ -117,8 +117,8 @@ fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
 }
 
 fn delaunay(
-    points: impl IntoIterator<Item = DelaunayPoint>,
-) -> Vec<[DelaunayPoint; 3]> {
+    points: impl IntoIterator<Item = ApproxPoint>,
+) -> Vec<[ApproxPoint; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation.add_constraint_edges(points, true).unwrap();
@@ -130,12 +130,12 @@ fn delaunay(
 }
 
 #[derive(Clone, Copy, Debug)]
-struct DelaunayPoint {
+struct ApproxPoint {
     pub local: Point<2>,
     pub global: Point<3>,
 }
 
-impl spade::HasPosition for DelaunayPoint {
+impl spade::HasPosition for ApproxPoint {
     type Scalar = f64;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
