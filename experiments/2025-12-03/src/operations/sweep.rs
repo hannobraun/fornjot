@@ -104,7 +104,6 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let approx = approx_face(
-                [0., 0.],
                 vec![
                     (
                         Point::from([1., 0.]),

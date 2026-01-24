@@ -14,7 +14,6 @@ use crate::{
 };
 
 pub fn approx_face(
-    _: impl Into<Point<2>>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
         Index<HalfEdge>,

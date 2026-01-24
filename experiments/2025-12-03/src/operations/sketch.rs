@@ -91,6 +91,8 @@ impl Sketch {
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
+        let _ = self.start;
+
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");
@@ -132,7 +134,6 @@ impl Sketch {
             .collect();
 
         let approx = approx_face(
-            self.start,
             positions_and_half_edges_and_approx,
             vertices,
             half_edges,
