@@ -167,9 +167,9 @@ fn local_approx_coords(
     let len = half_edges[half_edge].approx.len();
     let increment = 1. / (len as f64 + 1.);
 
-    (1..=len)
+    (0..len)
         .map(|i| {
-            let inc = increment * i as f64;
+            let inc = increment * (i + 1) as f64;
 
             let (u, v) = match fixed {
                 FixedCoord::U { value } => (value, inc),
