@@ -8,6 +8,7 @@ use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 use crate::{
+    approx::ApproxPoint,
     store::{Index, Store},
     topology::{HalfEdge, Vertex},
 };
@@ -127,19 +128,4 @@ fn delaunay(
         .inner_faces()
         .map(|triangle| triangle.vertices().map(|vertex| *vertex.data()))
         .collect()
-}
-
-#[derive(Clone, Copy, Debug)]
-pub struct ApproxPoint {
-    pub local: Point<2>,
-    pub global: Point<3>,
-}
-
-impl spade::HasPosition for ApproxPoint {
-    type Scalar = f64;
-
-    fn position(&self) -> spade::Point2<Self::Scalar> {
-        let [x, y] = self.local.coords.components.map(|s| s.into_f64());
-        spade::Point2 { x, y }
-    }
 }

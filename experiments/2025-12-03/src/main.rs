@@ -7,6 +7,7 @@ use crate::{
     store::Store,
 };
 
+mod approx;
 mod debug;
 mod geometry;
 mod helpers;
