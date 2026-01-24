@@ -47,7 +47,7 @@ fn model() -> TriMesh {
     let tolerance = Scalar::from(0.001);
 
     let bottom = {
-        Sketch::start_at([0., 0.])
+        Sketch::start_at()
             .line_to([1., 0.])
             .line_to([1., 1.])
             .line_to([0., 1.])
