@@ -168,8 +168,12 @@ fn local_approx_coords(
     let len = half_edge.approx.len();
     let increment = 1. / (len as f64 + 1.);
 
-    (0..len)
-        .map(|i| {
+    half_edge
+        .approx
+        .iter()
+        .copied()
+        .enumerate()
+        .map(|(i, _)| {
             let inc = increment * (i + 1) as f64;
 
             let (u, v) = match fixed {
