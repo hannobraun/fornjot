@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    approx::ApproxPoint,
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
@@ -112,7 +113,10 @@ pub fn face_to_solid(
                             bottom,
                             FixedCoord::V { value: 0. },
                             half_edges,
-                        ),
+                        )
+                        .into_iter()
+                        .map(|point| point.local)
+                        .collect(),
                     ),
                     (
                         Point::from([1., 1.]),
@@ -121,7 +125,10 @@ pub fn face_to_solid(
                             right,
                             FixedCoord::U { value: 1. },
                             half_edges,
-                        ),
+                        )
+                        .into_iter()
+                        .map(|point| point.local)
+                        .collect(),
                     ),
                     (Point::from([0., 1.]), top, {
                         let mut approx = local_approx_coords(
@@ -130,7 +137,7 @@ pub fn face_to_solid(
                             half_edges,
                         );
                         approx.reverse();
-                        approx
+                        approx.into_iter().map(|point| point.local).collect()
                     }),
                     (Point::from([0., 0.]), left, {
                         let mut approx = local_approx_coords(
@@ -139,7 +146,7 @@ pub fn face_to_solid(
                             half_edges,
                         );
                         approx.reverse();
-                        approx
+                        approx.into_iter().map(|point| point.local).collect()
                     }),
                 ],
                 vertices,
@@ -163,7 +170,7 @@ fn local_approx_coords(
     half_edge: Index<HalfEdge>,
     fixed: FixedCoord,
     half_edges: &Store<HalfEdge>,
-) -> Vec<Point<2>> {
+) -> Vec<ApproxPoint<2>> {
     let half_edge = &half_edges[half_edge];
     let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
@@ -172,7 +179,7 @@ fn local_approx_coords(
         .iter()
         .copied()
         .enumerate()
-        .map(|(i, _)| {
+        .map(|(i, global)| {
             let inc = increment * (i + 1) as f64;
 
             let (u, v) = match fixed {
@@ -180,7 +187,10 @@ fn local_approx_coords(
                 FixedCoord::V { value } => (inc, value),
             };
 
-            Point::from([u, v])
+            ApproxPoint {
+                local: Point::from([u, v]),
+                global,
+            }
         })
         .collect()
 }
