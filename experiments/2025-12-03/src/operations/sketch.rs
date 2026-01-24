@@ -9,16 +9,12 @@ use crate::{
 };
 
 pub struct Sketch {
-    start: Point<2>,
     segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
-    pub fn start_at(start: impl Into<Point<2>>) -> Self {
-        let start = start.into();
-
+    pub fn start_at(_: impl Into<Point<2>>) -> Self {
         Self {
-            start,
             segments: Vec::new(),
         }
     }
@@ -91,8 +87,6 @@ impl Sketch {
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
     ) -> Index<Face> {
-        let _ = self.start;
-
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");
