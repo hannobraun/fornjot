@@ -14,7 +14,7 @@ use crate::{
 };
 
 pub fn approx_face(
-    start: impl Into<Point<2>>,
+    _: impl Into<Point<2>>,
     positions_and_half_edges_and_approx: Vec<(
         Point<2>,
         Index<HalfEdge>,
@@ -23,7 +23,12 @@ pub fn approx_face(
     vertices: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
-    let start = start.into();
+    let Some(start) = positions_and_half_edges_and_approx
+        .last()
+        .map(|&(position, _, _)| position)
+    else {
+        return Vec::new();
+    };
 
     let polygon = polygon([start].into_iter().chain(
         positions_and_half_edges_and_approx.iter().flat_map(
