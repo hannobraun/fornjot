@@ -1,12 +1,12 @@
 use fj_math::Point;
 
 #[derive(Clone, Copy, Debug)]
-pub struct ApproxPoint {
-    pub local: Point<2>,
+pub struct ApproxPoint<const D: usize> {
+    pub local: Point<D>,
     pub global: Point<3>,
 }
 
-impl spade::HasPosition for ApproxPoint {
+impl spade::HasPosition for ApproxPoint<2> {
     type Scalar = f64;
 
     fn position(&self) -> spade::Point2<Self::Scalar> {
