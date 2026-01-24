@@ -13,7 +13,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    pub fn start_at() -> Self {
+    pub fn new() -> Self {
         Self {
             segments: Vec::new(),
         }
