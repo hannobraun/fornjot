@@ -164,7 +164,8 @@ fn local_approx_coords(
     fixed: FixedCoord,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Point<2>> {
-    let len = half_edges[half_edge].approx.len();
+    let half_edge = &half_edges[half_edge];
+    let len = half_edge.approx.len();
     let increment = 1. / (len as f64 + 1.);
 
     (0..len)
