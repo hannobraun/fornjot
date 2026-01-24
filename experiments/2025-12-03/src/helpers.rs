@@ -130,7 +130,7 @@ fn delaunay(
 }
 
 #[derive(Clone, Copy, Debug)]
-struct ApproxPoint {
+pub struct ApproxPoint {
     pub local: Point<2>,
     pub global: Point<3>,
 }
