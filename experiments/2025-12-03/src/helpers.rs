@@ -7,11 +7,7 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::{
-    approx::ApproxPoint,
-    store::{Index, Store},
-    topology::HalfEdge,
-};
+use crate::{approx::ApproxPoint, store::Index, topology::HalfEdge};
 
 pub fn approx_face(
     positions_and_half_edges_and_approx: Vec<(
@@ -19,7 +15,6 @@ pub fn approx_face(
         Index<HalfEdge>,
         Vec<ApproxPoint<2>>,
     )>,
-    _: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx
         .first()
