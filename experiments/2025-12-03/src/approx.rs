@@ -39,15 +39,10 @@ impl HalfEdgeApprox {
             global: vertices[half_edges[half_edge].boundary[0]].point,
         };
 
-        Self {
-            start,
-            other: local_approx_coords(
-                half_edge,
-                fixed_coord,
-                half_edges,
-                reverse,
-            ),
-        }
+        let other =
+            local_approx_coords(half_edge, fixed_coord, half_edges, reverse);
+
+        Self { start, other }
     }
 
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
