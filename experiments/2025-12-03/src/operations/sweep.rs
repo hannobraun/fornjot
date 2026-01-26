@@ -167,7 +167,7 @@ pub fn face_to_solid(
     })
 }
 
-fn local_approx_coords(
+pub fn local_approx_coords(
     half_edge: Index<HalfEdge>,
     fixed: FixedCoord,
     half_edges: &Store<HalfEdge>,
@@ -207,7 +207,7 @@ fn local_approx_coords(
         .collect()
 }
 
-enum FixedCoord {
+pub enum FixedCoord {
     U { value: f64 },
     V { value: f64 },
 }
