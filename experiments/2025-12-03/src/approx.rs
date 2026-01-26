@@ -36,8 +36,8 @@ impl HalfEdgeApprox {
         let start = {
             let local = start.into();
             let global = {
-                let [global, _] = half_edges[half_edge].boundary;
-                global
+                let [vertex, _] = half_edges[half_edge].boundary;
+                vertex
             };
 
             ApproxPoint {
