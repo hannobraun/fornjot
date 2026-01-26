@@ -204,9 +204,9 @@ fn local_approx_coords(
     let global = half_edge.approx.iter().copied();
     let local = (0..half_edge.approx.len()).map(|i| increment * (i + 1) as f64);
 
-    global
-        .zip(local)
-        .map(|(global, local)| {
+    local
+        .zip(global)
+        .map(|(local, global)| {
             let (u, v) = match fixed {
                 FixedCoord::U { value } => (value, local),
                 FixedCoord::V { value } => (local, value),
