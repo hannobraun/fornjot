@@ -43,13 +43,12 @@ pub fn approx_face(
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let point_from_vertex = start;
             let points_from_approx = approx
                 .into_iter()
                 .zip(half_edge.approx.iter().copied())
                 .map(|(local, global)| ApproxPoint { local, global });
 
-            [point_from_vertex].into_iter().chain(points_from_approx)
+            [start].into_iter().chain(points_from_approx)
         },
     );
 
