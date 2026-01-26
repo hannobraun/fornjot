@@ -7,22 +7,21 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::approx::ApproxPoint;
+use crate::approx::{ApproxPoint, HalfEdgeApprox};
 
-pub fn approx_face(boundary: Vec<Vec<ApproxPoint<2>>>) -> Vec<Triangle<3>> {
-    let Some(start) = boundary.first().and_then(|half_edge| half_edge.first())
-    else {
+pub fn approx_face(boundary: Vec<HalfEdgeApprox>) -> Vec<Triangle<3>> {
+    let Some(start) = boundary.first().map(|half_edge| half_edge.start) else {
         return Vec::new();
     };
 
     let polygon = polygon(
         boundary
             .iter()
-            .flat_map(|half_edge| half_edge.iter().map(|point| point.local))
+            .flat_map(|half_edge| half_edge.points().map(|point| point.local))
             .chain([start.local]),
     );
 
-    delaunay(boundary.into_iter().flatten())
+    delaunay(boundary.iter().flat_map(|half_edge| half_edge.points()))
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);

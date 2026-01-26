@@ -2,7 +2,7 @@ use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    approx::ApproxPoint,
+    approx::{ApproxPoint, HalfEdgeApprox},
     geometry::surface::Plane,
     helpers::approx_face,
     store::{Index, Store},
@@ -109,15 +109,13 @@ impl Sketch {
             );
 
             boundary.push(half_edge);
-            boundary_approx.push(
-                [ApproxPoint {
+            boundary_approx.push(HalfEdgeApprox {
+                start: ApproxPoint {
                     local: prev.end,
                     global: vertices[half_edges[half_edge].boundary[0]].point,
-                }]
-                .into_iter()
-                .chain(approx)
-                .collect(),
-            );
+                },
+                other: approx,
+            });
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }

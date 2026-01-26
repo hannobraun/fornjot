@@ -14,3 +14,14 @@ impl spade::HasPosition for ApproxPoint<2> {
         spade::Point2 { x, y }
     }
 }
+
+pub struct HalfEdgeApprox {
+    pub start: ApproxPoint<2>,
+    pub other: Vec<ApproxPoint<2>>,
+}
+
+impl HalfEdgeApprox {
+    pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
+        [self.start].into_iter().chain(self.other.iter().copied())
+    }
+}
