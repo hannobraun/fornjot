@@ -12,8 +12,7 @@ use crate::approx::ApproxPoint;
 pub fn approx_face(
     boundary: Vec<(ApproxPoint<2>, Vec<ApproxPoint<2>>)>,
 ) -> Vec<Triangle<3>> {
-    let Some(start) = boundary.first().map(|&(position, _)| position.local)
-    else {
+    let Some(start) = boundary.first().map(|&(start, _)| start.local) else {
         return Vec::new();
     };
 
