@@ -14,6 +14,8 @@ pub fn approx_face(boundary: Vec<HalfEdgeApprox>) -> Vec<Triangle<3>> {
         return Vec::new();
     };
 
+    let boundary_points =
+        boundary.iter().flat_map(|half_edge| half_edge.points());
     let polygon = polygon(
         boundary
             .iter()
@@ -21,7 +23,7 @@ pub fn approx_face(boundary: Vec<HalfEdgeApprox>) -> Vec<Triangle<3>> {
             .chain([start.local]),
     );
 
-    delaunay(boundary.iter().flat_map(|half_edge| half_edge.points()))
+    delaunay(boundary_points)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
