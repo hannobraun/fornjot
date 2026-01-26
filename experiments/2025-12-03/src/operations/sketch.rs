@@ -108,11 +108,8 @@ impl Sketch {
             );
 
             boundary.push(half_edge);
-            positions_and_half_edges_and_approx.push((
-                current.end,
-                half_edge,
-                approx,
-            ));
+            positions_and_half_edges_and_approx
+                .push((prev.end, half_edge, approx));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }

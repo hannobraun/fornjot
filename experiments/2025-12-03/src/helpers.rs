@@ -23,17 +23,20 @@ pub fn approx_face(
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx
-        .last()
+        .first()
         .map(|&(position, _, _)| position)
     else {
         return Vec::new();
     };
 
-    let polygon = polygon([start].into_iter().chain(
-        positions_and_half_edges_and_approx.iter().flat_map(
-            |(position, _, approx)| approx.iter().chain([position]).copied(),
-        ),
-    ));
+    let polygon = polygon(
+        positions_and_half_edges_and_approx
+            .iter()
+            .flat_map(|(position, _, approx)| {
+                [position].into_iter().chain(approx).copied()
+            })
+            .chain([start]),
+    );
 
     let points = positions_and_half_edges_and_approx.into_iter().flat_map(
         |(local, half_edge, approx)| {
@@ -46,13 +49,13 @@ pub fn approx_face(
                 .zip(half_edge.approx.iter().copied())
                 .map(|(local, global)| ApproxPoint { local, global });
             let point_from_vertex = {
-                let [_, vertex] = half_edge.boundary;
+                let [vertex, _] = half_edge.boundary;
                 let global = vertices[vertex].point;
 
                 ApproxPoint { local, global }
             };
 
-            points_from_approx.into_iter().chain([point_from_vertex])
+            [point_from_vertex].into_iter().chain(points_from_approx)
         },
     );
 

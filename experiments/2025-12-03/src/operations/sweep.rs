@@ -106,7 +106,7 @@ pub fn face_to_solid(
             let approx = approx_face(
                 vec![
                     (
-                        Point::from([1., 0.]),
+                        Point::from([0., 0.]),
                         bottom,
                         local_approx_coords(
                             bottom,
@@ -118,7 +118,7 @@ pub fn face_to_solid(
                         .collect(),
                     ),
                     (
-                        Point::from([1., 1.]),
+                        Point::from([1., 0.]),
                         right,
                         local_approx_coords(
                             right,
@@ -129,7 +129,7 @@ pub fn face_to_solid(
                         .map(|point| point.local)
                         .collect(),
                     ),
-                    (Point::from([0., 1.]), top, {
+                    (Point::from([1., 1.]), top, {
                         let mut approx = local_approx_coords(
                             top,
                             FixedCoord::V { value: 1. },
@@ -138,7 +138,7 @@ pub fn face_to_solid(
                         approx.reverse();
                         approx.into_iter().map(|point| point.local).collect()
                     }),
-                    (Point::from([0., 0.]), left, {
+                    (Point::from([0., 1.]), left, {
                         let mut approx = local_approx_coords(
                             left,
                             FixedCoord::U { value: 0. },
