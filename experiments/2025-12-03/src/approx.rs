@@ -1,5 +1,10 @@
 use fj_math::Point;
 
+use crate::{
+    store::{Index, Store},
+    topology::HalfEdge,
+};
+
 #[derive(Clone, Copy, Debug)]
 pub struct ApproxPoint<const D: usize> {
     pub local: Point<D>,
@@ -24,4 +29,49 @@ impl HalfEdgeApprox {
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
         [self.start].into_iter().chain(self.other.iter().copied())
     }
+}
+
+pub fn local_approx_coords(
+    half_edge: Index<HalfEdge>,
+    fixed: FixedCoord,
+    half_edges: &Store<HalfEdge>,
+    reverse: bool,
+) -> Vec<ApproxPoint<2>> {
+    let half_edge = &half_edges[half_edge];
+
+    let local = {
+        let increment = 1. / (half_edge.approx.len() as f64 + 1.);
+
+        let mut points = (0..half_edge.approx.len())
+            .map(|i| increment * (i + 1) as f64)
+            .collect::<Vec<_>>();
+
+        if reverse {
+            points.reverse();
+        }
+
+        points
+    };
+    let global = half_edge.approx.iter().copied();
+
+    local
+        .into_iter()
+        .zip(global)
+        .map(|(local, global)| {
+            let (u, v) = match fixed {
+                FixedCoord::U { value } => (value, local),
+                FixedCoord::V { value } => (local, value),
+            };
+
+            ApproxPoint {
+                local: Point::from([u, v]),
+                global,
+            }
+        })
+        .collect()
+}
+
+pub enum FixedCoord {
+    U { value: f64 },
+    V { value: f64 },
 }
