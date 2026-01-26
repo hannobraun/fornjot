@@ -35,7 +35,10 @@ impl HalfEdgeApprox {
     ) -> Self {
         let start = {
             let local = start.into();
-            let [global, _] = half_edges[half_edge].boundary;
+            let global = {
+                let [global, _] = half_edges[half_edge].boundary;
+                global
+            };
 
             ApproxPoint {
                 local,
