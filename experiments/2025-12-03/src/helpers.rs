@@ -19,7 +19,7 @@ pub fn approx_face(
         Index<HalfEdge>,
         Vec<ApproxPoint<2>>,
     )>,
-    half_edges: &Store<HalfEdge>,
+    _: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx
         .first()
@@ -39,15 +39,9 @@ pub fn approx_face(
             .chain([start]),
     );
 
-    let points = positions_and_half_edges_and_approx.into_iter().flat_map(
-        |(start, half_edge, approx)| {
-            let half_edge = &half_edges[half_edge];
-
-            assert_eq!(half_edge.approx.len(), approx.len());
-
-            [start].into_iter().chain(approx)
-        },
-    );
+    let points = positions_and_half_edges_and_approx
+        .into_iter()
+        .flat_map(|(start, _, approx)| [start].into_iter().chain(approx));
 
     delaunay(points)
         .into_iter()
