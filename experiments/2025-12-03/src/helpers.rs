@@ -17,7 +17,7 @@ pub fn approx_face(boundary: Vec<Vec<ApproxPoint<2>>>) -> Vec<Triangle<3>> {
     let polygon = polygon(
         boundary
             .iter()
-            .flat_map(|approx| approx.iter().map(|point| point.local))
+            .flat_map(|points| points.iter().map(|point| point.local))
             .chain([start.local]),
     );
 
