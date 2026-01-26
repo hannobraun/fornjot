@@ -117,10 +117,7 @@ pub fn face_to_solid(
                             FixedCoord::V { value: 0. },
                             half_edges,
                             false,
-                        )
-                        .into_iter()
-                        .map(|point| point.local)
-                        .collect(),
+                        ),
                     ),
                     (
                         ApproxPoint {
@@ -134,10 +131,7 @@ pub fn face_to_solid(
                             FixedCoord::U { value: 1. },
                             half_edges,
                             false,
-                        )
-                        .into_iter()
-                        .map(|point| point.local)
-                        .collect(),
+                        ),
                     ),
                     (
                         ApproxPoint {
@@ -150,10 +144,7 @@ pub fn face_to_solid(
                             FixedCoord::V { value: 1. },
                             half_edges,
                             true,
-                        )
-                        .into_iter()
-                        .map(|point| point.local)
-                        .collect(),
+                        ),
                     ),
                     (
                         ApproxPoint {
@@ -167,10 +158,7 @@ pub fn face_to_solid(
                             FixedCoord::U { value: 0. },
                             half_edges,
                             true,
-                        )
-                        .into_iter()
-                        .map(|point| point.local)
-                        .collect(),
+                        ),
                     ),
                 ],
                 half_edges,

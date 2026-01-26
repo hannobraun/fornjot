@@ -115,7 +115,7 @@ impl Sketch {
                     global: vertices[half_edges[half_edge].boundary[0]].point,
                 },
                 half_edge,
-                approx.into_iter().map(|point| point.local).collect(),
+                approx,
             ));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
