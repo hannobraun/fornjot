@@ -21,9 +21,7 @@ pub fn approx_face(boundary: Vec<Vec<ApproxPoint<2>>>) -> Vec<Triangle<3>> {
             .chain([start.local]),
     );
 
-    let points = boundary.into_iter().flatten();
-
-    delaunay(points)
+    delaunay(boundary.into_iter().flatten())
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
