@@ -9,27 +9,19 @@ use spade::Triangulation;
 
 use crate::approx::ApproxPoint;
 
-pub fn approx_face(
-    boundary: Vec<(ApproxPoint<2>, Vec<ApproxPoint<2>>)>,
-) -> Vec<Triangle<3>> {
-    let Some(start) = boundary.first().map(|(start, _)| start) else {
+pub fn approx_face(boundary: Vec<Vec<ApproxPoint<2>>>) -> Vec<Triangle<3>> {
+    let Some(start) = boundary.first().and_then(|points| points.first()) else {
         return Vec::new();
     };
 
     let polygon = polygon(
         boundary
             .iter()
-            .flat_map(|(start, approx)| {
-                [start.local]
-                    .into_iter()
-                    .chain(approx.iter().map(|point| point.local))
-            })
+            .flat_map(|approx| approx.iter().map(|point| point.local))
             .chain([start.local]),
     );
 
-    let points = boundary
-        .into_iter()
-        .flat_map(|(start, approx)| [start].into_iter().chain(approx));
+    let points = boundary.into_iter().flatten();
 
     delaunay(points)
         .into_iter()

@@ -109,13 +109,15 @@ impl Sketch {
             );
 
             boundary.push(half_edge);
-            positions_and_half_edges_and_approx.push((
-                ApproxPoint {
+            positions_and_half_edges_and_approx.push(
+                [ApproxPoint {
                     local: prev.end,
                     global: vertices[half_edges[half_edge].boundary[0]].point,
-                },
-                approx,
-            ));
+                }]
+                .into_iter()
+                .chain(approx)
+                .collect(),
+            );
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }

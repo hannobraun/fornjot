@@ -104,54 +104,54 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let approx = approx_face(vec![
-                (
-                    ApproxPoint {
-                        local: Point::from([0., 0.]),
-                        global: vertices[half_edges[bottom].boundary[0]].point,
-                    },
-                    local_approx_coords(
-                        bottom,
-                        FixedCoord::V { value: 0. },
-                        half_edges,
-                        false,
-                    ),
-                ),
-                (
-                    ApproxPoint {
-                        local: Point::from([1., 0.]),
-                        global: vertices[half_edges[right].boundary[0]].point,
-                    },
-                    local_approx_coords(
-                        right,
-                        FixedCoord::U { value: 1. },
-                        half_edges,
-                        false,
-                    ),
-                ),
-                (
-                    ApproxPoint {
-                        local: Point::from([1., 1.]),
-                        global: vertices[half_edges[top].boundary[0]].point,
-                    },
-                    local_approx_coords(
-                        top,
-                        FixedCoord::V { value: 1. },
-                        half_edges,
-                        true,
-                    ),
-                ),
-                (
-                    ApproxPoint {
-                        local: Point::from([0., 1.]),
-                        global: vertices[half_edges[left].boundary[0]].point,
-                    },
-                    local_approx_coords(
-                        left,
-                        FixedCoord::U { value: 0. },
-                        half_edges,
-                        true,
-                    ),
-                ),
+                [ApproxPoint {
+                    local: Point::from([0., 0.]),
+                    global: vertices[half_edges[bottom].boundary[0]].point,
+                }]
+                .into_iter()
+                .chain(local_approx_coords(
+                    bottom,
+                    FixedCoord::V { value: 0. },
+                    half_edges,
+                    false,
+                ))
+                .collect(),
+                [ApproxPoint {
+                    local: Point::from([1., 0.]),
+                    global: vertices[half_edges[right].boundary[0]].point,
+                }]
+                .into_iter()
+                .chain(local_approx_coords(
+                    right,
+                    FixedCoord::U { value: 1. },
+                    half_edges,
+                    false,
+                ))
+                .collect(),
+                [ApproxPoint {
+                    local: Point::from([1., 1.]),
+                    global: vertices[half_edges[top].boundary[0]].point,
+                }]
+                .into_iter()
+                .chain(local_approx_coords(
+                    top,
+                    FixedCoord::V { value: 1. },
+                    half_edges,
+                    true,
+                ))
+                .collect(),
+                [ApproxPoint {
+                    local: Point::from([0., 1.]),
+                    global: vertices[half_edges[left].boundary[0]].point,
+                }]
+                .into_iter()
+                .chain(local_approx_coords(
+                    left,
+                    FixedCoord::U { value: 0. },
+                    half_edges,
+                    true,
+                ))
+                .collect(),
             ]);
 
             faces.push(Face {
