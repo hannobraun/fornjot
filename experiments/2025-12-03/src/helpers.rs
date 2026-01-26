@@ -15,16 +15,16 @@ use crate::{
 
 pub fn approx_face(
     positions_and_half_edges_and_approx: Vec<(
-        Point<2>,
+        ApproxPoint<2>,
         Index<HalfEdge>,
         Vec<Point<2>>,
     )>,
-    vertices: &Store<Vertex>,
+    _: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx
         .first()
-        .map(|&(position, _, _)| position)
+        .map(|&(position, _, _)| position.local)
     else {
         return Vec::new();
     };
@@ -33,7 +33,7 @@ pub fn approx_face(
         positions_and_half_edges_and_approx
             .iter()
             .flat_map(|(position, _, approx)| {
-                [*position].into_iter().chain(approx.iter().copied())
+                [position.local].into_iter().chain(approx.iter().copied())
             })
             .chain([start]),
     );
@@ -44,12 +44,7 @@ pub fn approx_face(
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let point_from_vertex = {
-                let [vertex, _] = half_edge.boundary;
-                let global = vertices[vertex].point;
-
-                ApproxPoint { local, global }
-            };
+            let point_from_vertex = local;
             let points_from_approx = approx
                 .into_iter()
                 .zip(half_edge.approx.iter().copied())
