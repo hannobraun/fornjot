@@ -207,7 +207,6 @@ fn local_approx_coords(
             .map(|i| increment * (i + 1) as f64)
             .collect::<Vec<_>>()
     };
-
     let global = half_edge.approx.iter().copied();
 
     local
