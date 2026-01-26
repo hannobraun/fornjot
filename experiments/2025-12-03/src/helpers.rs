@@ -10,7 +10,7 @@ use spade::Triangulation;
 use crate::{
     approx::ApproxPoint,
     store::{Index, Store},
-    topology::{HalfEdge, Vertex},
+    topology::HalfEdge,
 };
 
 pub fn approx_face(
@@ -19,7 +19,6 @@ pub fn approx_face(
         Index<HalfEdge>,
         Vec<Point<2>>,
     )>,
-    _: &Store<Vertex>,
     half_edges: &Store<HalfEdge>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx

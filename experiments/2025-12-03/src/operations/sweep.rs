@@ -140,8 +140,7 @@ pub fn face_to_solid(
                     (
                         ApproxPoint {
                             local: Point::from([1., 1.]),
-                            global: vertices[half_edges[top].boundary[0]]
-                                .point,
+                            global: vertices[half_edges[top].boundary[0]].point,
                         },
                         top,
                         {
@@ -178,7 +177,6 @@ pub fn face_to_solid(
                         },
                     ),
                 ],
-                vertices,
                 half_edges,
             );
 
