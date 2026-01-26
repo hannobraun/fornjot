@@ -38,12 +38,12 @@ pub fn approx_face(
     );
 
     let points = positions_and_half_edges_and_approx.into_iter().flat_map(
-        |(local, half_edge, approx)| {
+        |(start, half_edge, approx)| {
             let half_edge = &half_edges[half_edge];
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let point_from_vertex = local;
+            let point_from_vertex = start;
             let points_from_approx = approx
                 .into_iter()
                 .zip(half_edge.approx.iter().copied())
