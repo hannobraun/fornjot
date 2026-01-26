@@ -1,7 +1,5 @@
-use fj_math::Point;
-
 use crate::{
-    approx::{ApproxPoint, FixedCoord, HalfEdgeApprox, local_approx_coords},
+    approx::{FixedCoord, HalfEdgeApprox},
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
@@ -104,54 +102,38 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let approx = approx_face(vec![
-                HalfEdgeApprox {
-                    start: ApproxPoint {
-                        local: Point::from([0., 0.]),
-                        global: vertices[half_edges[bottom].boundary[0]].point,
-                    },
-                    other: local_approx_coords(
-                        bottom,
-                        FixedCoord::V { value: 0. },
-                        half_edges,
-                        false,
-                    ),
-                },
-                HalfEdgeApprox {
-                    start: ApproxPoint {
-                        local: Point::from([1., 0.]),
-                        global: vertices[half_edges[right].boundary[0]].point,
-                    },
-                    other: local_approx_coords(
-                        right,
-                        FixedCoord::U { value: 1. },
-                        half_edges,
-                        false,
-                    ),
-                },
-                HalfEdgeApprox {
-                    start: ApproxPoint {
-                        local: Point::from([1., 1.]),
-                        global: vertices[half_edges[top].boundary[0]].point,
-                    },
-                    other: local_approx_coords(
-                        top,
-                        FixedCoord::V { value: 1. },
-                        half_edges,
-                        true,
-                    ),
-                },
-                HalfEdgeApprox {
-                    start: ApproxPoint {
-                        local: Point::from([0., 1.]),
-                        global: vertices[half_edges[left].boundary[0]].point,
-                    },
-                    other: local_approx_coords(
-                        left,
-                        FixedCoord::U { value: 0. },
-                        half_edges,
-                        true,
-                    ),
-                },
+                HalfEdgeApprox::with_evenly_distributed_local_coords(
+                    [0., 0.],
+                    FixedCoord::V { value: 0. },
+                    false,
+                    bottom,
+                    vertices,
+                    half_edges,
+                ),
+                HalfEdgeApprox::with_evenly_distributed_local_coords(
+                    [1., 0.],
+                    FixedCoord::U { value: 1. },
+                    false,
+                    right,
+                    vertices,
+                    half_edges,
+                ),
+                HalfEdgeApprox::with_evenly_distributed_local_coords(
+                    [1., 1.],
+                    FixedCoord::V { value: 1. },
+                    true,
+                    top,
+                    vertices,
+                    half_edges,
+                ),
+                HalfEdgeApprox::with_evenly_distributed_local_coords(
+                    [0., 1.],
+                    FixedCoord::U { value: 0. },
+                    true,
+                    left,
+                    vertices,
+                    half_edges,
+                ),
             ]);
 
             faces.push(Face {

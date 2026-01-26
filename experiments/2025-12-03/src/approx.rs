@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     store::{Index, Store},
-    topology::HalfEdge,
+    topology::{HalfEdge, Vertex},
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -26,6 +26,28 @@ pub struct HalfEdgeApprox {
 }
 
 impl HalfEdgeApprox {
+    pub fn with_evenly_distributed_local_coords(
+        start: impl Into<Point<2>>,
+        fixed_coord: FixedCoord,
+        reverse: bool,
+        half_edge: Index<HalfEdge>,
+        vertices: &Store<Vertex>,
+        half_edges: &Store<HalfEdge>,
+    ) -> Self {
+        Self {
+            start: ApproxPoint {
+                local: start.into(),
+                global: vertices[half_edges[half_edge].boundary[0]].point,
+            },
+            other: local_approx_coords(
+                half_edge,
+                fixed_coord,
+                half_edges,
+                reverse,
+            ),
+        }
+    }
+
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
         [self.start].into_iter().chain(self.other.iter().copied())
     }
