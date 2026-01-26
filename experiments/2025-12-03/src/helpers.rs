@@ -33,7 +33,7 @@ pub fn approx_face(
         positions_and_half_edges_and_approx
             .iter()
             .flat_map(|(position, _, approx)| {
-                [position].into_iter().chain(approx).copied()
+                [*position].into_iter().chain(approx.iter().copied())
             })
             .chain([start]),
     );
