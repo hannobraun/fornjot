@@ -199,9 +199,9 @@ fn local_approx_coords(
     half_edges: &Store<HalfEdge>,
 ) -> Vec<ApproxPoint<2>> {
     let half_edge = &half_edges[half_edge];
+    let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
     let global = half_edge.approx.iter().copied();
-    let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
     global
         .enumerate()
