@@ -19,8 +19,8 @@ pub fn approx_face(
     let polygon = polygon(
         boundary
             .iter()
-            .flat_map(|(position, approx)| {
-                [position.local]
+            .flat_map(|(start, approx)| {
+                [start.local]
                     .into_iter()
                     .chain(approx.iter().map(|point| point.local))
             })
