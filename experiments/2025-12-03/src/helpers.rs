@@ -16,7 +16,7 @@ pub fn approx_face(boundary: Vec<HalfEdgeApprox>) -> Vec<Triangle<3>> {
 
     let boundary_points =
         boundary.iter().flat_map(|half_edge| half_edge.points());
-    let polygon = polygon(
+    let boundary_polygon = polygon(
         boundary
             .iter()
             .flat_map(|half_edge| half_edge.points().map(|point| point.local))
@@ -33,7 +33,7 @@ pub fn approx_face(boundary: Vec<HalfEdgeApprox>) -> Vec<Triangle<3>> {
                 .components
                 .map(|s| s.into_f64());
 
-            polygon.contains(&Coord { x, y })
+            boundary_polygon.contains(&Coord { x, y })
         })
         .map(|triangle| {
             let [p0, p1, p2] = triangle.map(|point| point.global);
