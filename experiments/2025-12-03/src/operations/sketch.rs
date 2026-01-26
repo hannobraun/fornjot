@@ -94,7 +94,7 @@ impl Sketch {
         };
 
         let mut boundary = Vec::new();
-        let mut positions_and_half_edges_and_approx = Vec::new();
+        let mut boundary_approx = Vec::new();
 
         for i in 0..=last_segment_index {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
@@ -109,7 +109,7 @@ impl Sketch {
             );
 
             boundary.push(half_edge);
-            positions_and_half_edges_and_approx.push(
+            boundary_approx.push(
                 [ApproxPoint {
                     local: prev.end,
                     global: vertices[half_edges[half_edge].boundary[0]].point,
@@ -126,7 +126,7 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let approx = approx_face(positions_and_half_edges_and_approx);
+        let approx = approx_face(boundary_approx);
 
         faces.push(Face { boundary, approx })
     }
