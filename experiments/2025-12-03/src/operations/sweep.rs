@@ -206,10 +206,10 @@ fn local_approx_coords(
 
     global
         .zip(local)
-        .map(|(global, inc)| {
+        .map(|(global, local)| {
             let (u, v) = match fixed {
-                FixedCoord::U { value } => (value, inc),
-                FixedCoord::V { value } => (inc, value),
+                FixedCoord::U { value } => (value, local),
+                FixedCoord::V { value } => (local, value),
             };
 
             ApproxPoint {
