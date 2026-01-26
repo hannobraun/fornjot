@@ -145,19 +145,15 @@ pub fn face_to_solid(
                             global: vertices[half_edges[top].boundary[0]].point,
                         },
                         top,
-                        {
-                            let mut approx = local_approx_coords(
-                                top,
-                                FixedCoord::V { value: 1. },
-                                half_edges,
-                                false,
-                            );
-                            approx.reverse();
-                            approx
-                                .into_iter()
-                                .map(|point| point.local)
-                                .collect()
-                        },
+                        local_approx_coords(
+                            top,
+                            FixedCoord::V { value: 1. },
+                            half_edges,
+                            true,
+                        )
+                        .into_iter()
+                        .map(|point| point.local)
+                        .collect(),
                     ),
                     (
                         ApproxPoint {
@@ -166,19 +162,15 @@ pub fn face_to_solid(
                                 .point,
                         },
                         left,
-                        {
-                            let mut approx = local_approx_coords(
-                                left,
-                                FixedCoord::U { value: 0. },
-                                half_edges,
-                                false,
-                            );
-                            approx.reverse();
-                            approx
-                                .into_iter()
-                                .map(|point| point.local)
-                                .collect()
-                        },
+                        local_approx_coords(
+                            left,
+                            FixedCoord::U { value: 0. },
+                            half_edges,
+                            true,
+                        )
+                        .into_iter()
+                        .map(|point| point.local)
+                        .collect(),
                     ),
                 ],
                 half_edges,
