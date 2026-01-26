@@ -201,8 +201,8 @@ fn local_approx_coords(
     let half_edge = &half_edges[half_edge];
     let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
-    let global = half_edge.approx.iter().copied();
     let local = (0..half_edge.approx.len()).map(|i| increment * (i + 1) as f64);
+    let global = half_edge.approx.iter().copied();
 
     local
         .zip(global)
