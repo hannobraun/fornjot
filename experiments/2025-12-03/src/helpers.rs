@@ -44,16 +44,16 @@ pub fn approx_face(
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let points_from_approx = approx
-                .into_iter()
-                .zip(half_edge.approx.iter().copied())
-                .map(|(local, global)| ApproxPoint { local, global });
             let point_from_vertex = {
                 let [vertex, _] = half_edge.boundary;
                 let global = vertices[vertex].point;
 
                 ApproxPoint { local, global }
             };
+            let points_from_approx = approx
+                .into_iter()
+                .zip(half_edge.approx.iter().copied())
+                .map(|(local, global)| ApproxPoint { local, global });
 
             [point_from_vertex].into_iter().chain(points_from_approx)
         },
