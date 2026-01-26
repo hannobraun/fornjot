@@ -33,9 +33,13 @@ impl HalfEdgeApprox {
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
-        let start = ApproxPoint {
-            local: start.into(),
-            global: vertices[half_edges[half_edge].boundary[0]].point,
+        let start = {
+            let local = start.into();
+
+            ApproxPoint {
+                local,
+                global: vertices[half_edges[half_edge].boundary[0]].point,
+            }
         };
 
         Self { start, other }
