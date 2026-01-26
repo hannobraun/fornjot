@@ -7,18 +7,17 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::{approx::ApproxPoint, store::Index, topology::HalfEdge};
+use crate::approx::ApproxPoint;
 
 pub fn approx_face(
     positions_and_half_edges_and_approx: Vec<(
         ApproxPoint<2>,
-        Index<HalfEdge>,
         Vec<ApproxPoint<2>>,
     )>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = positions_and_half_edges_and_approx
         .first()
-        .map(|&(position, _, _)| position.local)
+        .map(|&(position, _)| position.local)
     else {
         return Vec::new();
     };
@@ -26,7 +25,7 @@ pub fn approx_face(
     let polygon = polygon(
         positions_and_half_edges_and_approx
             .iter()
-            .flat_map(|(position, _, approx)| {
+            .flat_map(|(position, approx)| {
                 [position.local]
                     .into_iter()
                     .chain(approx.iter().map(|point| point.local))
@@ -36,7 +35,7 @@ pub fn approx_face(
 
     let points = positions_and_half_edges_and_approx
         .into_iter()
-        .flat_map(|(start, _, approx)| [start].into_iter().chain(approx));
+        .flat_map(|(start, approx)| [start].into_iter().chain(approx));
 
     delaunay(points)
         .into_iter()

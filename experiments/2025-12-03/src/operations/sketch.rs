@@ -114,7 +114,6 @@ impl Sketch {
                     local: prev.end,
                     global: vertices[half_edges[half_edge].boundary[0]].point,
                 },
-                half_edge,
                 approx,
             ));
             self.segments[i].attachment =

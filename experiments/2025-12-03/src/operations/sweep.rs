@@ -109,7 +109,6 @@ pub fn face_to_solid(
                         local: Point::from([0., 0.]),
                         global: vertices[half_edges[bottom].boundary[0]].point,
                     },
-                    bottom,
                     local_approx_coords(
                         bottom,
                         FixedCoord::V { value: 0. },
@@ -122,7 +121,6 @@ pub fn face_to_solid(
                         local: Point::from([1., 0.]),
                         global: vertices[half_edges[right].boundary[0]].point,
                     },
-                    right,
                     local_approx_coords(
                         right,
                         FixedCoord::U { value: 1. },
@@ -135,7 +133,6 @@ pub fn face_to_solid(
                         local: Point::from([1., 1.]),
                         global: vertices[half_edges[top].boundary[0]].point,
                     },
-                    top,
                     local_approx_coords(
                         top,
                         FixedCoord::V { value: 1. },
@@ -148,7 +145,6 @@ pub fn face_to_solid(
                         local: Point::from([0., 1.]),
                         global: vertices[half_edges[left].boundary[0]].point,
                     },
-                    left,
                     local_approx_coords(
                         left,
                         FixedCoord::U { value: 0. },
