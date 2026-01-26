@@ -202,12 +202,11 @@ fn local_approx_coords(
     let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
     let global = half_edge.approx.iter().copied();
+    let local = (0..half_edge.approx.len()).map(|i| increment * (i + 1) as f64);
 
     global
-        .enumerate()
-        .map(|(i, global)| {
-            let inc = increment * (i + 1) as f64;
-
+        .zip(local)
+        .map(|(global, inc)| {
             let (u, v) = match fixed {
                 FixedCoord::U { value } => (value, inc),
                 FixedCoord::V { value } => (inc, value),
