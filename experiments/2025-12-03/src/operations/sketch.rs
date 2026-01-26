@@ -115,7 +115,7 @@ impl Sketch {
                     global: vertices[half_edges[half_edge].boundary[0]].point,
                 },
                 half_edge,
-                approx,
+                approx.into_iter().map(|point| point.local).collect(),
             ));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
@@ -147,7 +147,7 @@ impl SketchSegment {
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
-    ) -> (Index<HalfEdge>, Vec<Point<2>>) {
+    ) -> (Index<HalfEdge>, Vec<ApproxPoint<2>>) {
         let approx = self.geometry.approx(prev.end, self.end, surface);
 
         let boundary = match self.attachment {
@@ -155,10 +155,7 @@ impl SketchSegment {
                 // We just assume that the approximation of the sketch segment
                 // and the existing approximation of the half-edge match. We
                 // should make sure by checking it here.
-                return (
-                    half_edge,
-                    approx.into_iter().map(|point| point.local).collect(),
-                );
+                return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
                 let v0 = prev.to_end_vertex(surface, half_edges, vertices);
@@ -179,10 +176,7 @@ impl SketchSegment {
             approx: approx.iter().copied().map(|point| point.global).collect(),
         });
 
-        (
-            half_edge,
-            approx.into_iter().map(|point| point.local).collect(),
-        )
+        (half_edge, approx)
     }
 
     pub fn to_start_vertex(
