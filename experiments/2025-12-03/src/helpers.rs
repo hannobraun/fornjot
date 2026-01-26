@@ -10,7 +10,8 @@ use spade::Triangulation;
 use crate::approx::ApproxPoint;
 
 pub fn approx_face(boundary: Vec<Vec<ApproxPoint<2>>>) -> Vec<Triangle<3>> {
-    let Some(start) = boundary.first().and_then(|points| points.first()) else {
+    let Some(start) = boundary.first().and_then(|half_edge| half_edge.first())
+    else {
         return Vec::new();
     };
 
