@@ -45,9 +45,7 @@ pub fn approx_face(
 
             assert_eq!(half_edge.approx.len(), approx.len());
 
-            let points_from_approx = approx;
-
-            [start].into_iter().chain(points_from_approx)
+            [start].into_iter().chain(approx)
         },
     );
 
