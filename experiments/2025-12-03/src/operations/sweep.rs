@@ -116,6 +116,7 @@ pub fn face_to_solid(
                             bottom,
                             FixedCoord::V { value: 0. },
                             half_edges,
+                            false,
                         )
                         .into_iter()
                         .map(|point| point.local)
@@ -132,6 +133,7 @@ pub fn face_to_solid(
                             right,
                             FixedCoord::U { value: 1. },
                             half_edges,
+                            false,
                         )
                         .into_iter()
                         .map(|point| point.local)
@@ -148,6 +150,7 @@ pub fn face_to_solid(
                                 top,
                                 FixedCoord::V { value: 1. },
                                 half_edges,
+                                false,
                             );
                             approx.reverse();
                             approx
@@ -168,6 +171,7 @@ pub fn face_to_solid(
                                 left,
                                 FixedCoord::U { value: 0. },
                                 half_edges,
+                                false,
                             );
                             approx.reverse();
                             approx
@@ -197,15 +201,22 @@ fn local_approx_coords(
     half_edge: Index<HalfEdge>,
     fixed: FixedCoord,
     half_edges: &Store<HalfEdge>,
+    reverse: bool,
 ) -> Vec<ApproxPoint<2>> {
     let half_edge = &half_edges[half_edge];
 
     let local = {
         let increment = 1. / (half_edge.approx.len() as f64 + 1.);
 
-        (0..half_edge.approx.len())
+        let mut points = (0..half_edge.approx.len())
             .map(|i| increment * (i + 1) as f64)
-            .collect::<Vec<_>>()
+            .collect::<Vec<_>>();
+
+        if reverse {
+            points.reverse();
+        }
+
+        points
     };
     let global = half_edge.approx.iter().copied();
 
