@@ -26,11 +26,10 @@ pub struct HalfEdgeApprox {
 }
 
 impl HalfEdgeApprox {
-    pub fn with_evenly_distributed_local_coords(
+    pub fn new(
         start: impl Into<Point<2>>,
-        fixed_coord: FixedCoord,
-        reverse: bool,
         half_edge: Index<HalfEdge>,
+        other: Vec<ApproxPoint<2>>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
@@ -39,6 +38,17 @@ impl HalfEdgeApprox {
             global: vertices[half_edges[half_edge].boundary[0]].point,
         };
 
+        Self { start, other }
+    }
+
+    pub fn with_evenly_distributed_local_coords(
+        start: impl Into<Point<2>>,
+        fixed_coord: FixedCoord,
+        reverse: bool,
+        half_edge: Index<HalfEdge>,
+        vertices: &Store<Vertex>,
+        half_edges: &Store<HalfEdge>,
+    ) -> Self {
         let other = {
             let half_edge = &half_edges[half_edge];
 
@@ -74,7 +84,7 @@ impl HalfEdgeApprox {
                 .collect()
         };
 
-        Self { start, other }
+        Self::new(start, half_edge, other, vertices, half_edges)
     }
 
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
