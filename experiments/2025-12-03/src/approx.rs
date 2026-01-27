@@ -50,7 +50,7 @@ impl HalfEdgeApprox {
         start: impl Into<Point<2>>,
         u: Axis,
         v: Axis,
-        reverse: ReverseLocalCoords,
+        _: ReverseLocalCoords,
         half_edge: Index<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
@@ -60,15 +60,8 @@ impl HalfEdgeApprox {
             let num_coords = half_edge.approx.len();
 
             let local = {
-                let mut u = u.iter(num_coords);
-                if let ReverseLocalCoords::True = reverse {
-                    u.reverse();
-                }
-
-                let mut v = v.iter(num_coords);
-                if let ReverseLocalCoords::True = reverse {
-                    v.reverse();
-                }
+                let u = u.iter(num_coords);
+                let v = v.iter(num_coords);
 
                 u.into_iter().zip(v)
             };
@@ -94,7 +87,7 @@ impl HalfEdgeApprox {
 
 pub enum Axis {
     Fixed { value: Scalar },
-    Uniform,
+    Uniform { reverse: bool },
 }
 
 impl Axis {
@@ -110,9 +103,17 @@ impl Axis {
             Axis::Fixed { value } => (0..num_coords)
                 .map(|_| value.into_f64())
                 .collect::<Vec<_>>(),
-            Axis::Uniform => (0..num_coords)
-                .map(|i| increment * (i + 1) as f64)
-                .collect::<Vec<_>>(),
+            Axis::Uniform { reverse } => {
+                let mut coords = (0..num_coords)
+                    .map(|i| increment * (i + 1) as f64)
+                    .collect::<Vec<_>>();
+
+                if *reverse {
+                    coords.reverse();
+                }
+
+                coords
+            }
         }
     }
 }

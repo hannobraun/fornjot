@@ -104,7 +104,7 @@ pub fn face_to_solid(
             let boundary = [
                 HalfEdgeApprox::from_axes(
                     [0., 0.],
-                    Axis::Uniform,
+                    Axis::Uniform { reverse: false },
                     Axis::fixed(0.),
                     ReverseLocalCoords::False,
                     bottom,
@@ -114,7 +114,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::from_axes(
                     [1., 0.],
                     Axis::fixed(1.),
-                    Axis::Uniform,
+                    Axis::Uniform { reverse: false },
                     ReverseLocalCoords::False,
                     right,
                     vertices,
@@ -122,7 +122,7 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::from_axes(
                     [1., 1.],
-                    Axis::Uniform,
+                    Axis::Uniform { reverse: true },
                     Axis::fixed(1.),
                     ReverseLocalCoords::True,
                     top,
@@ -132,7 +132,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::from_axes(
                     [0., 1.],
                     Axis::fixed(0.),
-                    Axis::Uniform,
+                    Axis::Uniform { reverse: true },
                     ReverseLocalCoords::True,
                     left,
                     vertices,
