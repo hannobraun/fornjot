@@ -107,6 +107,12 @@ pub enum Axis {
     Uniform,
 }
 
+impl Axis {
+    pub fn fixed(value: f64) -> Self {
+        Self::Fixed { value }
+    }
+}
+
 pub enum ReverseLocalCoords {
     False,
     True,

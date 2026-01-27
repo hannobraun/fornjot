@@ -105,7 +105,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::from_axes(
                     [0., 0.],
                     Axis::Uniform,
-                    Axis::Fixed { value: 0. },
+                    Axis::fixed(0.),
                     ReverseLocalCoords::False,
                     bottom,
                     vertices,
@@ -113,7 +113,7 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::from_axes(
                     [1., 0.],
-                    Axis::Fixed { value: 1. },
+                    Axis::fixed(1.),
                     Axis::Uniform,
                     ReverseLocalCoords::False,
                     right,
@@ -123,7 +123,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::from_axes(
                     [1., 1.],
                     Axis::Uniform,
-                    Axis::Fixed { value: 1. },
+                    Axis::fixed(1.),
                     ReverseLocalCoords::True,
                     top,
                     vertices,
@@ -131,7 +131,7 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::from_axes(
                     [0., 1.],
-                    Axis::Fixed { value: 0. },
+                    Axis::fixed(0.),
                     Axis::Uniform,
                     ReverseLocalCoords::True,
                     left,
