@@ -60,28 +60,12 @@ impl HalfEdgeApprox {
             let num_coords = half_edge.approx.len();
 
             let local = {
-                let increment = 1. / (num_coords as f64 + 1.);
-
-                let mut u = match u {
-                    Axis::Fixed { value } => (0..num_coords)
-                        .map(|_| value.into_f64())
-                        .collect::<Vec<_>>(),
-                    Axis::Uniform => (0..num_coords)
-                        .map(|i| increment * (i + 1) as f64)
-                        .collect::<Vec<_>>(),
-                };
+                let mut u = u.iter(num_coords);
                 if let ReverseLocalCoords::True = reverse {
                     u.reverse();
                 }
 
-                let mut v = match v {
-                    Axis::Fixed { value } => (0..num_coords)
-                        .map(|_| value.into_f64())
-                        .collect::<Vec<_>>(),
-                    Axis::Uniform => (0..num_coords)
-                        .map(|i| increment * (i + 1) as f64)
-                        .collect::<Vec<_>>(),
-                };
+                let mut v = v.iter(num_coords);
                 if let ReverseLocalCoords::True = reverse {
                     v.reverse();
                 }
@@ -117,6 +101,19 @@ impl Axis {
     pub fn fixed(value: impl Into<Scalar>) -> Self {
         let value = value.into();
         Self::Fixed { value }
+    }
+
+    pub fn iter(&self, num_coords: usize) -> Vec<f64> {
+        let increment = 1. / (num_coords as f64 + 1.);
+
+        match self {
+            Axis::Fixed { value } => (0..num_coords)
+                .map(|_| value.into_f64())
+                .collect::<Vec<_>>(),
+            Axis::Uniform => (0..num_coords)
+                .map(|i| increment * (i + 1) as f64)
+                .collect::<Vec<_>>(),
+        }
     }
 }
 
