@@ -9,7 +9,10 @@ use spade::Triangulation;
 
 use crate::approx::{ApproxPoint, HalfEdgeApprox};
 
-pub fn approx_face(boundary: &[HalfEdgeApprox]) -> Vec<Triangle<3>> {
+pub fn approx_face(
+    boundary: &[HalfEdgeApprox],
+    surface: impl IntoIterator<Item = ApproxPoint<2>>,
+) -> Vec<Triangle<3>> {
     let Some(start) = boundary.first().map(|half_edge| half_edge.start) else {
         return Vec::new();
     };
@@ -23,6 +26,7 @@ pub fn approx_face(boundary: &[HalfEdgeApprox]) -> Vec<Triangle<3>> {
             .chain([start.local]),
     );
 
+    let _ = surface;
     delaunay(boundary_points)
         .into_iter()
         .filter(|triangle| {

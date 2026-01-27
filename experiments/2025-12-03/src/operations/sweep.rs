@@ -135,8 +135,9 @@ pub fn face_to_solid(
                     half_edges,
                 ),
             ];
+            let surface = Vec::new();
 
-            let approx = approx_face(&boundary);
+            let approx = approx_face(&boundary, surface);
 
             faces.push(Face {
                 boundary: vec![bottom, right, top, left],
