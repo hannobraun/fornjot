@@ -46,7 +46,7 @@ impl HalfEdgeApprox {
         Self { start, inner }
     }
 
-    pub fn from_axes(
+    pub fn from_start_and_axes(
         start: impl Into<Point<2>>,
         u: Axis,
         v: Axis,

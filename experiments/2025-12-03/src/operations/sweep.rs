@@ -102,7 +102,7 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let boundary = [
-                HalfEdgeApprox::from_axes(
+                HalfEdgeApprox::from_start_and_axes(
                     [0., 0.],
                     Axis::Uniform { reverse: false },
                     Axis::fixed(0.),
@@ -110,7 +110,7 @@ pub fn face_to_solid(
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_axes(
+                HalfEdgeApprox::from_start_and_axes(
                     [1., 0.],
                     Axis::fixed(1.),
                     Axis::Uniform { reverse: false },
@@ -118,7 +118,7 @@ pub fn face_to_solid(
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_axes(
+                HalfEdgeApprox::from_start_and_axes(
                     [1., 1.],
                     Axis::Uniform { reverse: true },
                     Axis::fixed(1.),
@@ -126,7 +126,7 @@ pub fn face_to_solid(
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_axes(
+                HalfEdgeApprox::from_start_and_axes(
                     [0., 1.],
                     Axis::fixed(0.),
                     Axis::Uniform { reverse: true },
