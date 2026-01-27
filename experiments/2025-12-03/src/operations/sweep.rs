@@ -101,7 +101,7 @@ pub fn face_to_solid(
         .zip(top_edges_for_sides)
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
-            let approx = approx_face(vec![
+            let approx = approx_face(&[
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [0., 0.],
                     FixedCoord::V { value: 0. },

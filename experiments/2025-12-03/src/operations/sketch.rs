@@ -120,7 +120,7 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let approx = approx_face(boundary_approx);
+        let approx = approx_face(&boundary_approx);
 
         faces.push(Face { boundary, approx })
     }
