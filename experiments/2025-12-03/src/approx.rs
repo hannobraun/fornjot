@@ -49,7 +49,7 @@ impl HalfEdgeApprox {
     pub fn with_evenly_distributed_local_coords(
         start: impl Into<Point<2>>,
         fixed_coord: FixedCoord,
-        reverse: bool,
+        reverse: ReverseLocalCoords,
         half_edge: Index<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
@@ -64,7 +64,7 @@ impl HalfEdgeApprox {
                     .map(|i| increment * (i + 1) as f64)
                     .collect::<Vec<_>>();
 
-                if reverse {
+                if let ReverseLocalCoords::True = reverse {
                     points.reverse();
                 }
 
@@ -100,4 +100,9 @@ impl HalfEdgeApprox {
 pub enum FixedCoord {
     U { value: f64 },
     V { value: f64 },
+}
+
+pub enum ReverseLocalCoords {
+    False,
+    True,
 }

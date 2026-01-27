@@ -1,5 +1,5 @@
 use crate::{
-    approx::{FixedCoord, HalfEdgeApprox},
+    approx::{FixedCoord, HalfEdgeApprox, ReverseLocalCoords},
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
@@ -105,7 +105,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [0., 0.],
                     FixedCoord::V { value: 0. },
-                    false,
+                    ReverseLocalCoords::False,
                     bottom,
                     vertices,
                     half_edges,
@@ -113,7 +113,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [1., 0.],
                     FixedCoord::U { value: 1. },
-                    false,
+                    ReverseLocalCoords::False,
                     right,
                     vertices,
                     half_edges,
@@ -121,7 +121,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [1., 1.],
                     FixedCoord::V { value: 1. },
-                    true,
+                    ReverseLocalCoords::True,
                     top,
                     vertices,
                     half_edges,
@@ -129,7 +129,7 @@ pub fn face_to_solid(
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [0., 1.],
                     FixedCoord::U { value: 0. },
-                    true,
+                    ReverseLocalCoords::True,
                     left,
                     vertices,
                     half_edges,
