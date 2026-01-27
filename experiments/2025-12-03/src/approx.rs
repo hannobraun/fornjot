@@ -48,7 +48,7 @@ impl HalfEdgeApprox {
 
     pub fn with_evenly_distributed_local_coords(
         start: impl Into<Point<2>>,
-        fixed: FixedCoord,
+        fixed: Axis,
         reverse: ReverseLocalCoords,
         half_edge: Index<HalfEdge>,
         vertices: &Store<Vertex>,
@@ -77,8 +77,8 @@ impl HalfEdgeApprox {
                 .zip(global)
                 .map(|(local, global)| {
                     let (u, v) = match fixed {
-                        FixedCoord::U { value } => (value, local),
-                        FixedCoord::V { value } => (local, value),
+                        Axis::U { value } => (value, local),
+                        Axis::V { value } => (local, value),
                     };
 
                     ApproxPoint {
@@ -97,7 +97,7 @@ impl HalfEdgeApprox {
     }
 }
 
-pub enum FixedCoord {
+pub enum Axis {
     U { value: f64 },
     V { value: f64 },
 }
