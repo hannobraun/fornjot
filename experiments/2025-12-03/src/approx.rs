@@ -54,7 +54,7 @@ impl HalfEdgeApprox {
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
-        let other = {
+        let inner = {
             let half_edge = &half_edges[half_edge];
 
             let local = {
@@ -89,7 +89,7 @@ impl HalfEdgeApprox {
                 .collect()
         };
 
-        Self::new(start, half_edge, other, vertices, half_edges)
+        Self::new(start, half_edge, inner, vertices, half_edges)
     }
 
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
