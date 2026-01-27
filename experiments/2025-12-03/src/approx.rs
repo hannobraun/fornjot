@@ -29,7 +29,7 @@ impl HalfEdgeApprox {
     pub fn new(
         start: impl Into<Point<2>>,
         half_edge: Index<HalfEdge>,
-        other: Vec<ApproxPoint<2>>,
+        inner: Vec<ApproxPoint<2>>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
@@ -43,10 +43,7 @@ impl HalfEdgeApprox {
             ApproxPoint { local, global }
         };
 
-        Self {
-            start,
-            inner: other,
-        }
+        Self { start, inner }
     }
 
     pub fn with_evenly_distributed_local_coords(
