@@ -104,7 +104,8 @@ pub fn face_to_solid(
             let boundary = [
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [0., 0.],
-                    Axis::V { value: 0. },
+                    Axis::Uniform,
+                    Axis::Fixed { value: 0. },
                     ReverseLocalCoords::False,
                     bottom,
                     vertices,
@@ -112,7 +113,8 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [1., 0.],
-                    Axis::U { value: 1. },
+                    Axis::Fixed { value: 1. },
+                    Axis::Uniform,
                     ReverseLocalCoords::False,
                     right,
                     vertices,
@@ -120,7 +122,8 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [1., 1.],
-                    Axis::V { value: 1. },
+                    Axis::Uniform,
+                    Axis::Fixed { value: 1. },
                     ReverseLocalCoords::True,
                     top,
                     vertices,
@@ -128,7 +131,8 @@ pub fn face_to_solid(
                 ),
                 HalfEdgeApprox::with_evenly_distributed_local_coords(
                     [0., 1.],
-                    Axis::U { value: 0. },
+                    Axis::Fixed { value: 0. },
+                    Axis::Uniform,
                     ReverseLocalCoords::True,
                     left,
                     vertices,
