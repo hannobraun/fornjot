@@ -46,7 +46,7 @@ impl HalfEdgeApprox {
         Self { start, inner }
     }
 
-    pub fn with_evenly_distributed_local_coords(
+    pub fn from_axes(
         start: impl Into<Point<2>>,
         u: Axis,
         v: Axis,
