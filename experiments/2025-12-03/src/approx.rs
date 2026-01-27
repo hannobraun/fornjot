@@ -59,10 +59,9 @@ impl HalfEdgeApprox {
             let num_coords = half_edge.approx.len();
 
             let local = {
-                let u = u.iter(num_coords);
                 let v = v.iter(num_coords);
 
-                u.into_iter().zip(v)
+                u.iter(num_coords).into_iter().zip(v)
             };
             let global = half_edge.approx.iter().copied();
 
