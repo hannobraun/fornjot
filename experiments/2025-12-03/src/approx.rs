@@ -22,7 +22,7 @@ impl spade::HasPosition for ApproxPoint<2> {
 
 pub struct HalfEdgeApprox {
     pub start: ApproxPoint<2>,
-    pub other: Vec<ApproxPoint<2>>,
+    pub inner: Vec<ApproxPoint<2>>,
 }
 
 impl HalfEdgeApprox {
@@ -43,7 +43,10 @@ impl HalfEdgeApprox {
             ApproxPoint { local, global }
         };
 
-        Self { start, other }
+        Self {
+            start,
+            inner: other,
+        }
     }
 
     pub fn with_evenly_distributed_local_coords(
@@ -93,7 +96,7 @@ impl HalfEdgeApprox {
     }
 
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
-        [self.start].into_iter().chain(self.other.iter().copied())
+        [self.start].into_iter().chain(self.inner.iter().copied())
     }
 }
 
