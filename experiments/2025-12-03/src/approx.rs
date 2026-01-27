@@ -78,11 +78,11 @@ impl HalfEdgeApprox {
                 .zip(global)
                 .map(|(local, global)| {
                     let u = match u {
-                        Axis::Fixed { value } => value,
+                        Axis::Fixed { value } => value.into_f64(),
                         Axis::Uniform => local,
                     };
                     let v = match v {
-                        Axis::Fixed { value } => value,
+                        Axis::Fixed { value } => value.into_f64(),
                         Axis::Uniform => local,
                     };
 
@@ -103,13 +103,13 @@ impl HalfEdgeApprox {
 }
 
 pub enum Axis {
-    Fixed { value: f64 },
+    Fixed { value: Scalar },
     Uniform,
 }
 
 impl Axis {
     pub fn fixed(value: impl Into<Scalar>) -> Self {
-        let value = value.into().into_f64();
+        let value = value.into();
         Self::Fixed { value }
     }
 }
