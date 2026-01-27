@@ -1,4 +1,4 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::{
     store::{Index, Store},
@@ -108,7 +108,8 @@ pub enum Axis {
 }
 
 impl Axis {
-    pub fn fixed(value: f64) -> Self {
+    pub fn fixed(value: impl Into<Scalar>) -> Self {
+        let value = value.into().into_f64();
         Self::Fixed { value }
     }
 }
