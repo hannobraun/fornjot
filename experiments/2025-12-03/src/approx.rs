@@ -28,8 +28,8 @@ pub struct HalfEdgeApprox {
 impl HalfEdgeApprox {
     pub fn from_points(
         start: impl Into<Point<2>>,
-        half_edge: Index<HalfEdge>,
         inner: Vec<ApproxPoint<2>>,
+        half_edge: Index<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
@@ -72,7 +72,7 @@ impl HalfEdgeApprox {
                 .collect()
         };
 
-        Self::from_points(start, half_edge, inner, vertices, half_edges)
+        Self::from_points(start, inner, half_edge, vertices, half_edges)
     }
 
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
