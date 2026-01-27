@@ -57,11 +57,12 @@ impl HalfEdgeApprox {
     ) -> Self {
         let inner = {
             let half_edge = &half_edges[half_edge];
+            let num_coords = half_edge.approx.len();
 
             let local = {
-                let increment = 1. / (half_edge.approx.len() as f64 + 1.);
+                let increment = 1. / (num_coords as f64 + 1.);
 
-                let mut points = (0..half_edge.approx.len())
+                let mut points = (0..num_coords)
                     .map(|i| increment * (i + 1) as f64)
                     .collect::<Vec<_>>();
 
