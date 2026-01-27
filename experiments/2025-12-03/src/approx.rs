@@ -50,7 +50,6 @@ impl HalfEdgeApprox {
         start: impl Into<Point<2>>,
         u: Axis,
         v: Axis,
-        _: ReverseLocalCoords,
         half_edge: Index<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
@@ -116,9 +115,4 @@ impl Axis {
             }
         }
     }
-}
-
-pub enum ReverseLocalCoords {
-    False,
-    True,
 }
