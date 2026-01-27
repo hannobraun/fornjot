@@ -62,35 +62,40 @@ impl HalfEdgeApprox {
             let local = {
                 let increment = 1. / (num_coords as f64 + 1.);
 
-                let mut points = (0..num_coords)
-                    .map(|i| increment * (i + 1) as f64)
-                    .collect::<Vec<_>>();
-
+                let mut u = match u {
+                    Axis::Fixed { value } => (0..num_coords)
+                        .map(|_| value.into_f64())
+                        .collect::<Vec<_>>(),
+                    Axis::Uniform => (0..num_coords)
+                        .map(|i| increment * (i + 1) as f64)
+                        .collect::<Vec<_>>(),
+                };
                 if let ReverseLocalCoords::True = reverse {
-                    points.reverse();
+                    u.reverse();
                 }
 
-                points
+                let mut v = match v {
+                    Axis::Fixed { value } => (0..num_coords)
+                        .map(|_| value.into_f64())
+                        .collect::<Vec<_>>(),
+                    Axis::Uniform => (0..num_coords)
+                        .map(|i| increment * (i + 1) as f64)
+                        .collect::<Vec<_>>(),
+                };
+                if let ReverseLocalCoords::True = reverse {
+                    v.reverse();
+                }
+
+                u.into_iter().zip(v)
             };
             let global = half_edge.approx.iter().copied();
 
             local
                 .into_iter()
                 .zip(global)
-                .map(|(local, global)| {
-                    let u = match u {
-                        Axis::Fixed { value } => value.into_f64(),
-                        Axis::Uniform => local,
-                    };
-                    let v = match v {
-                        Axis::Fixed { value } => value.into_f64(),
-                        Axis::Uniform => local,
-                    };
-
-                    ApproxPoint {
-                        local: Point::from([u, v]),
-                        global,
-                    }
+                .map(|((u, v), global)| ApproxPoint {
+                    local: Point::from([u, v]),
+                    global,
                 })
                 .collect()
         };
