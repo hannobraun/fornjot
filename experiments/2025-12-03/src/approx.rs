@@ -58,7 +58,10 @@ impl HalfEdgeApprox {
             let half_edge = &half_edges[half_edge];
             let num_coords = half_edge.approx.len();
 
-            let local = u.iter(num_coords).into_iter().zip(v.iter(num_coords));
+            let local = u
+                .into_iter(num_coords)
+                .into_iter()
+                .zip(v.into_iter(num_coords));
             let global = half_edge.approx.iter().copied();
 
             local
@@ -90,7 +93,7 @@ impl Axis {
         Self::Fixed { value }
     }
 
-    pub fn iter(self, num_coords: usize) -> Vec<f64> {
+    pub fn into_iter(self, num_coords: usize) -> Vec<f64> {
         let increment = 1. / (num_coords as f64 + 1.);
 
         match self {
