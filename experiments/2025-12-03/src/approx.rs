@@ -90,7 +90,7 @@ impl Axis {
         Self::Fixed { value }
     }
 
-    pub fn iter(&self, num_coords: usize) -> Vec<f64> {
+    pub fn iter(self, num_coords: usize) -> Vec<f64> {
         let increment = 1. / (num_coords as f64 + 1.);
 
         match self {
@@ -102,7 +102,7 @@ impl Axis {
                     .map(|i| increment * (i + 1) as f64)
                     .collect::<Vec<_>>();
 
-                if *reverse {
+                if reverse {
                     coords.reverse();
                 }
 
