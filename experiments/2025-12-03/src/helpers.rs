@@ -26,8 +26,7 @@ pub fn approx_face(
             .chain([start.local]),
     );
 
-    let _ = surface;
-    delaunay(boundary_points)
+    delaunay(boundary_points.chain(surface))
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
