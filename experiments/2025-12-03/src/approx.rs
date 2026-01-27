@@ -61,16 +61,14 @@ impl HalfEdgeApprox {
             let local = u
                 .into_iter(num_coords)
                 .into_iter()
-                .zip(v.into_iter(num_coords));
+                .zip(v.into_iter(num_coords))
+                .map(|(u, v)| Point::from([u, v]));
             let global = half_edge.approx.iter().copied();
 
             local
                 .into_iter()
                 .zip(global)
-                .map(|((u, v), global)| ApproxPoint {
-                    local: Point::from([u, v]),
-                    global,
-                })
+                .map(|(local, global)| ApproxPoint { local, global })
                 .collect()
         };
 
