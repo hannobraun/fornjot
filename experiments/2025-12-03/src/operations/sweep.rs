@@ -15,6 +15,7 @@ pub fn face_to_solid(
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
 ) -> Index<Solid> {
+    let approx = curve.approx();
     let mut connect = Connect::new();
 
     let bottom_inv = reverse::face(&faces[bottom], half_edges);
@@ -53,8 +54,6 @@ pub fn face_to_solid(
         .collect::<Vec<_>>();
 
     let (side_edges_going_up, side_edges_going_down) = {
-        let approx = curve.approx();
-
         let mut side_edges_going_up = bottom_vertices
             .iter()
             .copied()
