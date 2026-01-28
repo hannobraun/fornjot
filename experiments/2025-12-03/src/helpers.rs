@@ -26,7 +26,7 @@ pub fn approx_face(
             .chain([start.local]),
     );
 
-    delaunay(boundary_points.chain(surface))
+    delaunay(boundary_points, surface)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
@@ -93,10 +93,14 @@ fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {
 
 fn delaunay(
     boundary: impl IntoIterator<Item = ApproxPoint<2>>,
+    surface: impl IntoIterator<Item = ApproxPoint<2>>,
 ) -> Vec<[ApproxPoint<2>; 3]> {
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
     triangulation.add_constraint_edges(boundary, true).unwrap();
+    surface.into_iter().for_each(|point| {
+        triangulation.insert(point).unwrap();
+    });
 
     triangulation
         .inner_faces()
