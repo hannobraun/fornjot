@@ -1,5 +1,8 @@
+use fj_math::Point;
+use itertools::Itertools;
+
 use crate::{
-    approx::{Axis, HalfEdgeApprox},
+    approx::{ApproxPoint, Axis, HalfEdgeApprox},
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
@@ -134,7 +137,25 @@ pub fn face_to_solid(
                     half_edges,
                 ),
             ];
-            let surface = Vec::new();
+            let surface = {
+                let [bottom, right, _, _] = &boundary;
+
+                let u = bottom.inner.iter().map(|point| point.local.u);
+                let v = right.inner.iter().map(|point| point.local.v);
+
+                let local =
+                    u.cartesian_product(v).map(|(u, v)| Point::from([u, v]));
+                let global = bottom
+                    .inner
+                    .iter()
+                    .map(|point| point.global)
+                    .cartesian_product(approx.iter().copied())
+                    .map(|(point, vector)| point + vector);
+
+                local
+                    .zip(global)
+                    .map(|(local, global)| ApproxPoint { local, global })
+            };
 
             let approx = approx_face(&boundary, surface);
 
