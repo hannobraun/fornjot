@@ -48,15 +48,15 @@ fn model() -> TriMesh {
 
     let bottom = {
         Sketch::new()
-            .line_to([1., 0.])
-            .line_to([1., 1.])
-            .line_to([0., 1.])
-            .line_to_at([0., 0.], left_front_bottom_outer)
+            .arc_to(radius, tolerance, [1., 0.])
+            .arc_to(radius, tolerance, [1., 1.])
+            .arc_to(radius, tolerance, [0., 1.])
+            .arc_to_at(radius, tolerance, [0., 0.], left_front_bottom_outer)
             .line_to_at([0.25, 0.25], left_front_bottom_inner)
-            .arc_to(radius, tolerance, [0.25, 0.75])
-            .arc_to(radius, tolerance, [0.75, 0.75])
-            .arc_to(radius, tolerance, [0.75, 0.25])
-            .arc_to_at(radius, tolerance, [0.25, 0.25], left_front_bottom_inner)
+            .line_to([0.25, 0.75])
+            .line_to([0.75, 0.75])
+            .line_to([0.75, 0.25])
+            .line_to_at([0.25, 0.25], left_front_bottom_inner)
             .line_to_at([0., 0.], left_front_bottom_outer)
             .into_face(
                 Plane {
