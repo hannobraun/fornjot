@@ -108,6 +108,7 @@
 pub mod algorithms;
 pub mod geometry;
 pub mod layers;
+pub mod new;
 pub mod operations;
 pub mod presentation;
 pub mod queries;
