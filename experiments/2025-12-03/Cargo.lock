@@ -618,6 +618,7 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "fj-core",
  "fj-export",
  "fj-interop",
  "fj-math",
@@ -625,6 +626,20 @@ dependencies = [
  "geo",
  "itertools 0.14.0",
  "spade",
+]
+
+[[package]]
+name = "fj-core"
+version = "0.49.0"
+dependencies = [
+ "fj-interop",
+ "fj-math",
+ "itertools 0.14.0",
+ "parking_lot",
+ "robust",
+ "spade",
+ "thiserror 2.0.18",
+ "type-map",
 ]
 
 [[package]]
@@ -2786,6 +2801,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2df906b07856748fa3f6e0ad0cbaa047052d4a7dd609e231c4f72cee8c36f31"
 dependencies = [
  "core_maths",
+]
+
+[[package]]
+name = "type-map"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cb30dbbd9036155e74adad6812e9898d03ec374946234fbcebd5dfc7b9187b90"
+dependencies = [
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
