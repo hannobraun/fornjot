@@ -160,8 +160,6 @@ Maybe the core problem of the old approach, is that it builds up a full topologi
 
 This new approach would do that, and it would do that in a way that seems to preserve the advantages of b-rep. Maybe it also has hidden problems that would make it unworkable. But so far, I haven't seen any.
 
-Currently, I'm still undecided. But maybe this is worth a try.
-
 ## Results
 
-The experiment is still ongoing, and could still fail due to unforeseen problems. But so far, everything's looking good.
+This experiment has concluded successfully and will be merged back into the mainline code.
