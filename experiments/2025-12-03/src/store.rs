@@ -10,10 +10,7 @@ pub struct Store<T> {
     inner: Vec<T>,
 }
 
-impl<T> Store<T>
-where
-    T: PartialEq + fmt::Debug,
-{
+impl<T> Store<T> {
     #[track_caller]
     pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
         let object = object.into();
