@@ -18,10 +18,6 @@ where
     pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
         let object = object.into();
 
-        if self.inner.contains(&object) {
-            panic!("Duplicate object: {object:?}");
-        }
-
         let index = self.inner.len();
         self.inner.push(object);
 
