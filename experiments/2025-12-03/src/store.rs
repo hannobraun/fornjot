@@ -11,6 +11,10 @@ pub struct Store<T> {
 }
 
 impl<T> Store<T> {
+    pub fn new() -> Self {
+        Self { inner: Vec::new() }
+    }
+
     pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
         let object = object.into();
 
@@ -26,9 +30,7 @@ impl<T> Store<T> {
 
 impl<T> Default for Store<T> {
     fn default() -> Self {
-        Self {
-            inner: Vec::default(),
-        }
+        Self::new()
     }
 }
 
