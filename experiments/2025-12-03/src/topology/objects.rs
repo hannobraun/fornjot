@@ -1,6 +1,6 @@
 use fj_math::{Point, Scalar, Triangle};
 
-use crate::store::Index;
+use crate::topology::Index;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {

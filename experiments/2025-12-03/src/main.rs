@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     geometry::{curve::Arc, surface::Plane},
     operations::{sketch::Sketch, sweep},
-    store::Store,
+    topology::Store,
 };
 
 mod approx;
@@ -12,7 +12,6 @@ mod debug;
 mod geometry;
 mod helpers;
 mod operations;
-mod store;
 mod topology;
 
 use debug::DEBUG_WINDOW;

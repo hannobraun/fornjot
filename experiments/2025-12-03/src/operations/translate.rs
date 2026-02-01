@@ -2,10 +2,7 @@ use std::collections::BTreeMap;
 
 use fj_math::{Triangle, Vector};
 
-use crate::{
-    store::{Index, Store},
-    topology::{Face, HalfEdge, Vertex},
-};
+use crate::topology::{Face, HalfEdge, Index, Store, Vertex};
 
 #[derive(Default)]
 pub struct Translate {

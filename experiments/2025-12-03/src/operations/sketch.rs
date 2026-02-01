@@ -5,8 +5,7 @@ use crate::{
     approx::{ApproxPoint, HalfEdgeApprox},
     geometry::surface::Plane,
     helpers::approx_face,
-    store::{Index, Store},
-    topology::{Face, HalfEdge, Vertex},
+    topology::{Face, HalfEdge, Index, Store, Vertex},
 };
 
 pub struct Sketch {

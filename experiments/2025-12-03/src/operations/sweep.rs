@@ -6,8 +6,7 @@ use crate::{
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
-    store::{Index, Store},
-    topology::{Face, HalfEdge, Solid, Vertex},
+    topology::{Face, HalfEdge, Index, Solid, Store, Vertex},
 };
 
 pub fn face_to_solid(

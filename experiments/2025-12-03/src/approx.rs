@@ -1,9 +1,6 @@
 use fj_math::{Point, Scalar};
 
-use crate::{
-    store::{Index, Store},
-    topology::{HalfEdge, Vertex},
-};
+use crate::topology::{HalfEdge, Index, Store, Vertex};
 
 #[derive(Clone, Copy, Debug)]
 pub struct ApproxPoint<const D: usize> {
