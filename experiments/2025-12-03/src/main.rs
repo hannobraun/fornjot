@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     geometry::{curve::Arc, surface::Plane},
     operations::{sketch::Sketch, sweep},
-    topology::Store,
+    topology::Topology,
 };
 
 mod approx;
@@ -34,10 +34,12 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn model() -> TriMesh {
-    let mut vertices = Store::default();
-    let mut half_edges = Store::default();
-    let mut faces = Store::default();
-    let mut solids = Store::default();
+    let Topology {
+        mut faces,
+        mut half_edges,
+        mut solids,
+        mut vertices,
+    } = Topology::default();
 
     let left_front_bottom_outer = vertices.push([0., 0., 0.]);
     let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
