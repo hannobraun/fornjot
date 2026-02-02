@@ -1,8 +1,7 @@
 use std::collections::BTreeMap;
 
+use fj_core::new::topology::{HalfEdge, Index, Store, Vertex};
 use fj_math::Point;
-
-use crate::topology::{HalfEdge, Index, Store, Vertex};
 
 pub struct Connect {
     vertices: BTreeMap<[Index<Vertex>; 2], Index<HalfEdge>>,

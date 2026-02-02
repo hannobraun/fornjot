@@ -1,10 +1,10 @@
+use fj_core::new::topology::Topology;
 use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{curve::Arc, surface::Plane},
     operations::{sketch::Sketch, sweep},
-    topology::Topology,
 };
 
 mod approx;
@@ -12,7 +12,6 @@ mod debug;
 mod geometry;
 mod helpers;
 mod operations;
-mod topology;
 
 use debug::DEBUG_WINDOW;
 

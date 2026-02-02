@@ -1,3 +1,4 @@
+use fj_core::new::topology::{Face, HalfEdge, Index, Store, Vertex};
 use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
@@ -5,7 +6,6 @@ use crate::{
     approx::{ApproxPoint, HalfEdgeApprox},
     geometry::surface::Plane,
     helpers::approx_face,
-    topology::{Face, HalfEdge, Index, Store, Vertex},
 };
 
 pub struct Sketch {

@@ -1,3 +1,4 @@
+use fj_core::new::topology::{Face, HalfEdge, Index, Solid, Store, Vertex};
 use fj_math::Point;
 use itertools::Itertools;
 
@@ -6,7 +7,6 @@ use crate::{
     geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
-    topology::{Face, HalfEdge, Index, Solid, Store, Vertex},
 };
 
 pub fn face_to_solid(
