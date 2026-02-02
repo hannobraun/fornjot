@@ -42,7 +42,7 @@ impl Translate {
         translated
     }
 
-    pub fn half_eldge(
+    pub fn half_edge(
         &mut self,
         half_edge: Index<HalfEdge>,
         offset: impl Into<Vector<3>>,
@@ -80,7 +80,7 @@ pub fn face(
         .iter()
         .copied()
         .map(|half_edge| {
-            translate.half_eldge(half_edge, offset, vertices, half_edges)
+            translate.half_edge(half_edge, offset, vertices, half_edges)
         })
         .collect();
     let approx = face
