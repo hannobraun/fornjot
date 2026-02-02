@@ -28,7 +28,7 @@ glyphon = "0.10.0"
 itertools = "0.14.0"
 
 [dependencies.bytemuck]
-version = "1.24.0"
+version = "1.25.0"
 features = ["derive"]
 
 [dependencies.image]
@@ -44,5 +44,5 @@ features = ["webgl"]
 # `wasm_js` feature when cross-compiling to WASM. Otherwise, `getrandom` will
 # not build.
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
-version = "0.3.4"
+version = "0.4.0"
 features = ["wasm_js"]
