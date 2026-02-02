@@ -28,7 +28,7 @@ glyphon = "0.10.0"
 itertools = "0.14.0"
 
 [dependencies.bytemuck]
-version = "1.24.0"
+version = "1.25.0"
 features = ["derive"]
 
 [dependencies.image]
