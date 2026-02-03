@@ -2,11 +2,11 @@
 //!
 //! See [`Topology`], which is the main entry point to this module.
 
-mod objects;
+mod primitives;
 mod store;
 
 pub use self::{
-    objects::{Face, HalfEdge, Solid, Vertex},
+    primitives::{Face, HalfEdge, Solid, Vertex},
     store::{Index, Store},
 };
 
