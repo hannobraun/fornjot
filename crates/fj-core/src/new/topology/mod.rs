@@ -1,3 +1,7 @@
+//! # Topological primitives to represent shapes
+//!
+//! See [`Topology`], which is the main entry point to this module.
+
 mod objects;
 mod store;
 
