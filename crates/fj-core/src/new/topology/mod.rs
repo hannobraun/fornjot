@@ -56,6 +56,7 @@ pub struct Topology {
 }
 
 impl Topology {
+    /// # Create a new instance of `Topology`
     pub fn new() -> Self {
         Self::default()
     }
