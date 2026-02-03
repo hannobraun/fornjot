@@ -17,3 +17,9 @@ pub struct Topology {
     pub solids: Store<Solid>,
     pub vertices: Store<Vertex>,
 }
+
+impl Topology {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}

@@ -38,7 +38,7 @@ fn model() -> TriMesh {
         mut half_edges,
         mut solids,
         mut vertices,
-    } = Topology::default();
+    } = Topology::new();
 
     let left_front_bottom_outer = vertices.push([0., 0., 0.]);
     let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
