@@ -34,9 +34,24 @@ pub use self::{
 /// See the documentation [`Store`] for more details on that.
 #[derive(Default)]
 pub struct Topology {
+    /// # The store for faces
+    ///
+    /// See [`Face`] for more details.
     pub faces: Store<Face>,
+
+    /// # The store for half-edges
+    ///
+    /// See [`HalfEdge`] for more details.
     pub half_edges: Store<HalfEdge>,
+
+    /// # The store for solids
+    ///
+    /// See [`Solid`] for more details.
     pub solids: Store<Solid>,
+
+    /// # The store for vertices
+    ///
+    /// See [`Vertex`] for more details.
     pub vertices: Store<Vertex>,
 }
 
