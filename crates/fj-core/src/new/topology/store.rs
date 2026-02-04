@@ -5,6 +5,19 @@ use std::{
     ops, vec,
 };
 
+/// # Append-only store for topological primitives
+///
+/// Allows you to store topological primitives, which are then identified by a
+/// stable [`Index`]. Each instance of `Store` stores one specific type of
+/// primitive. You don't actually have to set this up yourself though, as you
+/// can just create an instance of [`Topology`] instead.
+///
+/// While nothing prevents you from creating multiple `Store`s per type of
+/// primitive, Fornjot's design assumes that one store per type of primitive
+/// exists. If you decide to create more, you must take care not to mix up
+/// [`Index`] instances from different stores.
+///
+/// [`Topology`]: crate::new::topology::Topology
 #[derive(Debug)]
 pub struct Store<T> {
     inner: Vec<T>,
