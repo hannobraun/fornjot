@@ -24,8 +24,8 @@ pub use self::{
 ///
 /// Though nothing prevents you from creating multiple instances of this struct
 /// (or not creating any at all, as you can create the [`Store`]s it contains
-/// separately), Fornjot has been designed with the assumptions that one
-/// instance of `Topology` (or more accurately, one set of `Store`s) exists.
+/// separately), Fornjot's design assumes that one instance of `Topology` (or
+/// more accurately, one set of `Store`s) exists.
 ///
 /// You may create multiple `Topology` instances, to keep various shapes
 /// completely isolated from each other. Though the implications of that are
