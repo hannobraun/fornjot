@@ -17,6 +17,7 @@ pub use self::{
 /// Fornjot.
 ///
 /// ```
+/// use fj_core::new::topology::Topology;
 /// let topology = Topology::new();
 /// // call code that operates on the topological objects here
 /// ```
