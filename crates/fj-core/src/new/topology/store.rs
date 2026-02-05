@@ -29,8 +29,8 @@ impl<T> Store<T> {
         Self { inner: Vec::new() }
     }
 
-    pub fn push(&mut self, object: impl Into<T>) -> Index<T> {
-        let object = object.into();
+    pub fn push(&mut self, primitive: impl Into<T>) -> Index<T> {
+        let object = primitive.into();
 
         let index = self.inner.len();
         self.inner.push(object);
