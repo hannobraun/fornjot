@@ -49,8 +49,8 @@ impl<T> Default for Store<T> {
 impl<T> ops::Index<Handle<T>> for Store<T> {
     type Output = T;
 
-    fn index(&self, index: Handle<T>) -> &Self::Output {
-        &self.inner[index.inner]
+    fn index(&self, handle: Handle<T>) -> &Self::Output {
+        &self.inner[handle.inner]
     }
 }
 
