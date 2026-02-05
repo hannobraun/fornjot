@@ -24,6 +24,7 @@ pub struct Store<T> {
 }
 
 impl<T> Store<T> {
+    /// # Create a new instance of `Store`
     pub fn new() -> Self {
         Self { inner: Vec::new() }
     }
