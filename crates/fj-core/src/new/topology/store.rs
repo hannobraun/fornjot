@@ -79,7 +79,7 @@ impl<T> Copy for Handle<T> {}
 
 impl<T> fmt::Debug for Handle<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let type_name = {
+        let primitive = {
             let full_name = type_name::<T>();
 
             full_name
@@ -89,6 +89,6 @@ impl<T> fmt::Debug for Handle<T> {
         };
         let index = self.index;
 
-        write!(f, "Index<{type_name}>({index})")
+        write!(f, "Index<{primitive}>({index})")
     }
 }
