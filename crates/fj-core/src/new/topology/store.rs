@@ -88,6 +88,6 @@ impl<T> fmt::Debug for Handle<T> {
                 .unwrap_or(full_name)
         };
 
-        write!(f, "Index<{primitive}>({index})", index = self.index)
+        write!(f, "Handle<{primitive}>({index})", index = self.index)
     }
 }
