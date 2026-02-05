@@ -87,8 +87,7 @@ impl<T> fmt::Debug for Handle<T> {
                 .map(|(_, name)| name)
                 .unwrap_or(full_name)
         };
-        let index = self.index;
 
-        write!(f, "Index<{primitive}>({index})")
+        write!(f, "Index<{primitive}>({index})", index = self.index)
     }
 }
