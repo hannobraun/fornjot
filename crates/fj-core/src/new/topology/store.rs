@@ -34,7 +34,7 @@ impl<T> Store<T> {
         self.inner.push(primitive.into());
 
         Handle {
-            inner: index,
+            index,
             _t: PhantomData,
         }
     }
@@ -50,7 +50,7 @@ impl<T> ops::Index<Handle<T>> for Store<T> {
     type Output = T;
 
     fn index(&self, handle: Handle<T>) -> &Self::Output {
-        &self.inner[handle.inner]
+        &self.inner[handle.index]
     }
 }
 
@@ -65,7 +65,7 @@ impl<T> IntoIterator for Store<T> {
 
 #[derive(Eq, Ord, PartialOrd, PartialEq)]
 pub struct Handle<T> {
-    inner: usize,
+    index: usize,
     _t: PhantomData<T>,
 }
 
@@ -87,7 +87,7 @@ impl<T> fmt::Debug for Handle<T> {
                 .map(|(_, name)| name)
                 .unwrap_or(full_name)
         };
-        let index = self.inner;
+        let index = self.index;
 
         write!(f, "Index<{type_name}>({index})")
     }
