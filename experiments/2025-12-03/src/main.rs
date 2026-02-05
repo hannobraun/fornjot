@@ -46,31 +46,26 @@ fn model() -> TriMesh {
     let radius = Scalar::from(1.0);
     let tolerance = Scalar::from(0.001);
 
-    let bottom = {
-        Sketch::new()
-            .arc_to(radius, tolerance, [1., 0.])
-            .arc_to(radius, tolerance, [1., 1.])
-            .arc_to(radius, tolerance, [0., 1.])
-            .arc_to_at(radius, tolerance, [0., 0.], left_front_bottom_outer)
-            .line_to_at([0.25, 0.25], left_front_bottom_inner)
-            .line_to([0.25, 0.75])
-            .line_to([0.75, 0.75])
-            .line_to([0.75, 0.25])
-            .line_to_at([0.25, 0.25], left_front_bottom_inner)
-            .line_to_at([0., 0.], left_front_bottom_outer)
-            .into_face(
-                Plane {
-                    origin: Point::from([0., 0., 0.]),
-                    axes: [
-                        Vector::from([0., 1., 0.]),
-                        Vector::from([1., 0., 0.]),
-                    ],
-                },
-                &mut vertices,
-                &mut half_edges,
-                &mut faces,
-            )
-    };
+    let bottom = Sketch::new()
+        .arc_to(radius, tolerance, [1., 0.])
+        .arc_to(radius, tolerance, [1., 1.])
+        .arc_to(radius, tolerance, [0., 1.])
+        .arc_to_at(radius, tolerance, [0., 0.], left_front_bottom_outer)
+        .line_to_at([0.25, 0.25], left_front_bottom_inner)
+        .line_to([0.25, 0.75])
+        .line_to([0.75, 0.75])
+        .line_to([0.75, 0.25])
+        .line_to_at([0.25, 0.25], left_front_bottom_inner)
+        .line_to_at([0., 0.], left_front_bottom_outer)
+        .into_face(
+            Plane {
+                origin: Point::from([0., 0., 0.]),
+                axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
+            },
+            &mut vertices,
+            &mut half_edges,
+            &mut faces,
+        );
 
     let cube = sweep::face_to_solid(
         bottom,
