@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
-use fj_core::new::topology::{Face, HalfEdge, Index, Store, Vertex};
+use fj_core::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
 use fj_math::{Triangle, Vector};
 
 #[derive(Default)]
 pub struct Translate {
-    vertices: BTreeMap<Index<Vertex>, Index<Vertex>>,
+    vertices: BTreeMap<Handle<Vertex>, Handle<Vertex>>,
 }
 
 impl Translate {
@@ -23,10 +23,10 @@ impl Translate {
 
     pub fn vertex(
         &mut self,
-        vertex: Index<Vertex>,
+        vertex: Handle<Vertex>,
         offset: impl Into<Vector<3>>,
         vertices: &mut Store<Vertex>,
-    ) -> Index<Vertex> {
+    ) -> Handle<Vertex> {
         let offset = offset.into();
 
         if let Some(translated) = self.vertices.get(&vertex).copied() {
@@ -44,11 +44,11 @@ impl Translate {
 
     pub fn half_edge(
         &mut self,
-        half_edge: Index<HalfEdge>,
+        half_edge: Handle<HalfEdge>,
         offset: impl Into<Vector<3>>,
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
-    ) -> Index<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let offset = offset.into();
 
         half_edges.push(HalfEdge {

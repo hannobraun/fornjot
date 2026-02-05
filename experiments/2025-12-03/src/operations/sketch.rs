@@ -1,4 +1,4 @@
-use fj_core::new::topology::{Face, HalfEdge, Index, Store, Vertex};
+use fj_core::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
 use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
@@ -42,7 +42,7 @@ impl Sketch {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Scalar>,
         to: impl Into<Point<2>>,
-        at: Index<Vertex>,
+        at: Handle<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
             end: to.into(),
@@ -69,7 +69,7 @@ impl Sketch {
     pub fn line_to_at(
         mut self,
         to: impl Into<Point<2>>,
-        at: Index<Vertex>,
+        at: Handle<Vertex>,
     ) -> Self {
         self.segments.push(SketchSegment {
             end: to.into(),
@@ -86,7 +86,7 @@ impl Sketch {
         vertices: &mut Store<Vertex>,
         half_edges: &mut Store<HalfEdge>,
         faces: &mut Store<Face>,
-    ) -> Index<Face> {
+    ) -> Handle<Face> {
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");
@@ -141,7 +141,7 @@ impl SketchSegment {
         surface: &Plane,
         half_edges: &mut Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
-    ) -> (Index<HalfEdge>, Vec<ApproxPoint<2>>) {
+    ) -> (Handle<HalfEdge>, Vec<ApproxPoint<2>>) {
         let approx = self.geometry.approx(prev.end, self.end, surface);
 
         let boundary = match self.attachment {
@@ -179,7 +179,7 @@ impl SketchSegment {
         surface: &Plane,
         half_edges: &Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
-    ) -> Index<Vertex> {
+    ) -> Handle<Vertex> {
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 let [vertex, _] = half_edges[half_edge].boundary;
@@ -197,7 +197,7 @@ impl SketchSegment {
         surface: &Plane,
         half_edges: &Store<HalfEdge>,
         vertices: &mut Store<Vertex>,
-    ) -> Index<Vertex> {
+    ) -> Handle<Vertex> {
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 let [_, vertex] = half_edges[half_edge].boundary;
@@ -315,6 +315,6 @@ impl SketchSegmentGeometry {
 
 #[derive(Clone, Copy, Debug)]
 enum SketchSegmentAttachment {
-    HalfEdge { half_edge: Index<HalfEdge> },
-    Vertex { vertex: Index<Vertex> },
+    HalfEdge { half_edge: Handle<HalfEdge> },
+    Vertex { vertex: Handle<Vertex> },
 }

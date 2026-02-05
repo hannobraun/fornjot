@@ -1,4 +1,4 @@
-use fj_core::new::topology::{Face, HalfEdge, Index, Solid, Store, Vertex};
+use fj_core::new::topology::{Face, HalfEdge, Handle, Solid, Store, Vertex};
 use fj_math::Point;
 use itertools::Itertools;
 
@@ -10,13 +10,13 @@ use crate::{
 };
 
 pub fn face_to_solid(
-    bottom: Index<Face>,
+    bottom: Handle<Face>,
     curve: &impl Curve,
     vertices: &mut Store<Vertex>,
     half_edges: &mut Store<HalfEdge>,
     faces: &mut Store<Face>,
     solids: &mut Store<Solid>,
-) -> Index<Solid> {
+) -> Handle<Solid> {
     let approx = curve.approx();
     let mut connect = Connect::new();
 

@@ -1,4 +1,4 @@
-use fj_core::new::topology::{HalfEdge, Index, Store, Vertex};
+use fj_core::new::topology::{HalfEdge, Handle, Store, Vertex};
 use fj_math::{Point, Scalar};
 
 #[derive(Clone, Copy, Debug)]
@@ -25,7 +25,7 @@ impl HalfEdgeApprox {
     pub fn from_points(
         start: impl Into<Point<2>>,
         inner: Vec<ApproxPoint<2>>,
-        half_edge: Index<HalfEdge>,
+        half_edge: Handle<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
@@ -46,7 +46,7 @@ impl HalfEdgeApprox {
         start: impl Into<Point<2>>,
         u: Axis,
         v: Axis,
-        half_edge: Index<HalfEdge>,
+        half_edge: Handle<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {

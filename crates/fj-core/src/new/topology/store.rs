@@ -29,11 +29,11 @@ impl<T> Store<T> {
         Self { inner: Vec::new() }
     }
 
-    pub fn push(&mut self, primitive: impl Into<T>) -> Index<T> {
+    pub fn push(&mut self, primitive: impl Into<T>) -> Handle<T> {
         let index = self.inner.len();
         self.inner.push(primitive.into());
 
-        Index {
+        Handle {
             inner: index,
             _t: PhantomData,
         }
@@ -46,10 +46,10 @@ impl<T> Default for Store<T> {
     }
 }
 
-impl<T> ops::Index<Index<T>> for Store<T> {
+impl<T> ops::Index<Handle<T>> for Store<T> {
     type Output = T;
 
-    fn index(&self, index: Index<T>) -> &Self::Output {
+    fn index(&self, index: Handle<T>) -> &Self::Output {
         &self.inner[index.inner]
     }
 }
@@ -64,20 +64,20 @@ impl<T> IntoIterator for Store<T> {
 }
 
 #[derive(Eq, Ord, PartialOrd, PartialEq)]
-pub struct Index<T> {
+pub struct Handle<T> {
     inner: usize,
     _t: PhantomData<T>,
 }
 
-impl<T> Clone for Index<T> {
+impl<T> Clone for Handle<T> {
     fn clone(&self) -> Self {
         *self
     }
 }
 
-impl<T> Copy for Index<T> {}
+impl<T> Copy for Handle<T> {}
 
-impl<T> fmt::Debug for Index<T> {
+impl<T> fmt::Debug for Handle<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let type_name = {
             let full_name = type_name::<T>();

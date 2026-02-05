@@ -1,6 +1,6 @@
 use fj_math::{Point, Scalar, Triangle};
 
-use crate::new::topology::Index;
+use crate::new::topology::Handle;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {
@@ -19,17 +19,17 @@ where
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
-    pub boundary: [Index<Vertex>; 2],
+    pub boundary: [Handle<Vertex>; 2],
     pub approx: Vec<Point<3>>,
 }
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
-    pub boundary: Vec<Index<HalfEdge>>,
+    pub boundary: Vec<Handle<HalfEdge>>,
     pub approx: Vec<Triangle<3>>,
 }
 
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
-    pub boundary: Vec<Index<Face>>,
+    pub boundary: Vec<Handle<Face>>,
 }

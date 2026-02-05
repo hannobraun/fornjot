@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 
-use fj_core::new::topology::{HalfEdge, Index, Store, Vertex};
+use fj_core::new::topology::{HalfEdge, Handle, Store, Vertex};
 use fj_math::Point;
 
 pub struct Connect {
-    vertices: BTreeMap<[Index<Vertex>; 2], Index<HalfEdge>>,
+    vertices: BTreeMap<[Handle<Vertex>; 2], Handle<HalfEdge>>,
 }
 
 impl Connect {
@@ -16,10 +16,10 @@ impl Connect {
 
     pub fn vertices(
         &mut self,
-        vertices: [Index<Vertex>; 2],
+        vertices: [Handle<Vertex>; 2],
         approx: impl IntoIterator<Item = Point<3>>,
         half_edges: &mut Store<HalfEdge>,
-    ) -> Index<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         if let Some(half_edge) = self.vertices.get(&vertices).copied() {
             return half_edge;
         }
