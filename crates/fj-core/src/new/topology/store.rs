@@ -30,10 +30,8 @@ impl<T> Store<T> {
     }
 
     pub fn push(&mut self, primitive: impl Into<T>) -> Index<T> {
-        let object = primitive.into();
-
         let index = self.inner.len();
-        self.inner.push(object);
+        self.inner.push(primitive.into());
 
         Index {
             inner: index,
