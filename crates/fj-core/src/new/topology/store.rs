@@ -44,6 +44,26 @@ impl<T> Store<T> {
         }
     }
 
+    /// # Access a primitive in the store
+    ///
+    /// Access a primitive in the store using a [`Handle`]. Those are returned
+    /// by [`Store::push`].
+    ///
+    /// This method exists to make the means of accessing primitives in the
+    /// store discoverable in the documentation, but it's not the recommended
+    /// way to do so. Indexing the store using the handle using `Store`'s
+    /// [`Index`] implementation is more convenient:
+    ///
+    /// ```
+    /// use fj_core::new::topology::{Store, Vertex};
+    /// use fj_math::Point;
+    ///
+    /// let mut store: Store<Vertex> = Store::new();
+    /// let handle = store.push([0., 0., 0.]);
+    ///
+    /// // Access the primitive without using `Store::get`.
+    /// let vertex = store[handle];
+    /// ```
     pub fn get(&self, handle: &Handle<T>) -> &T {
         &self.inner[handle.index]
     }
