@@ -38,6 +38,10 @@ impl<T> Store<T> {
             _t: PhantomData,
         }
     }
+
+    pub fn get(&self, handle: &Handle<T>) -> &T {
+        &self.inner[handle.index]
+    }
 }
 
 impl<T> Default for Store<T> {
@@ -50,7 +54,7 @@ impl<T> ops::Index<Handle<T>> for Store<T> {
     type Output = T;
 
     fn index(&self, handle: Handle<T>) -> &Self::Output {
-        &self.inner[handle.index]
+        self.get(&handle)
     }
 }
 
