@@ -29,6 +29,10 @@ impl<T> Store<T> {
         Self { inner: Vec::new() }
     }
 
+    /// # Push a new primitive into the store
+    ///
+    /// Returns a [`Handle`] that can be used to access the primitive later.
+    /// See [`Store::get`] for more information on how to do that.
     pub fn push(&mut self, primitive: impl Into<T>) -> Handle<T> {
         let index = self.inner.len();
         self.inner.push(primitive.into());
