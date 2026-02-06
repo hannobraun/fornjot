@@ -2,7 +2,8 @@ use std::{
     any::type_name,
     fmt::{self, Debug},
     marker::PhantomData,
-    ops, vec,
+    ops::Index,
+    vec,
 };
 
 /// # Append-only store for topological primitives
@@ -54,7 +55,7 @@ impl<T> Default for Store<T> {
     }
 }
 
-impl<T> ops::Index<Handle<T>> for Store<T> {
+impl<T> Index<Handle<T>> for Store<T> {
     type Output = T;
 
     fn index(&self, handle: Handle<T>) -> &Self::Output {
