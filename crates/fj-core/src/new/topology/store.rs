@@ -92,6 +92,33 @@ impl<T> IntoIterator for Store<T> {
     }
 }
 
+/// # A handle to a topological primitive
+///
+/// Topological primitives are stored inside [`Store`]. An instance of `Handle`
+/// references a primitive that has been stored and can be used to access it.
+///
+/// The easiest way to do so, is using [`Store`]'s [`Index`] implementation:
+///
+/// ```
+/// use fj_core::new::topology::{Store, Vertex};
+/// use fj_math::Point;
+///
+/// let mut store: Store<Vertex> = Store::new();
+/// let handle = store.push([0., 0., 0.]);
+///
+/// let vertex = store[handle];
+/// ```
+///
+/// Though it's also possible to use [`Store::get`] instead.
+///
+/// Handles are typed, to prevent mix-ups between different stores. However,
+/// there's nothing built into `Handle` to prevent mix-ups between different
+/// stores of the same type.
+///
+/// Fornjot's design assumes that only one store exists per type of primitive.
+/// As long as the user upholds this assumption, there should be no issue. If a
+/// user decides to use multiple sets of stores, they must take care not to mix
+/// up handles between different stores of the same type.
 #[derive(Eq, Ord, PartialOrd, PartialEq)]
 pub struct Handle<T> {
     index: usize,
