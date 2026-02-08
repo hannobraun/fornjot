@@ -2,8 +2,19 @@ use fj_math::{Point, Scalar, Triangle};
 
 use crate::new::topology::Handle;
 
+/// # A vertex
+///
+/// Vertices are the lowest-level topological primitive. The only piece of data
+/// they contain is the point that defines their geometrical representation.
+///
+/// Even though each vertex corresponds to a point, not every point corresponds
+/// to a vertex. There are many points that approximate the curvature of
+/// [`HalfEdge`]s and [`Face`]s, which do not correspond to a vertex.
+///
+/// Vertices form the boundary of [`HalfEdge`]s.
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Vertex {
+    /// # The vertex's geometrical representation
     pub point: Point<3>,
 }
 
