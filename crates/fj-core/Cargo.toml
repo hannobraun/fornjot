@@ -25,4 +25,4 @@ type-map = "0.5.1"
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-anyhow = "1.0.100"
+anyhow = "1.0.101"
