@@ -1,12 +1,11 @@
-use fj_core::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
+use fj_core::new::{
+    approx::{ApproxPoint, HalfEdgeApprox},
+    topology::{Face, HalfEdge, Handle, Store, Vertex},
+};
 use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
-use crate::{
-    approx::{ApproxPoint, HalfEdgeApprox},
-    geometry::surface::Plane,
-    helpers::approx_face,
-};
+use crate::{geometry::surface::Plane, helpers::approx_face};
 
 pub struct Sketch {
     segments: Vec<SketchSegment>,

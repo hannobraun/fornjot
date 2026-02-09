@@ -7,7 +7,6 @@ use crate::{
     operations::{sketch::Sketch, sweep},
 };
 
-mod approx;
 mod debug;
 mod geometry;
 mod helpers;
