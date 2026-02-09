@@ -43,9 +43,15 @@ pub struct HalfEdge {
     pub approx: Vec<Point<3>>,
 }
 
+/// # A face
+///
+/// Faces make up the boundary of [`Solid`]s.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Face {
+    /// # The half-edges that bound the face
     pub boundary: Vec<Handle<HalfEdge>>,
+
+    /// # The triangles that approximate the face
     pub approx: Vec<Triangle<3>>,
 }
 
