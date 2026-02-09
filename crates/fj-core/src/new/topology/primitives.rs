@@ -28,9 +28,18 @@ where
     }
 }
 
+/// # A half-edge
+///
+/// Half-edges make up the boundary of [`Face`]s.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
+    /// # The two vertices that bound the half-edge
     pub boundary: [Handle<Vertex>; 2],
+
+    /// # The points that approximate the half-edge
+    ///
+    /// These points approximate the half-edge _between_ the boundary vertices.
+    /// So this might be empty, if the half-edge is a line segment.
     pub approx: Vec<Point<3>>,
 }
 
