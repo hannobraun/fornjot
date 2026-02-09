@@ -55,7 +55,9 @@ pub struct Face {
     pub approx: Vec<Triangle<3>>,
 }
 
+/// # A solid body
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
+    /// # The faces that bound the solid
     pub boundary: Vec<Handle<Face>>,
 }
