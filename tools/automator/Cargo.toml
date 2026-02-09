@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.101"
 chrono = "0.4.43"
 map-macro = "0.3.0"
 octocrab = "0.49.5"
@@ -19,7 +19,7 @@ url = "2.5.7"
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.5.56"
+version = "4.5.57"
 features = ["derive"]
 
 [dependencies.tokio]

@@ -6,8 +6,8 @@ publish = false
 
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.101"
 tempfile = "3.24.0"
 
 [build-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.101"
