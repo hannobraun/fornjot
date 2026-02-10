@@ -80,6 +80,10 @@ pub struct HalfEdgeApprox {
 }
 
 impl HalfEdgeApprox {
+    /// # Construct `HalfEdgeApprox` by providing all points
+    ///
+    /// This constructor is a suitable choice, if 2D coordinates for all points
+    /// are already available.
     pub fn from_points(
         start: impl Into<Point<2>>,
         inner: Vec<ApproxPoint<2>>,
