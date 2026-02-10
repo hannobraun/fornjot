@@ -14,4 +14,6 @@
 //! [2025-12-03]: https://github.com/hannobraun/fornjot/tree/main/experiments/2025-12-03
 
 pub mod approx;
+#[allow(missing_docs)] // temporary, during the transition
+pub mod geometry;
 pub mod topology;

@@ -1,12 +1,12 @@
 use fj_core::new::{
     approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint},
+    geometry::curve::Curve,
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::curve::Curve,
     helpers::approx_face,
     operations::{connect::Connect, reverse, translate},
 };

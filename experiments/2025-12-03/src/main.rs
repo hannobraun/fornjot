@@ -1,14 +1,13 @@
-use fj_core::new::topology::Topology;
+use fj_core::new::{
+    geometry::{curve::Arc, surface::Plane},
+    topology::Topology,
+};
 use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
-use crate::{
-    geometry::{curve::Arc, surface::Plane},
-    operations::{sketch::Sketch, sweep},
-};
+use crate::operations::{sketch::Sketch, sweep};
 
 mod debug;
-mod geometry;
 mod helpers;
 mod operations;
 
