@@ -108,8 +108,8 @@ impl ApproxHalfEdge {
     ///
     /// Only the `start` point needs to be provided directly. The other points
     /// are taken from the provided `u` and `v` axes. Usually, you'd combine an
-    /// [`Axis::Fixed`] with an [`Axis::Uniform`], to get uniformly distributed
-    /// points along one axis, like `[0, 0.1]`, `[0, 0.2]`, ...
+    /// [`ApproxAxis::Fixed`] with an [`ApproxAxis::Uniform`], to get uniformly
+    /// distributed points along one axis, like `[0, 0.1]`, `[0, 0.2]`, ...
     ///
     /// This is often good enough. The key insight here is, that you don't need
     /// a perfectly accurate local representation of the face's 3D points (like
@@ -122,8 +122,8 @@ impl ApproxHalfEdge {
     /// long as those are connected correctly, it doesn't matter how we did it.
     pub fn from_start_and_axes(
         start: impl Into<Point<2>>,
-        u: Axis,
-        v: Axis,
+        u: ApproxAxis,
+        v: ApproxAxis,
         half_edge: Handle<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
@@ -160,12 +160,12 @@ impl ApproxHalfEdge {
     }
 }
 
-pub enum Axis {
+pub enum ApproxAxis {
     Fixed { value: Scalar },
     Uniform { reverse: bool },
 }
 
-impl Axis {
+impl ApproxAxis {
     pub fn fixed(value: impl Into<Scalar>) -> Self {
         let value = value.into();
         Self::Fixed { value }
@@ -173,10 +173,10 @@ impl Axis {
 
     pub fn into_iter(self, num_coords: usize) -> Vec<f64> {
         match self {
-            Axis::Fixed { value } => (0..num_coords)
+            ApproxAxis::Fixed { value } => (0..num_coords)
                 .map(|_| value.into_f64())
                 .collect::<Vec<_>>(),
-            Axis::Uniform { reverse } => {
+            ApproxAxis::Uniform { reverse } => {
                 let increment = 1. / (num_coords as f64 + 1.);
 
                 let mut coords = (0..num_coords)
