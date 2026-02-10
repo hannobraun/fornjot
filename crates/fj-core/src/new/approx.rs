@@ -195,14 +195,14 @@ impl ApproxAxis {
         Self::Fixed { value }
     }
 
-    pub fn into_iter(self, num_coords: usize) -> impl Iterator<Item = f64> {
+    pub fn into_iter(self, num_coords: usize) -> impl Iterator<Item = Scalar> {
         match self {
             ApproxAxis::Fixed { value } => (0..num_coords)
-                .map(|_| value.into_f64())
+                .map(|_| value)
                 .collect::<Vec<_>>()
                 .into_iter(),
             ApproxAxis::Uniform { reverse } => {
-                let increment = 1. / (num_coords as f64 + 1.);
+                let increment = Scalar::from(1. / (num_coords as f64 + 1.));
 
                 let mut coords = (0..num_coords)
                     .map(|i| increment * (i + 1) as f64)
