@@ -195,6 +195,11 @@ impl ApproxAxis {
         Self::Fixed { value }
     }
 
+    /// # Iterate over the coordinates of this axis
+    ///
+    /// The returned iterator will yield the number of coordinates defined by
+    /// the `num_coords` parameter. The values of those coordinates depend on
+    /// the variant of this `ApproxAxis` instance.
     pub fn into_iter(self, num_coords: usize) -> impl Iterator<Item = Scalar> {
         match self {
             ApproxAxis::Fixed { value } => (0..num_coords)
