@@ -160,9 +160,29 @@ impl ApproxHalfEdge {
     }
 }
 
+/// # Provides iterators over the coordinates of an axis
+///
+/// See [`ApproxHalfEdge::from_start_and_axes`].
 pub enum ApproxAxis {
-    Fixed { value: Scalar },
-    Uniform { reverse: bool },
+    /// # Provide one fixed coordinate for the whole axis
+    Fixed {
+        /// # The fixed coordinate value
+        value: Scalar,
+    },
+
+    /// # Provide uniformly distributed coordinates between `0` and `1`
+    ///
+    /// The number of coordinates provided is determined by the argument passed
+    /// when calling [`ApproxAxis::into_iter`]. The coordinates provided will be
+    /// _between_ `0` and `1`, excluding those limits.
+    Uniform {
+        /// # Indicate whether to reverse the coordinates
+        ///
+        /// Start with the lowest coordinate (the one closest to `0`), if this
+        /// is false. Start with the highest coordinate (the one closest to
+        /// `1`), if this is true.
+        reverse: bool,
+    },
 }
 
 impl ApproxAxis {
