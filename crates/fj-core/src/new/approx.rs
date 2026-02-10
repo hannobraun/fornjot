@@ -134,7 +134,6 @@ impl ApproxHalfEdge {
 
             let local = u
                 .into_iter(num_coords)
-                .into_iter()
                 .zip(v.into_iter(num_coords))
                 .map(|(u, v)| Point::from([u, v]));
             let global = half_edge.approx.iter().copied();
@@ -196,11 +195,12 @@ impl ApproxAxis {
         Self::Fixed { value }
     }
 
-    pub fn into_iter(self, num_coords: usize) -> Vec<f64> {
+    pub fn into_iter(self, num_coords: usize) -> impl Iterator<Item = f64> {
         match self {
             ApproxAxis::Fixed { value } => (0..num_coords)
                 .map(|_| value.into_f64())
-                .collect::<Vec<_>>(),
+                .collect::<Vec<_>>()
+                .into_iter(),
             ApproxAxis::Uniform { reverse } => {
                 let increment = 1. / (num_coords as f64 + 1.);
 
@@ -212,7 +212,7 @@ impl ApproxAxis {
                     coords.reverse();
                 }
 
-                coords
+                coords.into_iter()
             }
         }
     }
