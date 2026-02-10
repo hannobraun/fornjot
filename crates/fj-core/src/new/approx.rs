@@ -53,7 +53,7 @@ impl spade::HasPosition for ApproxPoint<2> {
     }
 }
 
-/// # An approximated half-edge, used for approximating faces
+/// # A representation of a half-edge, for the purpose of approximation
 ///
 /// When creating the approximation of a face, 2D coordinates are required for
 /// the Delaunay triangulation. `ApproxHalfEdge` provides these, in addition to
