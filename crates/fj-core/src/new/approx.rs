@@ -104,6 +104,22 @@ impl HalfEdgeApprox {
         Self { start, inner }
     }
 
+    /// # Construct `HalfEdgeApprox` from axes
+    ///
+    /// Only the `start` point needs to be provided directly. The other points
+    /// are taken from the provided `u` and `v` axes. Usually, you'd combine an
+    /// [`Axis::Fixed`] with an [`Axis::Uniform`], to get uniformly distributed
+    /// points along one axis, like `[0, 0.1]`, `[0, 0.2]`, ...
+    ///
+    /// This is often good enough. The key insight here is, that you don't need
+    /// a perfectly accurate local representation of the face's 3D points (like
+    /// their projection into a surface) to create a triangulation. All you need
+    /// is the correct number of points, relatively position in the correct way.
+    ///
+    /// As long as we connect the points with the right triangles, it doesn't
+    /// matter at all what those triangles are in local coordinates. We throw
+    /// away the local coordinates afterwards and only remember global ones. As
+    /// long as those are connected correctly, it doesn't matter how we did it.
     pub fn from_start_and_axes(
         start: impl Into<Point<2>>,
         u: Axis,
