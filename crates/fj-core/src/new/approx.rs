@@ -53,8 +53,29 @@ impl spade::HasPosition for ApproxPoint<2> {
     }
 }
 
+/// # An approximated half-edge, used for approximating faces
+///
+/// When creating the approximation of a face, 2D coordinates are required for
+/// the Delaunay triangulation. `HalfEdgeApprox` provides these, in addition to
+/// global 3D coordinates.
+///
+/// These 2D coordinates may already be available, for example when creating a
+/// face from a sketch. Or they may not be, making it necessary to create
+/// suitable 2D coordinates for the approximation. `HalfEdgeApprox` provides
+/// constructors for both cases.
 pub struct HalfEdgeApprox {
+    /// # The start point of the approximated half-edge
+    ///
+    /// An end point is not provided, as `HalfEdgeApprox` exists for the express
+    /// purpose of approximating faces. In a face boundary, the end point of one
+    /// half-edge is the start point of the next one, so storing only the start
+    /// point of each half-edge is enough.
     pub start: ApproxPoint<2>,
+
+    /// # The points that approximate that half-edge
+    ///
+    /// This is equivalent to [`HalfEdge`]'s `approx` field, and does not
+    /// include start or end points.
     pub inner: Vec<ApproxPoint<2>>,
 }
 
