@@ -186,6 +186,11 @@ pub enum ApproxAxis {
 }
 
 impl ApproxAxis {
+    /// # Convenience constructor to create an [`ApproxAxis::Fixed`]
+    ///
+    /// Allows you to supply any value that can convert into a [`Scalar`], while
+    /// constructing [`ApproxAxis::Fixed`] directly requires you to provide a
+    /// [`Scalar`] itself.
     pub fn fixed(value: impl Into<Scalar>) -> Self {
         let value = value.into();
         Self::Fixed { value }
