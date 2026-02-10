@@ -149,6 +149,12 @@ impl HalfEdgeApprox {
         Self::from_points(start, inner, half_edge, vertices, half_edges)
     }
 
+    /// # Iterate over all points
+    ///
+    /// This includes the start point and all inner points, but not the end
+    /// point, which is not stored in this struct. Since in the context of a
+    /// face boundary, the end point of one half-edge is the start point of the
+    /// next, end points are not needed here.
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
         [self.start].into_iter().chain(self.inner.iter().copied())
     }
