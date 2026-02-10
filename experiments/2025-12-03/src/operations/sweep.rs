@@ -1,5 +1,5 @@
 use fj_core::new::{
-    approx::{ApproxPoint, Axis, HalfEdgeApprox},
+    approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint},
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 use fj_math::Point;
@@ -105,34 +105,34 @@ pub fn face_to_solid(
         .zip(side_edges_going_down)
         .map(|(((bottom, right), top), left)| {
             let boundary = [
-                HalfEdgeApprox::from_start_and_axes(
+                ApproxHalfEdge::from_start_and_axes(
                     [0., 0.],
-                    Axis::Uniform { reverse: false },
-                    Axis::fixed(0.),
+                    ApproxAxis::Uniform { reverse: false },
+                    ApproxAxis::fixed(0.),
                     bottom,
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_start_and_axes(
+                ApproxHalfEdge::from_start_and_axes(
                     [1., 0.],
-                    Axis::fixed(1.),
-                    Axis::Uniform { reverse: false },
+                    ApproxAxis::fixed(1.),
+                    ApproxAxis::Uniform { reverse: false },
                     right,
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_start_and_axes(
+                ApproxHalfEdge::from_start_and_axes(
                     [1., 1.],
-                    Axis::Uniform { reverse: true },
-                    Axis::fixed(1.),
+                    ApproxAxis::Uniform { reverse: true },
+                    ApproxAxis::fixed(1.),
                     top,
                     vertices,
                     half_edges,
                 ),
-                HalfEdgeApprox::from_start_and_axes(
+                ApproxHalfEdge::from_start_and_axes(
                     [0., 1.],
-                    Axis::fixed(0.),
-                    Axis::Uniform { reverse: true },
+                    ApproxAxis::fixed(0.),
+                    ApproxAxis::Uniform { reverse: true },
                     left,
                     vertices,
                     half_edges,

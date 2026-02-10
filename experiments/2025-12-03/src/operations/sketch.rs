@@ -1,5 +1,5 @@
 use fj_core::new::{
-    approx::{ApproxPoint, HalfEdgeApprox},
+    approx::{ApproxHalfEdge, ApproxPoint},
     topology::{Face, HalfEdge, Handle, Store, Vertex},
 };
 use fj_math::{Circle, Point, Scalar, Vector};
@@ -107,7 +107,7 @@ impl Sketch {
             );
 
             boundary.push(half_edge);
-            boundary_approx.push(HalfEdgeApprox::from_points(
+            boundary_approx.push(ApproxHalfEdge::from_points(
                 prev.end, approx, half_edge, vertices, half_edges,
             ));
             self.segments[i].attachment =

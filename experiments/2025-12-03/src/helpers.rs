@@ -3,13 +3,13 @@ use std::{
     mem,
 };
 
-use fj_core::new::approx::{ApproxPoint, HalfEdgeApprox};
+use fj_core::new::approx::{ApproxHalfEdge, ApproxPoint};
 use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
 pub fn approx_face(
-    boundary: &[HalfEdgeApprox],
+    boundary: &[ApproxHalfEdge],
     surface: impl IntoIterator<Item = ApproxPoint<2>>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = boundary.first().map(|half_edge| half_edge.start) else {
