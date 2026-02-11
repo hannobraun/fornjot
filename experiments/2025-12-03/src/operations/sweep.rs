@@ -1,6 +1,6 @@
 use fj_core::new::{
     approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint},
-    geometry::curve::Curve,
+    geometry::Curve,
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 use fj_math::Point;

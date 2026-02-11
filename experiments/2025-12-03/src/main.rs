@@ -1,5 +1,5 @@
 use fj_core::new::{
-    geometry::{curve::Arc, surface::Plane},
+    geometry::{Arc, Plane},
     topology::Topology,
 };
 use fj_interop::{Color, MeshTriangle, TriMesh};
