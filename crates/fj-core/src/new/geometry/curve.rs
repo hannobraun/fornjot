@@ -1,7 +1,22 @@
 use fj_math::{Circle, Point, Scalar, Vector};
 
+/// # A relative curve
+///
+/// Curves in Fornjot are always _relative_, meaning the user of this trait must
+/// provide a start point to locate them in space.
 pub trait Curve {
+    /// # Access the (relative) end point of the curve
+    ///
+    /// Provides a vector that points from a user-provided start point to the
+    /// end point of the curve.
     fn end(&self) -> Vector<3>;
+
+    /// # Approximate the curve
+    ///
+    /// Returns a list of vectors (relative to a user-provided start point) that
+    /// approximate the curve. If a tolerance value is required, to define how
+    /// far the approximation is allowed to deviate from the idealized curve,
+    /// then such a value must be encoded into the curve itself.
     fn approx(&self) -> Vec<Vector<3>>;
 }
 
