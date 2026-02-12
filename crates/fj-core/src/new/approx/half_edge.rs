@@ -16,7 +16,7 @@ use crate::new::{
 /// suitable 2D coordinates for the approximation. `ApproxHalfEdge` provides
 /// constructors for both cases.
 pub struct ApproxHalfEdge {
-    /// # The start point of the approximated half-edge
+    /// # The start point of the half-edge
     ///
     /// An end point is not provided, as `ApproxHalfEdge` exists for the express
     /// purpose of approximating faces. In a face boundary, the end point of one
@@ -24,7 +24,7 @@ pub struct ApproxHalfEdge {
     /// point of each half-edge is enough.
     pub start: ApproxPoint<2>,
 
-    /// # The points that approximate that half-edge
+    /// # The points that approximate the curve between start and end points
     ///
     /// This is equivalent to [`HalfEdge`]'s `approx` field, and does not
     /// include start or end points.
@@ -102,7 +102,7 @@ impl ApproxHalfEdge {
 
     /// # Iterate over all points
     ///
-    /// This includes the start point and all inner points, but not the end
+    /// This includes the start point and all curve points, but not the end
     /// point, which is not stored in this struct. Since in the context of a
     /// face boundary, the end point of one half-edge is the start point of the
     /// next, end points are not needed here.
