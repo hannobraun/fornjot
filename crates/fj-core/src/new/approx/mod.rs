@@ -14,9 +14,12 @@
 //! implemented, never coming into contact with this module.
 
 mod axis;
+#[allow(missing_docs)] // temporary, during transition
+mod face;
 mod half_edge;
 mod point;
 
 pub use self::{
-    axis::ApproxAxis, half_edge::ApproxHalfEdge, point::ApproxPoint,
+    axis::ApproxAxis, face::ApproxFace, half_edge::ApproxHalfEdge,
+    point::ApproxPoint,
 };

@@ -8,7 +8,6 @@ use fj_math::{Point, Scalar, Vector};
 use crate::operations::{sketch::Sketch, sweep};
 
 mod debug;
-mod helpers;
 mod operations;
 
 use debug::DEBUG_WINDOW;

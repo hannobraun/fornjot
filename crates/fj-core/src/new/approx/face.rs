@@ -3,10 +3,11 @@ use std::{
     mem,
 };
 
-use fj_core::new::approx::{ApproxHalfEdge, ApproxPoint};
 use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
+
+use crate::new::approx::{ApproxHalfEdge, ApproxPoint};
 
 pub struct ApproxFace {
     pub boundary: Vec<ApproxHalfEdge>,
