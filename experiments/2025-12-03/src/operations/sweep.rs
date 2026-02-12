@@ -141,13 +141,13 @@ pub fn face_to_solid(
             let surface = {
                 let [bottom, right, _, _] = &boundary;
 
-                let u = bottom.inner.iter().map(|point| point.local.u);
-                let v = right.inner.iter().map(|point| point.local.v);
+                let u = bottom.curve.iter().map(|point| point.local.u);
+                let v = right.curve.iter().map(|point| point.local.v);
 
                 let local =
                     u.cartesian_product(v).map(|(u, v)| Point::from([u, v]));
                 let global = bottom
-                    .inner
+                    .curve
                     .iter()
                     .map(|point| point.global)
                     .cartesian_product(approx.iter().copied())
