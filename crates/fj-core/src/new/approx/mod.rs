@@ -20,6 +20,8 @@ mod half_edge;
 mod point;
 
 pub use self::{
-    axis::ApproxAxis, face::ApproxFace, half_edge::ApproxHalfEdge,
+    axis::ApproxAxis,
+    face::{ApproxFace, face_approx},
+    half_edge::ApproxHalfEdge,
     point::ApproxPoint,
 };

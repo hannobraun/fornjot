@@ -1,5 +1,5 @@
 use fj_core::new::{
-    approx::{ApproxFace, ApproxHalfEdge, ApproxPoint},
+    approx::{ApproxFace, ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Plane,
     topology::{Face, HalfEdge, Handle, Store, Vertex},
 };
@@ -117,11 +117,10 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let approx = ApproxFace {
+        let approx = face_approx(&ApproxFace {
             boundary: boundary_approx,
             surface: Vec::new(),
-        }
-        .to_face_approx();
+        });
 
         faces.push(Face { boundary, approx })
     }
