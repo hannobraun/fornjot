@@ -118,7 +118,7 @@ impl Sketch {
         }
 
         let surface_approx = Vec::new();
-        let approx = face_approx(&boundary_approx, &surface_approx);
+        let approx = face_approx(&boundary_approx, surface_approx);
 
         faces.push(Face { boundary, approx })
     }

@@ -11,7 +11,7 @@ use crate::new::approx::{ApproxHalfEdge, ApproxPoint};
 
 pub fn face_approx(
     boundary: &[ApproxHalfEdge],
-    surface: &[ApproxPoint<2>],
+    surface: impl IntoIterator<Item = ApproxPoint<2>>,
 ) -> Vec<Triangle<3>> {
     let Some(start) = boundary.first().map(|half_edge| half_edge.start) else {
         return Vec::new();
@@ -26,7 +26,7 @@ pub fn face_approx(
             .chain([start.local]),
     );
 
-    delaunay(boundary_points, surface.iter().copied())
+    delaunay(boundary_points, surface)
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
