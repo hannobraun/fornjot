@@ -1,5 +1,5 @@
 use fj_core::new::{
-    approx::{ApproxFace, ApproxHalfEdge, ApproxPoint, face_approx},
+    approx::{ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Plane,
     topology::{Face, HalfEdge, Handle, Store, Vertex},
 };
@@ -118,10 +118,7 @@ impl Sketch {
         }
 
         let surface_approx = Vec::new();
-        let approx = face_approx(&ApproxFace {
-            boundary: boundary_approx,
-            surface: surface_approx,
-        });
+        let approx = face_approx(&boundary_approx, &surface_approx);
 
         faces.push(Face { boundary, approx })
     }

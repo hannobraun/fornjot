@@ -1,7 +1,5 @@
 use fj_core::new::{
-    approx::{
-        ApproxAxis, ApproxFace, ApproxHalfEdge, ApproxPoint, face_approx,
-    },
+    approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Curve,
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
@@ -155,13 +153,10 @@ pub fn face_to_solid(
                 local
                     .zip(global)
                     .map(|(local, global)| ApproxPoint { local, global })
-                    .collect()
+                    .collect::<Vec<_>>()
             };
 
-            let approx = face_approx(&ApproxFace {
-                boundary: boundary.to_vec(),
-                surface,
-            });
+            let approx = face_approx(&boundary, &surface);
 
             faces.push(Face {
                 boundary: vec![bottom, right, top, left],
