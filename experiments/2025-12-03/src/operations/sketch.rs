@@ -6,7 +6,7 @@ use fj_core::new::{
 use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
-use crate::helpers::approx_face;
+use crate::helpers::{ApproxFace, approx_face};
 
 pub struct Sketch {
     segments: Vec<SketchSegment>,
@@ -120,7 +120,10 @@ impl Sketch {
         }
 
         let surface_approx = Vec::new();
-        let approx = approx_face(&boundary_approx, surface_approx);
+        let approx = approx_face(&ApproxFace {
+            boundary: boundary_approx,
+            surface: surface_approx,
+        });
 
         faces.push(Face { boundary, approx })
     }

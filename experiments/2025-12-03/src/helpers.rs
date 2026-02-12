@@ -8,24 +8,29 @@ use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-pub fn approx_face(
-    boundary: &[ApproxHalfEdge],
-    surface: impl IntoIterator<Item = ApproxPoint<2>>,
-) -> Vec<Triangle<3>> {
-    let Some(start) = boundary.first().map(|half_edge| half_edge.start) else {
+pub struct ApproxFace {
+    pub boundary: Vec<ApproxHalfEdge>,
+    pub surface: Vec<ApproxPoint<2>>,
+}
+
+pub fn approx_face(face: &ApproxFace) -> Vec<Triangle<3>> {
+    let Some(start) = face.boundary.first().map(|half_edge| half_edge.start)
+    else {
         return Vec::new();
     };
 
-    let boundary_points =
-        boundary.iter().flat_map(|half_edge| half_edge.points());
+    let boundary_points = face
+        .boundary
+        .iter()
+        .flat_map(|half_edge| half_edge.points());
     let boundary_polygon = polygon(
-        boundary
+        face.boundary
             .iter()
             .flat_map(|half_edge| half_edge.points().map(|point| point.local))
             .chain([start.local]),
     );
 
-    delaunay(boundary_points, surface)
+    delaunay(boundary_points, face.surface.iter().copied())
         .into_iter()
         .filter(|triangle| {
             let points = triangle.map(|point| point.local);
