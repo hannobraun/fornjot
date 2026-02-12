@@ -28,7 +28,7 @@ pub struct ApproxHalfEdge {
     ///
     /// This is equivalent to [`HalfEdge`]'s `approx` field, and does not
     /// include start or end points.
-    pub inner: Vec<ApproxPoint<2>>,
+    pub curve: Vec<ApproxPoint<2>>,
 }
 
 impl ApproxHalfEdge {
@@ -53,7 +53,10 @@ impl ApproxHalfEdge {
             ApproxPoint { local, global }
         };
 
-        Self { start, inner }
+        Self {
+            start,
+            curve: inner,
+        }
     }
 
     /// # Construct `ApproxHalfEdge` from axes
@@ -107,6 +110,6 @@ impl ApproxHalfEdge {
     /// face boundary, the end point of one half-edge is the start point of the
     /// next, end points are not needed here.
     pub fn points(&self) -> impl Iterator<Item = ApproxPoint<2>> {
-        [self.start].into_iter().chain(self.inner.iter().copied())
+        [self.start].into_iter().chain(self.curve.iter().copied())
     }
 }
