@@ -10,6 +10,7 @@ pub struct Plane {
 }
 
 impl Plane {
+    /// # Convert a surface-local point to a global one
     pub fn local_point_to_global(&self, local: Point<2>) -> Point<3> {
         self.origin + self.local_vector_to_global(local.coords)
     }
