@@ -15,6 +15,7 @@ use crate::new::{
 /// face from a sketch. Or they may not be, making it necessary to create
 /// suitable 2D coordinates for the approximation. `ApproxHalfEdge` provides
 /// constructors for both cases.
+#[derive(Clone)]
 pub struct ApproxHalfEdge {
     /// # The start point of the half-edge
     ///
