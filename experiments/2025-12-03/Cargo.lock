@@ -634,6 +634,7 @@ version = "0.49.0"
 dependencies = [
  "fj-interop",
  "fj-math",
+ "geo",
  "itertools 0.14.0",
  "parking_lot",
  "robust",
