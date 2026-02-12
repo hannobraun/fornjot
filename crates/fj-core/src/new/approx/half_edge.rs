@@ -80,7 +80,7 @@ impl ApproxHalfEdge {
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
     ) -> Self {
-        let inner = {
+        let curve = {
             let half_edge = &half_edges[half_edge];
             let num_coords = half_edge.approx.len();
 
@@ -97,7 +97,7 @@ impl ApproxHalfEdge {
                 .collect()
         };
 
-        Self::from_points(start, inner, half_edge, vertices, half_edges)
+        Self::from_points(start, curve, half_edge, vertices, half_edges)
     }
 
     /// # Iterate over all points
