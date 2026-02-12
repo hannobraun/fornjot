@@ -119,10 +119,9 @@ impl Sketch {
             assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
         }
 
-        let surface_approx = Vec::new();
         let approx = approx_face(&ApproxFace {
             boundary: boundary_approx,
-            surface: surface_approx,
+            surface: Vec::new(),
         });
 
         faces.push(Face { boundary, approx })
