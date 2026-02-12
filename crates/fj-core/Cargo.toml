@@ -16,6 +16,7 @@ workspace = true
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
+geo = "0.32.0"
 itertools = "0.14.0"
 parking_lot = "0.12.5"
 robust = "1.2.0"
