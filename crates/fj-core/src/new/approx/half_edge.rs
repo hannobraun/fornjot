@@ -38,7 +38,7 @@ impl ApproxHalfEdge {
     /// are already available.
     pub fn from_points(
         start: impl Into<Point<2>>,
-        inner: Vec<ApproxPoint<2>>,
+        curve: Vec<ApproxPoint<2>>,
         half_edge: Handle<HalfEdge>,
         vertices: &Store<Vertex>,
         half_edges: &Store<HalfEdge>,
@@ -53,10 +53,7 @@ impl ApproxHalfEdge {
             ApproxPoint { local, global }
         };
 
-        Self {
-            start,
-            curve: inner,
-        }
+        Self { start, curve }
     }
 
     /// # Construct `ApproxHalfEdge` from axes
