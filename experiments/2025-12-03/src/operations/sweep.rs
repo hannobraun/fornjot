@@ -153,7 +153,6 @@ pub fn face_to_solid(
                 local
                     .zip(global)
                     .map(|(local, global)| ApproxPoint { local, global })
-                    .collect::<Vec<_>>()
             };
 
             let approx = face_approx(&boundary, surface);
