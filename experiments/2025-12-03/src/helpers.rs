@@ -13,46 +13,51 @@ pub struct ApproxFace {
     pub surface: Vec<ApproxPoint<2>>,
 }
 
-pub fn approx_face(face: &ApproxFace) -> Vec<Triangle<3>> {
-    let Some(start) = face.boundary.first().map(|half_edge| half_edge.start)
-    else {
-        return Vec::new();
-    };
+impl ApproxFace {
+    pub fn to_face_approx(&self) -> Vec<Triangle<3>> {
+        let Some(start) =
+            self.boundary.first().map(|half_edge| half_edge.start)
+        else {
+            return Vec::new();
+        };
 
-    let boundary_points = face
-        .boundary
-        .iter()
-        .flat_map(|half_edge| half_edge.points());
-    let boundary_polygon = polygon(
-        face.boundary
+        let boundary_points = self
+            .boundary
             .iter()
-            .flat_map(|half_edge| half_edge.points().map(|point| point.local))
-            .chain([start.local]),
-    );
+            .flat_map(|half_edge| half_edge.points());
+        let boundary_polygon = polygon(
+            self.boundary
+                .iter()
+                .flat_map(|half_edge| {
+                    half_edge.points().map(|point| point.local)
+                })
+                .chain([start.local]),
+        );
 
-    delaunay(boundary_points, face.surface.iter().copied())
-        .into_iter()
-        .filter(|triangle| {
-            let points = triangle.map(|point| point.local);
-            let [x, y] = Triangle::from_points(points)
-                .center()
-                .coords
-                .components
-                .map(|s| s.into_f64());
+        delaunay(boundary_points, self.surface.iter().copied())
+            .into_iter()
+            .filter(|triangle| {
+                let points = triangle.map(|point| point.local);
+                let [x, y] = Triangle::from_points(points)
+                    .center()
+                    .coords
+                    .components
+                    .map(|s| s.into_f64());
 
-            boundary_polygon.contains(&Coord { x, y })
-        })
-        .map(|triangle| {
-            let [p0, p1, p2] = triangle.map(|point| point.global);
-            let triangle = Triangle::from([p0, p1, p2]);
+                boundary_polygon.contains(&Coord { x, y })
+            })
+            .map(|triangle| {
+                let [p0, p1, p2] = triangle.map(|point| point.global);
+                let triangle = Triangle::from([p0, p1, p2]);
 
-            if !triangle.is_valid() {
-                panic!("Expected valid triangle; got: {triangle:?}");
-            }
+                if !triangle.is_valid() {
+                    panic!("Expected valid triangle; got: {triangle:?}");
+                }
 
-            triangle
-        })
-        .collect()
+                triangle
+            })
+            .collect()
+    }
 }
 
 fn polygon(points: impl IntoIterator<Item = Point<2>>) -> Polygon {

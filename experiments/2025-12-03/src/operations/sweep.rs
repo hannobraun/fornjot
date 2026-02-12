@@ -7,7 +7,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    helpers::{ApproxFace, approx_face},
+    helpers::ApproxFace,
     operations::{connect::Connect, reverse, translate},
 };
 
@@ -159,10 +159,11 @@ pub fn face_to_solid(
                     .collect()
             };
 
-            let approx = approx_face(&ApproxFace {
+            let approx = ApproxFace {
                 boundary: boundary.to_vec(),
                 surface,
-            });
+            }
+            .to_face_approx();
 
             faces.push(Face {
                 boundary: vec![bottom, right, top, left],
