@@ -15,6 +15,7 @@ impl Plane {
         self.origin + self.local_vector_to_global(local.coords)
     }
 
+    /// # Convert a surface-local vector to a global one
     pub fn local_vector_to_global(&self, local: Vector<2>) -> Vector<3> {
         let [u, v] = local.components;
         let [axis_u, axis_v] = self.axes;
