@@ -1,7 +1,11 @@
 use fj_math::{Point, Vector};
 
+/// # A plane
 pub struct Plane {
+    /// # The origin point of the plane
     pub origin: Point<3>,
+
+    /// # The axes that define the plane's orientation and coordinate system
     pub axes: [Vector<3>; 2],
 }
 
