@@ -4,16 +4,23 @@ use fj_math::Point;
 
 use crate::new::topology::{HalfEdge, Handle, Store, Vertex};
 
+/// # Connect two primitives, creating a new one
 #[derive(Default)]
 pub struct Connect {
     vertices: BTreeMap<[Handle<Vertex>; 2], Handle<HalfEdge>>,
 }
 
 impl Connect {
+    /// # Construct a new instance of `Connect`
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// # Connect two vertices, creating a half-edge
+    ///
+    /// This function caches its result. If you call it multiple times with the
+    /// same two vertices in the same order, it will return a handle to the same
+    /// half-edge both times.
     pub fn vertices(
         &mut self,
         vertices: [Handle<Vertex>; 2],
