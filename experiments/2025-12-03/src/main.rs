@@ -1,6 +1,6 @@
 use fj_core::new::{
     geometry::{Arc, Plane},
-    operations::{sketch::Sketch, sweep},
+    operations::{Sketch, sweep},
     topology::Topology,
 };
 use fj_interop::{Color, MeshTriangle, TriMesh};
