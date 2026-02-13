@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::new::{
     approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Curve,
-    operations::{Connect, Reverse, translate::Translate},
+    operations::{Connect, Reverse, Translate},
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 

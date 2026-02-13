@@ -6,4 +6,5 @@ pub mod translate;
 
 pub use self::{
     connect::Connect, reverse::Reverse, sketch::Sketch, sweep::Sweep,
+    translate::Translate,
 };
