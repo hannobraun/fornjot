@@ -29,7 +29,7 @@ impl Sweep {
 
         let mut connect = Connect::new();
         let mut reverse = Reverse::new();
-        let mut translate = Translate::default();
+        let mut translate = Translate::new();
 
         let bottom_inv = reverse.face(&faces[bottom], half_edges);
 

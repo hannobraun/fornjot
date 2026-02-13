@@ -10,6 +10,10 @@ pub struct Translate {
 }
 
 impl Translate {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn triangle(
         &mut self,
         triangle: Triangle<3>,
