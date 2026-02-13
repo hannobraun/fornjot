@@ -1,3 +1,5 @@
+//! # Operations that create and modify shapes
+
 mod connect;
 mod reverse;
 mod sketch;
