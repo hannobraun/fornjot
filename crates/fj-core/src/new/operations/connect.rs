@@ -1,13 +1,15 @@
 use std::collections::BTreeMap;
 
-use fj_core::new::topology::{HalfEdge, Handle, Store, Vertex};
 use fj_math::Point;
+
+use crate::new::topology::{HalfEdge, Handle, Store, Vertex};
 
 pub struct Connect {
     vertices: BTreeMap<[Handle<Vertex>; 2], Handle<HalfEdge>>,
 }
 
 impl Connect {
+    #[allow(clippy::new_without_default)] // temporary, during transition
     pub fn new() -> Self {
         Self {
             vertices: BTreeMap::new(),

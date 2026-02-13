@@ -15,4 +15,6 @@
 
 pub mod approx;
 pub mod geometry;
+#[allow(missing_docs)] // temporary, during transition
+pub mod operations;
 pub mod topology;

@@ -1,7 +1,8 @@
 use std::collections::BTreeMap;
 
-use fj_core::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
 use fj_math::{Triangle, Vector};
+
+use crate::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
 
 #[derive(Default)]
 pub struct Translate {

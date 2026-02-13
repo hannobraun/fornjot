@@ -1,5 +1,6 @@
-use fj_core::new::topology::{Face, HalfEdge, Store};
 use fj_math::Triangle;
+
+use crate::new::topology::{Face, HalfEdge, Store};
 
 pub fn half_edge(half_edge: &HalfEdge) -> HalfEdge {
     let HalfEdge {

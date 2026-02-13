@@ -1,14 +1,12 @@
 use fj_core::new::{
     geometry::{Arc, Plane},
+    operations::{sketch::Sketch, sweep},
     topology::Topology,
 };
 use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
-use crate::operations::{sketch::Sketch, sweep};
-
 mod debug;
-mod operations;
 
 use debug::DEBUG_WINDOW;
 

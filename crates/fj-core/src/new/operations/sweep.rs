@@ -1,12 +1,12 @@
-use fj_core::new::{
-    approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
-    geometry::Curve,
-    topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
-};
 use fj_math::Point;
 use itertools::Itertools;
 
-use crate::operations::{connect::Connect, reverse, translate};
+use crate::new::{
+    approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
+    geometry::Curve,
+    operations::{connect::Connect, reverse, translate},
+    topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
+};
 
 pub fn face_to_solid(
     bottom: Handle<Face>,
