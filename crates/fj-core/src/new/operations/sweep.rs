@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::new::{
     approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Curve,
-    operations::{Connect, reverse, translate},
+    operations::{Connect, reverse::Reverse, translate},
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 
@@ -18,8 +18,9 @@ pub fn face_to_solid(
 ) -> Handle<Solid> {
     let approx = curve.approx();
     let mut connect = Connect::new();
+    let mut reverse = Reverse::new();
 
-    let bottom_inv = reverse::face(&faces[bottom], half_edges);
+    let bottom_inv = reverse.face(&faces[bottom], half_edges);
 
     let top = {
         let top =
@@ -30,7 +31,7 @@ pub fn face_to_solid(
     let bottom_edges_for_sides = bottom_inv.boundary.clone();
     let top_edges_for_sides = {
         let mut top_edges =
-            reverse::face(&faces[top], half_edges).boundary.clone();
+            reverse.face(&faces[top], half_edges).boundary.clone();
 
         top_edges.reverse();
 

@@ -2,47 +2,60 @@ use fj_math::Triangle;
 
 use crate::new::topology::{Face, HalfEdge, Store};
 
-pub fn half_edge(half_edge: &HalfEdge) -> HalfEdge {
-    let HalfEdge {
-        mut boundary,
-        mut approx,
-    } = half_edge.clone();
+#[derive(Default)]
+pub struct Reverse {}
 
-    boundary.reverse();
-    approx.reverse();
+impl Reverse {
+    pub fn new() -> Self {
+        Self::default()
+    }
 
-    HalfEdge { boundary, approx }
-}
+    pub fn half_edge(&mut self, half_edge: &HalfEdge) -> HalfEdge {
+        let HalfEdge {
+            mut boundary,
+            mut approx,
+        } = half_edge.clone();
 
-pub fn face(face: &Face, half_edges: &mut Store<HalfEdge>) -> Face {
-    let boundary = face
-        .boundary
-        .iter()
-        .copied()
-        .map(|e| {
-            let half_edge = half_edge(&half_edges[e]);
+        boundary.reverse();
+        approx.reverse();
 
-            if let Some(index) = face
-                .boundary
-                .iter()
-                .copied()
-                .find(|&index| half_edges[index] == half_edge)
-            {
-                index
-            } else {
-                half_edges.push(half_edge)
-            }
-        })
-        .rev()
-        .collect();
+        HalfEdge { boundary, approx }
+    }
 
-    let approx = face
-        .approx
-        .iter()
-        .copied()
-        .map(Triangle::reverse)
-        .rev()
-        .collect();
+    pub fn face(
+        &mut self,
+        face: &Face,
+        half_edges: &mut Store<HalfEdge>,
+    ) -> Face {
+        let boundary = face
+            .boundary
+            .iter()
+            .copied()
+            .map(|e| {
+                let half_edge = self.half_edge(&half_edges[e]);
 
-    Face { boundary, approx }
+                if let Some(index) = face
+                    .boundary
+                    .iter()
+                    .copied()
+                    .find(|&index| half_edges[index] == half_edge)
+                {
+                    index
+                } else {
+                    half_edges.push(half_edge)
+                }
+            })
+            .rev()
+            .collect();
+
+        let approx = face
+            .approx
+            .iter()
+            .copied()
+            .map(Triangle::reverse)
+            .rev()
+            .collect();
+
+        Face { boundary, approx }
+    }
 }
