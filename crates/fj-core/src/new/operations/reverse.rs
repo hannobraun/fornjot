@@ -2,14 +2,17 @@ use fj_math::Triangle;
 
 use crate::new::topology::{Face, HalfEdge, Store};
 
+/// # Reverse the orientation of a primitive
 #[derive(Default)]
 pub struct Reverse {}
 
 impl Reverse {
+    /// # Construct a new instance of `Reverse`
     pub fn new() -> Self {
         Self::default()
     }
 
+    /// # Reverse the orientation of the provided half-edge
     pub fn half_edge(&mut self, half_edge: &HalfEdge) -> HalfEdge {
         let HalfEdge {
             mut boundary,
@@ -22,6 +25,7 @@ impl Reverse {
         HalfEdge { boundary, approx }
     }
 
+    /// # Reverse the orientation of the provided face
     pub fn face(
         &mut self,
         face: &Face,
