@@ -7,16 +7,14 @@ use crate::new::{
     topology::{Face, HalfEdge, Handle, Store, Vertex},
 };
 
+#[derive(Default)]
 pub struct Sketch {
     segments: Vec<SketchSegment>,
 }
 
 impl Sketch {
-    #[allow(clippy::new_without_default)] // temporary, during transition
     pub fn new() -> Self {
-        Self {
-            segments: Vec::new(),
-        }
+        Self::default()
     }
 
     pub fn arc_to(
