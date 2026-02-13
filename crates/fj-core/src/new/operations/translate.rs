@@ -64,32 +64,31 @@ impl Translate {
                 .collect(),
         })
     }
-}
 
-pub fn face(
-    face: &Face,
-    offset: impl Into<Vector<3>>,
-    vertices: &mut Store<Vertex>,
-    half_edges: &mut Store<HalfEdge>,
-) -> Face {
-    let offset = offset.into();
+    pub fn face(
+        &mut self,
+        face: &Face,
+        offset: impl Into<Vector<3>>,
+        vertices: &mut Store<Vertex>,
+        half_edges: &mut Store<HalfEdge>,
+    ) -> Face {
+        let offset = offset.into();
 
-    let mut translate = Translate::default();
+        let boundary = face
+            .boundary
+            .iter()
+            .copied()
+            .map(|half_edge| {
+                self.half_edge(half_edge, offset, vertices, half_edges)
+            })
+            .collect();
+        let approx = face
+            .approx
+            .iter()
+            .copied()
+            .map(|triangle| self.triangle(triangle, offset))
+            .collect();
 
-    let boundary = face
-        .boundary
-        .iter()
-        .copied()
-        .map(|half_edge| {
-            translate.half_edge(half_edge, offset, vertices, half_edges)
-        })
-        .collect();
-    let approx = face
-        .approx
-        .iter()
-        .copied()
-        .map(|triangle| translate.triangle(triangle, offset))
-        .collect();
-
-    Face { boundary, approx }
+        Face { boundary, approx }
+    }
 }

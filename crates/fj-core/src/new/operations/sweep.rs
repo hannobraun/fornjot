@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::new::{
     approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
     geometry::Curve,
-    operations::{Connect, Reverse, translate},
+    operations::{Connect, Reverse, translate::Translate},
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 
@@ -28,12 +28,13 @@ impl Sweep {
         let approx = curve.approx();
         let mut connect = Connect::new();
         let mut reverse = Reverse::new();
+        let mut translate = Translate::default();
 
         let bottom_inv = reverse.face(&faces[bottom], half_edges);
 
         let top = {
             let top =
-                translate::face(&bottom_inv, curve.end(), vertices, half_edges);
+                translate.face(&bottom_inv, curve.end(), vertices, half_edges);
             faces.push(top)
         };
 
