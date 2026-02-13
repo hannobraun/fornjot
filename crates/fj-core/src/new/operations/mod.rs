@@ -1,7 +1,7 @@
 mod connect;
 mod reverse;
 mod sketch;
-pub mod sweep;
+mod sweep;
 pub mod translate;
 
 pub use self::{
