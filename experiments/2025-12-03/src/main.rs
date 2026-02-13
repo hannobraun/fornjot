@@ -1,6 +1,6 @@
 use fj_core::new::{
     geometry::{Arc, Plane},
-    operations::{Sketch, sweep},
+    operations::{Sketch, sweep::Sweep},
     topology::Topology,
 };
 use fj_interop::{Color, MeshTriangle, TriMesh};
@@ -35,6 +35,8 @@ fn model() -> TriMesh {
         mut vertices,
     } = Topology::new();
 
+    let mut sweep = Sweep::new();
+
     let left_front_bottom_outer = vertices.push([0., 0., 0.]);
     let left_front_bottom_inner = vertices.push([0.25, 0.25, 0.]);
 
@@ -62,7 +64,7 @@ fn model() -> TriMesh {
             &mut faces,
         );
 
-    let cube = sweep::face_to_solid(
+    let cube = sweep.face_to_solid(
         bottom,
         &Arc::to([0., 0., 1.], [1., 1., 1.], tolerance),
         &mut vertices,
