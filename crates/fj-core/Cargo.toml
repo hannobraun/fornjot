@@ -24,6 +24,12 @@ spade = "2.15.0"
 thiserror = "2.0.18"
 type-map = "0.5.1"
 
+# We don't depend on `getrandom` directly, but we need this to enable the `js`
+# feature when cross-compiling to WASM. Otherwise, `getrandom` will not build.
+[target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
+version = "0.2.17"
+features = ["js"]
+
 [dev-dependencies]
 pretty_assertions = "1.4.1"
 anyhow = "1.0.101"
