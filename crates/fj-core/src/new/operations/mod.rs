@@ -1,5 +1,5 @@
 mod connect;
-pub mod reverse;
+mod reverse;
 pub mod sketch;
 pub mod sweep;
 pub mod translate;
