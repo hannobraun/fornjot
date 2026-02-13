@@ -26,6 +26,7 @@ impl Sweep {
         solids: &mut Store<Solid>,
     ) -> Handle<Solid> {
         let approx = curve.approx();
+
         let mut connect = Connect::new();
         let mut reverse = Reverse::new();
         let mut translate = Translate::default();
