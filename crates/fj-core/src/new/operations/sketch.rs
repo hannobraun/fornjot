@@ -131,6 +131,10 @@ impl Sketch {
         self
     }
 
+    /// # Add a line segment to a given point, providing the vertex there
+    ///
+    /// See the documentation of [`Sketch`] for a discussion on why you might
+    /// want to provide a vertex.
     pub fn line_to_at(
         mut self,
         to: impl Into<Point<2>>,
