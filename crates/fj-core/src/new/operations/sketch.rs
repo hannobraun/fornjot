@@ -149,6 +149,12 @@ impl Sketch {
         self
     }
 
+    /// # Convert the sketch into a face
+    ///
+    /// A sketch is purely a 2-dimensional construct, with no notion on where
+    /// that sketch might be located in a 3D space. In calling this method, the
+    /// caller provides provides the surface on which the sketch is to be
+    /// located, enabling its conversion into a face.
     pub fn into_face(
         mut self,
         surface: Plane,
