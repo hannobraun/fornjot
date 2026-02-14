@@ -120,6 +120,7 @@ impl Sketch {
         self
     }
 
+    /// # Add a line segment to a given point
     pub fn line_to(mut self, to: impl Into<Point<2>>) -> Self {
         self.segments.push(SketchSegment {
             end: to.into(),
