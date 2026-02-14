@@ -69,6 +69,15 @@ impl Sketch {
         Self::default()
     }
 
+    /// # Add an arc segment to a given point
+    ///
+    /// The arc is defined by a given radius, as well as a tolerance value that
+    /// defines how far the approximated representation of the arc is allowed to
+    /// deviate from the idealized arc.
+    ///
+    /// If the provided radius is positive, the resulting arc bulges to the
+    /// right, when viewed from the origin point of the arc. If the provided
+    /// radius is negative, the arc bulges to the left.
     pub fn arc_to(
         mut self,
         radius: impl Into<Scalar>,
