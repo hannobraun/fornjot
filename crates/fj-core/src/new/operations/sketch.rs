@@ -96,6 +96,11 @@ impl Sketch {
         self
     }
 
+    /// # Add an arc segment to a given point, providing the vertex there
+    ///
+    /// See [`Sketch::arc_to`] for more information on how the arc gets
+    /// constructed. See the documentation of [`Sketch`] for a discussion on why
+    /// you might want to provide a vertex.
     pub fn arc_to_at(
         mut self,
         radius: impl Into<Scalar>,
