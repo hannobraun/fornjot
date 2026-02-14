@@ -23,6 +23,7 @@ pub struct Sketch {
 }
 
 impl Sketch {
+    /// # Construct a new instance of `Sketch`
     pub fn new() -> Self {
         Self::default()
     }
