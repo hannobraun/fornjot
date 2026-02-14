@@ -13,10 +13,51 @@ use crate::new::{
 /// via [`Sketch::arc_to`] and the other methods, then finally convert it into a
 /// face via [`Sketch::into_face`], once you're ready.
 ///
+/// ## Origin and destination points
+///
 /// A sketch is created empty, and the methods that append to it only append
 /// segments _to_ a point. The origin point of every segment is implicit, and
 /// provided by the destination point of the previous segment. The origin point
 /// of the first segment is provided by the destination point of the last one.
+///
+/// ## Holes
+///
+/// Sketches consist of a single series of segments that form a sketch's
+/// boundary. There is no explicit notion of holes, in the form of additional
+/// series of segments that would define those.
+///
+/// Creating a sketch with holes is still possible though. The holes just need
+/// to be part of the single series of segments, which means the sketch's
+/// exterior and its holes must be connected.
+///
+/// To achieve that, you can first create the outside boundary, then, from the
+/// point where the last segment of the outside boundary touches its first
+/// segment, continue the boundary to the first segment of the hole.
+///
+/// Between outside boundary and hole, you have a connecting segment, and once
+/// you finish the hole, you add a second connecting segment in the other
+/// direction, that is coincident with the first one.
+///
+/// You could use the same principle to create multiple holes, which are
+/// connected to the outside boundary in the same location, in different
+/// locations, or by connecting the holes to each other. What's important, is
+/// that the boundary forms a single, closed cycle in the end.
+///
+/// ## Shared vertices
+///
+/// The methods that append sketch segments each come in two variants: a basic
+/// one that just lets you define the segment and its definition, and another
+/// one that lets you provide the destination [`Vertex`].
+///
+/// If you do not provide a vertex, then a new one will be created at the
+/// segment's destination point. This can lead to distinct but coincident
+/// vertices, where you have connecting segments between the exterior boundary
+/// and holes, for example, which can be problematic.
+///
+/// To prevent that, the second set of append methods exists. They allow you to
+/// create a single vertex for a set of coincident points in advance, and then
+/// provide that vertex for each coincident point, ensuring that all distinct
+/// vertices also have distinct positions.
 #[derive(Default)]
 pub struct Sketch {
     segments: Vec<SketchSegment>,
