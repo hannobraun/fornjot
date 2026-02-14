@@ -7,6 +7,16 @@ use crate::new::{
     topology::{Face, HalfEdge, Handle, Store, Vertex},
 };
 
+/// # Draw a 2D sketch and convert it into a face
+///
+/// You can create a new sketch via [`Sketch::new`], then append segments to it
+/// via [`Sketch::arc_to`] and the other methods, then finally convert it into a
+/// face via [`Sketch::into_face`], once you're ready.
+///
+/// A sketch is created empty, and the methods that append to it only append
+/// segments _to_ a point. The origin point of every segment is implicit, and
+/// provided by the destination point of the previous segment. The origin point
+/// of the first segment is provided by the destination point of the last one.
 #[derive(Default)]
 pub struct Sketch {
     segments: Vec<SketchSegment>,
