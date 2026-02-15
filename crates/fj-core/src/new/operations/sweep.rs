@@ -13,6 +13,7 @@ use crate::new::{
 pub struct Sweep {}
 
 impl Sweep {
+    /// # Construct a new instance of `Sweep`
     pub fn new() -> Self {
         Self::default()
     }
