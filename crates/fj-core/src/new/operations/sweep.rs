@@ -8,6 +8,7 @@ use crate::new::{
     topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
 };
 
+/// # Sweep a primitive along a curve to create another primitive
 #[derive(Default)]
 pub struct Sweep {}
 
