@@ -18,6 +18,14 @@ impl Sweep {
         Self::default()
     }
 
+    /// # Sweep a face into a solid body
+    ///
+    /// **Attention, this method is rather finicky** in regards to how the face
+    /// and the curve it is swept along must be oriented towards each other, to
+    /// produce a valid solid.
+    ///
+    /// In addition, the limitations are not well-tested, and thus not
+    /// well-understood at this point.
     pub fn face_to_solid(
         &mut self,
         bottom: Handle<Face>,
