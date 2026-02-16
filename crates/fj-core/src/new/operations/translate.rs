@@ -60,6 +60,7 @@ impl Translate {
         translated
     }
 
+    /// # Translate a half-edge
     pub fn half_edge(
         &mut self,
         half_edge: Handle<HalfEdge>,
