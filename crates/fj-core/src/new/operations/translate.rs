@@ -4,6 +4,9 @@ use fj_math::{Triangle, Vector};
 
 use crate::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
 
+/// # Translate primitives, given an offset
+///
+/// This operation is a placeholder for a more general "transform" operation.
 #[derive(Default)]
 pub struct Translate {
     vertices: BTreeMap<Handle<Vertex>, Handle<Vertex>>,
