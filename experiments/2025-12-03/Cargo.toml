@@ -13,8 +13,5 @@ spade = "*"
 [dependencies.fj]
 path = "../../crates/fj"
 
-[dependencies.fj-math]
-path = "../../crates/fj-math"
-
 [dependencies.fj-viewer]
 path = "../../crates/fj-viewer"
