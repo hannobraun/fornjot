@@ -31,6 +31,14 @@ impl Translate {
         }
     }
 
+    /// # Translate a vertex
+    ///
+    /// Caches the result of the translation, and will return the same resulting
+    /// vertex, if you call this method multiple times with the same input
+    /// vertex.
+    ///
+    /// **This method returns a cached result depending only on the input
+    /// vertex, disregarding the provided offset. This is a bug.**
     pub fn vertex(
         &mut self,
         vertex: Handle<Vertex>,
