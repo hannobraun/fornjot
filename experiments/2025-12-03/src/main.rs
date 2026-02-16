@@ -1,4 +1,4 @@
-use fj_core::new::{
+use fj::core::new::{
     geometry::{Arc, Plane},
     operations::{Sketch, Sweep},
     topology::Topology,
