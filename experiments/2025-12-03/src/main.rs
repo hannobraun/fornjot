@@ -22,7 +22,7 @@ fn main() -> anyhow::Result<()> {
         }
     })?;
 
-    fj_export::export(tri_mesh.external_triangles(), "output.3mf")?;
+    fj::export::export(tri_mesh.external_triangles(), "output.3mf")?;
 
     Ok(())
 }
