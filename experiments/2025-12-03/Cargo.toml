@@ -12,6 +12,3 @@ spade = "*"
 
 [dependencies.fj]
 path = "../../crates/fj"
-
-[dependencies.fj-viewer]
-path = "../../crates/fj-viewer"
