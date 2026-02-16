@@ -5,8 +5,8 @@ use fj::{
         topology::Topology,
     },
     interop::{Color, MeshTriangle, TriMesh},
+    math::{Point, Scalar, Vector},
 };
-use fj_math::{Point, Scalar, Vector};
 
 mod debug;
 
