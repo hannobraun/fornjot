@@ -18,6 +18,7 @@ impl Translate {
         Self::default()
     }
 
+    /// # Translate a triangle
     pub fn triangle(
         &mut self,
         triangle: Triangle<3>,
