@@ -83,6 +83,7 @@ impl Translate {
         })
     }
 
+    /// # Translate a face
     pub fn face(
         &mut self,
         face: &Face,
