@@ -1,9 +1,11 @@
-use fj::core::new::{
-    geometry::{Arc, Plane},
-    operations::{Sketch, Sweep},
-    topology::Topology,
+use fj::{
+    core::new::{
+        geometry::{Arc, Plane},
+        operations::{Sketch, Sweep},
+        topology::Topology,
+    },
+    interop::{Color, MeshTriangle, TriMesh},
 };
-use fj_interop::{Color, MeshTriangle, TriMesh};
 use fj_math::{Point, Scalar, Vector};
 
 mod debug;
