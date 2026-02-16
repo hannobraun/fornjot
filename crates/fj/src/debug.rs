@@ -1,6 +1,6 @@
 use std::{ops::Deref, sync::Mutex};
 
-use fj::{
+use crate::{
     interop::TriMesh,
     math::Point,
     viewer::{ViewerHandle, WindowHandle},

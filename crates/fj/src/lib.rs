@@ -10,10 +10,13 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 mod args;
+#[allow(missing_docs)] // temporary, during transition
+mod debug;
 mod instance;
 
 pub use self::{
     args::Args,
+    debug::DEBUG_WINDOW,
     instance::{Error, Instance, Result},
 };
 

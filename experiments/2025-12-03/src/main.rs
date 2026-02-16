@@ -8,10 +8,6 @@ use fj::{
     math::{Point, Scalar, Vector},
 };
 
-mod debug;
-
-use debug::DEBUG_WINDOW;
-
 fn main() -> anyhow::Result<()> {
     let tri_mesh = model();
 
@@ -19,7 +15,7 @@ fn main() -> anyhow::Result<()> {
         let tri_mesh = tri_mesh.clone();
 
         |viewer| {
-            DEBUG_WINDOW.initialize(&viewer);
+            fj::DEBUG_WINDOW.initialize(&viewer);
             viewer.open_window().display_mesh(tri_mesh);
         }
     })?;
