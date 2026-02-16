@@ -15,7 +15,7 @@ use debug::DEBUG_WINDOW;
 fn main() -> anyhow::Result<()> {
     let tri_mesh = model();
 
-    fj_viewer::make_viewer_and_spawn_thread({
+    fj::viewer::make_viewer_and_spawn_thread({
         let tri_mesh = tri_mesh.clone();
 
         |viewer| {
