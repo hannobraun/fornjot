@@ -10,6 +10,9 @@ geo = "*"
 itertools = "*"
 spade = "*"
 
+[dependencies.fj]
+path = "../../crates/fj"
+
 [dependencies.fj-core]
 path = "../../crates/fj-core"
 
