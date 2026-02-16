@@ -13,6 +13,7 @@ pub struct Translate {
 }
 
 impl Translate {
+    /// # Construct a new instance of `Translate`
     pub fn new() -> Self {
         Self::default()
     }
