@@ -49,6 +49,11 @@ impl DebugWindow {
         *inner = DebugWindowState::Initialized { window };
     }
 
+    /// # Display a mesh in the debug window
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if you haven't call [`DebugWindow::initialize`] before.
     pub fn display_mesh(&self, tri_mesh: TriMesh) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
@@ -56,6 +61,11 @@ impl DebugWindow {
         window.display_mesh(tri_mesh);
     }
 
+    /// # Display a surface-local point in the debug window
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if you haven't call [`DebugWindow::initialize`] before.
     pub fn display_point_surface(&self, point: Point<2>) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
@@ -63,6 +73,11 @@ impl DebugWindow {
         window.display_point_surface(point);
     }
 
+    /// # Display a global (3D) point in the debug window
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if you haven't call [`DebugWindow::initialize`] before.
     pub fn display_point_global(&self, point: Point<3>) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
@@ -70,6 +85,14 @@ impl DebugWindow {
         window.display_point_global(point);
     }
 
+    /// # Clear the debug window
+    ///
+    /// Reverse the effect an any `display_*` methods that might have been
+    /// called before, but leave the `DebugWindow` instance initialized.
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if you haven't call [`DebugWindow::initialize`] before.
     pub fn clear(&self) {
         let inner = self.mutex.inner.lock().unwrap();
         let window = inner.deref().expect_initialized();
