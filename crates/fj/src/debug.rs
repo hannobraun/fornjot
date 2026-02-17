@@ -6,6 +6,20 @@ use crate::{
     viewer::{ViewerHandle, WindowHandle},
 };
 
+/// # Provides easy access to a window, for debugging purposes
+///
+/// This gives you an easy window that you can just display stuff in, accessible
+/// from anywhere. If you want to use Fornjot's viewer to display geometry as a
+/// regular part of your code's function, you should not use this, and pass a
+/// [`ViewerHandle`] or [`WindowHandle`] instead.
+///
+/// But if you need to quickly display something, somewhere in the depths of
+/// your code, without wanting to rewrite your whole call chain, this is the
+/// right tool for the job.
+///
+/// The debug window is initially uninitialized. You must call
+/// [`DebugWindow::initialize`] before calling any other methods on this
+/// instance.
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 
 pub struct DebugWindow {
