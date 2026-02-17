@@ -27,7 +27,7 @@ pub struct DebugWindow {
 }
 
 impl DebugWindow {
-    pub const fn new() -> Self {
+    const fn new() -> Self {
         Self {
             mutex: DebugWindowMutex {
                 inner: Mutex::new(DebugWindowState::Uninitialized),
