@@ -6,9 +6,6 @@ edition = "2024"
 
 [dependencies]
 anyhow = "*"
-geo = "*"
-itertools = "*"
-spade = "*"
 
 [dependencies.fj]
 path = "../../crates/fj"
