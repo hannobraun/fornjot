@@ -22,6 +22,9 @@ use crate::{
 /// instance.
 pub static DEBUG_WINDOW: DebugWindow = DebugWindow::new();
 
+/// # Provides easy access to a window, for debugging purposes
+///
+/// You can't construct this type yourself. Please use it via [`DEBUG_WINDOW`].
 pub struct DebugWindow {
     mutex: DebugWindowMutex,
 }
