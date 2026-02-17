@@ -10,7 +10,6 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 mod args;
-#[allow(missing_docs)] // temporary, during transition
 mod debug;
 mod instance;
 
