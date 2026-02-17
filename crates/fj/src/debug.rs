@@ -86,7 +86,10 @@ enum DebugWindowState {
 impl DebugWindowState {
     pub fn expect_initialized(&self) -> &WindowHandle {
         let DebugWindowState::Initialized { window } = self else {
-            panic!("Debug window has not been initialized.");
+            panic!(
+                "You must call `DebugWindow::initialize` before calling any of \
+                its other methods.",
+            );
         };
 
         window
