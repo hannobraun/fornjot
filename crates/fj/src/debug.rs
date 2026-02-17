@@ -38,6 +38,10 @@ impl DebugWindow {
         }
     }
 
+    /// # Initialize this `DebugWindow` instance
+    ///
+    /// You must call this, before you can call any of `DebugWindow`'s other
+    /// methods.
     pub fn initialize(&self, viewer: &ViewerHandle) {
         let window = viewer.open_window();
 
