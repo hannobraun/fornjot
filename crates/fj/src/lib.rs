@@ -16,7 +16,7 @@ mod instance;
 
 pub use self::{
     args::Args,
-    debug::DEBUG_WINDOW,
+    debug::{DEBUG_WINDOW, DebugWindow},
     instance::{Error, Instance, Result},
 };
 
