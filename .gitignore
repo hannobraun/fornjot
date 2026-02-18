@@ -1,6 +1,9 @@
 # Cargo
 /target
 
+# https://direnv.net/
+/.direnv
+
 # IDE Configurations
 **/.vs/ # Visual Studio
 **/.idea/ # Intellij
