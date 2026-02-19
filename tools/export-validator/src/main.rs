@@ -29,9 +29,11 @@ fn main() -> anyhow::Result<()> {
 
 fn handle_model(model: String) -> Result<(), anyhow::Error> {
     let dir = tempdir()?;
+
     let file_name = format!("{model}.3mf");
     let export_file_path = dir.path().join(file_name);
     let export_file_path_str = export_file_path.to_str().unwrap();
+
     let exit_status = Command::new("cargo")
         .arg("run")
         .args(["-p", &model])
@@ -44,8 +46,10 @@ fn handle_model(model: String) -> Result<(), anyhow::Error> {
                 {exit_status}"
         );
     }
+
     unsafe { validate_model(export_file_path_str) }
         .with_context(|| format!("Could not validate model `{model}`"))?;
+
     Ok(())
 }
 
