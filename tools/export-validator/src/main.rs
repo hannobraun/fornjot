@@ -40,6 +40,7 @@ fn handle_model(model: String) -> Result<(), anyhow::Error> {
         .arg("--")
         .args(["--export", export_file_path_str])
         .status()?;
+
     if !exit_status.success() {
         bail!(
             "Exporting model `{model}` failed with error code: {exit_status}"
