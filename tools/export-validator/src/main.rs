@@ -13,8 +13,7 @@ fn main() -> anyhow::Result<()> {
     } else {
         // Otherwise validate all models in `models` directory
         for model in fs::read_dir("models")? {
-            let model = model?;
-            let model = model.file_name().into_string().map_err(|err| {
+            let model = model?.file_name().into_string().map_err(|err| {
                 anyhow!(
                     "Failed to convert directory name to `String`: {:?}",
                     err
