@@ -42,8 +42,7 @@ fn handle_model(model: String) -> Result<(), anyhow::Error> {
         .status()?;
     if !exit_status.success() {
         bail!(
-            "Exporting model `{model}` failed with error code:\
-                {exit_status}"
+            "Exporting model `{model}` failed with error code: {exit_status}"
         );
     }
 
