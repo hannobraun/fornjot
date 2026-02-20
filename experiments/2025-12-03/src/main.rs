@@ -62,7 +62,7 @@ fn model() -> TriMesh {
             &mut faces,
         );
 
-    let cube = sweep.face_to_solid(
+    let rounded = sweep.face_to_solid(
         bottom,
         &Arc::to([0., 0., 1.], [1., 1., 1.], tolerance),
         &mut vertices,
@@ -71,7 +71,7 @@ fn model() -> TriMesh {
         &mut solids,
     );
 
-    let triangles = solids[cube]
+    let triangles = solids[rounded]
         .boundary
         .iter()
         .flat_map(|&face| &faces[face].approx);
