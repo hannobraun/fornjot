@@ -16,8 +16,6 @@ workspace = true
 
 [dependencies]
 fj-core.workspace = true
-fj-interop.workspace = true
-fj-math.workspace = true
 futures = "0.3.32"
 nalgebra = "0.34.1"
 tobj = "4.0.3"

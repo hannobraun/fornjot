@@ -1247,8 +1247,6 @@ version = "0.49.0"
 dependencies = [
  "bytemuck",
  "fj-core",
- "fj-interop",
- "fj-math",
  "futures",
  "getrandom 0.3.4",
  "glyphon",
