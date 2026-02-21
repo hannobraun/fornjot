@@ -1,7 +1,7 @@
 use std::{ops::Deref, sync::Mutex};
 
 use crate::{
-    interop::TriMesh,
+    core::interop::TriMesh,
     math::Point,
     viewer::{ViewerHandle, WindowHandle},
 };
