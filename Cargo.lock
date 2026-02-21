@@ -1181,8 +1181,6 @@ dependencies = [
  "clap",
  "fj-core",
  "fj-export",
- "fj-interop",
- "fj-math",
  "fj-viewer",
  "thiserror 2.0.18",
  "tracing",
