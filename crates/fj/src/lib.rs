@@ -21,5 +21,4 @@ pub use self::{
 
 pub use fj_core as core;
 pub use fj_export as export;
-pub use fj_math as math;
 pub use fj_viewer as viewer;
