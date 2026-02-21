@@ -4,9 +4,9 @@ use fj_core::{
     Core,
     algorithms::{bounding_volume::BoundingVolume, triangulate::Triangulate},
     interop::{InvalidTolerance, Tolerance},
+    math::{Aabb, Point, Scalar},
     validation::{ValidationConfig, ValidationErrors},
 };
-use fj_math::{Aabb, Point, Scalar};
 use fj_viewer::make_viewer_and_spawn_thread;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
