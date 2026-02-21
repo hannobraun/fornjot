@@ -120,3 +120,6 @@ pub mod validation;
 mod core;
 
 pub use self::core::Core;
+
+pub use fj_interop as interop;
+pub use fj_math as math;
