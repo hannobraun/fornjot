@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::{Index, TriMesh, vertices_to_indexed_vertices};
+use fj_core::interop::{Index, TriMesh, vertices_to_indexed_vertices};
 use fj_math::{Point, Scalar};
 
 #[derive(Debug)]

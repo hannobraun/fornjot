@@ -1,7 +1,7 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
-use fj_interop::TriMesh;
+use fj_core::interop::TriMesh;
 use fj_math::{Aabb, Point, Scalar, Transform, Vector};
 
 use crate::window::NormalizedScreenPosition;

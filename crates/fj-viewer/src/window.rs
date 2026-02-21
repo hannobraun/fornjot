@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use fj_interop::TriMesh;
+use fj_core::interop::TriMesh;
 use fj_math::{Aabb, Point};
 use itertools::Itertools;
 use tracing::warn;
