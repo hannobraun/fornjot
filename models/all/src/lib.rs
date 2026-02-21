@@ -1,11 +1,7 @@
-use fj::{
-    core::{
-        operations::{
-            build::BuildSolid, merge::Merge, transform::TransformObject,
-        },
-        topology::Solid,
-    },
+use fj::core::{
     math::{Scalar, Vector},
+    operations::{build::BuildSolid, merge::Merge, transform::TransformObject},
+    topology::Solid,
 };
 
 pub fn model(core: &mut fj::core::Core) -> Solid {

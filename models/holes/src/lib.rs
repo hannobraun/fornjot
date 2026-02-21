@@ -1,12 +1,10 @@
-use fj::{
-    core::{
-        operations::{
-            holes::{AddHole, HoleLocation},
-            update::UpdateSolid,
-        },
-        topology::Solid,
-    },
+use fj::core::{
     math::Scalar,
+    operations::{
+        holes::{AddHole, HoleLocation},
+        update::UpdateSolid,
+    },
+    topology::Solid,
 };
 
 pub fn model(radius: impl Into<Scalar>, core: &mut fj::core::Core) -> Solid {

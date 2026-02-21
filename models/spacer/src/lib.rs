@@ -1,14 +1,12 @@
-use fj::{
-    core::{
-        operations::{
-            build::{BuildCycle, BuildRegion, BuildSketch},
-            reverse::Reverse,
-            sweep::SweepSketch,
-            update::{UpdateRegion, UpdateSketch},
-        },
-        topology::{Cycle, Region, Sketch, Solid},
-    },
+use fj::core::{
     math::{Point, Vector},
+    operations::{
+        build::{BuildCycle, BuildRegion, BuildSketch},
+        reverse::Reverse,
+        sweep::SweepSketch,
+        update::{UpdateRegion, UpdateSketch},
+    },
+    topology::{Cycle, Region, Sketch, Solid},
 };
 
 pub fn model(

@@ -1,13 +1,11 @@
-use fj::{
-    core::{
-        operations::{
-            build::{BuildRegion, BuildSketch},
-            sweep::SweepSketch,
-            update::UpdateSketch,
-        },
-        topology::{Region, Sketch, Solid},
-    },
+use fj::core::{
     math::{Scalar, Vector},
+    operations::{
+        build::{BuildRegion, BuildSketch},
+        sweep::SweepSketch,
+        update::UpdateSketch,
+    },
+    topology::{Region, Sketch, Solid},
 };
 
 pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
