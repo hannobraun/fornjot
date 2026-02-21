@@ -1,4 +1,4 @@
-use fj_math::{Point, Vector};
+use fj_core::math::{Point, Vector};
 use glyphon::{FontSystem, TextArea, TextBounds};
 
 use crate::graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform};

@@ -1,6 +1,6 @@
 use std::{io, mem::size_of, sync::Arc, vec};
 
-use fj_math::Point;
+use fj_core::math::Point;
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;

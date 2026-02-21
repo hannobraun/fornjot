@@ -1,6 +1,8 @@
 use bytemuck::{Pod, Zeroable};
-use fj_core::interop::{Index, TriMesh, vertices_to_indexed_vertices};
-use fj_math::{Point, Scalar};
+use fj_core::{
+    interop::{Index, TriMesh, vertices_to_indexed_vertices},
+    math::{Point, Scalar},
+};
 
 #[derive(Debug)]
 pub struct Vertices {

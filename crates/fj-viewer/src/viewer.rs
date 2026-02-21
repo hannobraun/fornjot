@@ -5,8 +5,7 @@ use std::{
     thread,
 };
 
-use fj_core::interop::TriMesh;
-use fj_math::Point;
+use fj_core::{interop::TriMesh, math::Point};
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,

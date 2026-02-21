@@ -1,4 +1,4 @@
-use fj_math::Transform;
+use fj_core::math::Transform;
 use wgpu::util::DeviceExt;
 
 use super::{

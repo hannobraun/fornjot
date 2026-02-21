@@ -1,7 +1,9 @@
 use std::sync::Arc;
 
-use fj_core::interop::TriMesh;
-use fj_math::{Aabb, Point};
+use fj_core::{
+    interop::TriMesh,
+    math::{Aabb, Point},
+};
 use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
