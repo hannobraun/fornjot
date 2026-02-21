@@ -1212,8 +1212,6 @@ name = "fj-export"
 version = "0.49.0"
 dependencies = [
  "fj-core",
- "fj-interop",
- "fj-math",
  "stl",
  "thiserror 2.0.18",
  "threemf",
