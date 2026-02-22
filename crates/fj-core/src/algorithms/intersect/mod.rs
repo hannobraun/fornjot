@@ -47,14 +47,3 @@ impl<const D: usize> HorizontalRayToTheRight<D> {
         components.into()
     }
 }
-
-impl<P, const D: usize> From<P> for HorizontalRayToTheRight<D>
-where
-    P: Into<Point<D>>,
-{
-    fn from(point: P) -> Self {
-        Self {
-            origin: point.into(),
-        }
-    }
-}
