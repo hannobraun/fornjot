@@ -1198,6 +1198,7 @@ dependencies = [
  "geo",
  "getrandom 0.2.17",
  "itertools 0.14.0",
+ "num-traits",
  "parking_lot",
  "parry2d-f64",
  "parry3d-f64",

@@ -19,6 +19,7 @@ fj-interop.workspace = true
 fj-math.workspace = true
 geo = "0.32.0"
 itertools = "0.14.0"
+num-traits = "0.2.19"
 parking_lot = "0.12.5"
 parry2d-f64 = "0.25.3"
 parry3d-f64 = "0.25.3"
