@@ -33,6 +33,13 @@ pub struct HorizontalRayToTheRight<const D: usize> {
 }
 
 impl<const D: usize> HorizontalRayToTheRight<D> {
+    #[cfg(test)]
+    fn from_point(point: impl Into<Point<D>>) -> Self {
+        Self {
+            origin: point.into(),
+        }
+    }
+
     /// Access the direction of this ray
     pub fn direction(&self) -> Vector<D> {
         let mut components = [0.; D];
