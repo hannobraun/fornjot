@@ -1230,16 +1230,6 @@ version = "0.49.0"
 [[package]]
 name = "fj-math"
 version = "0.49.0"
-dependencies = [
- "approx",
- "decorum",
- "iter_fixed",
- "nalgebra",
- "num-traits",
- "parry2d-f64",
- "parry3d-f64",
- "robust",
-]
 
 [[package]]
 name = "fj-viewer"
