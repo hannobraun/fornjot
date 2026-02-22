@@ -1,10 +1,10 @@
-use fj_interop::Color;
 use fj_math::Vector;
 use itertools::Itertools;
 
 use crate::{
     Core,
     geometry::LocalVertexGeom,
+    interop::Color,
     operations::{
         build::BuildCycle, join::JoinCycle, sweep::half_edge::SweepHalfEdge,
     },

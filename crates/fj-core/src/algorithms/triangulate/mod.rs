@@ -3,9 +3,11 @@
 mod delaunay;
 mod polygon;
 
-use fj_interop::{MeshTriangle, Tolerance, TriMesh};
-
-use crate::{Core, operations::presentation::GetColor};
+use crate::{
+    Core,
+    interop::{MeshTriangle, Tolerance, TriMesh},
+    operations::presentation::GetColor,
+};
 
 use self::polygon::Polygon;
 
@@ -79,13 +81,13 @@ impl Triangulate for FaceApprox {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::{Tolerance, TriMesh};
     use fj_math::{Point, Scalar};
 
     use crate::{
         Core,
         algorithms::approx::{ApproxCache, face::approx_face},
         geometry::repr::tri_mesh::convert_point_surface_to_global,
+        interop::{Tolerance, TriMesh},
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,

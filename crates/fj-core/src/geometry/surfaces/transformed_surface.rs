@@ -1,8 +1,8 @@
-use fj_interop::Tolerance;
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle};
 
 use crate::{
     geometry::{Geometry, traits::GenTriMesh},
+    interop::Tolerance,
     storage::Handle,
     topology::Surface,
 };

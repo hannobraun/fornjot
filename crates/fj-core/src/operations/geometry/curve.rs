@@ -1,8 +1,8 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, Geometry, LocalCurveGeom, Path},
+    interop::ext::ArrayExt,
     layers::Layer,
     storage::Handle,
     topology::{Curve, Surface},

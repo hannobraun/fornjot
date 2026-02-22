@@ -1,9 +1,9 @@
-use fj_interop::{Color, ext::ArrayExt};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     Core,
     geometry::{CurveBoundary, LocalVertexGeom},
+    interop::{Color, ext::ArrayExt},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         geometry::UpdateCurveGeometry,

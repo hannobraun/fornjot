@@ -19,11 +19,10 @@ use std::{
 };
 
 use curve::CurveApproxCache;
-use fj_interop::Tolerance;
 use fj_math::Point;
 use vertex::VertexApproxCache;
 
-use crate::geometry::Geometry;
+use crate::{geometry::Geometry, interop::Tolerance};
 
 /// Approximate an object
 pub trait Approx: Sized {

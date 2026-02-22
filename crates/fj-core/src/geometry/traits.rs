@@ -19,8 +19,9 @@
 
 use std::ops::Deref;
 
-use fj_interop::Tolerance;
 use fj_math::{Aabb, LineSegment, Point, Scalar, Triangle};
+
+use crate::interop::Tolerance;
 
 use super::{CurveBoundary, Geometry, Path};
 

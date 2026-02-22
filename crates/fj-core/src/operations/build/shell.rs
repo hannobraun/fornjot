@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
     Core,
     geometry::{CurveBoundary, LocalVertexGeom},
+    interop::ext::ArrayExt,
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
         geometry::UpdateCurveGeometry,

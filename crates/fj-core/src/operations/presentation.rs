@@ -1,8 +1,6 @@
 //! Operations to control the presentation of objects
 
-use fj_interop::Color;
-
-use crate::{Core, storage::Handle, topology::Region};
+use crate::{Core, interop::Color, storage::Handle, topology::Region};
 
 /// Get the color of an object
 pub trait GetColor {

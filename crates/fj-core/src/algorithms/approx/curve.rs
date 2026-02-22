@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use fj_interop::Tolerance;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
@@ -8,6 +7,7 @@ use crate::{
         CurveBoundary, Geometry, Path,
         repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
     },
+    interop::Tolerance,
     storage::Handle,
     topology::{Curve, Surface},
 };

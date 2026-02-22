@@ -1,8 +1,7 @@
 //! Layer infrastructure for [`Presentation`]
 
-use fj_interop::Color;
-
 use crate::{
+    interop::Color,
     presentation::Presentation,
     storage::Handle,
     topology::{AnyObject, Region, Stored},

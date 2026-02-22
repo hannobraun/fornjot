@@ -1,6 +1,5 @@
 use std::fmt;
 
-use fj_interop::Tolerance;
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -8,6 +7,7 @@ use crate::{
         CurveBoundary, Geometry,
         repr::tri_mesh::convert_point_surface_to_global,
     },
+    interop::Tolerance,
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
         SiblingOfHalfEdge,

@@ -4,11 +4,11 @@
 
 use std::iter;
 
-use fj_interop::Tolerance;
 use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, Geometry},
+    interop::Tolerance,
     storage::Handle,
     topology::{HalfEdge, Surface},
 };

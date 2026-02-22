@@ -244,10 +244,9 @@ impl SplitFace for Shell {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::Color;
-
     use crate::{
         Core,
+        interop::Color,
         operations::{
             build::BuildShell,
             presentation::{GetColor, SetColor},
