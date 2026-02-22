@@ -14,6 +14,7 @@ categories.workspace = true
 workspace = true
 
 [dependencies]
+approx = "0.5.1"
 fj-interop.workspace = true
 fj-math.workspace = true
 geo = "0.32.0"
