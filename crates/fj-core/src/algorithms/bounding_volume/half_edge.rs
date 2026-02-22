@@ -1,7 +1,6 @@
-use fj_math::{Aabb, Vector};
-
 use crate::{
     geometry::{Geometry, Path},
+    math::{Aabb, Vector},
     storage::Handle,
     topology::{HalfEdge, Surface, Vertex},
 };

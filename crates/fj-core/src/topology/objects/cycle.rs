@@ -1,7 +1,6 @@
-use fj_math::{Scalar, Winding};
-
 use crate::{
     geometry::{Geometry, Path},
+    math::{Scalar, Winding},
     storage::Handle,
     topology::{HalfEdge, ObjectSet},
 };

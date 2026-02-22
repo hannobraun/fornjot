@@ -1,8 +1,9 @@
 use std::iter;
 
-use fj_math::{Point, Scalar, Sign};
-
-use crate::interop::Tolerance;
+use crate::{
+    interop::Tolerance,
+    math::{Point, Scalar, Sign},
+};
 
 /// # Approximation parameters for a circle
 #[derive(Debug)]

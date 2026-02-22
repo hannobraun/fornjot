@@ -1,9 +1,9 @@
-use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
     Core,
     geometry::{CurveBoundary, LocalVertexGeom},
+    math::{Point, Scalar, Vector},
     operations::build::BuildHalfEdge,
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},

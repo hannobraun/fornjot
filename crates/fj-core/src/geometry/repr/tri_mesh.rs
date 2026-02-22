@@ -1,10 +1,9 @@
 //! # Geometric utility code based on triangle meshes
 
-use fj_math::{Point, Vector};
-
 use crate::{
     geometry::{Geometry, traits::GenTriMesh},
     interop::Tolerance,
+    math::{Point, Vector},
 };
 
 /// # A triangle mesh, the uniform intermediate representation of a surface

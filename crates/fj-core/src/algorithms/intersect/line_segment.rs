@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Line, LineSegment, Point, Scalar, Vector};
+use crate::math::{Aabb, Line, LineSegment, Point, Scalar, Vector};
 
 /// An intersection between a [`Line`] and a [`LineSegment`]
 #[derive(Debug, Eq, PartialEq)]
@@ -66,7 +66,7 @@ impl LineSegmentIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Line, LineSegment, Point, Scalar, Vector};
+    use crate::math::{Line, LineSegment, Point, Scalar, Vector};
 
     use super::LineSegmentIntersection;
 

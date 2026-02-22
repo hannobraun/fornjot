@@ -12,11 +12,11 @@ mod vertex;
 
 use std::collections::{BTreeMap, btree_map};
 
-use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
     Core,
+    math::{Transform, Vector},
     operations::insert::Insert,
     storage::{Handle, ObjectId},
     topology::{AnyObject, Stored},

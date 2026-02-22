@@ -1,10 +1,9 @@
-use fj_math::{LineSegment, Point, PolyChain, Triangle};
-
 use crate::{
     algorithms::intersect::{
         HorizontalRayToTheRight, Intersect, ray_segment::RaySegmentIntersection,
     },
     interop::ext::SliceExt,
+    math::{LineSegment, Point, PolyChain, Triangle},
 };
 
 #[derive(Default)]
@@ -207,7 +206,7 @@ impl Polygon {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, PolyChain};
+    use crate::math::{Point, PolyChain};
 
     use super::Polygon;
 

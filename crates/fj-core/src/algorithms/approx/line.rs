@@ -1,4 +1,4 @@
-use fj_math::{Line, Point};
+use crate::math::{Line, Point};
 
 /// Approximate a line
 ///

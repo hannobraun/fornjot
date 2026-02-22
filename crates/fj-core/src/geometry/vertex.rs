@@ -1,8 +1,6 @@
 use std::collections::BTreeMap;
 
-use fj_math::Point;
-
-use crate::{storage::Handle, topology::Curve};
+use crate::{math::Point, storage::Handle, topology::Curve};
 
 /// The geometric definition of a vertex
 #[derive(Clone, Debug, Default)]

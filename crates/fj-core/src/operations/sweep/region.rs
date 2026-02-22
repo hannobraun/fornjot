@@ -1,8 +1,7 @@
-use fj_math::Vector;
-
 use crate::{
     Core,
     interop::Color,
+    math::Vector,
     operations::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
     },

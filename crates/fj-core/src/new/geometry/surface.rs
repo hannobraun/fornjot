@@ -1,4 +1,4 @@
-use fj_math::{Point, Vector};
+use crate::math::{Point, Vector};
 
 /// # A plane
 pub struct Plane {

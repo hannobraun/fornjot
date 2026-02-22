@@ -1,8 +1,9 @@
 use std::collections::BTreeMap;
 
-use fj_math::{Aabb, Triangle};
-
-use crate::interop::Color;
+use crate::{
+    interop::Color,
+    math::{Aabb, Triangle},
+};
 
 /// # A triangle mesh
 #[derive(Clone, Debug, Default)]

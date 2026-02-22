@@ -1,7 +1,6 @@
-use fj_math::{Point, Scalar};
-
 use crate::{
     geometry::Geometry,
+    math::{Point, Scalar},
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Sketch, Surface},
     validation::{ValidationConfig, validation_check::ValidationCheck},

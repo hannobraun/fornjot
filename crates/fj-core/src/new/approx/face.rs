@@ -3,11 +3,13 @@ use std::{
     mem,
 };
 
-use fj_math::{Point, Triangle};
 use geo::{Contains, Coord, LineString, Polygon};
 use spade::Triangulation;
 
-use crate::new::approx::{ApproxHalfEdge, ApproxPoint};
+use crate::{
+    math::{Point, Triangle},
+    new::approx::{ApproxHalfEdge, ApproxPoint},
+};
 
 /// # Create a face approximation by triangulating boundary and surface points
 ///

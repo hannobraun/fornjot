@@ -1,5 +1,3 @@
-use fj_math::Transform;
-
 use crate::{
     Core,
     geometry::{
@@ -7,6 +5,7 @@ use crate::{
         repr::tri_mesh::TriMesh,
         surfaces::{SweptCurve, TransformedSurface},
     },
+    math::Transform,
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,

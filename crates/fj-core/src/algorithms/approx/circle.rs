@@ -1,8 +1,7 @@
-use fj_math::{Circle, Point};
-
 use crate::{
     geometry::{CurveBoundary, traits::GenPolyline},
     interop::Tolerance,
+    math::{Circle, Point},
 };
 
 /// # Approximate a circle

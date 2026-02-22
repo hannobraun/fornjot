@@ -6,9 +6,7 @@ mod half_edge;
 mod shell;
 mod solid;
 
-use fj_math::Aabb;
-
-use crate::geometry::Geometry;
+use crate::{geometry::Geometry, math::Aabb};
 
 /// Compute a bounding volume for an object
 pub trait BoundingVolume<const D: usize> {

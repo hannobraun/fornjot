@@ -1,6 +1,7 @@
-use fj_math::{Point, Scalar, Triangle};
-
-use crate::new::topology::Handle;
+use crate::{
+    math::{Point, Scalar, Triangle},
+    new::topology::Handle,
+};
 
 /// # A vertex
 ///

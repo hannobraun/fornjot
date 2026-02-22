@@ -1,10 +1,12 @@
-use fj_math::{Circle, Point, Scalar, Vector};
 use itertools::Itertools;
 
-use crate::new::{
-    approx::{ApproxHalfEdge, ApproxPoint, face_approx},
-    geometry::Plane,
-    topology::{Face, HalfEdge, Handle, Store, Vertex},
+use crate::{
+    math::{Circle, Point, Scalar, Vector},
+    new::{
+        approx::{ApproxHalfEdge, ApproxPoint, face_approx},
+        geometry::Plane,
+        topology::{Face, HalfEdge, Handle, Store, Vertex},
+    },
 };
 
 /// # Draw a 2D sketch and convert it into a face

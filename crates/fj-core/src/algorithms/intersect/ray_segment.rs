@@ -1,6 +1,6 @@
 //! Intersection between a ray and a line segment in 2D
 
-use fj_math::LineSegment;
+use crate::math::LineSegment;
 
 use super::{HorizontalRayToTheRight, Intersect};
 
@@ -115,9 +115,7 @@ pub enum RaySegmentIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::LineSegment;
-
-    use crate::algorithms::intersect::Intersect;
+    use crate::{algorithms::intersect::Intersect, math::LineSegment};
 
     use super::{HorizontalRayToTheRight, RaySegmentIntersection};
 

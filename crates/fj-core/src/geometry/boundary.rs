@@ -3,9 +3,7 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-use fj_math::Point;
-
-use crate::{storage::Handle, topology::Vertex};
+use crate::{math::Point, storage::Handle, topology::Vertex};
 
 /// A boundary on a curve
 ///

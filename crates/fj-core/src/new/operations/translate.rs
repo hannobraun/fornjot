@@ -1,8 +1,9 @@
 use std::collections::BTreeMap;
 
-use fj_math::{Triangle, Vector};
-
-use crate::new::topology::{Face, HalfEdge, Handle, Store, Vertex};
+use crate::{
+    math::{Triangle, Vector},
+    new::topology::{Face, HalfEdge, Handle, Store, Vertex},
+};
 
 /// # Translate primitives, given an offset
 ///

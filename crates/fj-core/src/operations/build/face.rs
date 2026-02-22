@@ -1,9 +1,8 @@
 use std::{array, borrow::Borrow};
 
-use fj_math::{Point, Scalar};
-
 use crate::{
     Core,
+    math::{Point, Scalar},
     operations::{
         build::{BuildCycle, BuildRegion, BuildSurface},
         insert::{Insert, IsInserted, IsInsertedNo},

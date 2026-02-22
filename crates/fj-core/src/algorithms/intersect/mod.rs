@@ -4,7 +4,7 @@ pub mod ray_segment;
 
 mod line_segment;
 
-use fj_math::{Point, Vector};
+use crate::math::{Point, Vector};
 
 pub use self::line_segment::LineSegmentIntersection;
 

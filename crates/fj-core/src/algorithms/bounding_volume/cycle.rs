@@ -1,7 +1,6 @@
-use fj_math::Aabb;
-
 use crate::{
     geometry::Geometry,
+    math::Aabb,
     storage::Handle,
     topology::{Cycle, Surface},
 };

@@ -1,7 +1,6 @@
-use fj_math::Vector;
-
 use crate::{
     Core,
+    math::Vector,
     operations::{insert::Insert, presentation::GetColor},
     storage::Handle,
     topology::{Face, Shell},

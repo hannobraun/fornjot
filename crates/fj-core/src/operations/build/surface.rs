@@ -1,10 +1,9 @@
-use fj_math::{Point, Scalar, Vector};
-
 use crate::{
     Core,
     geometry::{
         Path, SurfaceGeom, repr::tri_mesh::TriMesh, surfaces::SweptCurve,
     },
+    math::{Point, Scalar, Vector},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,

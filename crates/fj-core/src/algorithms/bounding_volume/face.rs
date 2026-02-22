@@ -1,13 +1,12 @@
 use std::ops::Deref;
 
-use fj_math::{Aabb, Vector};
-
 use crate::{
     geometry::{
         Geometry, repr::tri_mesh::convert_point_surface_to_global,
         traits::GenTriMesh,
     },
     interop::Tolerance,
+    math::{Aabb, Vector},
     topology::Face,
 };
 

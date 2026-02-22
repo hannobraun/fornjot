@@ -1,7 +1,6 @@
-use fj_math::Vector;
-
 use crate::{
     Core,
+    math::Vector,
     operations::{
         derive::DeriveFrom,
         insert::Insert,

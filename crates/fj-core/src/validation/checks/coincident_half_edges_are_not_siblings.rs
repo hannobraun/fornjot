@@ -1,13 +1,12 @@
 use std::fmt;
 
-use fj_math::{Point, Scalar};
-
 use crate::{
     geometry::{
         CurveBoundary, Geometry,
         repr::tri_mesh::convert_point_surface_to_global,
     },
     interop::Tolerance,
+    math::{Point, Scalar},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
         SiblingOfHalfEdge,

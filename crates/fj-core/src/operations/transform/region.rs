@@ -1,7 +1,6 @@
-use fj_math::Transform;
-
 use crate::{
     Core,
+    math::Transform,
     operations::insert::Insert,
     storage::Handle,
     topology::{Region, Surface},

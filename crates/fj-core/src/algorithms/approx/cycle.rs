@@ -2,11 +2,10 @@
 //!
 //! See [`CycleApprox`].
 
-use fj_math::LineSegment;
-
 use crate::{
     geometry::{CurveBoundary, Geometry},
     interop::Tolerance,
+    math::LineSegment,
     storage::Handle,
     topology::{Cycle, Surface},
 };

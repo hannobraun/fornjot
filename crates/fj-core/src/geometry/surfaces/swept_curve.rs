@@ -1,11 +1,10 @@
-use fj_math::{Aabb, Point, Scalar, Triangle, Vector};
-
 use crate::{
     geometry::{
         Geometry, Path,
         traits::{GenPolyline, GenTriMesh},
     },
     interop::Tolerance,
+    math::{Aabb, Point, Scalar, Triangle, Vector},
 };
 
 /// # A surface that is a curve, swept along a path

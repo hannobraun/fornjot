@@ -1,7 +1,6 @@
-use fj_math::Winding;
-
 use crate::{
     geometry::Geometry,
+    math::Winding,
     storage::Handle,
     topology::{Region, Surface},
 };

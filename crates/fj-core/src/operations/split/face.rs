@@ -1,9 +1,9 @@
-use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
     Core,
     geometry::LocalVertexGeom,
+    math::Point,
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,

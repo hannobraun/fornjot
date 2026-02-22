@@ -1,13 +1,12 @@
 use std::collections::BTreeMap;
 
-use fj_math::{Circle, Line, Point};
-
 use crate::{
     geometry::{
         CurveBoundary, Geometry, Path,
         repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
     },
     interop::Tolerance,
+    math::{Circle, Line, Point},
     storage::Handle,
     topology::{Curve, Surface},
 };
@@ -206,7 +205,6 @@ impl CurveApproxCache {
 mod tests {
     use std::f64::consts::TAU;
 
-    use fj_math::{Circle, Point, Vector};
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -219,6 +217,7 @@ mod tests {
             repr::tri_mesh::convert_point_surface_to_global,
             surfaces::SweptCurve,
         },
+        math::{Circle, Point, Vector},
         operations::build::BuildSurface,
         topology::Surface,
     };

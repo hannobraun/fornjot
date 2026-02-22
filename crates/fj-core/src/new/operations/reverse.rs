@@ -1,6 +1,7 @@
-use fj_math::Triangle;
-
-use crate::new::topology::{Face, HalfEdge, Store};
+use crate::{
+    math::Triangle,
+    new::topology::{Face, HalfEdge, Store},
+};
 
 /// # Reverse the orientation of a primitive
 #[derive(Default)]

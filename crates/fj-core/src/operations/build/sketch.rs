@@ -1,7 +1,6 @@
-use fj_math::{Point, Scalar};
-
 use crate::{
     Core,
+    math::{Point, Scalar},
     operations::update::UpdateSketch,
     topology::{Region, Sketch, Topology},
 };

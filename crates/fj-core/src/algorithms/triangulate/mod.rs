@@ -81,13 +81,12 @@ impl Triangulate for FaceApprox {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar};
-
     use crate::{
         Core,
         algorithms::approx::{ApproxCache, face::approx_face},
         geometry::repr::tri_mesh::convert_point_surface_to_global,
         interop::{Tolerance, TriMesh},
+        math::{Point, Scalar},
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,

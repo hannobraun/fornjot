@@ -1,9 +1,8 @@
 use std::collections::BTreeMap;
 
-use fj_math::Point;
-
 use crate::{
     geometry::{Geometry, repr::tri_mesh::convert_point_surface_to_global},
+    math::Point,
     storage::Handle,
     topology::{Curve, Surface, Vertex},
 };

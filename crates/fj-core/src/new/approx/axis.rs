@@ -1,4 +1,4 @@
-use fj_math::Scalar;
+use crate::math::Scalar;
 
 /// # Provides iterators over the coordinates of an axis
 ///

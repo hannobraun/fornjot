@@ -2,7 +2,7 @@
 //!
 //! See [`Tolerance`].
 
-use fj_math::Scalar;
+use crate::math::Scalar;
 
 /// # A tolerance value
 ///

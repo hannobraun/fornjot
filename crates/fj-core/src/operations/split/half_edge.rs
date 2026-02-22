@@ -1,8 +1,7 @@
-use fj_math::Point;
-
 use crate::{
     Core,
     geometry::LocalVertexGeom,
+    math::Point,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     topology::{Cycle, HalfEdge, Vertex},

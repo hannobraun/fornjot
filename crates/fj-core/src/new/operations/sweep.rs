@@ -1,11 +1,13 @@
-use fj_math::Point;
 use itertools::Itertools;
 
-use crate::new::{
-    approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
-    geometry::Curve,
-    operations::{Connect, Reverse, Translate},
-    topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
+use crate::{
+    math::Point,
+    new::{
+        approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
+        geometry::Curve,
+        operations::{Connect, Reverse, Translate},
+        topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
+    },
 };
 
 /// # Sweep a primitive along a curve to create another primitive

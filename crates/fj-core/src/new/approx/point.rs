@@ -1,4 +1,4 @@
-use fj_math::Point;
+use crate::math::Point;
 
 /// # A point in an approximation with both local and global representation
 ///

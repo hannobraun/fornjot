@@ -1,9 +1,8 @@
-use fj_math::{Point, Scalar, Vector};
-
 use crate::{
     Core,
     geometry::{CurveBoundary, LocalVertexGeom},
     interop::{Color, ext::ArrayExt},
+    math::{Point, Scalar, Vector},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         geometry::UpdateCurveGeometry,

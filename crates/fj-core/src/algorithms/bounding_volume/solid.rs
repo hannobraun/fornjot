@@ -1,6 +1,4 @@
-use fj_math::Aabb;
-
-use crate::{geometry::Geometry, topology::Solid};
+use crate::{geometry::Geometry, math::Aabb, topology::Solid};
 
 impl super::BoundingVolume<3> for &Solid {
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<3>> {

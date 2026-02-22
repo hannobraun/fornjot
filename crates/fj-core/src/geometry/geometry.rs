@@ -1,8 +1,7 @@
 use std::collections::BTreeMap;
 
-use fj_math::Vector;
-
 use crate::{
+    math::Vector,
     storage::Handle,
     topology::{Curve, Surface, Topology, Vertex},
 };

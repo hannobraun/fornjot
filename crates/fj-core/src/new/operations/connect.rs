@@ -1,8 +1,9 @@
 use std::collections::BTreeMap;
 
-use fj_math::Point;
-
-use crate::new::topology::{HalfEdge, Handle, Store, Vertex};
+use crate::{
+    math::Point,
+    new::topology::{HalfEdge, Handle, Store, Vertex},
+};
 
 /// # Connect two primitives, creating a new one
 #[derive(Default)]

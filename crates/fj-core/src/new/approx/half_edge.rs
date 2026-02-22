@@ -1,8 +1,9 @@
-use fj_math::Point;
-
-use crate::new::{
-    approx::{ApproxAxis, ApproxPoint},
-    topology::{HalfEdge, Handle, Store, Vertex},
+use crate::{
+    math::Point,
+    new::{
+        approx::{ApproxAxis, ApproxPoint},
+        topology::{HalfEdge, Handle, Store, Vertex},
+    },
 };
 
 /// # A representation of a half-edge, for the purpose of approximation

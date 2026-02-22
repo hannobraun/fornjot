@@ -1,10 +1,9 @@
 //! Add holes to shapes
 
-use fj_math::{Point, Scalar, Vector};
-
 use crate::{
     Core,
     geometry::repr::tri_mesh::convert_point_surface_to_global,
+    math::{Point, Scalar, Vector},
     storage::Handle,
     topology::{Cycle, Face, Region, Shell},
 };

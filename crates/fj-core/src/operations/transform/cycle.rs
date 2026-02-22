@@ -1,8 +1,8 @@
-use fj_math::Transform;
 use itertools::Itertools;
 
 use crate::{
     Core,
+    math::Transform,
     operations::insert::Insert,
     storage::Handle,
     topology::{Cycle, Surface},

@@ -1,7 +1,6 @@
-use fj_math::{Point, Scalar};
-
 use crate::{
     Core,
+    math::{Point, Scalar},
     operations::{build::BuildCycle, insert::Insert},
     storage::Handle,
     topology::{Cycle, Region, Surface},

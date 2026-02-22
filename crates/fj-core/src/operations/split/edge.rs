@@ -1,7 +1,6 @@
-use fj_math::Point;
-
 use crate::{
     Core,
+    math::Point,
     operations::{
         insert::Insert, replace::ReplaceHalfEdge, split::SplitHalfEdge,
         update::UpdateHalfEdge,

@@ -1,10 +1,9 @@
 //! # Geometry code specific to circles
 
-use fj_math::{Circle, LineSegment, Point};
-
 use crate::{
     geometry::{CurveBoundary, traits::GenPolyline},
     interop::{CircleApproxParams, Tolerance},
+    math::{Circle, LineSegment, Point},
 };
 
 impl<const D: usize> GenPolyline<D> for Circle<D> {
@@ -64,13 +63,12 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
 mod tests {
     use std::f64::consts::TAU;
 
-    use fj_math::{Point, Scalar};
-
     use crate::{
         geometry::{
             CurveBoundary, curves::circle::Circle, traits::GenPolyline,
         },
         interop::Tolerance,
+        math::{Point, Scalar},
     };
 
     use super::CircleApproxParams;

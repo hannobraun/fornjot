@@ -1,4 +1,4 @@
-use fj_math::{Circle, Point, Scalar, Vector};
+use crate::math::{Circle, Point, Scalar, Vector};
 
 /// # A relative curve
 ///

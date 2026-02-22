@@ -2,11 +2,11 @@ use std::iter::repeat;
 
 use crate::{
     geometry::{Geometry, repr::tri_mesh::convert_point_surface_to_global},
+    math::Point,
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Vertex},
     validation::{ValidationCheck, checks::MultipleReferencesToObject},
 };
-use fj_math::Point;
 
 use super::{Validate, ValidationConfig, ValidationError};
 

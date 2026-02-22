@@ -1,5 +1,3 @@
-use fj_math::{Circle, Line, Vector};
-
 use crate::{
     Core,
     geometry::{
@@ -9,6 +7,7 @@ use crate::{
         },
         surfaces::SweptCurve,
     },
+    math::{Circle, Line, Vector},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,

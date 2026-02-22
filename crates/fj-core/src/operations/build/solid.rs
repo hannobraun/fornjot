@@ -1,7 +1,6 @@
-use fj_math::Point;
-
 use crate::{
     Core,
+    math::Point,
     operations::{
         build::{BuildShell, TetrahedronShell},
         insert::{Insert, IsInsertedYes},

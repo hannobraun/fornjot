@@ -1,6 +1,4 @@
-use fj_math::Transform;
-
-use crate::{Core, topology::Vertex};
+use crate::{Core, math::Transform, topology::Vertex};
 
 use super::{TransformCache, TransformObject};
 

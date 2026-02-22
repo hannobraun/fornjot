@@ -2,11 +2,10 @@
 
 use std::iter;
 
-use fj_math::{Aabb, LineSegment, Point};
-
 use crate::{
     geometry::{CurveBoundary, traits::GenPolyline},
     interop::Tolerance,
+    math::{Aabb, LineSegment, Point},
 };
 
 /// # A polyline, the uniform representation of curve geometry
