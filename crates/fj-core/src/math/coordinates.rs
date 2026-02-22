@@ -7,8 +7,8 @@ use super::Scalar;
 /// and [`Vector`] do not have such a field themselves.
 ///
 /// [`Deref`]: std::ops::Deref
-/// [`Point`]: crate::Point
-/// [`Vector`]: crate::Vector
+/// [`Point`]: crate::math::Point
+/// [`Vector`]: crate::math::Vector
 #[repr(C)]
 pub struct T {
     /// The single coordinate of the 1-dimensional curve coordinates
@@ -22,8 +22,8 @@ pub struct T {
 /// [`Point`] and [`Vector`] do not have such fields themselves.
 ///
 /// [`Deref`]: std::ops::Deref
-/// [`Point`]: crate::Point
-/// [`Vector`]: crate::Vector
+/// [`Point`]: crate::math::Point
+/// [`Vector`]: crate::math::Vector
 #[repr(C)]
 pub struct Uv {
     /// The first coordinate of the 2-dimensional surface coordinates
@@ -40,8 +40,8 @@ pub struct Uv {
 /// [`Point`] and [`Vector`] do not have such fields themselves.
 ///
 /// [`Deref`]: std::ops::Deref
-/// [`Point`]: crate::Point
-/// [`Vector`]: crate::Vector
+/// [`Point`]: crate::math::Point
+/// [`Vector`]: crate::math::Vector
 #[repr(C)]
 pub struct Xyz {
     /// The first coordinate of the 3-dimensional model coordinates
