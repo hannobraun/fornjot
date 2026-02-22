@@ -55,8 +55,7 @@ impl<T> Store<T> {
     /// [`Index`] implementation is more convenient:
     ///
     /// ```
-    /// use fj_core::new::topology::{Store, Vertex};
-    /// use fj_math::Point;
+    /// use fj_core::{math::Point, new::topology::{Store, Vertex}};
     ///
     /// let mut store: Store<Vertex> = Store::new();
     /// let handle = store.push([0., 0., 0.]);
@@ -100,8 +99,7 @@ impl<T> IntoIterator for Store<T> {
 /// The easiest way to do so, is using [`Store`]'s [`Index`] implementation:
 ///
 /// ```
-/// use fj_core::new::topology::{Store, Vertex};
-/// use fj_math::Point;
+/// use fj_core::{math::Point, new::topology::{Store, Vertex}};
 ///
 /// let mut store: Store<Vertex> = Store::new();
 /// let handle = store.push([0., 0., 0.]);
