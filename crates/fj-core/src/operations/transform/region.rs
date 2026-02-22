@@ -1,3 +1,5 @@
+use fj_math::Transform;
+
 use crate::{
     Core,
     operations::insert::Insert,
@@ -12,7 +14,7 @@ impl TransformObject for (&Handle<Region>, &Handle<Surface>) {
 
     fn transform_with_cache(
         self,
-        transform: &fj_math::Transform,
+        transform: &Transform,
         core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self::Transformed {
