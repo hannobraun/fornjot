@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::{Line, Scalar};
+use crate::math::{Line, Scalar};
 
 use super::Point;
 

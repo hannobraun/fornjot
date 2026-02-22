@@ -161,7 +161,7 @@ impl ops::Mul<Self> for Transform {
 mod tests {
     use approx::assert_abs_diff_eq;
 
-    use crate::{Scalar, Vector};
+    use crate::math::{Scalar, Vector};
 
     use super::Transform;
 

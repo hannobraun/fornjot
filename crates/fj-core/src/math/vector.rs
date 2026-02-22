@@ -2,7 +2,7 @@ use std::{fmt, ops};
 
 use iter_fixed::IntoIteratorFixed;
 
-use crate::Bivector;
+use crate::math::Bivector;
 
 use super::{
     Scalar,
@@ -476,7 +476,7 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Scalar, Vector};
+    use crate::math::{Scalar, Vector};
 
     #[test]
     fn to_uv() {

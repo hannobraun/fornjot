@@ -1,4 +1,4 @@
-use crate::{Point, Scalar, Transform, Triangle, Vector};
+use crate::math::{Point, Scalar, Transform, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -178,7 +178,7 @@ impl Line<3> {
 mod tests {
     use approx::assert_abs_diff_eq;
 
-    use crate::{Point, Scalar, Vector};
+    use crate::math::{Point, Scalar, Vector};
 
     use super::Line;
 

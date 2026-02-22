@@ -1,4 +1,4 @@
-use crate::{LineSegment, Point};
+use crate::math::{LineSegment, Point};
 
 /// A polygonal chain
 ///

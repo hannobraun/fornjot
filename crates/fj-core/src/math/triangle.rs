@@ -1,7 +1,7 @@
 use approx::AbsDiffEq;
 use parry3d_f64::query::{Ray, RayCast as _};
 
-use crate::Vector;
+use crate::math::Vector;
 
 use super::{Point, Scalar};
 
@@ -277,7 +277,7 @@ impl Winding {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Point, Vector};
+    use crate::math::{Point, Vector};
 
     use super::Triangle;
 

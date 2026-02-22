@@ -1,4 +1,4 @@
-use crate::{Scalar, Vector};
+use crate::math::{Scalar, Vector};
 
 /// # An n-dimensional bivector
 ///

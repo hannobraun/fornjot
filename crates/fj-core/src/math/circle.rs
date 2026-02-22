@@ -1,6 +1,6 @@
 use approx::{AbsDiffEq, assert_relative_eq};
 
-use crate::{Aabb, Point, Scalar, Transform, Vector};
+use crate::math::{Aabb, Point, Scalar, Transform, Vector};
 
 /// An n-dimensional circle
 ///
@@ -180,7 +180,7 @@ impl Circle<3> {
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
 
-    use crate::{Circle, Point, Vector};
+    use crate::math::{Circle, Point, Vector};
 
     #[test]
     fn point_to_circle_coords() {

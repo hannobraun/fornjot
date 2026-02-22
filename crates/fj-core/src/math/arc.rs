@@ -1,6 +1,6 @@
 use num_traits::Float;
 
-use crate::{Point, Scalar, Vector};
+use crate::math::{Point, Scalar, Vector};
 
 /// Calculated geometry that is useful when dealing with an arc
 #[derive(Debug)]
@@ -86,7 +86,7 @@ impl Arc {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Point, Scalar, Vector};
+    use crate::math::{Point, Scalar, Vector};
 
     use super::Arc;
 

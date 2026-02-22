@@ -109,6 +109,7 @@ pub mod algorithms;
 pub mod geometry;
 pub mod interop;
 pub mod layers;
+pub mod math;
 pub mod new;
 pub mod operations;
 pub mod presentation;
@@ -121,5 +122,3 @@ pub mod validation;
 mod core;
 
 pub use self::core::Core;
-
-pub use fj_math as math;
