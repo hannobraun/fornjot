@@ -1198,6 +1198,7 @@ dependencies = [
  "fj-math",
  "geo",
  "getrandom 0.2.17",
+ "iter_fixed",
  "itertools 0.14.0",
  "nalgebra",
  "num-traits",

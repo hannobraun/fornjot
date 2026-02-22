@@ -19,6 +19,7 @@ decorum = "0.4.0"
 fj-interop.workspace = true
 fj-math.workspace = true
 geo = "0.32.0"
+iter_fixed = "0.4.0"
 itertools = "0.14.0"
 nalgebra = "0.34.1"
 num-traits = "0.2.19"
