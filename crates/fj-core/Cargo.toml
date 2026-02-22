@@ -15,6 +15,7 @@ workspace = true
 
 [dependencies]
 approx = "0.5.1"
+decorum = "0.4.0"
 fj-interop.workspace = true
 fj-math.workspace = true
 geo = "0.32.0"
