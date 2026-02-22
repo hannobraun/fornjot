@@ -12,7 +12,3 @@ categories.workspace = true
 
 [lints]
 workspace = true
-
-[dependencies]
-fj-math.workspace = true
-thiserror = "2.0.18"
