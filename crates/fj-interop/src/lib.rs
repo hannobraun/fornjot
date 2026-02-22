@@ -4,21 +4,7 @@
 //! split into multiple libraries that can be used semi-independently, and this
 //! is one of those.
 //!
-//! This library defines types that allow other components of Fornjot to
-//! interoperate, without having to depend on each other.
+//! This library has been deprecated. Its contents have moved into [`fj-core`].
 //!
 //! [Fornjot]: https://www.fornjot.app/
-
-mod approx;
-mod color;
-mod tolerance;
-mod tri_mesh;
-
-pub mod ext;
-
-pub use self::{
-    approx::CircleApproxParams,
-    color::Color,
-    tolerance::{InvalidTolerance, Tolerance},
-    tri_mesh::{Index, MeshTriangle, TriMesh, vertices_to_indexed_vertices},
-};
+//! [`fj-core`]: https://crates.io/crates/fj-core

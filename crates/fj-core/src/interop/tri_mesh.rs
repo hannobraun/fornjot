@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use fj_math::{Aabb, Triangle};
 
-use crate::Color;
+use crate::interop::Color;
 
 /// # A triangle mesh
 #[derive(Clone, Debug, Default)]
