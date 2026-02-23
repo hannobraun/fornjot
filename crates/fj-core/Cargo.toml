@@ -39,4 +39,4 @@ features = ["js"]
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-anyhow = "1.0.101"
+anyhow = "1.0.102"
