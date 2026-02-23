@@ -156,3 +156,13 @@ impl Line {
         Self { end: end.into() }
     }
 }
+
+impl Curve for Line {
+    fn end(&self) -> Vector<3> {
+        self.end
+    }
+
+    fn approx(&self) -> Vec<Vector<3>> {
+        vec![]
+    }
+}
