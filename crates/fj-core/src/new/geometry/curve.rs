@@ -20,7 +20,7 @@ pub trait Curve {
     fn approx(&self) -> Vec<Vector<3>>;
 }
 
-/// # Am arc, relative to a user-provided start point
+/// # An arc, relative to a user-provided start point
 pub struct Arc {
     /// # The end of the arc, relative to the user-provided start point
     pub end: Vector<3>,
