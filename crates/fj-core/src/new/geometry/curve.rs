@@ -140,3 +140,19 @@ impl Curve for Arc {
         approx
     }
 }
+
+/// # A line, relative to a user-provided start point
+pub struct Line {
+    /// # The end of the line, relative to the user-provided start point
+    pub end: Vector<3>,
+}
+
+impl Line {
+    /// # Construct a relative line to the given end point
+    ///
+    /// This is a convenience constructor that accepts any argument that
+    /// converts into the type of a `Line`'s field.
+    pub fn to(end: impl Into<Vector<3>>) -> Self {
+        Self { end: end.into() }
+    }
+}

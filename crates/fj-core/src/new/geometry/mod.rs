@@ -14,6 +14,6 @@ mod curve;
 mod surface;
 
 pub use self::{
-    curve::{Arc, Curve},
+    curve::{Arc, Curve, Line},
     surface::Plane,
 };
