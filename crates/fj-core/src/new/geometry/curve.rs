@@ -41,7 +41,7 @@ impl Arc {
     /// # Construct a relative arc to the given end point
     ///
     /// This is a convenience constructor that accepts any arguments that
-    /// convert into the types of an arc's fields of an `Arc`.
+    /// convert into the types of an `Arc`'s fields.
     pub fn to(
         end: impl Into<Vector<3>>,
         dir: impl Into<Vector<3>>,
