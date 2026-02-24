@@ -1194,8 +1194,6 @@ dependencies = [
  "anyhow",
  "approx",
  "decorum",
- "fj-interop",
- "fj-math",
  "geo",
  "getrandom 0.2.17",
  "iter_fixed",
