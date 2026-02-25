@@ -1,4 +1,7 @@
-use fj_core::interop::TriMesh;
+use fj_core::{
+    interop::{Color, MeshTriangle, TriMesh},
+    new::Model,
+};
 
 use crate::{Arguments, Result};
 
@@ -6,7 +9,22 @@ use crate::{Arguments, Result};
 ///
 /// Will export the model, if the respective argument has been set. Will display
 /// the model otherwise.
-pub fn process_model(tri_mesh: TriMesh, args: Arguments) -> Result {
+pub fn process_model(model: Model, args: Arguments) -> Result {
+    let triangles = model.topology.solids[model.solid]
+        .boundary
+        .iter()
+        .flat_map(|&face| &model.topology.faces[face].approx);
+
+    let mut tri_mesh = TriMesh::new();
+
+    for &triangle in triangles {
+        tri_mesh.triangles.push(MeshTriangle {
+            inner: triangle,
+            is_internal: false,
+            color: Color::default(),
+        });
+    }
+
     if let Some(path) = args.export {
         crate::export::export(tri_mesh.external_triangles(), path)?;
     } else {
