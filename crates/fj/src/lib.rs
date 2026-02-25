@@ -12,11 +12,13 @@
 mod args;
 mod debug;
 mod instance;
+mod process_model;
 
 pub use self::{
     args::Args,
     debug::{DEBUG_WINDOW, DebugWindow},
     instance::{Error, Instance, Result},
+    process_model::process_model,
 };
 
 pub use fj_core as core;

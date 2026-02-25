@@ -22,19 +22,7 @@ fn main() -> fj::Result {
     let params = Parameters::parse();
 
     let tri_mesh = cuboid::model([params.x, params.y, params.z]);
-
-    if let Some(path) = params.fj.export {
-        fj::export::export(tri_mesh.external_triangles(), path)?;
-    } else {
-        fj::viewer::make_viewer_and_spawn_thread({
-            let tri_mesh = tri_mesh.clone();
-
-            |viewer| {
-                fj::DEBUG_WINDOW.initialize(&viewer);
-                viewer.open_window().display_mesh(tri_mesh);
-            }
-        })?;
-    }
+    fj::process_model(tri_mesh, params.fj)?;
 
     Ok(())
 }
