@@ -19,11 +19,22 @@ struct Parameters {
 }
 
 fn main() -> fj::Result {
-    let mut fj = fj::Instance::new();
     let params = Parameters::parse();
 
-    let model = cuboid::model_old([params.x, params.y, params.z], &mut fj.core);
-    fj.process_model_args(&model, params.fj)?;
+    let tri_mesh = cuboid::model([params.x, params.y, params.z]);
+
+    if let Some(path) = params.fj.export {
+        fj::export::export(tri_mesh.external_triangles(), path)?;
+    } else {
+        fj::viewer::make_viewer_and_spawn_thread({
+            let tri_mesh = tri_mesh.clone();
+
+            |viewer| {
+                fj::DEBUG_WINDOW.initialize(&viewer);
+                viewer.open_window().display_mesh(tri_mesh);
+            }
+        })?;
+    }
 
     Ok(())
 }
