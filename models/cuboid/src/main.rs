@@ -19,10 +19,10 @@ struct Arguments {
 }
 
 fn main() -> fj::Result {
-    let params = Arguments::parse();
+    let args = Arguments::parse();
 
-    let tri_mesh = cuboid::model([params.x, params.y, params.z]);
-    fj::process_model(tri_mesh, params.fj)?;
+    let tri_mesh = cuboid::model([args.x, args.y, args.z]);
+    fj::process_model(tri_mesh, args.fj)?;
 
     Ok(())
 }
