@@ -11,7 +11,7 @@ pub fn model(radius: impl Into<Scalar>, core: &mut fj::core::Core) -> Solid {
     let radius = radius.into();
 
     let size = radius * 4.;
-    let cuboid = cuboid::model([size * 2., size, size], core);
+    let cuboid = cuboid::model_old([size * 2., size, size], core);
 
     cuboid.update_shell(
         cuboid.shells().only(),

@@ -15,7 +15,7 @@ pub fn model(core: &mut fj::core::Core) -> Solid {
 
     let models = [
         color::model(core),
-        cuboid::model([1., 2., 3.], core),
+        cuboid::model_old([1., 2., 3.], core),
         holes::model(0.5, core),
         spacer::model(2., 1., 1., core),
         split::model(1., 0.2, core),

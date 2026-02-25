@@ -6,7 +6,7 @@ use fj::core::{
 };
 
 pub fn model(size: f64, split_pos: f64, core: &mut fj::core::Core) -> Solid {
-    let cuboid = cuboid::model([size, size, size], core);
+    let cuboid = cuboid::model_old([size, size, size], core);
 
     cuboid.update_shell(
         cuboid.shells().only(),

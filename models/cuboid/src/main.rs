@@ -22,7 +22,7 @@ fn main() -> fj::Result {
     let mut fj = fj::Instance::new();
     let params = Parameters::parse();
 
-    let model = cuboid::model([params.x, params.y, params.z], &mut fj.core);
+    let model = cuboid::model_old([params.x, params.y, params.z], &mut fj.core);
     fj.process_model_args(&model, params.fj)?;
 
     Ok(())

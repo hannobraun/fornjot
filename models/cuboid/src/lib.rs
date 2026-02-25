@@ -8,7 +8,10 @@ use fj::core::{
     topology::{Region, Sketch, Solid},
 };
 
-pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
+pub fn model_old(
+    size: impl Into<Vector<3>>,
+    core: &mut fj::core::Core,
+) -> Solid {
     let [x, y, z] = size.into().components;
 
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
