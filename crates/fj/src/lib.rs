@@ -9,13 +9,13 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-mod args;
+mod cli;
 mod debug;
 mod instance;
 mod process_model;
 
 pub use self::{
-    args::Arguments,
+    cli::Arguments,
     debug::{DEBUG_WINDOW, DebugWindow},
     instance::{Error, Instance, Result},
     process_model::process_model,
