@@ -5,7 +5,7 @@ use fj::core::{
         sweep::SweepSketch,
         update::UpdateSketch,
     },
-    topology::{Region, Sketch, Solid},
+    topology::{Region, Sketch as SketchOld, Solid},
 };
 
 pub fn model_old(
@@ -17,7 +17,7 @@ pub fn model_old(
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, -z]);
 
-    Sketch::empty(&core.layers.topology)
+    SketchOld::empty(&core.layers.topology)
         .add_regions(
             [Region::polygon(
                 [
