@@ -5,7 +5,7 @@ use fj_core::{
     math::Scalar,
 };
 
-/// Standardized CLI for Fornjot models
+/// Standardized CLI arguments for Fornjot models
 ///
 /// This is completely optional, as models are just Rust code and don't need any
 /// kind of CLI interface. It is useful, however, to provide a standardized
