@@ -19,7 +19,7 @@ struct Parameters {
     height: f64,
 
     #[command(flatten)]
-    fj: fj::Args,
+    fj: fj::Arguments,
 }
 
 fn main() -> fj::Result {

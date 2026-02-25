@@ -1,12 +1,12 @@
 use fj_core::interop::TriMesh;
 
-use crate::{Args, Result};
+use crate::{Arguments, Result};
 
 /// # Process a model, given as a triangle mesh, according to the arguments
 ///
 /// Will export the model, if the respective argument has been set. Will display
 /// the model otherwise.
-pub fn process_model(tri_mesh: TriMesh, args: Args) -> Result {
+pub fn process_model(tri_mesh: TriMesh, args: Arguments) -> Result {
     if let Some(path) = args.export {
         crate::export::export(tri_mesh.external_triangles(), path)?;
     } else {

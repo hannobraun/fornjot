@@ -10,7 +10,7 @@ use fj_core::{
 use fj_viewer::make_viewer_and_spawn_thread;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{Args, export, viewer};
+use crate::{Arguments, export, viewer};
 
 /// An instance of Fornjot
 ///
@@ -46,7 +46,7 @@ impl Instance {
         for<'r> (&'r M, Tolerance): Triangulate,
         for<'r> &'r M: BoundingVolume<3>,
     {
-        let args = Args::parse();
+        let args = Arguments::parse();
         self.process_model_args(model, args)
     }
 
@@ -55,7 +55,7 @@ impl Instance {
     /// This function is similar to [`Self::process_model`], but accepts pre-parsed arguments
     /// instead of parsing them from the command line. This is useful when you want to
     /// extend the standard arguments with your own parameters.
-    pub fn process_model_args<M>(&mut self, model: &M, args: Args) -> Result
+    pub fn process_model_args<M>(&mut self, model: &M, args: Arguments) -> Result
     where
         for<'r> (&'r M, Tolerance): Triangulate,
         for<'r> &'r M: BoundingVolume<3>,

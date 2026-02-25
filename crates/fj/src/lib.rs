@@ -15,7 +15,7 @@ mod instance;
 mod process_model;
 
 pub use self::{
-    args::Args,
+    args::Arguments,
     debug::{DEBUG_WINDOW, DebugWindow},
     instance::{Error, Instance, Result},
     process_model::process_model,

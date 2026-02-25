@@ -17,7 +17,7 @@ use fj_core::{
 ///
 /// [`Instance::process_model`]: crate::Instance::process_model
 #[derive(clap::Parser)]
-pub struct Args {
+pub struct Arguments {
     /// Export model to this path
     #[arg(short, long, value_name = "PATH")]
     pub export: Option<PathBuf>,
@@ -31,7 +31,7 @@ pub struct Args {
     pub ignore_validation: bool,
 }
 
-impl Args {
+impl Arguments {
     /// Parse the command-line arguments
     ///
     /// Convenience method that saves the caller from having to import the
