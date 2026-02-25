@@ -55,7 +55,11 @@ impl Instance {
     /// This function is similar to [`Self::process_model`], but accepts pre-parsed arguments
     /// instead of parsing them from the command line. This is useful when you want to
     /// extend the standard arguments with your own parameters.
-    pub fn process_model_args<M>(&mut self, model: &M, args: Arguments) -> Result
+    pub fn process_model_args<M>(
+        &mut self,
+        model: &M,
+        args: Arguments,
+    ) -> Result
     where
         for<'r> (&'r M, Tolerance): Triangulate,
         for<'r> &'r M: BoundingVolume<3>,
