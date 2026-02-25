@@ -5,10 +5,10 @@ use fj_core::{
 
 use crate::{Arguments, Result};
 
-/// # Process a model, given as a triangle mesh, according to the arguments
+/// # Process a model, according to the provided arguments
 ///
-/// Will export the model, if the respective argument has been set. Will display
-/// the model otherwise.
+/// Exports the model, if the respective argument has been set. Display the
+/// model otherwise.
 pub fn process_model(model: Model, args: Arguments) -> Result {
     let triangles = model.topology.solids[model.solid]
         .boundary
