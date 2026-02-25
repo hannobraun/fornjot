@@ -1,7 +1,7 @@
 use clap::Parser;
 
 #[derive(Parser)]
-struct Arguments {
+struct CuboidArgs {
     /// Size of the cuboid along the x-axis
     #[arg(long, default_value = "3.0")]
     x: f64,
@@ -19,7 +19,7 @@ struct Arguments {
 }
 
 fn main() -> fj::Result {
-    let args = Arguments::parse();
+    let args = CuboidArgs::parse();
 
     let tri_mesh = cuboid::model([args.x, args.y, args.z]);
     fj::process_model(tri_mesh, args.fj)?;
