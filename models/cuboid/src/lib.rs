@@ -17,12 +17,13 @@ use fj::core::{
 pub fn model(size: impl Into<Vector<3>>) -> TriMesh {
     let [x, y, z] = size.into().components;
 
+    let topology = Topology::new();
     let Topology {
         mut faces,
         mut half_edges,
         mut solids,
         mut vertices,
-    } = Topology::new();
+    } = topology;
 
     let mut sweep = Sweep::new();
 
