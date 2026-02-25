@@ -1,5 +1,4 @@
 use fj::core::{
-    interop::{Color, MeshTriangle, TriMesh},
     math::{Point, Scalar, Vector},
     new::{
         geometry::{Line, Plane},
@@ -15,7 +14,7 @@ use fj::core::{
     topology::{Region, Sketch as SketchOld, Solid},
 };
 
-pub fn model(size: impl Into<Vector<3>>) -> TriMesh {
+pub fn model(size: impl Into<Vector<3>>) -> Model {
     let [x, y, z] = size.into().components;
 
     let mut topology = Topology::new();
@@ -52,27 +51,10 @@ pub fn model(size: impl Into<Vector<3>>) -> TriMesh {
         solids,
     );
 
-    let model = Model {
+    Model {
         solid: cuboid,
         topology,
-    };
-
-    let triangles = model.topology.solids[cuboid]
-        .boundary
-        .iter()
-        .flat_map(|&face| &model.topology.faces[face].approx);
-
-    let mut tri_mesh = TriMesh::new();
-
-    for &triangle in triangles {
-        tri_mesh.triangles.push(MeshTriangle {
-            inner: triangle,
-            is_internal: false,
-            color: Color::default(),
-        });
     }
-
-    tri_mesh
 }
 
 pub fn model_old(

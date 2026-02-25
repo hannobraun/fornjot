@@ -1,4 +1,5 @@
 use clap::Parser;
+use fj::core::interop::{Color, MeshTriangle, TriMesh};
 
 #[derive(Parser)]
 struct CuboidArgs {
@@ -21,7 +22,23 @@ struct CuboidArgs {
 fn main() -> fj::Result {
     let args = CuboidArgs::parse();
 
-    let tri_mesh = cuboid::model([args.x, args.y, args.z]);
+    let model = cuboid::model([args.x, args.y, args.z]);
+
+    let triangles = model.topology.solids[model.solid]
+        .boundary
+        .iter()
+        .flat_map(|&face| &model.topology.faces[face].approx);
+
+    let mut tri_mesh = TriMesh::new();
+
+    for &triangle in triangles {
+        tri_mesh.triangles.push(MeshTriangle {
+            inner: triangle,
+            is_internal: false,
+            color: Color::default(),
+        });
+    }
+
     fj::process_model(tri_mesh, args.fj)?;
 
     Ok(())
