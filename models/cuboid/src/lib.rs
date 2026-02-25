@@ -5,6 +5,7 @@ use fj::core::{
         geometry::{Line, Plane},
         operations::{Sketch, Sweep},
         topology::Topology,
+        Model,
     },
     operations::{
         build::{BuildRegion, BuildSketch},
@@ -51,10 +52,15 @@ pub fn model(size: impl Into<Vector<3>>) -> TriMesh {
         solids,
     );
 
-    let triangles = solids[cuboid]
+    let model = Model {
+        solid: cuboid,
+        topology,
+    };
+
+    let triangles = model.topology.solids[cuboid]
         .boundary
         .iter()
-        .flat_map(|&face| &faces[face].approx);
+        .flat_map(|&face| &model.topology.faces[face].approx);
 
     let mut tri_mesh = TriMesh::new();
 
