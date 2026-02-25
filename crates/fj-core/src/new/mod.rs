@@ -17,3 +17,7 @@ pub mod approx;
 pub mod geometry;
 pub mod operations;
 pub mod topology;
+
+mod model;
+
+pub use self::model::Model;
