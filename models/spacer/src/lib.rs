@@ -11,7 +11,7 @@ use fj::core::{
 
 pub fn model_old(
     outer_radius: f64,
-    inner: f64,
+    inner_radius: f64,
     height: f64,
     core: &mut fj::core::Core,
 ) -> Solid {
@@ -29,7 +29,7 @@ pub fn model_old(
             .add_interiors(
                 [Cycle::circle(
                     Point::origin(),
-                    inner,
+                    inner_radius,
                     core.layers.topology.surfaces.space_2d(),
                     core,
                 )
