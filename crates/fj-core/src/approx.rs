@@ -1,6 +1,4 @@
-//! Tolerance value for approximation
-//!
-//! See [`Tolerance`].
+//! # Tools for approximating shapes
 
 use crate::math::Scalar;
 
