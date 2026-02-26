@@ -84,14 +84,14 @@ impl Sketch {
     pub fn arc_to(
         mut self,
         radius: impl Into<Scalar>,
-        tolerance: impl Into<Scalar>,
+        tolerance: impl Into<Tolerance>,
         to: impl Into<Point<2>>,
     ) -> Self {
         self.segments.push(SketchSegment {
             end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
-                tolerance: tolerance.into().into(),
+                tolerance: tolerance.into(),
             },
             attachment: None,
         });
