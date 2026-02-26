@@ -20,15 +20,15 @@ struct SpacerArgs {
 
 fn main() -> fj::Result {
     let mut fj = fj::Instance::new();
-    let params = SpacerArgs::parse();
+    let args = SpacerArgs::parse();
 
     let model = spacer::model(
-        params.outer_radius,
-        params.inner_radius,
-        params.height,
+        args.outer_radius,
+        args.inner_radius,
+        args.height,
         &mut fj.core,
     );
-    fj.process_model_args(&model, params.fj)?;
+    fj.process_model_args(&model, args.fj)?;
 
     Ok(())
 }
