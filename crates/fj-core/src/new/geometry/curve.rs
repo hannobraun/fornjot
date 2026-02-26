@@ -48,12 +48,12 @@ impl Arc {
     pub fn to(
         end: impl Into<Vector<3>>,
         dir: impl Into<Vector<3>>,
-        tolerance: impl Into<Scalar>,
+        tolerance: impl Into<Tolerance>,
     ) -> Self {
         Self {
             end: end.into(),
             dir: dir.into(),
-            tolerance: tolerance.into().into(),
+            tolerance: tolerance.into(),
         }
     }
 }
