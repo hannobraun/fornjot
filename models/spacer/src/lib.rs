@@ -9,7 +9,7 @@ use fj::core::{
     topology::{Cycle, Region, Sketch, Solid},
 };
 
-pub fn model(
+pub fn model_old(
     outer: f64,
     inner: f64,
     height: f64,

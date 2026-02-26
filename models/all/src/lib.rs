@@ -17,7 +17,7 @@ pub fn model(core: &mut fj::core::Core) -> Solid {
         color::model(core),
         cuboid::model_old([1., 2., 3.], core),
         holes::model(0.5, core),
-        spacer::model(2., 1., 1., core),
+        spacer::model_old(2., 1., 1., core),
         split::model(1., 0.2, core),
         star::model(5, 2., 1., 1., core),
         vertices_indices::model(core),

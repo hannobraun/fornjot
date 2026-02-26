@@ -22,7 +22,7 @@ fn main() -> fj::Result {
     let mut fj = fj::Instance::new();
     let args = SpacerArgs::parse();
 
-    let model = spacer::model(
+    let model = spacer::model_old(
         args.outer_radius,
         args.inner_radius,
         args.height,
