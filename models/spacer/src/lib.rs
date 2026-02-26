@@ -10,7 +10,7 @@ use fj::core::{
 };
 
 pub fn model_old(
-    outer: f64,
+    outer_radius: f64,
     inner: f64,
     height: f64,
     core: &mut fj::core::Core,
@@ -22,7 +22,7 @@ pub fn model_old(
         .add_regions(
             [Region::circle(
                 Point::origin(),
-                outer,
+                outer_radius,
                 core.layers.topology.surfaces.space_2d(),
                 core,
             )
