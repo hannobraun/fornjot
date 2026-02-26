@@ -107,7 +107,7 @@ impl Sketch {
     pub fn arc_to_at(
         mut self,
         radius: impl Into<Scalar>,
-        tolerance: impl Into<Scalar>,
+        tolerance: impl Into<Tolerance>,
         to: impl Into<Point<2>>,
         at: Handle<Vertex>,
     ) -> Self {
@@ -115,7 +115,7 @@ impl Sketch {
             end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
-                tolerance: tolerance.into().into(),
+                tolerance: tolerance.into(),
             },
             attachment: Some(SketchSegmentAttachment::Vertex { vertex: at }),
         });
