@@ -1,4 +1,7 @@
-use crate::math::{Circle, Point, Scalar, Vector};
+use crate::{
+    approx::Tolerance,
+    math::{Circle, Point, Scalar, Vector},
+};
 
 /// # A relative curve
 ///
@@ -34,7 +37,7 @@ pub struct Arc {
     ///
     /// Defines how far the arc's approximation is allowed to deviate from the
     /// idealized arc.
-    pub tolerance: Scalar,
+    pub tolerance: Tolerance,
 }
 
 impl Arc {
@@ -50,7 +53,7 @@ impl Arc {
         Self {
             end: end.into(),
             dir: dir.into(),
-            tolerance: tolerance.into(),
+            tolerance: tolerance.into().into(),
         }
     }
 }
@@ -118,7 +121,8 @@ impl Curve for Arc {
         };
 
         let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI / (Scalar::ONE - (self.tolerance / radius)).acos(),
+            Scalar::PI
+                / (Scalar::ONE - (self.tolerance.inner() / radius)).acos(),
             3.,
         )
         .ceil();
