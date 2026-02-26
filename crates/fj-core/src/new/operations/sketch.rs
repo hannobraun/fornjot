@@ -1,6 +1,7 @@
 use itertools::Itertools;
 
 use crate::{
+    approx::Tolerance,
     math::{Circle, Point, Scalar, Vector},
     new::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
@@ -90,7 +91,7 @@ impl Sketch {
             end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
-                tolerance: tolerance.into(),
+                tolerance: tolerance.into().into(),
             },
             attachment: None,
         });
@@ -114,7 +115,7 @@ impl Sketch {
             end: to.into(),
             geometry: SketchSegmentGeometry::Arc {
                 radius: radius.into(),
-                tolerance: tolerance.into(),
+                tolerance: tolerance.into().into(),
             },
             attachment: Some(SketchSegmentAttachment::Vertex { vertex: at }),
         });
@@ -291,7 +292,10 @@ impl SketchSegment {
 
 #[derive(Clone, Copy)]
 enum SketchSegmentGeometry {
-    Arc { radius: Scalar, tolerance: Scalar },
+    Arc {
+        radius: Scalar,
+        tolerance: Tolerance,
+    },
     Line,
 }
 
@@ -354,7 +358,8 @@ impl SketchSegmentGeometry {
                 };
 
                 let num_vertices_to_approx_full_circle = Scalar::max(
-                    Scalar::PI / (Scalar::ONE - (tolerance / radius)).acos(),
+                    Scalar::PI
+                        / (Scalar::ONE - (tolerance.inner() / radius)).acos(),
                     3.,
                 )
                 .ceil();
