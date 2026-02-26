@@ -6,7 +6,7 @@ use fj::core::{
         sweep::SweepSketch,
         update::{UpdateRegion, UpdateSketch},
     },
-    topology::{Cycle, Region, Sketch, Solid},
+    topology::{Cycle, Region, Sketch as SketchOld, Solid},
 };
 
 pub fn model_old(
@@ -18,7 +18,7 @@ pub fn model_old(
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., -height]);
 
-    Sketch::empty(&core.layers.topology)
+    SketchOld::empty(&core.layers.topology)
         .add_regions(
             [Region::circle(
                 Point::origin(),
