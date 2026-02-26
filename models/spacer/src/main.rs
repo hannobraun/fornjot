@@ -1,7 +1,7 @@
 use clap::Parser;
 
 #[derive(Parser)]
-struct Parameters {
+struct SpacerArgs {
     /// Outer radius of the spacer
     #[arg(long, default_value = "1.0")]
     outer_radius: f64,
@@ -20,7 +20,7 @@ struct Parameters {
 
 fn main() -> fj::Result {
     let mut fj = fj::Instance::new();
-    let params = Parameters::parse();
+    let params = SpacerArgs::parse();
 
     let model = spacer::model(
         params.outer_radius,
