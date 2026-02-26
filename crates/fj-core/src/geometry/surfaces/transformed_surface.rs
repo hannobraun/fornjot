@@ -1,6 +1,6 @@
 use crate::{
+    approx::Tolerance,
     geometry::{Geometry, traits::GenTriMesh},
-    interop::Tolerance,
     math::{Aabb, Point, Scalar, Transform, Triangle},
     storage::Handle,
     topology::Surface,

@@ -1,11 +1,11 @@
 use std::ops::Deref;
 
 use crate::{
+    approx::Tolerance,
     geometry::{
         Geometry, repr::tri_mesh::convert_point_surface_to_global,
         traits::GenTriMesh,
     },
-    interop::Tolerance,
     math::{Aabb, Vector},
     topology::Face,
 };

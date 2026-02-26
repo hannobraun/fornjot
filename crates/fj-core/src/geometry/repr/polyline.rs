@@ -3,9 +3,7 @@
 use std::iter;
 
 use crate::{
-    geometry::{CurveBoundary, traits::GenPolyline},
-    interop::Tolerance,
-    math::{Aabb, LineSegment, Point},
+    approx::Tolerance, geometry::{CurveBoundary, traits::GenPolyline}, math::{Aabb, LineSegment, Point}
 };
 
 /// # A polyline, the uniform representation of curve geometry

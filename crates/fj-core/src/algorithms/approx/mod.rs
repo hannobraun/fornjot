@@ -21,7 +21,7 @@ use std::{
 use curve::CurveApproxCache;
 use vertex::VertexApproxCache;
 
-use crate::{geometry::Geometry, interop::Tolerance, math::Point};
+use crate::{approx::Tolerance, geometry::Geometry, math::Point};
 
 /// Approximate an object
 pub trait Approx: Sized {

@@ -1,9 +1,9 @@
 use crate::{
+    approx::Tolerance,
     geometry::{
         Geometry, Path,
         traits::{GenPolyline, GenTriMesh},
     },
-    interop::Tolerance,
     math::{Aabb, Point, Scalar, Triangle, Vector},
 };
 

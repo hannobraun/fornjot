@@ -1,8 +1,8 @@
 //! # Geometry code specific to lines
 
 use crate::{
+    approx::Tolerance,
     geometry::{CurveBoundary, traits::GenPolyline},
-    interop::Tolerance,
     math::{Line, LineSegment, Point},
 };
 

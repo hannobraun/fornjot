@@ -2,9 +2,9 @@
 
 use std::collections::BTreeSet;
 
-use crate::{geometry::Geometry, topology::Shell};
+use crate::{approx::Tolerance, geometry::Geometry, topology::Shell};
 
-use super::{Approx, ApproxCache, Tolerance, face::FaceApprox};
+use super::{Approx, ApproxCache, face::FaceApprox};
 
 impl Approx for &Shell {
     type Approximation = BTreeSet<FaceApprox>;

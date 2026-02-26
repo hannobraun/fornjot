@@ -5,8 +5,8 @@
 use std::iter;
 
 use crate::{
+    approx::Tolerance,
     geometry::{CurveBoundary, Geometry},
-    interop::Tolerance,
     math::Point,
     storage::Handle,
     topology::{HalfEdge, Surface},

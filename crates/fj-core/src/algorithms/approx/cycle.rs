@@ -3,8 +3,8 @@
 //! See [`CycleApprox`].
 
 use crate::{
+    approx::Tolerance,
     geometry::{CurveBoundary, Geometry},
-    interop::Tolerance,
     math::LineSegment,
     storage::Handle,
     topology::{Cycle, Surface},

@@ -5,8 +5,8 @@
 use std::{collections::BTreeSet, ops::Deref};
 
 use crate::{
+    approx::Tolerance,
     geometry::Geometry,
-    interop::Tolerance,
     storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,

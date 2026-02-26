@@ -1,7 +1,7 @@
 use std::iter;
 
 use crate::{
-    interop::Tolerance,
+    approx::Tolerance,
     math::{Point, Scalar, Sign},
 };
 

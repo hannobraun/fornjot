@@ -1,7 +1,7 @@
 use std::{num::ParseFloatError, path::PathBuf, str::FromStr};
 
 use fj_core::{
-    interop::{InvalidTolerance, Tolerance},
+    approx::{InvalidTolerance, Tolerance},
     math::Scalar,
 };
 

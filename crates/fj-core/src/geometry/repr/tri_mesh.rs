@@ -1,8 +1,8 @@
 //! # Geometric utility code based on triangle meshes
 
 use crate::{
+    approx::Tolerance,
     geometry::{Geometry, traits::GenTriMesh},
-    interop::Tolerance,
     math::{Point, Vector},
 };
 

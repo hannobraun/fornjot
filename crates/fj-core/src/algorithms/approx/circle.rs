@@ -1,6 +1,6 @@
 use crate::{
+    approx::Tolerance,
     geometry::{CurveBoundary, traits::GenPolyline},
-    interop::Tolerance,
     math::{Circle, Point},
 };
 

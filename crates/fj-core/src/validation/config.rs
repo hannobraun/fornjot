@@ -1,4 +1,4 @@
-use crate::{interop::Tolerance, math::Scalar};
+use crate::{approx::Tolerance, math::Scalar};
 
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]

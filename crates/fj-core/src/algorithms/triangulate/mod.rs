@@ -5,7 +5,8 @@ mod polygon;
 
 use crate::{
     Core,
-    interop::{MeshTriangle, Tolerance, TriMesh},
+    approx::Tolerance,
+    interop::{MeshTriangle, TriMesh},
     operations::presentation::GetColor,
 };
 
@@ -84,8 +85,9 @@ mod tests {
     use crate::{
         Core,
         algorithms::approx::{ApproxCache, face::approx_face},
+        approx::Tolerance,
         geometry::repr::tri_mesh::convert_point_surface_to_global,
-        interop::{Tolerance, TriMesh},
+        interop::TriMesh,
         math::{Point, Scalar},
         operations::{
             build::{BuildCycle, BuildFace},

@@ -2,7 +2,7 @@
 //!
 //! See [`Core`].
 
-use crate::{interop::Tolerance, layers::Layers, validation::ValidationConfig};
+use crate::{approx::Tolerance, layers::Layers, validation::ValidationConfig};
 
 /// An instance of the Fornjot core
 ///

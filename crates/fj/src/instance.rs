@@ -3,7 +3,7 @@ use std::{error::Error as _, fmt};
 use fj_core::{
     Core,
     algorithms::{bounding_volume::BoundingVolume, triangulate::Triangulate},
-    interop::{InvalidTolerance, Tolerance},
+    approx::{InvalidTolerance, Tolerance},
     math::{Aabb, Point, Scalar},
     validation::{ValidationConfig, ValidationErrors},
 };

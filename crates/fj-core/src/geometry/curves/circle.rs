@@ -1,8 +1,9 @@
 //! # Geometry code specific to circles
 
 use crate::{
+    approx::Tolerance,
     geometry::{CurveBoundary, traits::GenPolyline},
-    interop::{CircleApproxParams, Tolerance},
+    interop::CircleApproxParams,
     math::{Circle, LineSegment, Point},
 };
 
@@ -64,10 +65,10 @@ mod tests {
     use std::f64::consts::TAU;
 
     use crate::{
+        approx::Tolerance,
         geometry::{
             CurveBoundary, curves::circle::Circle, traits::GenPolyline,
         },
-        interop::Tolerance,
         math::{Point, Scalar},
     };
 

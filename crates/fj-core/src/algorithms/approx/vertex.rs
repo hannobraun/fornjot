@@ -1,13 +1,14 @@
 use std::collections::BTreeMap;
 
 use crate::{
+    approx::Tolerance,
     geometry::{Geometry, repr::tri_mesh::convert_point_surface_to_global},
     math::Point,
     storage::Handle,
     topology::{Curve, Surface, Vertex},
 };
 
-use super::{ApproxPoint, Tolerance};
+use super::ApproxPoint;
 
 /// # Approximate a vertex position
 pub fn approx_vertex(

@@ -1,11 +1,11 @@
 use std::fmt;
 
 use crate::{
+    approx::Tolerance,
     geometry::{
         CurveBoundary, Geometry,
         repr::tri_mesh::convert_point_surface_to_global,
     },
-    interop::Tolerance,
     math::{Point, Scalar},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,

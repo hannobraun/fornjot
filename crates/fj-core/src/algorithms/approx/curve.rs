@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
 use crate::{
+    approx::Tolerance,
     geometry::{
         CurveBoundary, Geometry, Path,
         repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
     },
-    interop::Tolerance,
     math::{Circle, Line, Point},
     storage::Handle,
     topology::{Curve, Surface},

@@ -20,7 +20,7 @@
 use std::ops::Deref;
 
 use crate::{
-    interop::Tolerance,
+    approx::Tolerance,
     math::{Aabb, LineSegment, Point, Scalar, Triangle},
 };
 

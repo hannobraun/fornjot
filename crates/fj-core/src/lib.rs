@@ -106,6 +106,7 @@
 #![allow(clippy::mutable_key_type)]
 
 pub mod algorithms;
+pub mod approx;
 pub mod geometry;
 pub mod interop;
 pub mod layers;
