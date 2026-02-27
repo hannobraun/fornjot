@@ -74,6 +74,16 @@ impl Curve for Arc {
         // computing a vector that fulfills these requirements.
         let dir_perp = self.end - self.end.vector_projecting_onto(&self.dir);
 
+        if dir_perp.magnitude().is_zero() {
+            // This can happen if `self.end` and its vector projection onto
+            // `self.dir` are equal, which would mean that both are parallel.
+            //
+            // We can interpret this edge case as an arc on an infinitely large
+            // circle, which is the same as a line. And a line needs no points
+            // to approximate it.
+            return Vec::new();
+        }
+
         // `dir_perp` is colinear with the `center` vector we seek:
         //
         // ```
