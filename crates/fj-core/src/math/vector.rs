@@ -474,6 +474,11 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
     }
 }
 
+/// # Indicates that an operation failed, because the vector magnitude is zero
+#[derive(Debug, thiserror::Error)]
+#[error("Operation failed because magnitude of vector is zero.")]
+pub struct MagnitudeIsZero;
+
 #[cfg(test)]
 mod tests {
     use crate::math::{Scalar, Vector};
