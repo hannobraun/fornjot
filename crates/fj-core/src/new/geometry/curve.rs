@@ -121,8 +121,8 @@ impl Curve for Arc {
         let start = Point::origin();
 
         let circle = {
+            let a = -center;
             let center = start + center;
-            let a = start - center;
             let b = (self.end - self.end.vector_projecting_onto(&a))
                 .normalize()
                 * radius;
