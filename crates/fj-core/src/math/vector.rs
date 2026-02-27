@@ -118,11 +118,11 @@ impl<const D: usize> Vector<D> {
 
     /// # Compute the scalar projection of this vector onto another
     pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
-        if other.magnitude() == Scalar::ZERO {
+        let other_normalized = if other.magnitude() != Scalar::ZERO {
+            other.normalize()
+        } else {
             return Scalar::ZERO;
-        }
-
-        let other_normalized = other.normalize();
+        };
 
         self.dot(&other_normalized)
     }
