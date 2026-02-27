@@ -122,7 +122,9 @@ impl<const D: usize> Vector<D> {
             return Scalar::ZERO;
         }
 
-        self.dot(&other.normalize())
+        let other_normalized = other.normalize();
+
+        self.dot(&other_normalized)
     }
 
     /// # Compute the vector projection of this vector onto another
