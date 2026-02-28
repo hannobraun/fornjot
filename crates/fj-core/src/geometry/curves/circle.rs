@@ -1,9 +1,8 @@
 //! # Geometry code specific to circles
 
 use crate::{
-    approx::Tolerance,
+    approx::{CircleApproxParams, Tolerance},
     geometry::{CurveBoundary, traits::GenPolyline},
-    interop::CircleApproxParams,
     math::{Circle, LineSegment, Point},
 };
 

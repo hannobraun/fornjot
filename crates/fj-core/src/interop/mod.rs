@@ -4,14 +4,12 @@
 //! `fj-interop` crate. The types in here will, over time, move to more
 //! appropriate places.
 
-mod approx;
 mod color;
 mod tri_mesh;
 
 pub mod ext;
 
 pub use self::{
-    approx::CircleApproxParams,
     color::Color,
     tri_mesh::{Index, MeshTriangle, TriMesh, vertices_to_indexed_vertices},
 };
