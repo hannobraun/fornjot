@@ -97,27 +97,27 @@ mod tests {
 
         // Empty range
         let empty: [Scalar; 0] = [];
-        test_path([[0.], [0.]], empty);
+        test_path([0., 0.], empty);
 
         // Ranges contain all generated points. Start is before the first
         // increment and after the last one in each case.
-        test_path([[0.], [TAU]], [1., 2., 3.]);
-        test_path([[1.], [TAU]], [1., 2., 3.]);
-        test_path([[0.], [TAU - 1.]], [1., 2., 3.]);
+        test_path([0., TAU], [1., 2., 3.]);
+        test_path([1., TAU], [1., 2., 3.]);
+        test_path([0., TAU - 1.], [1., 2., 3.]);
 
         // Here the range is restricted to cut of the first or last increment.
-        test_path([[2.], [TAU]], [2., 3.]);
-        test_path([[0.], [TAU - 2.]], [1., 2.]);
+        test_path([2., TAU], [2., 3.]);
+        test_path([0., TAU - 2.], [1., 2.]);
 
         // And everything again, but in reverse.
-        test_path([[TAU], [0.]], [3., 2., 1.]);
-        test_path([[TAU], [1.]], [3., 2., 1.]);
-        test_path([[TAU - 1.], [0.]], [3., 2., 1.]);
-        test_path([[TAU], [2.]], [3., 2.]);
-        test_path([[TAU - 2.], [0.]], [2., 1.]);
+        test_path([TAU, 0.], [3., 2., 1.]);
+        test_path([TAU, 1.], [3., 2., 1.]);
+        test_path([TAU - 1., 0.], [3., 2., 1.]);
+        test_path([TAU, 2.], [3., 2.]);
+        test_path([TAU - 2., 0.], [2., 1.]);
 
         fn test_path(
-            boundary: [[f64; 1]; 2],
+            boundary: [f64; 2],
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
@@ -130,7 +130,7 @@ mod tests {
             let params = CircleApproxParams::new(circle.radius(), tolerance);
 
             let points = params
-                .approx_circle(boundary.map(Into::into))
+                .approx_circle(boundary.map(|coord| Point::from([coord])))
                 .collect::<Vec<_>>();
 
             let expected_points = expected_coords
