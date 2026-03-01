@@ -65,10 +65,8 @@ mod tests {
 
     use crate::{
         approx::Tolerance,
-        geometry::{
-            CurveBoundary, curves::circle::Circle, traits::GenPolyline,
-        },
-        math::{Point, Scalar},
+        geometry::{CurveBoundary, traits::GenPolyline},
+        math::{Circle, Point, Scalar},
     };
 
     use super::CircleApproxParams;
