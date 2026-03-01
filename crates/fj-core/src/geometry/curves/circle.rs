@@ -65,7 +65,7 @@ mod tests {
 
     use crate::{
         approx::Tolerance,
-        geometry::{CurveBoundary, traits::GenPolyline},
+        geometry::traits::GenPolyline,
         math::{Circle, Point, Scalar},
     };
 
@@ -117,7 +117,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            boundary: impl Into<CurveBoundary<Point<1>>>,
+            boundary: [impl Into<Point<1>>; 2],
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
@@ -130,7 +130,7 @@ mod tests {
             let params = CircleApproxParams::new(circle.radius(), tolerance);
 
             let points = params
-                .approx_circle(boundary.into().inner)
+                .approx_circle(boundary.map(Into::into))
                 .collect::<Vec<_>>();
 
             let expected_points = expected_coords
