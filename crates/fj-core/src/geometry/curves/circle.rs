@@ -117,7 +117,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            boundary: [impl Into<Point<1>>; 2],
+            boundary: [[f64; 1]; 2],
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
