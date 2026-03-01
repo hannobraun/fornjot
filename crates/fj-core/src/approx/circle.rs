@@ -76,3 +76,85 @@ impl CircleApproxParams {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::f64::consts::TAU;
+
+    use crate::{
+        approx::Tolerance,
+        math::{Circle, Point, Scalar},
+    };
+
+    use super::CircleApproxParams;
+
+    #[test]
+    fn increment_for_circle() {
+        test_increment(1., 0.5, 3.);
+        test_increment(1., 0.1, 7.);
+        test_increment(1., 0.01, 23.);
+
+        fn test_increment(
+            radius: impl Into<Scalar>,
+            tolerance: impl Into<Tolerance>,
+            expected_num_vertices: impl Into<Scalar>,
+        ) {
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = CircleApproxParams::new(circle.radius(), tolerance);
+
+            let expected_increment = Scalar::TAU / expected_num_vertices;
+            assert_eq!(params.increment(), expected_increment);
+        }
+    }
+
+    #[test]
+    fn points_for_circle() {
+        // At the chosen values for radius and tolerance (see below), the
+        // increment is `PI / 4`, so ~1.57.
+
+        // Empty range
+        let empty: [Scalar; 0] = [];
+        test_path([0., 0.], empty);
+
+        // Ranges contain all generated points. Start is before the first
+        // increment and after the last one in each case.
+        test_path([0., TAU], [1., 2., 3.]);
+        test_path([1., TAU], [1., 2., 3.]);
+        test_path([0., TAU - 1.], [1., 2., 3.]);
+
+        // Here the range is restricted to cut of the first or last increment.
+        test_path([2., TAU], [2., 3.]);
+        test_path([0., TAU - 2.], [1., 2.]);
+
+        // And everything again, but in reverse.
+        test_path([TAU, 0.], [3., 2., 1.]);
+        test_path([TAU, 1.], [3., 2., 1.]);
+        test_path([TAU - 1., 0.], [3., 2., 1.]);
+        test_path([TAU, 2.], [3., 2.]);
+        test_path([TAU - 2., 0.], [2., 1.]);
+
+        fn test_path(
+            boundary: [f64; 2],
+            expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
+        ) {
+            // Choose radius and tolerance such, that we need 4 vertices to
+            // approximate a full circle. This is the lowest number that we can
+            // still cover all the edge cases with
+            let radius = 1.;
+            let tolerance = 0.375;
+
+            let circle = Circle::from_center_and_radius([0., 0.], radius);
+            let params = CircleApproxParams::new(circle.radius(), tolerance);
+
+            let points = params
+                .approx_circle(boundary.map(|coord| Point::from([coord])))
+                .collect::<Vec<_>>();
+
+            let expected_points = expected_coords
+                .into_iter()
+                .map(|i| Point::from([params.increment() * i]))
+                .collect::<Vec<_>>();
+            assert_eq!(points, expected_points);
+        }
+    }
+}
