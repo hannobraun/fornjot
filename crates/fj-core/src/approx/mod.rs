@@ -4,6 +4,6 @@ mod circle;
 mod tolerance;
 
 pub use self::{
-    circle::CircleApproxParams,
+    circle::CircleApprox,
     tolerance::{InvalidTolerance, Tolerance},
 };

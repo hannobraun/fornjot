@@ -1,7 +1,7 @@
 //! # Geometry code specific to circles
 
 use crate::{
-    approx::{CircleApproxParams, Tolerance},
+    approx::{CircleApprox, Tolerance},
     geometry::{CurveBoundary, traits::GenPolyline},
     math::{Circle, LineSegment, Point},
 };
@@ -16,7 +16,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         point_curve: Point<1>,
         tolerance: Tolerance,
     ) -> LineSegment<D> {
-        let params = CircleApproxParams::new(self.radius(), tolerance);
+        let params = CircleApprox::new(self.radius(), tolerance);
 
         // The approximation parameters have an increment, in curve coordinates,
         // that determines the distance between points on the polyline. Let's
@@ -54,7 +54,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         boundary: CurveBoundary<Point<1>>,
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let params = CircleApproxParams::new(self.radius(), tolerance);
+        let params = CircleApprox::new(self.radius(), tolerance);
         params.approx_circle(boundary.inner).collect()
     }
 }

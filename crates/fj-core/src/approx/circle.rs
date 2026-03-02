@@ -7,11 +7,11 @@ use crate::{
 
 /// # Approximation parameters for a circle
 #[derive(Debug)]
-pub struct CircleApproxParams {
+pub struct CircleApprox {
     increment: Scalar,
 }
 
-impl CircleApproxParams {
+impl CircleApprox {
     /// # Compute the approximation parameters for a given circle and tolerance
     pub fn new(
         radius: impl Into<Scalar>,
@@ -86,7 +86,7 @@ mod tests {
         math::{Circle, Point, Scalar},
     };
 
-    use super::CircleApproxParams;
+    use super::CircleApprox;
 
     #[test]
     fn increment_for_circle() {
@@ -100,7 +100,7 @@ mod tests {
             expected_num_vertices: impl Into<Scalar>,
         ) {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::new(circle.radius(), tolerance);
+            let params = CircleApprox::new(circle.radius(), tolerance);
 
             let expected_increment = Scalar::TAU / expected_num_vertices;
             assert_eq!(params.increment(), expected_increment);
@@ -144,7 +144,7 @@ mod tests {
             let tolerance = 0.375;
 
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::new(circle.radius(), tolerance);
+            let params = CircleApprox::new(circle.radius(), tolerance);
 
             let points = params
                 .approx_circle(boundary.map(|coord| Point::from([coord])))
