@@ -5,14 +5,14 @@ use crate::{
     math::{Point, Scalar, Sign},
 };
 
-/// # Approximation parameters for a circle
+/// # Approximate a circle
 #[derive(Debug)]
 pub struct CircleApprox {
     increment: Scalar,
 }
 
 impl CircleApprox {
-    /// # Compute the approximation parameters for a given circle and tolerance
+    /// # Create an approximation for the circle with the given parameters
     pub fn new(
         radius: impl Into<Scalar>,
         tolerance: impl Into<Tolerance>,
