@@ -1,6 +1,6 @@
 use crate::{
-    approx::Tolerance,
-    math::{Circle, Point, Scalar, Vector},
+    approx::{CircleApprox, Tolerance},
+    math::{Circle, Point, Vector},
 };
 
 /// # A relative curve
@@ -130,28 +130,15 @@ impl Curve for Arc {
             Circle::new(center, a, b)
         };
 
-        let num_vertices_to_approx_full_circle = Scalar::max(
-            Scalar::PI
-                / (Scalar::ONE - (self.tolerance.inner() / radius)).acos(),
-            3.,
-        )
-        .ceil();
-
-        let increment =
-            Vector::from([Scalar::TAU / num_vertices_to_approx_full_circle]);
+        let approx = CircleApprox::new(radius, self.tolerance);
 
         let start_local = circle.point_to_circle_coords(start);
         let end_local = circle.point_to_circle_coords(start + self.end);
 
-        let mut approx = Vec::new();
-
-        let mut point = start_local + increment;
-        while point < end_local {
-            approx.push(circle.point_from_circle_coords(point) - start);
-            point += increment;
-        }
-
         approx
+            .points([start_local, end_local])
+            .map(|local| circle.point_from_circle_coords(local) - start)
+            .collect()
     }
 }
 
