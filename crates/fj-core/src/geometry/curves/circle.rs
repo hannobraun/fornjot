@@ -55,7 +55,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
         let params = CircleApprox::new(self.radius(), tolerance);
-        params.approx_circle(boundary.inner).collect()
+        params.points(boundary.inner).collect()
     }
 }
 

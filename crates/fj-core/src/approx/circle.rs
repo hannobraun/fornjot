@@ -35,7 +35,7 @@ impl CircleApprox {
     }
 
     /// # Generate points to approximate the circle within a given boundary
-    pub fn approx_circle(
+    pub fn points(
         &self,
         boundary: [Point<1>; 2],
     ) -> impl Iterator<Item = Point<1>> + '_ {
@@ -147,7 +147,7 @@ mod tests {
             let params = CircleApprox::new(circle.radius(), tolerance);
 
             let points = params
-                .approx_circle(boundary.map(|coord| Point::from([coord])))
+                .points(boundary.map(|coord| Point::from([coord])))
                 .collect::<Vec<_>>();
 
             let expected_points = expected_coords
