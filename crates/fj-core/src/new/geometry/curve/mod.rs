@@ -132,7 +132,8 @@ impl Curve for Arc {
 
         let approx = CircleApprox::new(radius, self.tolerance);
 
-        let start_local = circle.point_to_circle_coords(start);
+        let start_local = Point::from([0.]);
+        assert_eq!(start_local, circle.point_to_circle_coords(start));
         let end_local = circle.point_to_circle_coords(start + self.end);
 
         approx
