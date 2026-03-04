@@ -481,6 +481,16 @@ impl<const D: usize> approx::AbsDiffEq for Vector<D> {
     }
 }
 
+impl<const D: usize> num_traits::Zero for Vector<D> {
+    fn zero() -> Self {
+        Self::from_component(Scalar::ZERO)
+    }
+
+    fn is_zero(&self) -> bool {
+        self.is_zero()
+    }
+}
+
 /// # Indicates that an operation failed, because the vector magnitude is zero
 #[derive(Debug, thiserror::Error)]
 #[error("Operation failed because magnitude of vector is zero.")]
