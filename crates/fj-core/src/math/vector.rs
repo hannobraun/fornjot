@@ -76,6 +76,11 @@ impl<const D: usize> Vector<D> {
         Vector { components }
     }
 
+    /// # Indicate whether the vector is zero
+    pub fn is_zero(&self) -> bool {
+        self.components.iter().all(|c| c.is_zero())
+    }
+
     /// # Compute the magnitude of the vector
     pub fn magnitude(&self) -> Scalar {
         self.dot(self).sqrt()
