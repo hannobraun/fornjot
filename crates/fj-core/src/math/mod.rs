@@ -33,6 +33,7 @@ mod circle;
 mod coordinates;
 mod line;
 mod line_segment;
+mod non_zero;
 mod point;
 mod poly_chain;
 mod scalar;
@@ -48,6 +49,7 @@ pub use self::{
     coordinates::{T, Uv, Xyz},
     line::Line,
     line_segment::LineSegment,
+    non_zero::NonZero,
     point::Point,
     poly_chain::PolyChain,
     scalar::{Scalar, Sign},
