@@ -55,5 +55,5 @@ pub use self::{
     scalar::{Scalar, Sign},
     transform::Transform,
     triangle::{Triangle, Winding},
-    vector::{MagnitudeIsZero, Vector},
+    vector::Vector,
 };
