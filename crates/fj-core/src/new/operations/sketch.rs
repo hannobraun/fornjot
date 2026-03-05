@@ -332,7 +332,6 @@ impl SketchSegmentGeometry {
                     let b_squared = c * c - a * a;
 
                     if b_squared < Scalar::ZERO {
-                        // TASK: Fix.
                         panic!(
                             "Radius of arc (`{radius}`) is too small: Must be \
                             at least half the distance between start \
