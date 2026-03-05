@@ -10,6 +10,7 @@ use std::ops::Deref;
 ///
 /// Once that situation has changed, it might be desirable to replace this type
 /// with [`std::num::NonZero`].
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct NonZero<T> {
     value: T,
 }
