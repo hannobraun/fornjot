@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{self, Deref};
 
 /// # Wrapper around a value to guarantee it's not zero
 ///
@@ -42,5 +42,25 @@ impl<T> Deref for NonZero<T> {
 
     fn deref(&self) -> &Self::Target {
         &self.value
+    }
+}
+
+impl<T> ops::Neg for NonZero<T>
+where
+    T: ops::Neg,
+    T::Output: num_traits::Zero,
+{
+    type Output = NonZero<T::Output>;
+
+    fn neg(self) -> Self::Output {
+        let value = self.into_value().neg();
+
+        let Some(non_zero) = NonZero::new(value) else {
+            unreachable!(
+                "Negating a non-zero value must result in a non-zero value"
+            );
+        };
+
+        non_zero
     }
 }
