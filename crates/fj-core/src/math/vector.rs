@@ -2,7 +2,7 @@ use std::{fmt, ops};
 
 use iter_fixed::IntoIteratorFixed;
 
-use crate::math::Bivector;
+use crate::math::{Bivector, NonZero};
 
 use super::{
     Scalar,
@@ -74,6 +74,15 @@ impl<const D: usize> Vector<D> {
         };
 
         Vector { components }
+    }
+
+    /// # Convert into a non-zero vector, or panic if the vector is zero
+    pub fn assert_non_zero(self) -> NonZero<Self> {
+        let Some(non_zero) = NonZero::new(self) else {
+            panic!("Vector is zero.");
+        };
+
+        non_zero
     }
 
     /// # Indicate whether the vector is zero
