@@ -2,7 +2,7 @@ use itertools::Itertools;
 
 use crate::{
     approx::Tolerance,
-    math::{Circle, Point, Scalar, Vector},
+    math::{Circle, NonZero, Point, Scalar, Vector},
     new::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
@@ -308,7 +308,9 @@ impl SketchSegmentGeometry {
     ) -> Vec<ApproxPoint<2>> {
         let approx = match self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
-                let start_to_end = end - start;
+                let Some(start_to_end) = NonZero::new(end - start) else {
+                    panic!("Zero-length sketch segments are not allowed.");
+                };
 
                 let midpoint_towards_center =
                     start_to_end.to_perpendicular().normalize()
@@ -344,7 +346,7 @@ impl SketchSegmentGeometry {
                 };
 
                 let center = start
-                    + start_to_end * 0.5
+                    + start_to_end.into_value() * 0.5
                     + midpoint_towards_center
                         * distance_from_midpoint_to_center;
 
@@ -369,8 +371,8 @@ impl SketchSegmentGeometry {
                 ]);
 
                 let start_local = circle.point_to_circle_coords(start);
-                let end_local =
-                    circle.point_to_circle_coords(start + start_to_end);
+                let end_local = circle
+                    .point_to_circle_coords(start + start_to_end.into_value());
 
                 let mut approx = Vec::new();
 
