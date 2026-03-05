@@ -189,6 +189,22 @@ impl Vector<2> {
     }
 }
 
+impl NonZero<Vector<2>> {
+    /// # Compute a vector that is perpendicular to this one
+    pub fn to_perpendicular(&self) -> Self {
+        let perpendicular = self.into_value().to_perpendicular();
+
+        let Some(non_zero) = NonZero::new(perpendicular) else {
+            unreachable!(
+                "A vector that's perpendicular to a non-zero vector is itself \
+                non-zero."
+            );
+        };
+
+        non_zero
+    }
+}
+
 impl Vector<3> {
     /// # Construct a `Vector` that represents the x-axis
     pub fn unit_x() -> Self {
