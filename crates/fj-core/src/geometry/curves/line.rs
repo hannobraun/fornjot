@@ -17,7 +17,8 @@ impl<const D: usize> GenPolyline<D> for Line<D> {
         _: Tolerance,
     ) -> LineSegment<D> {
         // Collapse line segment into a point, as per documentation.
-        let point = self.origin() + self.direction() * point_curve.t;
+        let point =
+            self.origin() + self.direction().into_value() * point_curve.t;
 
         LineSegment {
             points: [point; 2],

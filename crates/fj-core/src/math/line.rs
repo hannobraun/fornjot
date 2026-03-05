@@ -83,8 +83,8 @@ impl<const D: usize> Line<D> {
     /// The length of this vector defines the unit of the line's curve
     /// coordinate system. The coordinate `1.` is always where the direction
     /// vector points, from `origin`.
-    pub fn direction(&self) -> Vector<D> {
-        self.direction.into_value()
+    pub fn direction(&self) -> NonZero<Vector<D>> {
+        self.direction
     }
 
     /// Determine if this line is coincident with another line
@@ -188,21 +188,21 @@ mod tests {
             ([1.], [1., 0.]),
         ]);
         assert_eq!(line.origin(), Point::from([0., 0.]));
-        assert_eq!(line.direction(), Vector::from([1., 0.]));
+        assert_eq!(line.direction().into_value(), Vector::from([1., 0.]));
 
         let line = Line::from_points_with_line_coords([
             ([1.], [0., 1.]),
             ([0.], [1., 1.]),
         ]);
         assert_eq!(line.origin(), Point::from([1., 1.]));
-        assert_eq!(line.direction(), Vector::from([-1., 0.]));
+        assert_eq!(line.direction().into_value(), Vector::from([-1., 0.]));
 
         let line = Line::from_points_with_line_coords([
             ([-1.], [0., 2.]),
             ([0.], [1., 2.]),
         ]);
         assert_eq!(line.origin(), Point::from([1., 2.]));
-        assert_eq!(line.direction(), Vector::from([1., 0.]));
+        assert_eq!(line.direction().into_value(), Vector::from([1., 0.]));
     }
 
     #[test]
