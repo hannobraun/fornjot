@@ -336,9 +336,9 @@ impl SketchSegmentGeometry {
                         panic!(
                             "Radius of arc (`{radius}`) is too small: Must be \
                             at least half the distance between start \
-                            (`{start:?}`) and end (`{to:?}`) points, or the \
+                            (`{start:?}`) and end (`{end:?}`) points, or the \
                             arc is not possible.",
-                            to = start_to_end,
+                            end = start_to_end,
                         );
                     }
 
