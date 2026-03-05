@@ -1,4 +1,4 @@
-use crate::math::{Point, Scalar, Transform, Triangle, Vector};
+use crate::math::{NonZero, Point, Transform, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -8,7 +8,7 @@ use crate::math::{Point, Scalar, Transform, Triangle, Vector};
 #[repr(C)]
 pub struct Line<const D: usize> {
     origin: Point<D>,
-    direction: Vector<D>,
+    direction: NonZero<Vector<D>>,
 }
 
 impl<const D: usize> Line<D> {
@@ -24,10 +24,9 @@ impl<const D: usize> Line<D> {
         let origin = origin.into();
         let direction = direction.into();
 
-        assert!(
-            direction.magnitude() != Scalar::ZERO,
-            "Can't construct `Line`. Direction is zero: {direction:?}"
-        );
+        let Some(direction) = NonZero::new(direction) else {
+            panic!("Can't construct `Line`. Direction is zero: {direction:?}");
+        };
 
         Self { origin, direction }
     }
@@ -85,7 +84,7 @@ impl<const D: usize> Line<D> {
     /// coordinate system. The coordinate `1.` is always where the direction
     /// vector points, from `origin`.
     pub fn direction(&self) -> Vector<D> {
-        self.direction
+        self.direction.into_value()
     }
 
     /// Determine if this line is coincident with another line
@@ -98,7 +97,7 @@ impl<const D: usize> Line<D> {
         let other_origin_is_not_on_self = {
             let a = other.origin;
             let b = self.origin;
-            let c = self.origin + self.direction;
+            let c = self.origin + self.direction.into_value();
 
             // The triangle is valid only, if the three points are not on the
             // same line.
@@ -118,7 +117,7 @@ impl<const D: usize> Line<D> {
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
-        self.origin += self.direction;
+        self.origin += self.direction.into_value();
         self.direction = -self.direction;
         self
     }
@@ -160,7 +159,7 @@ impl<const D: usize> Line<D> {
         &self,
         vector: impl Into<Vector<1>>,
     ) -> Vector<D> {
-        self.direction * vector.into().t
+        self.direction.into_value() * vector.into().t
     }
 }
 
@@ -223,7 +222,7 @@ mod tests {
     fn convert_point_to_line_coords() {
         let line = Line {
             origin: Point::from([1., 2., 3.]),
-            direction: Vector::from([2., 3., 5.]),
+            direction: Vector::from([2., 3., 5.]).assert_non_zero(),
         };
 
         verify(line, -1.);
