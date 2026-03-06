@@ -142,7 +142,7 @@ impl<const D: usize> Vector<D> {
     }
 
     /// # Compute the vector projection of this vector onto another
-    pub fn vector_projecting_onto(&self, other: &Self) -> Self {
+    pub fn vector_projection_onto(&self, other: &Self) -> Self {
         *other * (self.dot(other) / other.dot(other))
     }
 

@@ -72,7 +72,7 @@ impl Curve for Arc {
         // We know that this `center` vector must be coplanar with `self.end`
         // and `self.dir`, and perpendicular to `self.dir`. We can start by
         // computing a vector that fulfills these requirements.
-        let dir_perp = self.end - self.end.vector_projecting_onto(&self.dir);
+        let dir_perp = self.end - self.end.vector_projection_onto(&self.dir);
 
         if dir_perp.magnitude().is_zero() {
             // This can happen if `self.end` and its vector projection onto
@@ -123,7 +123,7 @@ impl Curve for Arc {
         let circle = {
             let a = -center;
             let center = start + center;
-            let b = (self.end - self.end.vector_projecting_onto(&a))
+            let b = (self.end - self.end.vector_projection_onto(&a))
                 .normalize()
                 * radius;
 
