@@ -45,6 +45,27 @@ impl<T> Deref for NonZero<T> {
     }
 }
 
+impl<T, Rhs> ops::Mul<NonZero<Rhs>> for NonZero<T>
+where
+    T: ops::Mul<Rhs>,
+    T::Output: num_traits::Zero,
+{
+    type Output = NonZero<T::Output>;
+
+    fn mul(self, rhs: NonZero<Rhs>) -> Self::Output {
+        let value = self.into_value().mul(rhs.into_value());
+
+        let Some(non_zero) = NonZero::new(value) else {
+            unreachable!(
+                "Multiplying two non-zero values must result in a non-zero \
+                value."
+            );
+        };
+
+        non_zero
+    }
+}
+
 impl<T> ops::Neg for NonZero<T>
 where
     T: ops::Neg,
