@@ -1,6 +1,6 @@
 use crate::{
     approx::{CircleApprox, Tolerance},
-    math::{Circle, Point, Vector},
+    math::{Circle, NonZero, Point, Vector},
 };
 
 /// # A relative curve
@@ -31,7 +31,7 @@ pub struct Arc {
     /// # The direction of the arc at the start point
     ///
     /// This vector defines a tangent of the circle that the arc is part of.
-    pub dir: Vector<3>,
+    pub dir: NonZero<Vector<3>>,
 
     /// # The tolerance value of the arc
     ///
@@ -52,7 +52,7 @@ impl Arc {
     ) -> Self {
         Self {
             end: end.into(),
-            dir: dir.into(),
+            dir: dir.into().assert_non_zero(),
             tolerance: tolerance.into(),
         }
     }
