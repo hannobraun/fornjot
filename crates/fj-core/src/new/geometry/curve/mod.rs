@@ -74,7 +74,7 @@ impl Curve for Arc {
         // computing a vector that fulfills these requirements.
         let dir_perp = self.end - self.end.vector_projection_onto(&self.dir);
 
-        if dir_perp.magnitude().is_zero() {
+        let Some(dir_perp) = NonZero::new(dir_perp) else {
             // This can happen if `self.end` and its vector projection onto
             // `self.dir` are equal, which would mean that both are parallel.
             //
@@ -82,7 +82,7 @@ impl Curve for Arc {
             // circle, which is the same as a line. And a line needs no points
             // to approximate it.
             return Vec::new();
-        }
+        };
 
         // `dir_perp` is colinear with the `center` vector we seek:
         //
@@ -115,7 +115,7 @@ impl Curve for Arc {
         let t = (self.end.dot(&self.end)) / (dir_perp.dot(&self.end) * 2.);
 
         // By putting that back into (1), we get `center`.
-        let center = dir_perp * t;
+        let center = dir_perp.into_value() * t;
         let radius = center.magnitude();
 
         let start = Point::origin();
