@@ -46,8 +46,12 @@ impl Sweep {
         let bottom_inv = reverse.face(&faces[bottom], half_edges);
 
         let top = {
-            let top =
-                translate.face(&bottom_inv, curve.end(), vertices, half_edges);
+            let top = translate.face(
+                &bottom_inv,
+                curve.end().into_value(),
+                vertices,
+                half_edges,
+            );
             faces.push(top)
         };
 

@@ -12,7 +12,7 @@ pub trait Curve {
     ///
     /// Provides a vector that points from a user-provided start point to the
     /// end point of the curve.
-    fn end(&self) -> Vector<3>;
+    fn end(&self) -> NonZero<Vector<3>>;
 
     /// # Approximate the curve
     ///
@@ -59,8 +59,8 @@ impl Arc {
 }
 
 impl Curve for Arc {
-    fn end(&self) -> Vector<3> {
-        self.end.into_value()
+    fn end(&self) -> NonZero<Vector<3>> {
+        self.end
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
@@ -165,8 +165,8 @@ impl Line {
 }
 
 impl Curve for Line {
-    fn end(&self) -> Vector<3> {
-        self.end.into_value()
+    fn end(&self) -> NonZero<Vector<3>> {
+        self.end
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
