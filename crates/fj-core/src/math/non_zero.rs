@@ -78,7 +78,7 @@ where
 
         let Some(non_zero) = NonZero::new(value) else {
             unreachable!(
-                "Negating a non-zero value must result in a non-zero value"
+                "Negating a non-zero value must result in a non-zero value."
             );
         };
 
