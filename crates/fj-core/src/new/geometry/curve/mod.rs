@@ -149,7 +149,7 @@ impl Curve for Arc {
 /// # A line, relative to a user-provided start point
 pub struct Line {
     /// # The end of the line, relative to the user-provided start point
-    pub end: Vector<3>,
+    pub end: NonZero<Vector<3>>,
 }
 
 impl Line {
@@ -158,13 +158,15 @@ impl Line {
     /// This is a convenience constructor that accepts any argument that
     /// converts into the type of a `Line`'s field.
     pub fn to(end: impl Into<Vector<3>>) -> Self {
-        Self { end: end.into() }
+        Self {
+            end: end.into().assert_non_zero(),
+        }
     }
 }
 
 impl Curve for Line {
     fn end(&self) -> Vector<3> {
-        self.end
+        self.end.into_value()
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
