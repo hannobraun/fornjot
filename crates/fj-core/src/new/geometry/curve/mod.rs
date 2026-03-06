@@ -26,7 +26,7 @@ pub trait Curve {
 /// # An arc, relative to a user-provided start point
 pub struct Arc {
     /// # The end of the arc, relative to the user-provided start point
-    pub end: Vector<3>,
+    pub end: NonZero<Vector<3>>,
 
     /// # The direction of the arc at the start point
     ///
@@ -51,7 +51,7 @@ impl Arc {
         tolerance: impl Into<Tolerance>,
     ) -> Self {
         Self {
-            end: end.into(),
+            end: end.into().assert_non_zero(),
             dir: dir.into().assert_non_zero(),
             tolerance: tolerance.into(),
         }
@@ -60,7 +60,7 @@ impl Arc {
 
 impl Curve for Arc {
     fn end(&self) -> Vector<3> {
-        self.end
+        self.end.into_value()
     }
 
     fn approx(&self) -> Vec<Vector<3>> {
@@ -72,7 +72,8 @@ impl Curve for Arc {
         // We know that this `center` vector must be coplanar with `self.end`
         // and `self.dir`, and perpendicular to `self.dir`. We can start by
         // computing a vector that fulfills these requirements.
-        let dir_perp = self.end - self.end.vector_projection_onto(&self.dir);
+        let dir_perp =
+            self.end.into_value() - self.end.vector_projection_onto(&self.dir);
 
         let Some(dir_perp) = NonZero::new(dir_perp) else {
             // This can happen if `self.end` and its vector projection onto
@@ -123,8 +124,9 @@ impl Curve for Arc {
         let circle = {
             let a = -center;
             let center = start + center;
-            let b = (self.end - self.end.vector_projection_onto(&a))
-                .normalize()
+            let b = (self.end.into_value()
+                - self.end.vector_projection_onto(&a))
+            .normalize()
                 * radius;
 
             Circle::new(center, a, b)
@@ -134,7 +136,8 @@ impl Curve for Arc {
 
         let start_local = Point::from([0.]);
         assert_eq!(start_local, circle.point_to_circle_coords(start));
-        let end_local = circle.point_to_circle_coords(start + self.end);
+        let end_local =
+            circle.point_to_circle_coords(start + self.end.into_value());
 
         approx
             .points([start_local, end_local])
