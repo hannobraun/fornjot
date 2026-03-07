@@ -1,6 +1,6 @@
 use crate::{
     approx::{CircleApprox, Tolerance},
-    math::{Circle, NonZero, Point, Vector},
+    math::{Circle, NonZero, Point, Scalar, Vector},
 };
 
 /// # A relative curve
@@ -114,7 +114,7 @@ impl Curve for Arc {
         // t = (end * end) / (2 * dir_perp * end)
         // ```
         let t = (self.end.dot(&self.end)).into_value()
-            / (dir_perp.dot(&self.end).into_value() * 2.);
+            / (dir_perp.dot(&self.end).into_value() * Scalar::from(2.));
 
         // By putting that back into (1), we get `center`.
         let center = dir_perp.into_value() * t;
