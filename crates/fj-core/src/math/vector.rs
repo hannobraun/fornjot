@@ -154,6 +154,13 @@ impl<const D: usize> Vector<D> {
     }
 }
 
+impl<const D: usize> NonZero<Vector<D>> {
+    /// # Compute the dot product with another vector
+    pub fn dot(&self, other: &Self) -> Scalar {
+        self.into_value().dot(other)
+    }
+}
+
 impl Vector<1> {
     /// # Construct a `Vector` that represents the t-axis
     pub fn unit_t() -> Self {
