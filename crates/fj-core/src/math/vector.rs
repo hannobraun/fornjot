@@ -156,8 +156,16 @@ impl<const D: usize> Vector<D> {
 
 impl<const D: usize> NonZero<Vector<D>> {
     /// # Compute the dot product with another vector
-    pub fn dot(&self, other: &Self) -> Scalar {
-        self.into_value().dot(other)
+    pub fn dot(&self, other: &Self) -> NonZero<Scalar> {
+        let value = self.into_value().dot(other);
+
+        let Some(non_zero) = NonZero::new(value) else {
+            unreachable!(
+                "The dot product of two non-zero vectors cannot be zero."
+            );
+        };
+
+        non_zero
     }
 }
 

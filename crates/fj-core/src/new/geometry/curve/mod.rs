@@ -113,7 +113,8 @@ impl Curve for Arc {
         // t * dir_perp * end = (end * end) / 2
         // t = (end * end) / (2 * dir_perp * end)
         // ```
-        let t = (self.end.dot(&self.end)) / (dir_perp.dot(&self.end) * 2.);
+        let t = (self.end.dot(&self.end)).into_value()
+            / (dir_perp.dot(&self.end).into_value() * 2.);
 
         // By putting that back into (1), we get `center`.
         let center = dir_perp.into_value() * t;
