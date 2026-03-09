@@ -24,6 +24,7 @@ pub trait Curve {
 }
 
 /// # An arc, relative to a user-provided start point
+#[derive(Debug)]
 pub struct Arc {
     /// # The end of the arc, relative to the user-provided start point
     pub end: NonZero<Vector<3>>,
