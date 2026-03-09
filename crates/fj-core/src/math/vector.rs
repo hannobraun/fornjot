@@ -142,8 +142,10 @@ impl<const D: usize> Vector<D> {
     }
 
     /// # Compute the vector projection of this vector onto another
-    pub fn vector_projection_onto(&self, other: &Self) -> Self {
-        *other * (self.dot(other) / other.dot(other))
+    pub fn vector_projection_onto(&self, other: &NonZero<Self>) -> Self {
+        // Requires `other` to be `NonZero, because the following line could
+        // cause a division by zero otherwise.
+        other.into_value() * (self.dot(other) / other.into_value().dot(other))
     }
 
     /// # Transform the vector by calling [`Scalar::floor`] on its components
