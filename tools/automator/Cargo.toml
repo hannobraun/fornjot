@@ -23,7 +23,7 @@ version = "4.5.60"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.49.0"
+version = "1.50.0"
 features = ["full"]
 
 [dependencies.tracing-subscriber]
