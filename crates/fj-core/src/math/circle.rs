@@ -45,7 +45,8 @@ impl<const D: usize> Circle<D> {
         let dot_product = a.dot(&b);
         assert!(
             dot_product < Scalar::default_epsilon(),
-            "`a` ({a:?}) and `b` ({b:?})  must be perpendicular to each other"
+            "`a` ({a:?}) and `b` ({b:?})  must be perpendicular to each other, \
+            but their dot product is {dot_product}.",
         );
 
         Self { center, a, b }
