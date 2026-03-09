@@ -66,6 +66,27 @@ where
     }
 }
 
+impl<T, Rhs> ops::Div<NonZero<Rhs>> for NonZero<T>
+where
+    T: ops::Div<Rhs>,
+    T::Output: num_traits::Zero,
+{
+    type Output = NonZero<T::Output>;
+
+    fn div(self, rhs: NonZero<Rhs>) -> Self::Output {
+        let value = self.into_value().div(rhs.into_value());
+
+        let Some(non_zero) = NonZero::new(value) else {
+            unreachable!(
+                "Dividing a non-zero value by another must result in a \
+                non-zero value."
+            );
+        };
+
+        non_zero
+    }
+}
+
 impl<T> ops::Neg for NonZero<T>
 where
     T: ops::Neg,
