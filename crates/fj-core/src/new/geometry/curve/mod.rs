@@ -114,7 +114,7 @@ impl Curve for Arc {
         // t * dir_perp * end = (end * end) / 2
         // t = (end * end) / (2 * dir_perp * end)
         // ```
-        let t = (self.end.dot(&self.end)) / (dir_perp.dot(&self.end))
+        let t = self.end.dot(&self.end) / (dir_perp.dot(&self.end))
             * Scalar::from(2.).assert_non_zero();
 
         // By putting that back into (1), we get `center`.
