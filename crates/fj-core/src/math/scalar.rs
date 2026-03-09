@@ -9,6 +9,8 @@ use std::{
 
 use decorum::{R64, divergence::OrPanic};
 
+use crate::math::NonZero;
+
 /// # A rational, finite scalar value
 ///
 /// `Scalar` is a wrapper around `f64` which guarantees that the contained value
@@ -72,6 +74,15 @@ impl Scalar {
     /// # Convert the scalar value into a `u64`
     pub fn into_u64(self) -> u64 {
         self.value as u64
+    }
+
+    /// # Convert into a non-zero scalar, or panic if the scalar is zero
+    pub fn assert_non_zero(self) -> NonZero<Self> {
+        let Some(non_zero) = NonZero::new(self) else {
+            panic!("Scalar is zero.");
+        };
+
+        non_zero
     }
 
     /// # Indicate whether the scalar value is negative

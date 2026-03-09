@@ -113,25 +113,24 @@ impl Curve for Arc {
         // t * dir_perp * end = (end * end) / 2
         // t = (end * end) / (2 * dir_perp * end)
         // ```
-        let t = ((self.end.dot(&self.end)) / (dir_perp.dot(&self.end)))
-            .into_value()
-            * Scalar::from(2.);
+        let t = (self.end.dot(&self.end)) / (dir_perp.dot(&self.end))
+            * Scalar::from(2.).assert_non_zero();
 
         // By putting that back into (1), we get `center`.
-        let center = dir_perp.into_value() * t;
+        let center = dir_perp * t;
         let radius = center.magnitude();
 
         let start = Point::origin();
 
         let circle = {
             let a = -center;
-            let center = start + center;
+            let center = start + center.into_value();
             let b = (self.end.into_value()
                 - self.end.vector_projection_onto(&a))
             .normalize()
                 * radius;
 
-            Circle::new(center, a, b)
+            Circle::new(center, a.into_value(), b)
         };
 
         let approx = CircleApprox::new(radius, self.tolerance);
