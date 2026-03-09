@@ -16,6 +16,6 @@ workspace = true
 [dependencies]
 fj-core.workspace = true
 thiserror = "2.0.18"
-threemf = "0.7.0"
+threemf = "0.8.0"
 stl = "0.2.1"
 wavefront_rs = "=2.0.0-beta.1"

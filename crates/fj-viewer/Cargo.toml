@@ -22,7 +22,7 @@ tobj = "4.0.3"
 raw-window-handle = "0.6.0"
 thiserror = "2.0.18"
 tracing = "0.1.44"
-winit = "0.30.12"
+winit = "0.30.13"
 glyphon = "0.10.0"
 itertools = "0.14.0"
 
