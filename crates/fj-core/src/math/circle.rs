@@ -42,8 +42,9 @@ impl<const D: usize> Circle<D> {
         // Requiring the vector to be *precisely* perpendicular is not
         // practical, because of numerical inaccuracy. This epsilon value seems
         // seems to work for now, but maybe it needs to become configurable.
+        let dot_product = a.dot(&b);
         assert!(
-            a.dot(&b) < Scalar::default_epsilon(),
+            dot_product < Scalar::default_epsilon(),
             "`a` ({a:?}) and `b` ({b:?})  must be perpendicular to each other"
         );
 
