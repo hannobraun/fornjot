@@ -44,7 +44,7 @@ impl<const D: usize> Circle<D> {
         // seems to work for now, but maybe it needs to become configurable.
         assert!(
             a.dot(&b) < Scalar::default_epsilon(),
-            "`a` and `b` must be perpendicular to each other"
+            "`a` ({a:?}) and `b` ({b:?})  must be perpendicular to each other"
         );
 
         Self { center, a, b }
