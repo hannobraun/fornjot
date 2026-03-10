@@ -126,6 +126,21 @@ impl Curve for Arc {
         let circle = {
             let a = -center;
             let center = start + center.into_value();
+            // The code in parentheses needs to be non-zero for the call to
+            // `normalize`. If it isn't, then `normalize` will cause a divide-
+            // by-zero.
+            //
+            // What that code in the parentheses does, is to extract the part of
+            // `self.end` that is orthogonal to `a`. And this might actually end
+            // up being zero. `a` is known to be perpendicular to `self.dir`, so
+            // if `self.end` is too, they are parallel.
+            //
+            // And this edge case is totally legitimate: `self.end` and
+            // `self.dir` can end up perpendicular, if the arc is a half-circle,
+            // in which case `self.end` points through the circle center.
+            //
+            // This means that as written, the following code does not cover
+            // this case and will panic.
             let b = (self.end.into_value()
                 - self.end.vector_projection_onto(&a))
             .normalize()
