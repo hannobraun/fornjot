@@ -151,8 +151,10 @@ impl Curve for Arc {
 
         let approx = CircleApprox::new(radius, self.tolerance);
 
-        let start_local = Point::from([0.]);
-        assert_eq!(start_local, circle.point_to_circle_coords(start));
+        // You might this that `start_local` would always end up as zero, but
+        // actually no. It could also be tau (2*pi), or I guess -tau, which
+        // makes no difference.
+        let start_local = circle.point_to_circle_coords(start);
         let end_local =
             circle.point_to_circle_coords(start + self.end.into_value());
 
