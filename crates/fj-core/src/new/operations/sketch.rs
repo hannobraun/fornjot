@@ -309,7 +309,16 @@ impl SketchSegmentGeometry {
         let approx = match self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let Some(start_to_end) = NonZero::new(end - start) else {
-                    panic!("Zero-length sketch segments are not allowed.");
+                    panic!(
+                        "Sketches don't support arcs with identical start and \
+                        end points. These don't actually define a full circle, \
+                        as one might assume, as only one point and a signed \
+                        radius do not provide enough information to locate the \
+                        circle center.\n\
+                        \n\
+                        To create a circle, please construct two subsequent \
+                        half-circle arcs instead."
+                    );
                 };
 
                 let midpoint_towards_center =
