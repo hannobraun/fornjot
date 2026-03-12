@@ -99,8 +99,7 @@ mod tests {
             tolerance: impl Into<Tolerance>,
             expected_num_vertices: impl Into<Scalar>,
         ) {
-            let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApprox::new(circle.radius(), tolerance);
+            let params = CircleApprox::new(radius, tolerance);
 
             let expected_increment = Scalar::TAU / expected_num_vertices;
             assert_eq!(params.increment(), expected_increment);
