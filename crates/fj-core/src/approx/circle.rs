@@ -17,6 +17,8 @@ impl CircleApprox {
         radius: impl Into<Scalar>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
+        let radius = radius.into().abs();
+
         let num_vertices_to_approx_full_circle = Scalar::max(
             Scalar::PI
                 / (Scalar::ONE - (tolerance.into().inner() / radius)).acos(),
@@ -93,6 +95,7 @@ mod tests {
         test_increment(1., 0.5, 3.);
         test_increment(1., 0.1, 7.);
         test_increment(1., 0.01, 23.);
+        test_increment(-1., 0.5, 3.);
 
         fn test_increment(
             radius: impl Into<Scalar>,
