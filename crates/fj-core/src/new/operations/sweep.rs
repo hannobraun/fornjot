@@ -34,7 +34,6 @@ impl Sweep {
         curve: &impl Curve,
         topology: &mut Topology,
     ) -> Handle<Solid> {
-        let half_edges = &mut topology.half_edges;
         let vertices = &mut topology.vertices;
         let solids = &mut topology.solids;
 
@@ -44,14 +43,15 @@ impl Sweep {
         let mut reverse = Reverse::new();
         let mut translate = Translate::new();
 
-        let bottom_inv = reverse.face(&topology.faces[bottom], half_edges);
+        let bottom_inv =
+            reverse.face(&topology.faces[bottom], &mut topology.half_edges);
 
         let top = {
             let top = translate.face(
                 &bottom_inv,
                 curve.end().into_value(),
                 vertices,
-                half_edges,
+                &mut topology.half_edges,
             );
             topology.faces.push(top)
         };
@@ -59,7 +59,7 @@ impl Sweep {
         let bottom_edges_for_sides = bottom_inv.boundary.clone();
         let top_edges_for_sides = {
             let mut top_edges = reverse
-                .face(&topology.faces[top], half_edges)
+                .face(&topology.faces[top], &mut topology.half_edges)
                 .boundary
                 .clone();
 
@@ -72,7 +72,7 @@ impl Sweep {
             .iter()
             .copied()
             .map(|e| {
-                let [v, _] = half_edges[e].boundary;
+                let [v, _] = topology.half_edges[e].boundary;
                 v
             })
             .collect::<Vec<_>>();
@@ -80,7 +80,7 @@ impl Sweep {
             .iter()
             .copied()
             .map(|e| {
-                let [_, v] = half_edges[e].boundary;
+                let [_, v] = topology.half_edges[e].boundary;
                 v
             })
             .collect::<Vec<_>>();
@@ -97,7 +97,7 @@ impl Sweep {
                             approx.iter().copied().map(|vector| {
                                 vertices[v_bottom].point + vector
                             }),
-                            half_edges,
+                            &mut topology.half_edges,
                         )
                     })
                     .collect::<Vec<_>>();
@@ -116,7 +116,7 @@ impl Sweep {
                             approx.iter().copied().rev().map(|vector| {
                                 vertices[v_bottom].point + vector
                             }),
-                            half_edges,
+                            &mut topology.half_edges,
                         )
                     })
                     .collect::<Vec<_>>();
@@ -137,7 +137,7 @@ impl Sweep {
                         ApproxAxis::fixed(0.),
                         bottom,
                         vertices,
-                        half_edges,
+                        &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
                         [1., 0.],
@@ -145,7 +145,7 @@ impl Sweep {
                         ApproxAxis::Uniform { reverse: false },
                         right,
                         vertices,
-                        half_edges,
+                        &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
                         [1., 1.],
@@ -153,7 +153,7 @@ impl Sweep {
                         ApproxAxis::fixed(1.),
                         top,
                         vertices,
-                        half_edges,
+                        &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
                         [0., 1.],
@@ -161,7 +161,7 @@ impl Sweep {
                         ApproxAxis::Uniform { reverse: true },
                         left,
                         vertices,
-                        half_edges,
+                        &topology.half_edges,
                     ),
                 ];
                 let surface = {
