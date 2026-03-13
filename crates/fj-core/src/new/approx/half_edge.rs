@@ -2,7 +2,7 @@ use crate::{
     math::Point,
     new::{
         approx::{ApproxAxis, ApproxPoint},
-        topology::{HalfEdge, Handle, Store, Vertex},
+        topology::{HalfEdge, Handle, Store, Topology, Vertex},
     },
 };
 
@@ -79,9 +79,11 @@ impl ApproxHalfEdge {
         u: ApproxAxis,
         v: ApproxAxis,
         half_edge: Handle<HalfEdge>,
-        vertices: &Store<Vertex>,
-        half_edges: &Store<HalfEdge>,
+        topology: &Topology,
     ) -> Self {
+        let half_edges = &topology.half_edges;
+        let vertices = &topology.vertices;
+
         let curve = {
             let half_edge = &half_edges[half_edge];
             let num_coords = half_edge.approx.len();
