@@ -34,7 +34,6 @@ impl Sweep {
         curve: &impl Curve,
         topology: &mut Topology,
     ) -> Handle<Solid> {
-        let faces = &mut topology.faces;
         let half_edges = &mut topology.half_edges;
         let vertices = &mut topology.vertices;
         let solids = &mut topology.solids;
@@ -45,7 +44,7 @@ impl Sweep {
         let mut reverse = Reverse::new();
         let mut translate = Translate::new();
 
-        let bottom_inv = reverse.face(&faces[bottom], half_edges);
+        let bottom_inv = reverse.face(&topology.faces[bottom], half_edges);
 
         let top = {
             let top = translate.face(
@@ -54,13 +53,15 @@ impl Sweep {
                 vertices,
                 half_edges,
             );
-            faces.push(top)
+            topology.faces.push(top)
         };
 
         let bottom_edges_for_sides = bottom_inv.boundary.clone();
         let top_edges_for_sides = {
-            let mut top_edges =
-                reverse.face(&faces[top], half_edges).boundary.clone();
+            let mut top_edges = reverse
+                .face(&topology.faces[top], half_edges)
+                .boundary
+                .clone();
 
             top_edges.reverse();
 
@@ -186,7 +187,7 @@ impl Sweep {
 
                 let approx = face_approx(&boundary, surface);
 
-                faces.push(Face {
+                topology.faces.push(Face {
                     boundary: vec![bottom, right, top, left],
                     approx,
                 })
