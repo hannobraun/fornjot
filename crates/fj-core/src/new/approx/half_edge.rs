@@ -44,13 +44,11 @@ impl ApproxHalfEdge {
         half_edge: Handle<HalfEdge>,
         topology: &Topology,
     ) -> Self {
-        let vertices = &topology.vertices;
-
         let start = {
             let local = start.into();
             let global = {
                 let [vertex, _] = topology.half_edges[half_edge].boundary;
-                vertices[vertex].point
+                topology.vertices[vertex].point
             };
 
             ApproxPoint { local, global }
