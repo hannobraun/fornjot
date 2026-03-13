@@ -73,7 +73,7 @@ impl Translate {
 
         half_edges.push(HalfEdge {
             boundary: half_edges[half_edge]
-                .boundary
+                .boundary()
                 .map(|vertex| self.vertex(vertex, offset, vertices)),
             approx: half_edges[half_edge]
                 .approx

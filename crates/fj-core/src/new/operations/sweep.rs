@@ -69,7 +69,7 @@ impl Sweep {
             .iter()
             .copied()
             .map(|e| {
-                let [v, _] = topology.half_edges[e].boundary;
+                let [v, _] = topology.half_edges[e].boundary();
                 v
             })
             .collect::<Vec<_>>();
@@ -77,7 +77,7 @@ impl Sweep {
             .iter()
             .copied()
             .map(|e| {
-                let [_, v] = topology.half_edges[e].boundary;
+                let [_, v] = topology.half_edges[e].boundary();
                 v
             })
             .collect::<Vec<_>>();

@@ -197,8 +197,8 @@ impl Sketch {
 
         for (&a, &b) in boundary.iter().circular_tuple_windows() {
             assert_eq!(
-                topology.half_edges[a].boundary[1],
-                topology.half_edges[b].boundary[0]
+                topology.half_edges[a].boundary()[1],
+                topology.half_edges[b].boundary()[0]
             );
         }
 
@@ -265,7 +265,7 @@ impl SketchSegment {
     ) -> Handle<Vertex> {
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                let [vertex, _] = half_edges[half_edge].boundary;
+                let [vertex, _] = half_edges[half_edge].boundary();
                 vertex
             }
             Some(SketchSegmentAttachment::Vertex { vertex: _ }) | None => {
@@ -283,7 +283,7 @@ impl SketchSegment {
     ) -> Handle<Vertex> {
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
-                let [_, vertex] = half_edges[half_edge].boundary;
+                let [_, vertex] = half_edges[half_edge].boundary();
                 vertex
             }
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,

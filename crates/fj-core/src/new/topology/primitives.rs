@@ -44,6 +44,13 @@ pub struct HalfEdge {
     pub approx: Vec<Point<3>>,
 }
 
+impl HalfEdge {
+    /// # Access the half-edge's boundary
+    pub fn boundary(&self) -> [Handle<Vertex>; 2] {
+        self.boundary
+    }
+}
+
 /// # A face
 ///
 /// Faces make up the boundary of [`Solid`]s.
