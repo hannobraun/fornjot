@@ -34,7 +34,6 @@ impl Sweep {
         curve: &impl Curve,
         topology: &mut Topology,
     ) -> Handle<Solid> {
-        let vertices = &mut topology.vertices;
         let solids = &mut topology.solids;
 
         let approx = curve.approx();
@@ -50,7 +49,7 @@ impl Sweep {
             let top = translate.face(
                 &bottom_inv,
                 curve.end().into_value(),
-                vertices,
+                &mut topology.vertices,
                 &mut topology.half_edges,
             );
             topology.faces.push(top)
@@ -85,44 +84,43 @@ impl Sweep {
             })
             .collect::<Vec<_>>();
 
-        let (side_edges_going_up, side_edges_going_down) =
-            {
-                let mut side_edges_going_up = bottom_vertices
-                    .iter()
-                    .copied()
-                    .zip(top_vertices.iter().copied())
-                    .map(|(v_bottom, v_top)| {
-                        connect.vertices(
-                            [v_bottom, v_top],
-                            approx.iter().copied().map(|vector| {
-                                vertices[v_bottom].point + vector
-                            }),
-                            &mut topology.half_edges,
-                        )
-                    })
-                    .collect::<Vec<_>>();
+        let (side_edges_going_up, side_edges_going_down) = {
+            let mut side_edges_going_up = bottom_vertices
+                .iter()
+                .copied()
+                .zip(top_vertices.iter().copied())
+                .map(|(v_bottom, v_top)| {
+                    connect.vertices(
+                        [v_bottom, v_top],
+                        approx.iter().copied().map(|vector| {
+                            topology.vertices[v_bottom].point + vector
+                        }),
+                        &mut topology.half_edges,
+                    )
+                })
+                .collect::<Vec<_>>();
 
-                // Both lists of side edges need to line up, so that the same
-                // index refers to an edge for the same face. This makes some
-                // shuffling necessary.
-                side_edges_going_up.rotate_left(1);
+            // Both lists of side edges need to line up, so that the same
+            // index refers to an edge for the same face. This makes some
+            // shuffling necessary.
+            side_edges_going_up.rotate_left(1);
 
-                let side_edges_going_down = top_vertices
-                    .into_iter()
-                    .zip(bottom_vertices)
-                    .map(|(v_top, v_bottom)| {
-                        connect.vertices(
-                            [v_top, v_bottom],
-                            approx.iter().copied().rev().map(|vector| {
-                                vertices[v_bottom].point + vector
-                            }),
-                            &mut topology.half_edges,
-                        )
-                    })
-                    .collect::<Vec<_>>();
+            let side_edges_going_down = top_vertices
+                .into_iter()
+                .zip(bottom_vertices)
+                .map(|(v_top, v_bottom)| {
+                    connect.vertices(
+                        [v_top, v_bottom],
+                        approx.iter().copied().rev().map(|vector| {
+                            topology.vertices[v_bottom].point + vector
+                        }),
+                        &mut topology.half_edges,
+                    )
+                })
+                .collect::<Vec<_>>();
 
-                (side_edges_going_up, side_edges_going_down)
-            };
+            (side_edges_going_up, side_edges_going_down)
+        };
 
         let side_faces = bottom_edges_for_sides
             .into_iter()
@@ -136,7 +134,7 @@ impl Sweep {
                         ApproxAxis::Uniform { reverse: false },
                         ApproxAxis::fixed(0.),
                         bottom,
-                        vertices,
+                        &topology.vertices,
                         &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
@@ -144,7 +142,7 @@ impl Sweep {
                         ApproxAxis::fixed(1.),
                         ApproxAxis::Uniform { reverse: false },
                         right,
-                        vertices,
+                        &topology.vertices,
                         &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
@@ -152,7 +150,7 @@ impl Sweep {
                         ApproxAxis::Uniform { reverse: true },
                         ApproxAxis::fixed(1.),
                         top,
-                        vertices,
+                        &topology.vertices,
                         &topology.half_edges,
                     ),
                     ApproxHalfEdge::from_start_and_axes(
@@ -160,7 +158,7 @@ impl Sweep {
                         ApproxAxis::fixed(0.),
                         ApproxAxis::Uniform { reverse: true },
                         left,
-                        vertices,
+                        &topology.vertices,
                         &topology.half_edges,
                     ),
                 ];
