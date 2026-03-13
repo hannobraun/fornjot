@@ -100,9 +100,9 @@ impl Sweep {
                 })
                 .collect::<Vec<_>>();
 
-            // Both lists of side edges need to line up, so that the same
-            // index refers to an edge for the same face. This makes some
-            // shuffling necessary.
+            // Both lists of side edges need to line up, so that the same index
+            // refers to an edge for the same face. This makes some shuffling
+            // necessary.
             side_edges_going_up.rotate_left(1);
 
             let side_edges_going_down = top_vertices
