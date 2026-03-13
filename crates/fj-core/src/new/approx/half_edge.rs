@@ -2,7 +2,7 @@ use crate::{
     math::Point,
     new::{
         approx::{ApproxAxis, ApproxPoint},
-        topology::{HalfEdge, Handle, Store, Topology, Vertex},
+        topology::{HalfEdge, Handle, Topology},
     },
 };
 
@@ -42,9 +42,11 @@ impl ApproxHalfEdge {
         start: impl Into<Point<2>>,
         curve: Vec<ApproxPoint<2>>,
         half_edge: Handle<HalfEdge>,
-        vertices: &Store<Vertex>,
-        half_edges: &Store<HalfEdge>,
+        topology: &Topology,
     ) -> Self {
+        let half_edges = &topology.half_edges;
+        let vertices = &topology.vertices;
+
         let start = {
             let local = start.into();
             let global = {
@@ -98,13 +100,7 @@ impl ApproxHalfEdge {
                 .collect()
         };
 
-        Self::from_points(
-            start,
-            curve,
-            half_edge,
-            &topology.vertices,
-            &topology.half_edges,
-        )
+        Self::from_points(start, curve, half_edge, topology)
     }
 
     /// # Iterate over all points
