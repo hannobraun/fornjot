@@ -39,10 +39,7 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
     let cuboid = sweep.face_to_solid(
         bottom,
         &Line::to([Scalar::ZERO, Scalar::ZERO, z]),
-        &mut topology.vertices,
-        &mut topology.half_edges,
-        &mut topology.faces,
-        &mut topology.solids,
+        &mut topology,
     );
 
     Model {

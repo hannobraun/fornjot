@@ -6,7 +6,7 @@ use crate::{
         approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Curve,
         operations::{Connect, Reverse, Translate},
-        topology::{Face, HalfEdge, Handle, Solid, Store, Vertex},
+        topology::{Face, Handle, Solid, Topology},
     },
 };
 
@@ -32,11 +32,13 @@ impl Sweep {
         &mut self,
         bottom: Handle<Face>,
         curve: &impl Curve,
-        vertices: &mut Store<Vertex>,
-        half_edges: &mut Store<HalfEdge>,
-        faces: &mut Store<Face>,
-        solids: &mut Store<Solid>,
+        topology: &mut Topology,
     ) -> Handle<Solid> {
+        let faces = &mut topology.faces;
+        let half_edges = &mut topology.half_edges;
+        let vertices = &mut topology.vertices;
+        let solids = &mut topology.solids;
+
         let approx = curve.approx();
 
         let mut connect = Connect::new();
