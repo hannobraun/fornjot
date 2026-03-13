@@ -163,7 +163,6 @@ impl Sketch {
         surface: Plane,
         topology: &mut Topology,
     ) -> Handle<Face> {
-        let faces = &mut topology.faces;
         let half_edges = &mut topology.half_edges;
         let vertices = &mut topology.vertices;
 
@@ -202,7 +201,7 @@ impl Sketch {
         let surface_approx = Vec::new();
         let approx = face_approx(&boundary_approx, surface_approx);
 
-        faces.push(Face { boundary, approx })
+        topology.faces.push(Face { boundary, approx })
     }
 }
 
