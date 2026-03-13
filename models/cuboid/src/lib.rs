@@ -18,12 +18,6 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
     let [x, y, z] = size.into().components;
 
     let mut topology = Topology::new();
-    let Topology {
-        faces,
-        half_edges,
-        solids,
-        vertices,
-    } = &mut topology;
 
     let mut sweep = Sweep::new();
 
@@ -37,18 +31,18 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
                 origin: Point::from([0., 0., 0.]),
                 axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
             },
-            vertices,
-            half_edges,
-            faces,
+            &mut topology.vertices,
+            &mut topology.half_edges,
+            &mut topology.faces,
         );
 
     let cuboid = sweep.face_to_solid(
         bottom,
         &Line::to([Scalar::ZERO, Scalar::ZERO, z]),
-        vertices,
-        half_edges,
-        faces,
-        solids,
+        &mut topology.vertices,
+        &mut topology.half_edges,
+        &mut topology.faces,
+        &mut topology.solids,
     );
 
     Model {
