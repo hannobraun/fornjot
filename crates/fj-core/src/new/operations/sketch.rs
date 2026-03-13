@@ -163,8 +163,6 @@ impl Sketch {
         surface: Plane,
         topology: &mut Topology,
     ) -> Handle<Face> {
-        let vertices = &mut topology.vertices;
-
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");
@@ -186,7 +184,7 @@ impl Sketch {
                 next,
                 &surface,
                 &mut topology.half_edges,
-                vertices,
+                &mut topology.vertices,
             );
 
             boundary.push(half_edge);
@@ -194,7 +192,7 @@ impl Sketch {
                 prev.end,
                 approx,
                 half_edge,
-                vertices,
+                &topology.vertices,
                 &topology.half_edges,
             ));
             self.segments[i].attachment =
