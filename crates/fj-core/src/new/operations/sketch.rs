@@ -6,7 +6,7 @@ use crate::{
     new::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
-        topology::{Face, HalfEdge, Handle, Store, Vertex},
+        topology::{Face, HalfEdge, Handle, Store, Topology, Vertex},
     },
 };
 
@@ -161,10 +161,12 @@ impl Sketch {
     pub fn into_face(
         mut self,
         surface: Plane,
-        vertices: &mut Store<Vertex>,
-        half_edges: &mut Store<HalfEdge>,
-        faces: &mut Store<Face>,
+        topology: &mut Topology,
     ) -> Handle<Face> {
+        let faces = &mut topology.faces;
+        let half_edges = &mut topology.half_edges;
+        let vertices = &mut topology.vertices;
+
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");

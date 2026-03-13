@@ -31,9 +31,7 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
                 origin: Point::from([0., 0., 0.]),
                 axes: [Vector::from([0., 1., 0.]), Vector::from([1., 0., 0.])],
             },
-            &mut topology.vertices,
-            &mut topology.half_edges,
-            &mut topology.faces,
+            &mut topology,
         );
 
     let cuboid = sweep.face_to_solid(
