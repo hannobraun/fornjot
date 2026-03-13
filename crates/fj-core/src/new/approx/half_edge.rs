@@ -81,8 +81,6 @@ impl ApproxHalfEdge {
         half_edge: Handle<HalfEdge>,
         topology: &Topology,
     ) -> Self {
-        let vertices = &topology.vertices;
-
         let curve = {
             let half_edge = &topology.half_edges[half_edge];
             let num_coords = half_edge.approx.len();
@@ -104,7 +102,7 @@ impl ApproxHalfEdge {
             start,
             curve,
             half_edge,
-            vertices,
+            &topology.vertices,
             &topology.half_edges,
         )
     }
