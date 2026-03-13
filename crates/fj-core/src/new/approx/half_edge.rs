@@ -81,11 +81,10 @@ impl ApproxHalfEdge {
         half_edge: Handle<HalfEdge>,
         topology: &Topology,
     ) -> Self {
-        let half_edges = &topology.half_edges;
         let vertices = &topology.vertices;
 
         let curve = {
-            let half_edge = &half_edges[half_edge];
+            let half_edge = &topology.half_edges[half_edge];
             let num_coords = half_edge.approx.len();
 
             let local = u
@@ -101,7 +100,13 @@ impl ApproxHalfEdge {
                 .collect()
         };
 
-        Self::from_points(start, curve, half_edge, vertices, half_edges)
+        Self::from_points(
+            start,
+            curve,
+            half_edge,
+            vertices,
+            &topology.half_edges,
+        )
     }
 
     /// # Iterate over all points
