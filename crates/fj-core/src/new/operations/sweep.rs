@@ -34,8 +34,6 @@ impl Sweep {
         curve: &impl Curve,
         topology: &mut Topology,
     ) -> Handle<Solid> {
-        let solids = &mut topology.solids;
-
         let approx = curve.approx();
 
         let mut connect = Connect::new();
@@ -193,7 +191,7 @@ impl Sweep {
 
         let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
 
-        solids.push(Solid {
+        topology.solids.push(Solid {
             boundary: all_faces,
         })
     }
