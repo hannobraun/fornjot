@@ -163,7 +163,6 @@ impl Sketch {
         surface: Plane,
         topology: &mut Topology,
     ) -> Handle<Face> {
-        let half_edges = &mut topology.half_edges;
         let vertices = &mut topology.vertices;
 
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
@@ -183,19 +182,30 @@ impl Sketch {
             let next = &self.segments[next_i];
 
             let (half_edge, approx) = current.to_half_edge_and_approx(
-                prev, next, &surface, half_edges, vertices,
+                prev,
+                next,
+                &surface,
+                &mut topology.half_edges,
+                vertices,
             );
 
             boundary.push(half_edge);
             boundary_approx.push(ApproxHalfEdge::from_points(
-                prev.end, approx, half_edge, vertices, half_edges,
+                prev.end,
+                approx,
+                half_edge,
+                vertices,
+                &topology.half_edges,
             ));
             self.segments[i].attachment =
                 Some(SketchSegmentAttachment::HalfEdge { half_edge });
         }
 
         for (&a, &b) in boundary.iter().circular_tuple_windows() {
-            assert_eq!(half_edges[a].boundary[1], half_edges[b].boundary[0]);
+            assert_eq!(
+                topology.half_edges[a].boundary[1],
+                topology.half_edges[b].boundary[0]
+            );
         }
 
         let surface_approx = Vec::new();
