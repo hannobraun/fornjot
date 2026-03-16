@@ -56,6 +56,34 @@ impl HalfEdge {
     }
 }
 
+/// # An edge
+///
+/// Edges are one-dimensional structures that exist where multiple [`Face`]s
+/// meet.
+///
+/// Edges are distinct from, but closely related to [`HalfEdge`]s. While a
+/// half-edge forms part of the boundary of a specific face, belonging only to
+/// that face, and edge is shared by multiple faces.
+///
+/// Half-edges reference edges, which define their boundary and approximation.
+/// Coincident half-edges must reference the same edge.
+///
+/// In principle, edges are undirected, in contrast to half-edges. In practice,
+/// they have a nominal direction, since the data they contain is directed.
+/// Half-edges define their own direction as the same or the opposite of the
+/// edge they reference.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub struct Edge {
+    /// # The two vertices that bound the edge
+    pub boundary: [Handle<Vertex>; 2],
+
+    /// # The points that approximate the edge
+    ///
+    /// These points approximate the edge _between_ the boundary vertices. So
+    /// this might be empty, if the edge is a line segment.
+    pub approx: Vec<Point<3>>,
+}
+
 /// # A face
 ///
 /// Faces make up the boundary of [`Solid`]s.
