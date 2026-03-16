@@ -92,8 +92,6 @@ impl Translate {
     ) -> Face {
         let offset = offset.into();
 
-        let vertices = &mut topology.vertices;
-
         let boundary = face
             .boundary
             .iter()
@@ -102,7 +100,7 @@ impl Translate {
                 self.half_edge(
                     half_edge,
                     offset,
-                    vertices,
+                    &mut topology.vertices,
                     &mut topology.half_edges,
                 )
             })
