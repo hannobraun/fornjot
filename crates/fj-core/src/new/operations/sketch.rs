@@ -6,7 +6,7 @@ use crate::{
     new::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
-        topology::{Face, HalfEdge, Handle, Store, Topology, Vertex},
+        topology::{Face, HalfEdge, Handle, Topology, Vertex},
     },
 };
 
@@ -229,20 +229,12 @@ impl SketchSegment {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 = prev.to_end_vertex(
-                    surface,
-                    &topology.half_edges,
-                    &mut topology.vertices,
-                );
+                let v0 = prev.to_end_vertex(surface, topology);
 
                 [v0, v1]
             }
             None => {
-                let v0 = prev.to_end_vertex(
-                    surface,
-                    &topology.half_edges,
-                    &mut topology.vertices,
-                );
+                let v0 = prev.to_end_vertex(surface, topology);
                 let v1 = next.to_start_vertex(self.end, surface, topology);
 
                 [v0, v1]
@@ -278,9 +270,11 @@ impl SketchSegment {
     pub fn to_end_vertex(
         self,
         surface: &Plane,
-        half_edges: &Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
+        topology: &mut Topology,
     ) -> Handle<Vertex> {
+        let half_edges = &topology.half_edges;
+        let vertices = &mut topology.vertices;
+
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 let [_, vertex] = half_edges[half_edge].boundary();
