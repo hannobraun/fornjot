@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     math::Point,
-    new::topology::{HalfEdge, Handle, Store, Vertex},
+    new::topology::{HalfEdge, Handle, Topology, Vertex},
 };
 
 /// # Connect two primitives, creating a new one
@@ -26,13 +26,13 @@ impl Connect {
         &mut self,
         vertices: [Handle<Vertex>; 2],
         approx: impl IntoIterator<Item = Point<3>>,
-        half_edges: &mut Store<HalfEdge>,
+        topology: &mut Topology,
     ) -> Handle<HalfEdge> {
         if let Some(half_edge) = self.vertices.get(&vertices).copied() {
             return half_edge;
         }
 
-        let half_edge = half_edges.push(HalfEdge {
+        let half_edge = topology.half_edges.push(HalfEdge {
             boundary: vertices,
             approx: approx.into_iter().collect(),
         });

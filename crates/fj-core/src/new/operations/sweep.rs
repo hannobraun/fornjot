@@ -97,7 +97,7 @@ impl Sweep {
                                 topology.vertices[v_bottom].point + vector
                             })
                             .collect::<Vec<_>>(),
-                        &mut topology.half_edges,
+                        topology,
                     )
                 })
                 .collect::<Vec<_>>();
@@ -121,7 +121,7 @@ impl Sweep {
                                 topology.vertices[v_bottom].point + vector
                             })
                             .collect::<Vec<_>>(),
-                        &mut topology.half_edges,
+                        topology,
                     )
                 })
                 .collect::<Vec<_>>();
