@@ -243,12 +243,7 @@ impl SketchSegment {
                     &topology.half_edges,
                     &mut topology.vertices,
                 );
-                let v1 = next.to_start_vertex(
-                    self.end,
-                    surface,
-                    &topology.half_edges,
-                    &mut topology.vertices,
-                );
+                let v1 = next.to_start_vertex(self.end, surface, topology);
 
                 [v0, v1]
             }
@@ -266,9 +261,11 @@ impl SketchSegment {
         self,
         position: Point<2>,
         surface: &Plane,
-        half_edges: &Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
+        topology: &mut Topology,
     ) -> Handle<Vertex> {
+        let half_edges = &topology.half_edges;
+        let vertices = &mut topology.vertices;
+
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 let [vertex, _] = half_edges[half_edge].boundary();
