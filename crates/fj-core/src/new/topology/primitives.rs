@@ -34,25 +34,38 @@ where
 /// Half-edges make up the boundary of [`Face`]s.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
-    /// # The two vertices that bound the half-edge
-    pub boundary: [Handle<Vertex>; 2],
-
-    /// # The points that approximate the half-edge
+    /// # The edge that defines this half-edge's boundary and approximation
     ///
-    /// These points approximate the half-edge _between_ the boundary vertices.
-    /// So this might be empty, if the half-edge is a line segment.
-    pub approx: Vec<Point<3>>,
+    /// This edge must be shared with all other coincident half-edges.
+    pub edge: Handle<Edge>,
+
+    /// # The orientation of the half-edge
+    ///
+    /// This orientation is defined in terms of the nominal direction of the
+    /// half-edge's edge.
+    pub orientation: Orientation,
 }
 
 impl HalfEdge {
     /// # Access the half-edge's boundary
-    pub fn boundary(&self, _: &Store<Edge>) -> [Handle<Vertex>; 2] {
-        self.boundary
+    pub fn boundary(&self, edges: &Store<Edge>) -> [Handle<Vertex>; 2] {
+        let [a, b] = edges[self.edge].boundary;
+
+        match self.orientation {
+            Orientation::Nominal => [a, b],
+            Orientation::AntiNominal => [b, a],
+        }
     }
 
     /// # Access the half-edge's approximation
-    pub fn approx(&self, _: &Store<Edge>) -> Vec<Point<3>> {
-        self.approx.clone()
+    pub fn approx(&self, edges: &Store<Edge>) -> Vec<Point<3>> {
+        let mut approx = edges[self.edge].approx.clone();
+
+        if let Orientation::AntiNominal = self.orientation {
+            approx.reverse();
+        }
+
+        approx
     }
 }
 

@@ -2,7 +2,9 @@ use std::collections::BTreeMap;
 
 use crate::{
     math::{Triangle, Vector},
-    new::topology::{Face, HalfEdge, Handle, Store, Topology, Vertex},
+    new::topology::{
+        Edge, Face, HalfEdge, Handle, Orientation, Store, Topology, Vertex,
+    },
 };
 
 /// # Translate primitives, given an offset
@@ -70,7 +72,7 @@ impl Translate {
     ) -> Handle<HalfEdge> {
         let offset = offset.into();
 
-        topology.half_edges.push(HalfEdge {
+        let edge = topology.edges.push(Edge {
             boundary: topology.half_edges[half_edge]
                 .boundary(&topology.edges)
                 .map(|vertex| {
@@ -81,6 +83,10 @@ impl Translate {
                 .into_iter()
                 .map(|point| point + offset)
                 .collect(),
+        });
+        topology.half_edges.push(HalfEdge {
+            edge,
+            orientation: Orientation::Nominal,
         })
     }
 

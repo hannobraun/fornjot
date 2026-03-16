@@ -15,15 +15,10 @@ impl Reverse {
 
     /// # Reverse the orientation of the provided half-edge
     pub fn half_edge(&mut self, half_edge: &HalfEdge) -> HalfEdge {
-        let HalfEdge {
-            mut boundary,
-            mut approx,
-        } = half_edge.clone();
-
-        boundary.reverse();
-        approx.reverse();
-
-        HalfEdge { boundary, approx }
+        HalfEdge {
+            edge: half_edge.edge,
+            orientation: half_edge.orientation.reverse(),
+        }
     }
 
     /// # Reverse the orientation of the provided face

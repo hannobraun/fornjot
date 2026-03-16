@@ -6,7 +6,9 @@ use crate::{
     new::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
-        topology::{Face, HalfEdge, Handle, Topology, Vertex},
+        topology::{
+            Edge, Face, HalfEdge, Handle, Orientation, Topology, Vertex,
+        },
     },
 };
 
@@ -241,9 +243,13 @@ impl SketchSegment {
             }
         };
 
-        let half_edge = topology.half_edges.push(HalfEdge {
+        let edge = topology.edges.push(Edge {
             boundary,
             approx: approx.iter().copied().map(|point| point.global).collect(),
+        });
+        let half_edge = topology.half_edges.push(HalfEdge {
+            edge,
+            orientation: Orientation::Nominal,
         });
 
         (half_edge, approx)
