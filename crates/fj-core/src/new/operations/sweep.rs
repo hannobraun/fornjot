@@ -90,9 +90,13 @@ impl Sweep {
                 .map(|(v_bottom, v_top)| {
                     connect.vertices(
                         [v_bottom, v_top],
-                        approx.iter().copied().map(|vector| {
-                            topology.vertices[v_bottom].point + vector
-                        }),
+                        approx
+                            .iter()
+                            .copied()
+                            .map(|vector| {
+                                topology.vertices[v_bottom].point + vector
+                            })
+                            .collect::<Vec<_>>(),
                         &mut topology.half_edges,
                     )
                 })
@@ -109,9 +113,14 @@ impl Sweep {
                 .map(|(v_top, v_bottom)| {
                     connect.vertices(
                         [v_top, v_bottom],
-                        approx.iter().copied().rev().map(|vector| {
-                            topology.vertices[v_bottom].point + vector
-                        }),
+                        approx
+                            .iter()
+                            .copied()
+                            .rev()
+                            .map(|vector| {
+                                topology.vertices[v_bottom].point + vector
+                            })
+                            .collect::<Vec<_>>(),
                         &mut topology.half_edges,
                     )
                 })
