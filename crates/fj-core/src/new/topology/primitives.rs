@@ -49,6 +49,11 @@ impl HalfEdge {
     pub fn boundary(&self) -> [Handle<Vertex>; 2] {
         self.boundary
     }
+
+    /// # Access the half-edge's approximation
+    pub fn approx(&self) -> Vec<Point<3>> {
+        self.approx.clone()
+    }
 }
 
 /// # A face

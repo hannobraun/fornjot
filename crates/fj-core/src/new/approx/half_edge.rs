@@ -82,13 +82,13 @@ impl ApproxHalfEdge {
     ) -> Self {
         let curve = {
             let half_edge = &topology.half_edges[half_edge];
-            let num_coords = half_edge.approx.len();
+            let num_coords = half_edge.approx().len();
 
             let local = u
                 .into_iter(num_coords)
                 .zip(v.into_iter(num_coords))
                 .map(|(u, v)| Point::from([u, v]));
-            let global = half_edge.approx.iter().copied();
+            let global = half_edge.approx().into_iter();
 
             local
                 .into_iter()

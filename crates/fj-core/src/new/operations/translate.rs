@@ -76,9 +76,8 @@ impl Translate {
                 .boundary()
                 .map(|vertex| self.vertex(vertex, offset, vertices)),
             approx: half_edges[half_edge]
-                .approx
-                .iter()
-                .copied()
+                .approx()
+                .into_iter()
                 .map(|point| point + offset)
                 .collect(),
         })
