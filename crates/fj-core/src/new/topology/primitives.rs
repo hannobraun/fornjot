@@ -112,3 +112,13 @@ pub enum Orientation {
     /// # The orientation is the same as the nominal orientation
     Nominal,
 }
+
+impl Orientation {
+    /// # Return the reverse orientation
+    pub fn reverse(&self) -> Self {
+        match self {
+            Self::AntiNominal => Self::Nominal,
+            Self::Nominal => Self::AntiNominal,
+        }
+    }
+}
