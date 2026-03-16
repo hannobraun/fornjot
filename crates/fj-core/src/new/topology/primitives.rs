@@ -1,6 +1,6 @@
 use crate::{
     math::{Point, Scalar, Triangle},
-    new::topology::Handle,
+    new::topology::{Handle, Store},
 };
 
 /// # A vertex
@@ -46,7 +46,7 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// # Access the half-edge's boundary
-    pub fn boundary(&self) -> [Handle<Vertex>; 2] {
+    pub fn boundary(&self, _: &Store<Edge>) -> [Handle<Vertex>; 2] {
         self.boundary
     }
 

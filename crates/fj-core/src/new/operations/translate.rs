@@ -71,9 +71,11 @@ impl Translate {
         let offset = offset.into();
 
         topology.half_edges.push(HalfEdge {
-            boundary: topology.half_edges[half_edge].boundary().map(|vertex| {
-                self.vertex(vertex, offset, &mut topology.vertices)
-            }),
+            boundary: topology.half_edges[half_edge]
+                .boundary(&topology.edges)
+                .map(|vertex| {
+                    self.vertex(vertex, offset, &mut topology.vertices)
+                }),
             approx: topology.half_edges[half_edge]
                 .approx()
                 .into_iter()

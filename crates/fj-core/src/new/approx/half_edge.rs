@@ -47,7 +47,8 @@ impl ApproxHalfEdge {
         let start = {
             let local = start.into();
             let global = {
-                let [vertex, _] = topology.half_edges[half_edge].boundary();
+                let [vertex, _] =
+                    topology.half_edges[half_edge].boundary(&topology.edges);
                 topology.vertices[vertex].point
             };
 
