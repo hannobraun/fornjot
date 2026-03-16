@@ -44,12 +44,8 @@ impl Sweep {
             reverse.face(&topology.faces[bottom], &mut topology.half_edges);
 
         let top = {
-            let top = translate.face(
-                &bottom_inv,
-                curve.end().into_value(),
-                &mut topology.vertices,
-                &mut topology.half_edges,
-            );
+            let top =
+                translate.face(&bottom_inv, curve.end().into_value(), topology);
             topology.faces.push(top)
         };
 
