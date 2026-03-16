@@ -70,14 +70,13 @@ impl Translate {
     ) -> Handle<HalfEdge> {
         let offset = offset.into();
 
-        let half_edges = &mut topology.half_edges;
         let vertices = &mut topology.vertices;
 
-        half_edges.push(HalfEdge {
-            boundary: half_edges[half_edge]
+        topology.half_edges.push(HalfEdge {
+            boundary: topology.half_edges[half_edge]
                 .boundary()
                 .map(|vertex| self.vertex(vertex, offset, vertices)),
-            approx: half_edges[half_edge]
+            approx: topology.half_edges[half_edge]
                 .approx()
                 .into_iter()
                 .map(|point| point + offset)
