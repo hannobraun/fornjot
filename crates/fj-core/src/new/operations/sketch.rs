@@ -179,13 +179,8 @@ impl Sketch {
             let prev = &self.segments[prev_i];
             let next = &self.segments[next_i];
 
-            let (half_edge, approx) = current.to_half_edge_and_approx(
-                prev,
-                next,
-                &surface,
-                &mut topology.half_edges,
-                &mut topology.vertices,
-            );
+            let (half_edge, approx) =
+                current.to_half_edge_and_approx(prev, next, &surface, topology);
 
             boundary.push(half_edge);
             boundary_approx.push(ApproxHalfEdge::from_points(
@@ -222,9 +217,11 @@ impl SketchSegment {
         prev: &SketchSegment,
         next: &SketchSegment,
         surface: &Plane,
-        half_edges: &mut Store<HalfEdge>,
-        vertices: &mut Store<Vertex>,
+        topology: &mut Topology,
     ) -> (Handle<HalfEdge>, Vec<ApproxPoint<2>>) {
+        let half_edges = &mut topology.half_edges;
+        let vertices = &mut topology.vertices;
+
         let approx = self.geometry.approx(prev.end, self.end, surface);
 
         let boundary = match self.attachment {
