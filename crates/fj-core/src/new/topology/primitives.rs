@@ -51,7 +51,7 @@ impl HalfEdge {
     }
 
     /// # Access the half-edge's approximation
-    pub fn approx(&self) -> Vec<Point<3>> {
+    pub fn approx(&self, _: &Store<Edge>) -> Vec<Point<3>> {
         self.approx.clone()
     }
 }

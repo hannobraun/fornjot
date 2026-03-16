@@ -77,7 +77,7 @@ impl Translate {
                     self.vertex(vertex, offset, &mut topology.vertices)
                 }),
             approx: topology.half_edges[half_edge]
-                .approx()
+                .approx(&topology.edges)
                 .into_iter()
                 .map(|point| point + offset)
                 .collect(),
