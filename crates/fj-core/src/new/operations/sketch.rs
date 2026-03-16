@@ -272,8 +272,6 @@ impl SketchSegment {
         surface: &Plane,
         topology: &mut Topology,
     ) -> Handle<Vertex> {
-        let vertices = &mut topology.vertices;
-
         match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 let [_, vertex] = topology.half_edges[half_edge].boundary();
@@ -282,7 +280,7 @@ impl SketchSegment {
             Some(SketchSegmentAttachment::Vertex { vertex }) => vertex,
             None => {
                 let point = surface.local_point_to_global(self.end);
-                vertices.push(Vertex { point })
+                topology.vertices.push(Vertex { point })
             }
         }
     }
