@@ -219,8 +219,6 @@ impl SketchSegment {
         surface: &Plane,
         topology: &mut Topology,
     ) -> (Handle<HalfEdge>, Vec<ApproxPoint<2>>) {
-        let vertices = &mut topology.vertices;
-
         let approx = self.geometry.approx(prev.end, self.end, surface);
 
         let boundary = match self.attachment {
@@ -231,19 +229,25 @@ impl SketchSegment {
                 return (half_edge, approx);
             }
             Some(SketchSegmentAttachment::Vertex { vertex: v1 }) => {
-                let v0 =
-                    prev.to_end_vertex(surface, &topology.half_edges, vertices);
+                let v0 = prev.to_end_vertex(
+                    surface,
+                    &topology.half_edges,
+                    &mut topology.vertices,
+                );
 
                 [v0, v1]
             }
             None => {
-                let v0 =
-                    prev.to_end_vertex(surface, &topology.half_edges, vertices);
+                let v0 = prev.to_end_vertex(
+                    surface,
+                    &topology.half_edges,
+                    &mut topology.vertices,
+                );
                 let v1 = next.to_start_vertex(
                     self.end,
                     surface,
                     &topology.half_edges,
-                    vertices,
+                    &mut topology.vertices,
                 );
 
                 [v0, v1]
