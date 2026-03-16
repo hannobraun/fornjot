@@ -66,10 +66,12 @@ impl Translate {
         &mut self,
         half_edge: Handle<HalfEdge>,
         offset: impl Into<Vector<3>>,
-        vertices: &mut Store<Vertex>,
-        half_edges: &mut Store<HalfEdge>,
+        topology: &mut Topology,
     ) -> Handle<HalfEdge> {
         let offset = offset.into();
+
+        let half_edges = &mut topology.half_edges;
+        let vertices = &mut topology.vertices;
 
         half_edges.push(HalfEdge {
             boundary: half_edges[half_edge]
@@ -96,14 +98,7 @@ impl Translate {
             .boundary
             .iter()
             .copied()
-            .map(|half_edge| {
-                self.half_edge(
-                    half_edge,
-                    offset,
-                    &mut topology.vertices,
-                    &mut topology.half_edges,
-                )
-            })
+            .map(|half_edge| self.half_edge(half_edge, offset, topology))
             .collect();
         let approx = face
             .approx
