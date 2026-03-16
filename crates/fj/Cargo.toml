@@ -22,9 +22,9 @@ thiserror = "2.0.18"
 tracing = "0.1.44"
 
 [dependencies.clap]
-version = "4.5.60"
+version = "4.6.0"
 features = ["derive"]
 
 [dependencies.tracing-subscriber]
-version = "0.3.22"
+version = "0.3.23"
 features = ["env-filter"]
