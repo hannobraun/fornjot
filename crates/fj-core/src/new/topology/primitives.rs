@@ -102,3 +102,13 @@ pub struct Solid {
     /// # The faces that bound the solid
     pub boundary: Vec<Handle<Face>>,
 }
+
+/// # An orientation, in terms of a context-dependent nominal orientation
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub enum Orientation {
+    /// # The orientation is the opposite of the nominal orientation
+    AntiNominal,
+
+    /// # The orientation is the same as the nominal orientation
+    Nominal,
+}
