@@ -106,19 +106,19 @@ pub struct Solid {
 /// # An orientation, in terms of a context-dependent nominal orientation
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub enum Orientation {
-    /// # The orientation is the opposite of the nominal orientation
-    AntiNominal,
-
     /// # The orientation is the same as the nominal orientation
     Nominal,
+
+    /// # The orientation is the opposite of the nominal orientation
+    AntiNominal,
 }
 
 impl Orientation {
     /// # Return the reverse orientation
     pub fn reverse(&self) -> Self {
         match self {
-            Self::AntiNominal => Self::Nominal,
             Self::Nominal => Self::AntiNominal,
+            Self::AntiNominal => Self::Nominal,
         }
     }
 }
