@@ -91,8 +91,7 @@ impl Translate {
         topology: &mut Topology,
     ) -> Face {
         let offset = offset.into();
-        
-        let half_edges = &mut topology.half_edges;
+
         let vertices = &mut topology.vertices;
 
         let boundary = face
@@ -100,7 +99,12 @@ impl Translate {
             .iter()
             .copied()
             .map(|half_edge| {
-                self.half_edge(half_edge, offset, vertices, half_edges)
+                self.half_edge(
+                    half_edge,
+                    offset,
+                    vertices,
+                    &mut topology.half_edges,
+                )
             })
             .collect();
         let approx = face
