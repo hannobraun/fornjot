@@ -24,17 +24,17 @@ impl Reverse {
     /// # Reverse the orientation of the provided face
     pub fn face(
         &mut self,
-        face: &HalfFace,
+        half_face: &HalfFace,
         half_edges: &mut Store<HalfEdge>,
     ) -> HalfFace {
-        let boundary = face
+        let boundary = half_face
             .boundary
             .iter()
             .copied()
             .map(|e| {
                 let half_edge = self.half_edge(&half_edges[e]);
 
-                if let Some(index) = face
+                if let Some(index) = half_face
                     .boundary
                     .iter()
                     .copied()
@@ -48,7 +48,7 @@ impl Reverse {
             .rev()
             .collect();
 
-        let approx = face
+        let approx = half_face
             .approx
             .iter()
             .copied()
