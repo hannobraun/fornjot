@@ -91,7 +91,7 @@ impl Translate {
     }
 
     /// # Translate a face
-    pub fn face(
+    pub fn half_face(
         &mut self,
         half_face: &HalfFace,
         offset: impl Into<Vector<3>>,

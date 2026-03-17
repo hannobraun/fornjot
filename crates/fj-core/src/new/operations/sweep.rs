@@ -45,7 +45,7 @@ impl Sweep {
 
         let top = {
             let top =
-                translate.face(&bottom_inv, curve.end().into_value(), topology);
+                translate.half_face(&bottom_inv, curve.end().into_value(), topology);
             topology.half_faces.push(top)
         };
 
