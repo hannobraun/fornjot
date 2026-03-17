@@ -1,4 +1,4 @@
-use crate::new::topology::{Edge, Face, HalfEdge, Solid, Store, Vertex};
+use crate::new::topology::{Edge, HalfEdge, HalfFace, Solid, Store, Vertex};
 
 /// # Stores for the topological primitives
 ///
@@ -33,7 +33,7 @@ pub struct Topology {
     /// # The store for faces
     ///
     /// See [`Face`] for more details.
-    pub faces: Store<Face>,
+    pub faces: Store<HalfFace>,
 
     /// # The store for half-edges
     ///

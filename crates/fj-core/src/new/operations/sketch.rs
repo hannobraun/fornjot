@@ -7,7 +7,7 @@ use crate::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
         topology::{
-            Edge, Face, HalfEdge, Handle, Orientation, Topology, Vertex,
+            Edge, HalfEdge, HalfFace, Handle, Orientation, Topology, Vertex,
         },
     },
 };
@@ -164,7 +164,7 @@ impl Sketch {
         mut self,
         surface: Plane,
         topology: &mut Topology,
-    ) -> Handle<Face> {
+    ) -> Handle<HalfFace> {
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             panic!("Empty sketches are not supported yet.");
@@ -202,7 +202,7 @@ impl Sketch {
         let surface_approx = Vec::new();
         let approx = face_approx(&boundary_approx, surface_approx);
 
-        topology.faces.push(Face { boundary, approx })
+        topology.faces.push(HalfFace { boundary, approx })
     }
 }
 

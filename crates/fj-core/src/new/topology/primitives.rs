@@ -101,7 +101,7 @@ pub struct Edge {
 ///
 /// Faces make up the boundary of [`Solid`]s.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
-pub struct Face {
+pub struct HalfFace {
     /// # The half-edges that bound the face
     pub boundary: Vec<Handle<HalfEdge>>,
 
@@ -113,7 +113,7 @@ pub struct Face {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
     /// # The faces that bound the solid
-    pub boundary: Vec<Handle<Face>>,
+    pub boundary: Vec<Handle<HalfFace>>,
 }
 
 /// # An orientation, in terms of a context-dependent nominal orientation

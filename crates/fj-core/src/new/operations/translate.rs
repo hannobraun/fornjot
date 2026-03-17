@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use crate::{
     math::{Triangle, Vector},
     new::topology::{
-        Edge, Face, HalfEdge, Handle, Orientation, Store, Topology, Vertex,
+        Edge, HalfEdge, HalfFace, Handle, Orientation, Store, Topology, Vertex,
     },
 };
 
@@ -93,10 +93,10 @@ impl Translate {
     /// # Translate a face
     pub fn face(
         &mut self,
-        face: &Face,
+        face: &HalfFace,
         offset: impl Into<Vector<3>>,
         topology: &mut Topology,
-    ) -> Face {
+    ) -> HalfFace {
         let offset = offset.into();
 
         let boundary = face
@@ -112,6 +112,6 @@ impl Translate {
             .map(|triangle| self.triangle(triangle, offset))
             .collect();
 
-        Face { boundary, approx }
+        HalfFace { boundary, approx }
     }
 }

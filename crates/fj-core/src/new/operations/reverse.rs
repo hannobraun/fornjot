@@ -1,6 +1,6 @@
 use crate::{
     math::Triangle,
-    new::topology::{Face, HalfEdge, Store},
+    new::topology::{HalfEdge, HalfFace, Store},
 };
 
 /// # Reverse the orientation of a primitive
@@ -24,9 +24,9 @@ impl Reverse {
     /// # Reverse the orientation of the provided face
     pub fn face(
         &mut self,
-        face: &Face,
+        face: &HalfFace,
         half_edges: &mut Store<HalfEdge>,
-    ) -> Face {
+    ) -> HalfFace {
         let boundary = face
             .boundary
             .iter()
@@ -56,6 +56,6 @@ impl Reverse {
             .rev()
             .collect();
 
-        Face { boundary, approx }
+        HalfFace { boundary, approx }
     }
 }

@@ -6,7 +6,7 @@ use crate::{
         approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Curve,
         operations::{Connect, Reverse, Translate},
-        topology::{Face, Handle, Solid, Topology},
+        topology::{HalfFace, Handle, Solid, Topology},
     },
 };
 
@@ -30,7 +30,7 @@ impl Sweep {
     /// well-understood at this point.
     pub fn face_to_solid(
         &mut self,
-        bottom: Handle<Face>,
+        bottom: Handle<HalfFace>,
         curve: &impl Curve,
         topology: &mut Topology,
     ) -> Handle<Solid> {
@@ -184,7 +184,7 @@ impl Sweep {
 
                 let approx = face_approx(&boundary, surface);
 
-                topology.faces.push(Face {
+                topology.faces.push(HalfFace {
                     boundary: vec![bottom, right, top, left],
                     approx,
                 })
