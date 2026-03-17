@@ -93,19 +93,19 @@ impl Translate {
     /// # Translate a face
     pub fn face(
         &mut self,
-        face: &HalfFace,
+        half_face: &HalfFace,
         offset: impl Into<Vector<3>>,
         topology: &mut Topology,
     ) -> HalfFace {
         let offset = offset.into();
 
-        let boundary = face
+        let boundary = half_face
             .boundary
             .iter()
             .copied()
             .map(|half_edge| self.half_edge(half_edge, offset, topology))
             .collect();
-        let approx = face
+        let approx = half_face
             .approx
             .iter()
             .copied()
