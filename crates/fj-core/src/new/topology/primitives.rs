@@ -10,7 +10,7 @@ use crate::{
 ///
 /// Even though each vertex corresponds to a point, not every point corresponds
 /// to a vertex. There are many points that approximate the curvature of
-/// [`HalfEdge`]s and [`Face`]s, which do not correspond to a vertex.
+/// [`HalfEdge`]s and [`HalfFace`]s, which do not correspond to a vertex.
 ///
 /// Vertices form the boundary of [`HalfEdge`]s.
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
@@ -31,7 +31,7 @@ where
 
 /// # A half-edge
 ///
-/// Half-edges make up the boundary of [`Face`]s.
+/// Half-edges make up the boundary of [`HalfFace`]s.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfEdge {
     /// # The edge that defines this half-edge's boundary and approximation
@@ -71,7 +71,7 @@ impl HalfEdge {
 
 /// # An edge
 ///
-/// Edges are one-dimensional structures that exist where multiple [`Face`]s
+/// Edges are one-dimensional structures that exist where multiple [`HalfFace`]s
 /// meet.
 ///
 /// Edges are distinct from, but closely related to [`HalfEdge`]s. While a

@@ -13,9 +13,9 @@ use crate::{
 
 /// # Create a face approximation by triangulating boundary and surface points
 ///
-/// This function produces a value that fits in [`Face`]'s `approx` field.
+/// This function produces a value that fits in [`HalfFace`]'s `approx` field.
 ///
-/// [`Face`]: crate::new::topology::Face
+/// [`HalfFace`]: crate::new::topology::HalfFace
 pub fn face_approx(
     boundary: &[ApproxHalfEdge],
     surface: impl IntoIterator<Item = ApproxPoint<2>>,
