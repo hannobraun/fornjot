@@ -90,7 +90,7 @@ impl Translate {
         })
     }
 
-    /// # Translate a face
+    /// # Translate a half-face
     pub fn half_face(
         &mut self,
         half_face: &HalfFace,
