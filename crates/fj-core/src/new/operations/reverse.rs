@@ -21,7 +21,7 @@ impl Reverse {
         }
     }
 
-    /// # Reverse the orientation of the provided face
+    /// # Reverse the orientation of the provided half-face
     pub fn half_face(
         &mut self,
         half_face: &HalfFace,
