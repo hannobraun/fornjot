@@ -30,9 +30,9 @@ pub struct Topology {
     /// See [`Edge`] for more details.
     pub edges: Store<Edge>,
 
-    /// # The store for faces
+    /// # The store for half-faces
     ///
-    /// See [`Face`] for more details.
+    /// See [`HalfFace`] for more details.
     pub half_faces: Store<HalfFace>,
 
     /// # The store for half-edges
