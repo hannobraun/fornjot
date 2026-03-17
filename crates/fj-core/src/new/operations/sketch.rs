@@ -202,7 +202,7 @@ impl Sketch {
         let surface_approx = Vec::new();
         let approx = face_approx(&boundary_approx, surface_approx);
 
-        topology.faces.push(HalfFace { boundary, approx })
+        topology.half_faces.push(HalfFace { boundary, approx })
     }
 }
 

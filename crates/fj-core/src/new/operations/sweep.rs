@@ -41,18 +41,18 @@ impl Sweep {
         let mut translate = Translate::new();
 
         let bottom_inv =
-            reverse.face(&topology.faces[bottom], &mut topology.half_edges);
+            reverse.face(&topology.half_faces[bottom], &mut topology.half_edges);
 
         let top = {
             let top =
                 translate.face(&bottom_inv, curve.end().into_value(), topology);
-            topology.faces.push(top)
+            topology.half_faces.push(top)
         };
 
         let bottom_edges_for_sides = bottom_inv.boundary.clone();
         let top_edges_for_sides = {
             let mut top_edges = reverse
-                .face(&topology.faces[top], &mut topology.half_edges)
+                .face(&topology.half_faces[top], &mut topology.half_edges)
                 .boundary
                 .clone();
 
@@ -184,7 +184,7 @@ impl Sweep {
 
                 let approx = face_approx(&boundary, surface);
 
-                topology.faces.push(HalfFace {
+                topology.half_faces.push(HalfFace {
                     boundary: vec![bottom, right, top, left],
                     approx,
                 })
