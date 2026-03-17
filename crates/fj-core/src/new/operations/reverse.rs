@@ -22,7 +22,7 @@ impl Reverse {
     }
 
     /// # Reverse the orientation of the provided face
-    pub fn face(
+    pub fn half_face(
         &mut self,
         half_face: &HalfFace,
         half_edges: &mut Store<HalfEdge>,
