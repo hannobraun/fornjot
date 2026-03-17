@@ -112,7 +112,7 @@ pub struct HalfFace {
 /// # A solid body
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {
-    /// # The faces that bound the solid
+    /// # The half-faces that bound the solid
     pub boundary: Vec<Handle<HalfFace>>,
 }
 
