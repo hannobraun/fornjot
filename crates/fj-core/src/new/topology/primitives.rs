@@ -97,9 +97,11 @@ pub struct Edge {
     pub approx: Vec<Point<3>>,
 }
 
-/// # A face
+/// # A half-face
 ///
-/// Faces make up the boundary of [`Solid`]s.
+/// Half-faces make up the boundary of [`Solid`]s. Directed half-faces relate to
+/// undirected faces, like directed half-edges relate to undirected edges: Where
+/// two half-faces coincide, they must reference the same face.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfFace {
     /// # The half-edges that bound the face
