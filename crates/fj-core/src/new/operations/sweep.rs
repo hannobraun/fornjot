@@ -40,12 +40,15 @@ impl Sweep {
         let mut reverse = Reverse::new();
         let mut translate = Translate::new();
 
-        let bottom_inv =
-            reverse.half_face(&topology.half_faces[bottom], &mut topology.half_edges);
+        let bottom_inv = reverse
+            .half_face(&topology.half_faces[bottom], &mut topology.half_edges);
 
         let top = {
-            let top =
-                translate.half_face(&bottom_inv, curve.end().into_value(), topology);
+            let top = translate.half_face(
+                &bottom_inv,
+                curve.end().into_value(),
+                topology,
+            );
             topology.half_faces.push(top)
         };
 
