@@ -41,7 +41,7 @@ pub struct HalfEdge {
 
     /// # The orientation of the half-edge
     ///
-    /// This orientation is defined in terms of the nominal direction of the
+    /// This orientation is defined in terms of the nominal orientation of the
     /// half-edge's edge.
     pub orientation: Orientation,
 }
@@ -82,8 +82,8 @@ impl HalfEdge {
 /// Coincident half-edges must reference the same edge.
 ///
 /// In principle, edges are undirected, in contrast to half-edges. In practice,
-/// they have a nominal direction, since the data they contain is directed.
-/// Half-edges define their own direction as the same or the opposite of the
+/// they have a nominal orientation, since the data they contain is directed.
+/// Half-edges define their own orientation as the same or the opposite of the
 /// edge they reference.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Edge {
