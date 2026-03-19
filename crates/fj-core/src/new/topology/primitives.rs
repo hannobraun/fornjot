@@ -104,10 +104,10 @@ pub struct Edge {
 /// two half-faces coincide, they must reference the same face.
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct HalfFace {
-    /// # The half-edges that bound the face
+    /// # The half-edges that bound the half-face
     pub boundary: Vec<Handle<HalfEdge>>,
 
-    /// # The triangles that approximate the face
+    /// # The triangles that approximate the half-face
     pub approx: Vec<Triangle<3>>,
 }
 
