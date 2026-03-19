@@ -111,6 +111,30 @@ pub struct HalfFace {
     pub approx: Vec<Triangle<3>>,
 }
 
+/// # A face
+///
+/// Faces are a two-dimensional structure that exist where multiple
+/// [`HalfFace`]s meet.
+///
+/// Faces are closely related to half-faces, in a similar way that [`Edge`]s are
+/// closely related to [`HalfEdge`]s. The boundary of a [`Solid`] is made up of
+/// directed half-faces, while faces are shared by multiple coincident
+/// half-faces.
+///
+/// Faces may be shared by half-faces from different solids, where those solids
+/// touch, or by half-faces from the same solid, where that solid touches
+/// itself.
+///
+/// In principle, faces are undirected, in contrast to half-faces. In practice,
+/// they have a nominal orientation, since their approximation is directed.
+/// Half-faces define their own orientation as the same or the opposite of the
+/// face they reference.
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub struct Face {
+    /// # The triangles that approximate the face
+    pub approx: Vec<Triangle<3>>,
+}
+
 /// # A solid body
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Solid {

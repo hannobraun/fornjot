@@ -7,7 +7,7 @@ mod store;
 mod topology;
 
 pub use self::{
-    primitives::{Edge, HalfEdge, HalfFace, Orientation, Solid, Vertex},
+    primitives::{Edge, Face, HalfEdge, HalfFace, Orientation, Solid, Vertex},
     store::{Handle, Store},
     topology::Topology,
 };
