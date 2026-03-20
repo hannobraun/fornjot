@@ -106,7 +106,7 @@ impl Translate {
             .map(|half_edge| self.half_edge(half_edge, offset, topology))
             .collect();
         let approx = half_face
-            .approx
+            .approx(&topology.faces)
             .iter()
             .copied()
             .map(|triangle| self.triangle(triangle, offset))

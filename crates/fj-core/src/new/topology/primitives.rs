@@ -111,6 +111,13 @@ pub struct HalfFace {
     pub approx: Vec<Triangle<3>>,
 }
 
+impl HalfFace {
+    /// # Access the half-face's approximation
+    pub fn approx(&self, _: &Store<Face>) -> Vec<Triangle<3>> {
+        self.approx.clone()
+    }
+}
+
 /// # A face
 ///
 /// Faces are a two-dimensional structure that exist where multiple

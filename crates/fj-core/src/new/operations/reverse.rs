@@ -51,7 +51,7 @@ impl Reverse {
             .collect();
 
         let approx = half_face
-            .approx
+            .approx(&topology.faces)
             .iter()
             .copied()
             .map(Triangle::reverse)
