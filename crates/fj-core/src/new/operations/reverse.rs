@@ -28,24 +28,23 @@ impl Reverse {
         topology: &mut Topology,
     ) -> HalfFace {
         let half_face = &topology.half_faces[half_face];
-        let half_edges = &mut topology.half_edges;
 
         let boundary = half_face
             .boundary
             .iter()
             .copied()
             .map(|e| {
-                let half_edge = self.half_edge(&half_edges[e]);
+                let half_edge = self.half_edge(&topology.half_edges[e]);
 
                 if let Some(index) = half_face
                     .boundary
                     .iter()
                     .copied()
-                    .find(|&index| half_edges[index] == half_edge)
+                    .find(|&index| topology.half_edges[index] == half_edge)
                 {
                     index
                 } else {
-                    half_edges.push(half_edge)
+                    topology.half_edges.push(half_edge)
                 }
             })
             .rev()
