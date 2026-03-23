@@ -75,8 +75,10 @@ impl Translate {
         let half_edge = &topology.half_edges[half_edge];
 
         let edge = {
-            let boundary = half_edge.boundary(&topology.edges);
-            let approx = half_edge.approx(&topology.edges);
+            let edge = &topology.edges[half_edge.edge];
+
+            let boundary = edge.boundary;
+            let approx = edge.approx.clone();
 
             topology.edges.push(Edge {
                 boundary: boundary.map(|vertex| {
