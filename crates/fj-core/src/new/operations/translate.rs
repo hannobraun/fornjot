@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use crate::{
     math::{Triangle, Vector},
     new::topology::{
-        Edge, HalfEdge, HalfFace, Handle, Orientation, Store, Topology, Vertex,
+        Edge, HalfEdge, HalfFace, Handle, Store, Topology, Vertex,
     },
 };
 
@@ -84,7 +84,7 @@ impl Translate {
                 .map(|point| point + offset)
                 .collect(),
         });
-        let orientation = Orientation::Nominal;
+        let orientation = topology.half_edges[half_edge].orientation;
 
         topology.half_edges.push(HalfEdge { edge, orientation })
     }
