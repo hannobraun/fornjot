@@ -150,7 +150,7 @@ pub struct Solid {
 }
 
 /// # An orientation, in terms of a context-dependent nominal orientation
-#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub enum Orientation {
     /// # The orientation is the same as the nominal orientation
     Nominal,
