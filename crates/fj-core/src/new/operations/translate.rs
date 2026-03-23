@@ -73,22 +73,32 @@ impl Translate {
         let offset = offset.into();
 
         let edge = {
-            let edge = &topology.edges[topology.half_edges[half_edge].edge];
-
-            topology.edges.push(Edge {
-                boundary: edge.boundary.map(|vertex| {
-                    self.vertex(vertex, offset, &mut topology.vertices)
-                }),
-                approx: edge
-                    .approx
-                    .iter()
-                    .map(|&point| point + offset)
-                    .collect(),
-            })
+            let edge = topology.half_edges[half_edge].edge;
+            let edge = self.edge(edge, offset, topology);
+            topology.edges.push(edge)
         };
         let orientation = topology.half_edges[half_edge].orientation;
 
         topology.half_edges.push(HalfEdge { edge, orientation })
+    }
+
+    /// # Translate an edge
+    pub fn edge(
+        &mut self,
+        edge: Handle<Edge>,
+        offset: impl Into<Vector<3>>,
+        topology: &mut Topology,
+    ) -> Edge {
+        let offset = offset.into();
+
+        let edge = &topology.edges[edge];
+
+        Edge {
+            boundary: edge.boundary.map(|vertex| {
+                self.vertex(vertex, offset, &mut topology.vertices)
+            }),
+            approx: edge.approx.iter().map(|&point| point + offset).collect(),
+        }
     }
 
     /// # Translate a half-face
