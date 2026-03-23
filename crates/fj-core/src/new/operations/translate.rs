@@ -73,8 +73,11 @@ impl Translate {
         let offset = offset.into();
 
         let edge = {
-            let edge = topology.half_edges[half_edge].edge;
-            let edge = self.edge(edge, offset, topology);
+            let edge = self.edge(
+                topology.half_edges[half_edge].edge,
+                offset,
+                topology,
+            );
             topology.edges.push(edge)
         };
         let orientation = topology.half_edges[half_edge].orientation;
