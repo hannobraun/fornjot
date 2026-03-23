@@ -84,6 +84,7 @@ impl Translate {
                 .map(|point| point + offset)
                 .collect(),
         });
+
         topology.half_edges.push(HalfEdge {
             edge,
             orientation: Orientation::Nominal,
