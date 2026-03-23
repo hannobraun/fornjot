@@ -72,10 +72,8 @@ impl Translate {
     ) -> Handle<HalfEdge> {
         let offset = offset.into();
 
-        let half_edge = &topology.half_edges[half_edge];
-
         let edge = {
-            let edge = &topology.edges[half_edge.edge];
+            let edge = &topology.edges[topology.half_edges[half_edge].edge];
 
             topology.edges.push(Edge {
                 boundary: edge.boundary.map(|vertex| {
@@ -88,7 +86,7 @@ impl Translate {
                     .collect(),
             })
         };
-        let orientation = half_edge.orientation;
+        let orientation = topology.half_edges[half_edge].orientation;
 
         topology.half_edges.push(HalfEdge { edge, orientation })
     }
