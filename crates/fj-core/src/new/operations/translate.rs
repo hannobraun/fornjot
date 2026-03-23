@@ -77,13 +77,15 @@ impl Translate {
         let edge = {
             let edge = &topology.edges[half_edge.edge];
 
-            let approx = &edge.approx;
-
             topology.edges.push(Edge {
                 boundary: edge.boundary.map(|vertex| {
                     self.vertex(vertex, offset, &mut topology.vertices)
                 }),
-                approx: approx.iter().map(|&point| point + offset).collect(),
+                approx: edge
+                    .approx
+                    .iter()
+                    .map(|&point| point + offset)
+                    .collect(),
             })
         };
         let orientation = half_edge.orientation;
