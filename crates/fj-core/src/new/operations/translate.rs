@@ -75,13 +75,13 @@ impl Translate {
         let edge = {
             let boundary =
                 topology.half_edges[half_edge].boundary(&topology.edges);
+            let approx = topology.half_edges[half_edge].approx(&topology.edges);
 
             topology.edges.push(Edge {
                 boundary: boundary.map(|vertex| {
                     self.vertex(vertex, offset, &mut topology.vertices)
                 }),
-                approx: topology.half_edges[half_edge]
-                    .approx(&topology.edges)
+                approx: approx
                     .into_iter()
                     .map(|point| point + offset)
                     .collect(),
