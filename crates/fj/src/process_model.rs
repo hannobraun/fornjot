@@ -13,11 +13,13 @@ pub fn process_model(model: Model, args: Arguments) -> Result {
     let triangles = model.topology.solids[model.solid]
         .boundary
         .iter()
-        .flat_map(|&half_face| &model.topology.half_faces[half_face].approx);
+        .flat_map(|&half_face| {
+            model.topology.half_faces[half_face].approx(&model.topology.faces)
+        });
 
     let mut tri_mesh = TriMesh::new();
 
-    for &triangle in triangles {
+    for triangle in triangles {
         tri_mesh.triangles.push(MeshTriangle {
             inner: triangle,
             is_internal: false,
