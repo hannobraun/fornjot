@@ -1,6 +1,7 @@
 use crate::new::topology::{Handle, Solid, Topology};
 
 /// # A self-contained Fornjot model
+#[derive(Debug)]
 pub struct Model {
     /// # The solid that defines this model
     pub solid: Handle<Solid>,
