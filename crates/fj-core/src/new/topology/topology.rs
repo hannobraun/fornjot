@@ -25,7 +25,7 @@ use crate::new::topology::{
 ///
 /// If you mix multiple `Topology` instances though, you are inviting trouble.
 /// See the documentation [`Store`] for more details on that.
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct Topology {
     /// # The store for edges
     ///
