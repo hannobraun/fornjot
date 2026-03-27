@@ -11,7 +11,7 @@ use fj::core::{
         sweep::SweepSketch,
         update::UpdateSketch,
     },
-    topology::{Region, Sketch as SketchOld, Solid},
+    topology::{Region, Sketch as SketchOld, Solid as SolidOld},
 };
 
 pub fn model(size: impl Into<Vector<3>>) -> Model {
@@ -49,7 +49,7 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
 pub fn model_old(
     size: impl Into<Vector<3>>,
     core: &mut fj::core::Core,
-) -> Solid {
+) -> SolidOld {
     let [x, y, z] = size.into().components;
 
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
