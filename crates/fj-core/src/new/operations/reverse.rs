@@ -1,7 +1,4 @@
-use crate::{
-    math::Triangle,
-    new::topology::{HalfEdge, HalfFace, Handle, Topology},
-};
+use crate::new::topology::{HalfEdge, HalfFace, Handle, Topology};
 
 /// # Reverse the orientation of a primitive
 #[derive(Default)]
@@ -50,14 +47,10 @@ impl Reverse {
             .rev()
             .collect();
 
-        let approx = half_face
-            .approx(&topology.faces)
-            .iter()
-            .copied()
-            .map(Triangle::reverse)
-            .rev()
-            .collect();
-
-        HalfFace { boundary, approx }
+        HalfFace {
+            boundary,
+            face: half_face.face,
+            orientation: half_face.orientation.reverse(),
+        }
     }
 }

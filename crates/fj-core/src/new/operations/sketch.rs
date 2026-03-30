@@ -7,7 +7,8 @@ use crate::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
         topology::{
-            Edge, HalfEdge, HalfFace, Handle, Orientation, Topology, Vertex,
+            Edge, Face, HalfEdge, HalfFace, Handle, Orientation, Topology,
+            Vertex,
         },
     },
 };
@@ -202,7 +203,12 @@ impl Sketch {
         let surface_approx = Vec::new();
         let approx = face_approx(&boundary_approx, surface_approx);
 
-        topology.half_faces.push(HalfFace { boundary, approx })
+        let face = topology.faces.push(Face { approx });
+        topology.half_faces.push(HalfFace {
+            boundary,
+            face,
+            orientation: Orientation::Nominal,
+        })
     }
 }
 

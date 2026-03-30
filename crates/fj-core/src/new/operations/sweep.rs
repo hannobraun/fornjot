@@ -6,7 +6,7 @@ use crate::{
         approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Curve,
         operations::{Connect, Reverse, Translate},
-        topology::{HalfFace, Handle, Solid, Topology},
+        topology::{Face, HalfFace, Handle, Orientation, Solid, Topology},
     },
 };
 
@@ -184,9 +184,11 @@ impl Sweep {
 
                 let approx = face_approx(&boundary, surface);
 
+                let face = topology.faces.push(Face { approx });
                 topology.half_faces.push(HalfFace {
                     boundary: vec![bottom, right, top, left],
-                    approx,
+                    face,
+                    orientation: Orientation::Nominal,
                 })
             });
 

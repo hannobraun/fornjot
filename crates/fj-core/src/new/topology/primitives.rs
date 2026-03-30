@@ -107,14 +107,26 @@ pub struct HalfFace {
     /// # The half-edges that bound the half-face
     pub boundary: Vec<Handle<HalfEdge>>,
 
-    /// # The triangles that approximate the half-face
-    pub approx: Vec<Triangle<3>>,
+    /// # The face that defines this half-face's approximation
+    pub face: Handle<Face>,
+
+    /// # The orientation of the half-face
+    ///
+    /// This orientation is defined in terms of the nominal orientation of the
+    /// half-face's face.
+    pub orientation: Orientation,
 }
 
 impl HalfFace {
     /// # Access the half-face's approximation
-    pub fn approx(&self, _: &Store<Face>) -> Vec<Triangle<3>> {
-        self.approx.clone()
+    pub fn approx(&self, faces: &Store<Face>) -> Vec<Triangle<3>> {
+        let approx = &faces[self.face].approx;
+
+        if let Orientation::Nominal = self.orientation {
+            approx.clone()
+        } else {
+            approx.iter().map(|triangle| triangle.reverse()).collect()
+        }
     }
 }
 
