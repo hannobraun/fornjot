@@ -73,7 +73,7 @@ impl From<Infallible> for ValidationError {
     }
 }
 
-/// A collection of validation errors
+/// # A collection of validation errors
 #[derive(Debug, thiserror::Error)]
 pub struct ValidationErrors(pub Vec<ValidationError>);
 
