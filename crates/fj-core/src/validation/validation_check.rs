@@ -4,7 +4,7 @@ use crate::geometry::Geometry;
 
 use super::ValidationConfig;
 
-/// Run a specific validation check on an object
+/// # Run a specific validation check on an object
 ///
 /// This trait is implemented once per validation check and object it applies
 /// to. `Self` is the object, while `T` identifies the validation check.
@@ -16,7 +16,7 @@ pub trait ValidationCheck<T>: Sized {
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r;
 
-    /// Convenience method to run the check return the first error
+    /// # Convenience method to run the check return the first error
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
@@ -34,7 +34,7 @@ pub trait ValidationCheck<T>: Sized {
         Ok(())
     }
 
-    /// Convenience method to run the check and expect one error
+    /// # Convenience method to run the check and expect one error
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
