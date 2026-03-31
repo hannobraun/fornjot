@@ -11,58 +11,58 @@ use super::checks::{
     MultipleReferencesToObject,
 };
 
-/// An error that can occur during a validation
+/// # An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Adjacent half-edges are not connected
+    /// # Adjacent half-edges are not connected
     #[error(transparent)]
     AdjacentHalfEdgesNotConnected(#[from] AdjacentHalfEdgesNotConnected),
 
-    /// Coincident half-edges are not siblings
+    /// # Coincident half-edges are not siblings
     #[error(transparent)]
     CoincidentHalfEdgesAreNotSiblings(
         #[from] CoincidentHalfEdgesAreNotSiblings,
     ),
 
-    /// Face has no boundary
+    /// # Face has no boundary
     #[error(transparent)]
     FaceHasNoBoundary(#[from] FaceHasNoBoundary),
 
-    /// Half-edge has no sibling
+    /// # Half-edge has no sibling
     #[error(transparent)]
     HalfEdgeHasNoSibling(#[from] HalfEdgeHasNoSibling),
 
-    /// Interior cycle has invalid winding
+    /// # Interior cycle has invalid winding
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
 
-    /// Multiple references to [`Cycle`]
+    /// # Multiple references to [`Cycle`]
     #[error(transparent)]
     MultipleReferencesToCycle(
         #[from] MultipleReferencesToObject<Cycle, Region>,
     ),
 
-    /// Multiple references to [`Face`]
+    /// # Multiple references to [`Face`]
     #[error(transparent)]
     MultipleReferencesToFace(#[from] MultipleReferencesToObject<Face, Shell>),
 
-    /// Multiple references to [`HalfEdge`]
+    /// # Multiple references to [`HalfEdge`]
     #[error(transparent)]
     MultipleReferencesToHalfEdge(
         #[from] MultipleReferencesToObject<HalfEdge, Cycle>,
     ),
 
-    /// Multiple references to [`Region`]
+    /// # Multiple references to [`Region`]
     #[error(transparent)]
     MultipleReferencesToRegion(
         #[from] MultipleReferencesToObject<Region, Face>,
     ),
 
-    /// `Solid` validation error
+    /// # `Solid` validation error
     #[error("`Solid` validation error")]
     Solid(#[from] SolidValidationError),
 
-    /// `Sketch` validation error
+    /// # `Sketch` validation error
     #[error("`Sketch` validation error")]
     Sketch(#[from] SketchValidationError),
 }
