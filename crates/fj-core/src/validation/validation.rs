@@ -2,18 +2,18 @@ use std::{error::Error, thread};
 
 use super::{ValidationConfig, ValidationError};
 
-/// Errors that occurred while validating the objects inserted into the stores
+/// # Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
 pub struct Validation {
-    /// All unhandled validation errors
+    /// # All unhandled validation errors
     pub errors: Vec<ValidationError>,
 
-    /// Validation configuration for the validation service
+    /// # Validation configuration for the validation service
     pub config: ValidationConfig,
 }
 
 impl Validation {
-    /// Construct an instance of `Validation`, using the provided configuration
+    /// # Construct an instance of `Validation`, using the provided config
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         let errors = Vec::new();
         Self { errors, config }
