@@ -1,9 +1,9 @@
 use crate::{approx::Tolerance, math::Scalar};
 
-/// Configuration required for the validation process
+/// # Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]
 pub struct ValidationConfig {
-    /// Panic on first validation error, instead of storing it
+    /// # Panic on first validation error, instead of storing it
     ///
     /// Validation errors are usually stored in the validation layer, and only
     /// cause a panic if the validation layer is dropped with unhandled errors.
@@ -19,10 +19,10 @@ pub struct ValidationConfig {
     /// Defaults to `false`.
     pub panic_on_error: bool,
 
-    /// The tolerance value used for intermediate geometry representation
+    /// # The tolerance value used for intermediate geometry representation
     pub tolerance: Tolerance,
 
-    /// The maximum distance between identical objects
+    /// # The maximum distance between identical objects
     ///
     /// Objects that are considered identical might still have a distance
     /// between them, due to inaccuracies of the numerical representation. If
@@ -30,7 +30,7 @@ pub struct ValidationConfig {
     /// considered identical.
     pub identical_max_distance: Scalar,
 
-    /// The minimum distance between distinct objects
+    /// # The minimum distance between distinct objects
     ///
     /// Objects whose distance is less than the value defined in this field, are
     /// considered identical.
@@ -38,7 +38,7 @@ pub struct ValidationConfig {
 }
 
 impl ValidationConfig {
-    /// Compute validation config from a tolerance value
+    /// # Compute validation config from a tolerance value
     pub fn from_tolerance(tolerance: impl Into<Tolerance>) -> Self {
         let tolerance = tolerance.into();
 
