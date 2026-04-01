@@ -17,6 +17,7 @@ pub mod approx;
 pub mod geometry;
 pub mod operations;
 pub mod topology;
+pub mod validation;
 
 mod model;
 
