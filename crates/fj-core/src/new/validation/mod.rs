@@ -6,3 +6,7 @@
 //!
 //! Defining what exactly is valid and what isn't, is still a work in progress.
 //! The validation checks in this module are a starting point.
+
+mod coincident_non_sibling_half_edges;
+
+pub use self::coincident_non_sibling_half_edges::CoincidentNonSiblingHalfEdges;
