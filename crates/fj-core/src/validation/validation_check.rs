@@ -9,7 +9,7 @@ use super::ValidationConfig;
 /// This trait is implemented once per validation check and primitive it applies
 /// to. `Self` is the primitive, while `T` identifies the validation check.
 pub trait ValidationCheck<T>: Sized {
-    /// # Run the validation check on the implementing object
+    /// # Run the validation check on the implementing primitive
     fn check<'r>(
         object: &'r T,
         geometry: &'r Geometry,
