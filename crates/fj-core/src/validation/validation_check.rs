@@ -4,7 +4,7 @@ use crate::geometry::Geometry;
 
 use super::ValidationConfig;
 
-/// # Run a specific validation check on a primitive
+/// # A specific validation check on a given primitive
 ///
 /// This trait is implemented once per validation check and primitive it applies
 /// to. `Self` is the primitive, while `T` identifies the validation check.
