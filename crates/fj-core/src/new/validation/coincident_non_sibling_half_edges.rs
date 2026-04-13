@@ -1,9 +1,9 @@
 use crate::new::topology::{HalfEdge, Handle};
 
-/// # A shell contains coincident half-edges that are no siblings
+/// # A solid contains coincident half-edges that are no siblings
 ///
 /// [`HalfEdge`]s are considered siblings, if they reference the same [`Edge`].
-/// Coincident half-edges within the same shell must be siblings, for the shell
+/// Coincident half-edges within the same shell must be siblings, for the solid
 /// to be valid.
 ///
 /// [`Edge`]: crate::new::topology::Edge
