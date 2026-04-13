@@ -11,7 +11,7 @@ use super::ValidationConfig;
 pub trait ValidationCheck<T>: Sized {
     /// # Run the validation check on the implementing primitive
     fn check<'r>(
-        object: &'r T,
+        primitive: &'r T,
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r;
