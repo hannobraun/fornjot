@@ -4,10 +4,10 @@ use crate::geometry::Geometry;
 
 use super::ValidationConfig;
 
-/// # Run a specific validation check on an object
+/// # Run a specific validation check on a primitive
 ///
-/// This trait is implemented once per validation check and object it applies
-/// to. `Self` is the object, while `T` identifies the validation check.
+/// This trait is implemented once per validation check and primitive it applies
+/// to. `Self` is the primitive, while `T` identifies the validation check.
 pub trait ValidationCheck<T>: Sized {
     /// # Run the validation check on the implementing object
     fn check<'r>(
