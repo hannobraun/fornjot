@@ -6,5 +6,8 @@
 /// the primitive that is being checked.
 pub trait ValidationCheck<T> {
     /// # Run the validation check on the provided primitive
+    ///
+    /// Returns an iterator over `Self`, which is the type that represents the
+    /// validation check and carries the relevant information about its failure.
     fn check<'r>(primitive: &'r T) -> impl Iterator<Item = Self> + 'r;
 }
