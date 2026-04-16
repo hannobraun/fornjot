@@ -1,4 +1,4 @@
-use crate::new::topology::Topology;
+use crate::{math::Scalar, new::topology::Topology};
 
 /// # A specific validation check on a given primitive
 ///
@@ -15,4 +15,13 @@ pub trait ValidationCheck<T> {
         primitive: &'r T,
         topology: &Topology,
     ) -> impl Iterator<Item = Self> + 'r;
+}
+
+/// # Configuration for validation checks
+pub struct ValidationConfig {
+    /// # The minimum distance between non-coincident geometric objects
+    ///
+    /// Geometric objects whose maximum distance from each other is less than
+    /// the value defined in this field, are considered coincident.
+    pub non_coincident_distance: Scalar,
 }

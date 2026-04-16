@@ -12,6 +12,6 @@ mod check;
 mod coincident_non_sibling_half_edges;
 
 pub use self::{
-    check::ValidationCheck,
+    check::{ValidationCheck, ValidationConfig},
     coincident_non_sibling_half_edges::CoincidentNonSiblingHalfEdges,
 };
