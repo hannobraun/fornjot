@@ -14,6 +14,7 @@ pub trait ValidationCheck<T> {
     fn check<'r>(
         primitive: &'r T,
         topology: &Topology,
+        config: &ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r;
 }
 
