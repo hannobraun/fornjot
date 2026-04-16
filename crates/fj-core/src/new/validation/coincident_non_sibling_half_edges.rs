@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::{
     math::Line,
     new::{
@@ -83,5 +85,16 @@ impl ValidationCheck<Solid> for CoincidentNonSiblingHalfEdges {
         coincident_non_siblings
             .into_iter()
             .map(|half_edges| Self { half_edges })
+    }
+}
+
+impl fmt::Display for CoincidentNonSiblingHalfEdges {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(
+            f,
+            "Coincident half-edges are not siblings: {:?}",
+            self.half_edges,
+        )?;
+        Ok(())
     }
 }
