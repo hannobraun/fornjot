@@ -19,11 +19,11 @@ url = "2.5.7"
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.6.0"
+version = "4.6.1"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.51.1"
+version = "1.52.1"
 features = ["full"]
 
 [dependencies.tracing-subscriber]
