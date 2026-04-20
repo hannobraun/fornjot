@@ -70,6 +70,21 @@ impl HalfEdge {
 
         approx
     }
+
+    /// # Access the half-edge's approximation, including its end points
+    pub fn end_points_and_approx(
+        &self,
+        edges: &Store<Edge>,
+        vertices: &Store<Vertex>,
+    ) -> Vec<Point<3>> {
+        let approx = self.approx(edges);
+
+        let [start, end] = edges[self.edge]
+            .boundary
+            .map(|handle| vertices[handle].point);
+
+        [start].into_iter().chain(approx).chain([end]).collect()
+    }
 }
 
 /// # An edge
