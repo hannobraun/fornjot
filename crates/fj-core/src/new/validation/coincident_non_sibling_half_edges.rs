@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{collections::BTreeSet, fmt};
 
 use crate::{
     math::Line,
@@ -32,12 +32,22 @@ impl ValidationCheck<Solid> for CoincidentNonSiblingHalfEdges {
             .flat_map(|&half_face| &topology.half_faces[half_face].boundary)
             .collect();
 
+        let mut visited_pairs = BTreeSet::new();
         let mut coincident_non_siblings = Vec::new();
 
         // Doing this without a spatial data structure is very suboptimal, but
         // should do for the time being.
         for &&handle_a in &half_edges {
             'b: for &&handle_b in &half_edges {
+                let mut handles = [handle_a, handle_b];
+                handles.sort();
+
+                if visited_pairs.contains(&handles) {
+                    continue;
+                } else {
+                    visited_pairs.insert(handles);
+                }
+
                 let [a, b] = [handle_a, handle_b]
                     .map(|half_edge| &topology.half_edges[half_edge]);
 
