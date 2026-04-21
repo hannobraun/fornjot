@@ -1,6 +1,6 @@
 use crate::{
     math::{Point, Scalar, Triangle},
-    new::topology::{Handle, Store},
+    new::topology::{Handle, Store, Topology},
 };
 
 /// # A vertex
@@ -72,16 +72,12 @@ impl HalfEdge {
     }
 
     /// # Access the half-edge's approximation, including its end points
-    pub fn end_points_and_approx(
-        &self,
-        edges: &Store<Edge>,
-        vertices: &Store<Vertex>,
-    ) -> Vec<Point<3>> {
-        let approx = self.approx(edges);
+    pub fn end_points_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
+        let approx = self.approx(&topology.edges);
 
-        let [start, end] = edges[self.edge]
+        let [start, end] = topology.edges[self.edge]
             .boundary
-            .map(|handle| vertices[handle].point);
+            .map(|handle| topology.vertices[handle].point);
 
         [start].into_iter().chain(approx).chain([end]).collect()
     }
