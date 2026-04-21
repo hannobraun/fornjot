@@ -57,8 +57,10 @@ impl ValidationCheck<Solid> for CoincidentNonSiblingHalfEdges {
 
                 // Again, it's very suboptimal to do this O(n^2) comparison of
                 // everything against everything, but it should do for now.
-                for a in a.approx(&topology.edges) {
-                    for &[b1, b2] in b.approx(&topology.edges).array_windows() {
+                for a in a.end_points_and_approx(topology) {
+                    for &[b1, b2] in
+                        b.end_points_and_approx(topology).array_windows()
+                    {
                         let (line, [t_min, t_max]) =
                             Line::from_points([b1, b2]);
                         let t =
