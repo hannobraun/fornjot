@@ -95,8 +95,8 @@ impl NavigationCubeRenderer {
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Render Pipeline Layout"),
                 bind_group_layouts: &[
-                    &texture_bind_group_layout,
-                    &mvp_matrix_bind_group_layout,
+                    Some(&texture_bind_group_layout),
+                    Some(&mvp_matrix_bind_group_layout),
                 ],
                 immediate_size: 0,
             });

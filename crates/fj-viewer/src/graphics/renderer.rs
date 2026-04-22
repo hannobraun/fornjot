@@ -48,9 +48,9 @@ impl Renderer {
     ) -> Result<Self, RendererInitError> {
         let window_size = window.inner_size();
 
-        let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
-            ..Default::default()
+            ..wgpu::InstanceDescriptor::new_without_display_handle()
         });
         let surface = instance.create_surface(window)?;
 
@@ -181,7 +181,7 @@ impl Renderer {
         let pipeline_layout = device.device.create_pipeline_layout(
             &wgpu::PipelineLayoutDescriptor {
                 label: None,
-                bind_group_layouts: &[&bind_group_layout],
+                bind_group_layouts: &[Some(&bind_group_layout)],
                 immediate_size: 0,
             },
         );
@@ -292,8 +292,11 @@ impl Renderer {
         );
 
         let surface_texture = match self.surface.get_current_texture() {
-            Ok(surface_texture) => surface_texture,
-            Err(wgpu::SurfaceError::Timeout) => {
+            wgpu::CurrentSurfaceTexture::Success(surface_texture)
+            | wgpu::CurrentSurfaceTexture::Suboptimal(surface_texture) => {
+                surface_texture
+            }
+            wgpu::CurrentSurfaceTexture::Timeout => {
                 // I'm seeing this all the time now (as in, multiple times per
                 // microsecond), with `PresentMode::AutoVsync`. Not sure what's
                 // going on, but for now, it works to just ignore it.
@@ -303,7 +306,18 @@ impl Renderer {
                 // - https://github.com/gfx-rs/wgpu/issues/1565
                 return Ok(());
             }
-            result => result?,
+            wgpu::CurrentSurfaceTexture::Occluded => {
+                return Ok(());
+            }
+            wgpu::CurrentSurfaceTexture::Outdated => {
+                return Err(DrawError::SurfaceTextureOutdated);
+            }
+            wgpu::CurrentSurfaceTexture::Lost => {
+                return Err(DrawError::SurfaceTextureLost);
+            }
+            wgpu::CurrentSurfaceTexture::Validation => {
+                return Err(DrawError::SurfaceTextureValidation);
+            }
         };
         let color_view = surface_texture
             .texture
@@ -446,8 +460,14 @@ pub enum RendererInitError {
 /// Returned by [`Renderer::draw`].
 #[derive(Error, Debug)]
 pub enum DrawError {
-    #[error("Error acquiring output surface")]
-    Surface(#[from] wgpu::SurfaceError),
+    #[error("Surface texture is lost")]
+    SurfaceTextureLost,
+
+    #[error("Surface texture is outdated")]
+    SurfaceTextureOutdated,
+
+    #[error("Surface texture validation error")]
+    SurfaceTextureValidation,
 
     #[error("Error rendering text")]
     Text(#[from] TextDrawError),
