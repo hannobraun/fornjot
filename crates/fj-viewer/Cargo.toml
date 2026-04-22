@@ -23,7 +23,7 @@ raw-window-handle = "0.6.0"
 thiserror = "2.0.18"
 tracing = "0.1.44"
 winit = "0.30.13"
-glyphon = "0.10.0"
+glyphon = "0.10.0" # must always stay compatible with `wgpu`
 itertools = "0.14.0"
 
 [dependencies.bytemuck]
