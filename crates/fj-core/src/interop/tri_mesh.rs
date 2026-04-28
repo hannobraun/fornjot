@@ -13,7 +13,7 @@ pub struct TriMesh {
 }
 
 impl TriMesh {
-    /// Construct a new instance of `Mesh`
+    /// Construct a new instance of `TriMesh`
     pub fn new() -> Self {
         Self::default()
     }
