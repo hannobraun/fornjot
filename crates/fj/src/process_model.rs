@@ -7,9 +7,8 @@ use crate::{Arguments, Result};
 /// Exports the model, if the respective argument has been set. Display the
 /// model otherwise.
 pub fn process_model(model: Model, args: Arguments) -> Result {
-    let tri_mesh = TriMesh::from_model(&model);
-
     if let Some(path) = args.export {
+        let tri_mesh = TriMesh::from_model(&model);
         crate::export::export(tri_mesh.external_triangles(), path)?;
     } else {
         crate::viewer::make_viewer_and_spawn_thread({
