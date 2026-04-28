@@ -4,6 +4,9 @@ use fj::core::{
         geometry::{Line, Plane},
         operations::{Sketch, Sweep},
         topology::Topology,
+        validation::{
+            CoincidentNonSiblingHalfEdges, ValidationCheck, ValidationConfig,
+        },
         Model,
     },
     operations::{
@@ -40,10 +43,20 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
         &mut topology,
     );
 
+    let invalid_half_edges = CoincidentNonSiblingHalfEdges::check(
+        &topology.solids[cuboid],
+        &topology,
+        &ValidationConfig {
+            non_coincident_distance: Scalar::from(0.1),
+        },
+    )
+    .flat_map(|failure| failure.half_edges)
+    .collect();
+
     Model {
         solid: cuboid,
         topology,
-        invalid_half_edges: Vec::new(),
+        invalid_half_edges,
     }
 }
 
