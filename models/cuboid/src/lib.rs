@@ -43,6 +43,7 @@ pub fn model(size: impl Into<Vector<3>>) -> Model {
     Model {
         solid: cuboid,
         topology,
+        invalid_half_edges: Vec::new(),
     }
 }
 
