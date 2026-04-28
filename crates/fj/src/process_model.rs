@@ -13,11 +13,9 @@ pub fn process_model(model: Model, args: Arguments) -> Result {
         crate::export::export(tri_mesh.external_triangles(), path)?;
     } else {
         crate::viewer::make_viewer_and_spawn_thread({
-            let tri_mesh = tri_mesh.clone();
-
             |viewer| {
                 crate::DEBUG_WINDOW.initialize(&viewer);
-                viewer.open_window().display_mesh(tri_mesh);
+                viewer.open_window().display_model(model);
             }
         })?;
     }

@@ -5,7 +5,7 @@ use std::{
     thread,
 };
 
-use fj_core::{interop::TriMesh, math::Point};
+use fj_core::{interop::TriMesh, math::Point, new::Model};
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -122,6 +122,18 @@ impl WindowHandle {
 
     /// # Display a 3D triangle mesh
     pub fn display_mesh(&self, tri_mesh: TriMesh) -> &Self {
+        self.event_loop.send_event(EventLoopEvent::Displayable {
+            displayable: Displayable::Mesh { tri_mesh },
+            window_id: self.id,
+        });
+
+        self
+    }
+
+    /// # Display a model
+    pub fn display_model(&self, model: Model) -> &Self {
+        let tri_mesh = TriMesh::from_model(&model);
+
         self.event_loop.send_event(EventLoopEvent::Displayable {
             displayable: Displayable::Mesh { tri_mesh },
             window_id: self.id,
