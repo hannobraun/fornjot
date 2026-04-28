@@ -132,10 +132,8 @@ impl WindowHandle {
 
     /// # Display a model
     pub fn display_model(&self, model: Model) -> &Self {
-        let tri_mesh = TriMesh::from_model(&model);
-
         self.event_loop.send_event(EventLoopEvent::Displayable {
-            displayable: Displayable::Mesh { tri_mesh },
+            displayable: Displayable::Model { model },
             window_id: self.id,
         });
 

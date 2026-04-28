@@ -3,6 +3,7 @@ use std::sync::Arc;
 use fj_core::{
     interop::TriMesh,
     math::{Aabb, Point},
+    new::Model,
 };
 use itertools::Itertools;
 use tracing::warn;
@@ -183,6 +184,24 @@ impl Window {
 
                 (render_mode, vertices, aabb, labels)
             }
+            Displayable::Model { model } => {
+                let tri_mesh = TriMesh::from_model(&model);
+
+                let render_mode = RenderMode::Mesh;
+                let vertices = Vertices::for_mesh(&tri_mesh);
+                let aabb = tri_mesh.aabb();
+                let labels = tri_mesh
+                    .all_triangles()
+                    .flat_map(|triangle| triangle.points)
+                    .sorted()
+                    .dedup()
+                    .map(|point| (format!("{point:.3?}"), point))
+                    .collect();
+
+                self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
+
+                (render_mode, vertices, aabb, labels)
+            }
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
                 let vertices = Vertices::for_point(point);
@@ -265,6 +284,7 @@ impl Window {
 
 pub enum Displayable {
     Mesh { tri_mesh: TriMesh },
+    Model { model: Model },
     Point { point: Point<3> },
     Polyline { points: Vec<PointWithLabel> },
 }
