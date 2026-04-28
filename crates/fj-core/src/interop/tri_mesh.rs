@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use crate::{
     interop::Color,
     math::{Aabb, Triangle},
+    new::Model,
 };
 
 /// # A triangle mesh
@@ -16,6 +17,25 @@ impl TriMesh {
     /// Construct a new instance of `TriMesh`
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Construct a triangle mesh from a model
+    pub fn from_model(model: &Model) -> Self {
+        let triangles = model.topology.solids[model.solid]
+            .boundary
+            .iter()
+            .flat_map(|&half_face| {
+                model.topology.half_faces[half_face]
+                    .approx(&model.topology.faces)
+            })
+            .map(|triangle| MeshTriangle {
+                inner: triangle,
+                is_internal: false,
+                color: Color::default(),
+            })
+            .collect();
+
+        Self { triangles }
     }
 
     /// # Add all the triangles from another `TriMesh` to this one
