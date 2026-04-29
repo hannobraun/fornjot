@@ -1,4 +1,3 @@
-use bytemuck::{Pod, Zeroable};
 use fj_core::{
     interop::{Index, TriMesh, vertices_to_indexed_vertices},
     math::{Point, Scalar},
@@ -71,7 +70,7 @@ impl Vertices {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Pod, Zeroable)]
+#[derive(Clone, Copy, Debug, PartialEq, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
 pub struct Vertex {
     pub position: [f32; 3],
