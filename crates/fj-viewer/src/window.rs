@@ -195,9 +195,9 @@ impl Window {
                     .map(|point| (format!("{point:.3?}"), point))
                     .collect();
 
-                self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
-
                 self.add_geometry(RenderMode::Mesh, vertices, labels, aabb);
+
+                self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
             }
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
