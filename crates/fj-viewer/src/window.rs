@@ -185,7 +185,6 @@ impl Window {
             Displayable::Model { model } => {
                 let tri_mesh = TriMesh::from_model(&model);
 
-                let render_mode = RenderMode::Mesh;
                 let vertices = Vertices::for_mesh(&tri_mesh);
                 let aabb = tri_mesh.aabb();
                 let labels = tri_mesh
@@ -198,7 +197,7 @@ impl Window {
 
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
 
-                self.add_geometry(render_mode, vertices, labels, aabb);
+                self.add_geometry(RenderMode::Mesh, vertices, labels, aabb);
             }
             Displayable::Point { point } => {
                 let render_mode = RenderMode::Point;
