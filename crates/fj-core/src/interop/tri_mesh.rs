@@ -140,7 +140,7 @@ where
 
     let mut indices_by_vertex = BTreeMap::new();
 
-    for vertex in original_vertices.into_iter() {
+    for vertex in original_vertices {
         let index = *indices_by_vertex.entry(vertex).or_insert_with(|| {
             let index = vertices.len();
             vertices.push(map_vertex(vertex));
