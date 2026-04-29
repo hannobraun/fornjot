@@ -34,7 +34,6 @@ impl Window {
     pub async fn new(
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let tri_mesh = TriMesh::default();
         let aabb = Aabb::<3>::default();
 
         let window = Arc::new(
@@ -58,7 +57,7 @@ impl Window {
             focus_point: None,
             window,
             renderer,
-            tri_mesh,
+            tri_mesh: TriMesh::default(),
             aabb,
             should_render: false,
         })
