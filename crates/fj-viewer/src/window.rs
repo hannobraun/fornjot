@@ -234,6 +234,16 @@ impl Window {
             }
         };
 
+        self.add_geometry(render_mode, vertices, labels, aabb);
+    }
+
+    fn add_geometry(
+        &mut self,
+        render_mode: RenderMode,
+        vertices: Vertices,
+        labels: Vec<(String, Point<3>)>,
+        aabb: Aabb<3>,
+    ) {
         self.renderer.add_geometry(render_mode, vertices, labels);
 
         self.aabb = self.aabb.merged(&aabb);
