@@ -116,7 +116,7 @@ pub struct MeshTriangle {
 /// - A collection of vertices that contains all the original vertices, but each
 ///   only once, with the order being undefined.
 /// - A collection of indices that correspond one-to-one to the original
-///   vertices reflect their original order.
+///   vertices and reflect their original order.
 ///
 /// The indices map into the collection of vertices.
 ///
