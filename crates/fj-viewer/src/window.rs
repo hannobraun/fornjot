@@ -34,8 +34,6 @@ impl Window {
     pub async fn new(
         event_loop: &ActiveEventLoop,
     ) -> Result<Self, WindowError> {
-        let aabb = Aabb::<3>::default();
-
         let window = Arc::new(
             event_loop.create_window(
                 winit::window::Window::default_attributes()
@@ -46,6 +44,7 @@ impl Window {
         );
         let renderer = Renderer::new(window.clone()).await?;
 
+        let aabb = Aabb::<3>::default();
         let camera = Camera::new(&aabb);
 
         Ok(Self {
