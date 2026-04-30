@@ -71,6 +71,21 @@ impl HalfEdge {
         approx
     }
 
+    /// # Access the half-edge's start point and its approximation
+    ///
+    /// By only including the start point but not the end point, this
+    /// representation avoid duplicated boundary points when approximating
+    /// multiple connected half-edges.
+    pub fn start_point_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
+        let approx = self.approx(&topology.edges);
+
+        let [start, _] = topology.edges[self.edge]
+            .boundary
+            .map(|handle| topology.vertices[handle].point);
+
+        [start].into_iter().chain(approx).collect()
+    }
+
     /// # Access the half-edge's approximation, including its end points
     pub fn end_points_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
         let approx = self.approx(&topology.edges);
