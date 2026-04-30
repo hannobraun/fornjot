@@ -86,7 +86,11 @@ impl HalfEdge {
         [start].into_iter().chain(approx).collect()
     }
 
-    /// # Access the half-edge's approximation, including its end points
+    /// # Access the half-edge's boundary points and its approximation
+    ///
+    /// This representation is useful to fully approximate a single half-edge.
+    /// When approximating multiple connected half-edges, you may want to use
+    /// [`HalfEdge::start_point_and_approx`] instead.
     pub fn end_points_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
         let approx = self.approx(&topology.edges);
 
