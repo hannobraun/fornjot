@@ -91,7 +91,7 @@ impl HalfEdge {
     /// This representation is useful to fully approximate a single half-edge.
     /// When approximating multiple connected half-edges, you may want to use
     /// [`HalfEdge::start_point_and_approx`] instead.
-    pub fn end_points_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
+    pub fn boundary_and_approx(&self, topology: &Topology) -> Vec<Point<3>> {
         let approx = self.approx(&topology.edges);
 
         let [start, end] = topology.edges[self.edge]
