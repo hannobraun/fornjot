@@ -59,7 +59,7 @@ impl HalfEdge {
 
     /// # Access the half-edge's approximation
     ///
-    /// This excludes the half-edge's end points, which means the returned
+    /// This excludes the half-edge's boundary points, which means the returned
     /// approximation may be empty.
     pub fn approx(&self, edges: &Store<Edge>) -> Vec<Point<3>> {
         let mut approx = edges[self.edge].approx.clone();
