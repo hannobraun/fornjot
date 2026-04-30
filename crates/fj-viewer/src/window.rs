@@ -219,7 +219,7 @@ impl Window {
                     points
                         .iter()
                         .chain(points.first())
-                        .map(|PointWithLabel { point, .. }| point),
+                        .map(|&PointWithLabel { point, .. }| point),
                 );
                 let aabb = Aabb::<3>::from_points(
                     points

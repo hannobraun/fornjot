@@ -41,9 +41,7 @@ impl Vertices {
         Self { vertices, indices }
     }
 
-    pub fn for_polyline<'r>(
-        points: impl IntoIterator<Item = &'r Point<3>>,
-    ) -> Self {
+    pub fn for_polyline(points: impl IntoIterator<Item = Point<3>>) -> Self {
         let vertices = points
             .into_iter()
             .map(|point| {
