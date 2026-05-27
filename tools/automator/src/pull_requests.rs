@@ -52,7 +52,7 @@ impl PullRequestsSinceLastRelease {
                         let version = version.ok_or_else(|| {
                             anyhow!(
                                 "Pull request title contains no version:\
-                                    {title}"
+                                {title}"
                             )
                         })?;
 
