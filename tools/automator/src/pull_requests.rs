@@ -117,8 +117,8 @@ impl Author {
     pub fn from_pull_request(
         pull_request: &SimplePullRequest,
     ) -> anyhow::Result<Self> {
-        let name = pull_request.user.clone().login;
-        let profile = pull_request.user.clone().html_url;
+        let name = pull_request.user.login.clone();
+        let profile = pull_request.user.html_url.clone();
 
         Ok(Self { name, profile })
     }
