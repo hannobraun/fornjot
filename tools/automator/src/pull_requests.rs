@@ -70,13 +70,12 @@ impl PullRequestsSinceLastRelease {
                 };
 
                 let number = pull_request.number;
-                let title = pull_request.title.clone();
                 let url = pull_request.html_url.clone();
                 let author = Author::from_pull_request(&pull_request)?;
 
                 let pull_request = PullRequest {
                     number,
-                    title,
+                    title: pull_request.title,
                     url,
                     author,
                     merged_at,
