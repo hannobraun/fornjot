@@ -69,12 +69,11 @@ impl PullRequestsSinceLastRelease {
                     continue;
                 };
 
-                let number = pull_request.number;
                 let url = pull_request.html_url.clone();
                 let author = Author::from_pull_request(&pull_request)?;
 
                 let pull_request = PullRequest {
-                    number,
+                    number: pull_request.number,
                     title: pull_request.title,
                     url,
                     author,
