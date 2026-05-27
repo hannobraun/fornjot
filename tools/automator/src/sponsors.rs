@@ -59,7 +59,6 @@ impl Sponsors {
             .context("Failed to deserialize GraphQL query result")?;
 
         let mut sponsors = response
-            .data
             .viewer
             .sponsors
             .nodes
@@ -170,11 +169,6 @@ impl PartialOrd for Sponsor {
 
 #[derive(Debug, serde::Deserialize)]
 pub struct QueryResult {
-    pub data: QueryResultData,
-}
-
-#[derive(Debug, serde::Deserialize)]
-pub struct QueryResultData {
     pub viewer: QueryResultViewer,
 }
 
