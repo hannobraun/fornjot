@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use autolib::find_version_in_str;
 use chrono::{DateTime, Utc};
 use octocrab::{
-    models::pulls::PullRequest as OctoPullRequest,
+    models::pulls::SimplePullRequest,
     params::{pulls::Sort, Direction, State},
     Octocrab,
 };
@@ -39,34 +39,28 @@ impl PullRequestsSinceLastRelease {
                 .await?;
 
             for pull_request in pull_request_page.items {
-                if let Some(labels) = pull_request.labels.as_ref() {
-                    for label in labels {
-                        if label.name == "release" {
-                            // We have found the most recently updated release
-                            // PR. Unless it has been updated since being merged
-                            // (which we prevent, by locking release PRs as part
-                            // of the release procedure), we can stop here.
+                for label in &pull_request.labels {
+                    if label.name == "release" {
+                        // We have found the most recently updated release
+                        // PR. Unless it has been updated since being merged
+                        // (which we prevent, by locking release PRs as part
+                        // of the release procedure), we can stop here.
 
-                            let title =
-                                pull_request.title.ok_or_else(|| {
-                                    anyhow!("Release PR is missing title")
-                                })?;
+                        let title = pull_request.title;
 
-                            let version = find_version_in_str(&title)?;
-                            let version = version.ok_or_else(|| {
-                                anyhow!(
-                                    "Pull request title contains no version:\
+                        let version = find_version_in_str(&title)?;
+                        let version = version.ok_or_else(|| {
+                            anyhow!(
+                                "Pull request title contains no version:\
                                     {title}"
-                                )
-                            })?;
+                            )
+                        })?;
 
-                            let time =
-                                pull_request.merged_at.ok_or_else(|| {
-                                    anyhow!("Release PR is missing merge time")
-                                })?;
+                        let time = pull_request.merged_at.ok_or_else(|| {
+                            anyhow!("Release PR is missing merge time")
+                        })?;
 
-                            break 'outer (version, time);
-                        }
+                        break 'outer (version, time);
                     }
                 }
 
@@ -76,14 +70,8 @@ impl PullRequestsSinceLastRelease {
                 };
 
                 let number = pull_request.number;
-                let title = pull_request
-                    .title
-                    .clone()
-                    .ok_or_else(|| anyhow!("Pull request is missing title"))?;
-                let url = pull_request
-                    .html_url
-                    .clone()
-                    .ok_or_else(|| anyhow!("Pull request is missing URL"))?;
+                let title = pull_request.title.clone();
+                let url = pull_request.html_url.clone();
                 let author = Author::from_pull_request(&pull_request)?;
 
                 let pull_request = PullRequest {
@@ -130,12 +118,9 @@ pub struct Author {
 
 impl Author {
     pub fn from_pull_request(
-        pull_request: &OctoPullRequest,
+        pull_request: &SimplePullRequest,
     ) -> anyhow::Result<Self> {
-        let user = pull_request
-            .user
-            .clone()
-            .ok_or_else(|| anyhow!("Pull request is missing author"))?;
+        let user = pull_request.user.clone();
 
         let name = user.login;
         let profile = user.html_url;
