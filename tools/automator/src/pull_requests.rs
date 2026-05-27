@@ -51,7 +51,7 @@ impl PullRequestsSinceLastRelease {
                         let version = find_version_in_str(&title)?;
                         let version = version.ok_or_else(|| {
                             anyhow!(
-                                "Pull request title contains no version:\
+                                "Pull request title contains no version: \
                                 {title}"
                             )
                         })?;
