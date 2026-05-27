@@ -41,10 +41,10 @@ impl PullRequestsSinceLastRelease {
             for pull_request in pull_request_page.items {
                 for label in &pull_request.labels {
                     if label.name == "release" {
-                        // We have found the most recently updated release
-                        // PR. Unless it has been updated since being merged
-                        // (which we prevent, by locking release PRs as part
-                        // of the release procedure), we can stop here.
+                        // We have found the most recently updated release PR.
+                        // Unless it has been updated since being merged (which
+                        // we prevent, by locking release PRs as part of the
+                        // release procedure), we can stop here.
 
                         let title = pull_request.title;
 
