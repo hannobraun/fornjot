@@ -69,7 +69,7 @@ impl PullRequestsSinceLastRelease {
                     continue;
                 };
 
-                let author = Author::from_pull_request(&pull_request)?;
+                let author = Author::from_pull_request(&pull_request);
 
                 let pull_request = PullRequest {
                     number: pull_request.number,
@@ -114,12 +114,10 @@ pub struct Author {
 }
 
 impl Author {
-    pub fn from_pull_request(
-        pull_request: &SimplePullRequest,
-    ) -> anyhow::Result<Self> {
+    pub fn from_pull_request(pull_request: &SimplePullRequest) -> Self {
         let name = pull_request.user.login.clone();
         let profile = pull_request.user.html_url.clone();
 
-        Ok(Self { name, profile })
+        Self { name, profile }
     }
 }
