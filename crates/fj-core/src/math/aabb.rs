@@ -99,14 +99,6 @@ impl<const D: usize> Aabb<D> {
 }
 
 impl Aabb<3> {
-    /// Convert the AABB to a Parry AABB
-    pub fn to_parry(self) -> parry3d_f64::bounding_volume::Aabb {
-        parry3d_f64::bounding_volume::Aabb {
-            mins: self.min.to_na(),
-            maxs: self.max.to_na(),
-        }
-    }
-
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
         let [min_x, min_y, min_z] = self.min.coords.components;
