@@ -1167,7 +1167,6 @@ dependencies = [
  "approx",
  "decorum",
  "geo",
- "getrandom 0.2.17",
  "iter_fixed",
  "itertools",
  "nalgebra",
