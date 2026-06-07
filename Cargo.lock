@@ -1172,7 +1172,6 @@ dependencies = [
  "nalgebra",
  "num-traits",
  "parking_lot",
- "parry2d-f64",
  "parry3d-f64",
  "pretty_assertions",
  "robust",
@@ -3220,32 +3219,6 @@ dependencies = [
  "redox_syscall 0.5.18",
  "smallvec",
  "windows-link",
-]
-
-[[package]]
-name = "parry2d-f64"
-version = "0.25.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "835d4ca2b68026b04a75ca6196da961d8c0895420eacc9cc2201f7ad54775780"
-dependencies = [
- "approx",
- "arrayvec",
- "bitflags 2.11.1",
- "downcast-rs 2.0.2",
- "either",
- "ena",
- "foldhash 0.2.0",
- "hashbrown 0.16.1",
- "log",
- "nalgebra",
- "num-derive",
- "num-traits",
- "ordered-float",
- "simba",
- "slab",
- "smallvec",
- "spade",
- "thiserror 2.0.18",
 ]
 
 [[package]]
