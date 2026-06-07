@@ -50,6 +50,11 @@ impl<const D: usize> Aabb<D> {
         Some(aabb)
     }
 
+    /// Compute the size of the AABB
+    pub fn size(&self) -> Vector<D> {
+        self.max - self.min
+    }
+
     /// Determine whether the AABB contains a given point
     pub fn contains(&self, point: impl Into<Point<D>>) -> bool {
         let point = point.into();
@@ -105,11 +110,6 @@ impl Aabb<3> {
     /// Compute the center point of the AABB
     pub fn center(&self) -> Point<3> {
         self.min + self.size() / 2.
-    }
-
-    /// Compute the size of the AABB
-    pub fn size(&self) -> Vector<3> {
-        self.max - self.min
     }
 }
 
