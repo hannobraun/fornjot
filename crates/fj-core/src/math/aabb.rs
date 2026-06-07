@@ -50,6 +50,11 @@ impl<const D: usize> Aabb<D> {
         Some(aabb)
     }
 
+    /// Compute the center point of the AABB
+    pub fn center(&self) -> Point<D> {
+        self.min + self.size() / 2.
+    }
+
     /// Compute the size of the AABB
     pub fn size(&self) -> Vector<D> {
         self.max - self.min
@@ -105,11 +110,6 @@ impl Aabb<3> {
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
         self.to_parry().vertices().map(Into::into)
-    }
-
-    /// Compute the center point of the AABB
-    pub fn center(&self) -> Point<3> {
-        self.min + self.size() / 2.
     }
 }
 
