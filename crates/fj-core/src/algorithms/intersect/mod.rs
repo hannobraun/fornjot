@@ -2,11 +2,7 @@
 
 pub mod ray_segment;
 
-mod line_segment;
-
 use crate::math::{Point, Vector};
-
-pub use self::line_segment::LineSegmentIntersection;
 
 /// Compute the intersection between a tuple of objects
 ///
