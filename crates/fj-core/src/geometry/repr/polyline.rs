@@ -5,7 +5,7 @@ use std::iter;
 use crate::{
     approx::Tolerance,
     geometry::{CurveBoundary, traits::GenPolyline},
-    math::{Aabb, LineSegment, Point},
+    math::{LineSegment, Point},
 };
 
 /// # A polyline, the uniform representation of curve geometry
@@ -75,21 +75,4 @@ pub fn convert_from_curve_point<const D: usize>(
     let line = line_segment.to_line();
 
     line.point_from_line_coords(point_curve)
-}
-
-/// # Generate a 2D axis-aligned bounding box for a curve in a given range
-pub fn surface_aabb_from_bounded_curve(
-    curve: &dyn GenPolyline<2>,
-    boundary: impl Into<CurveBoundary<Point<1>>>,
-    tolerance: impl Into<Tolerance>,
-) -> Aabb<2> {
-    let boundary = boundary.into();
-    let tolerance = tolerance.into();
-
-    let points_curve = curve.generate_polyline(boundary, tolerance);
-    let points_surface = points_curve.into_iter().map(|point_curve| {
-        convert_from_curve_point(curve, point_curve, tolerance)
-    });
-
-    Aabb::<2>::from_points(points_surface)
 }
