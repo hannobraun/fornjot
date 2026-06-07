@@ -52,7 +52,9 @@ impl<const D: usize> Aabb<D> {
 impl Aabb<2> {
     /// Construct a 2-dimensional AABB from a list of points
     ///
-    /// The resulting AABB will contain all the points.
+    /// Returns an axis-aligned-bounding box that contains all the points from
+    /// the provided iterator, if the iterator yields any points. Returns `None`
+    /// otherwise.
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Option<Self> {
