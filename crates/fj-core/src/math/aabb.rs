@@ -17,6 +17,42 @@ pub struct Aabb<const D: usize> {
 }
 
 impl<const D: usize> Aabb<D> {
+    /// Construct an AABB from a list of points
+    ///
+    /// Returns an axis-aligned-bounding box that contains all the points from
+    /// the provided iterator, if the iterator yields any points. Returns `None`
+    /// otherwise.
+    pub fn from_points(
+        points: impl IntoIterator<Item = impl Into<Point<D>>>,
+    ) -> Option<Self> {
+        let mut points = points.into_iter().map(Into::into);
+
+        let initial_point = points.next()?;
+
+        let mut aabb = Self {
+            min: initial_point,
+            max: initial_point,
+        };
+
+        for point in points {
+            aabb.min
+                .coords
+                .components
+                .iter_mut()
+                .zip(point.coords.components.iter())
+                .for_each(|(min, &new)| *min = cmp::min(*min, new));
+
+            aabb.max
+                .coords
+                .components
+                .iter_mut()
+                .zip(point.coords.components.iter())
+                .for_each(|(max, &new)| *max = cmp::max(*max, new));
+        }
+
+        Some(aabb)
+    }
+
     /// Determine whether the AABB contains a given point
     pub fn contains(&self, point: impl Into<Point<D>>) -> bool {
         let point = point.into();
@@ -50,42 +86,6 @@ impl<const D: usize> Aabb<D> {
 }
 
 impl Aabb<2> {
-    /// Construct a 2-dimensional AABB from a list of points
-    ///
-    /// Returns an axis-aligned-bounding box that contains all the points from
-    /// the provided iterator, if the iterator yields any points. Returns `None`
-    /// otherwise.
-    pub fn from_points(
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Option<Self> {
-        let mut points = points.into_iter().map(Into::into);
-
-        let initial_point = points.next()?;
-
-        let mut aabb = Self {
-            min: initial_point,
-            max: initial_point,
-        };
-
-        for point in points {
-            aabb.min
-                .coords
-                .components
-                .iter_mut()
-                .zip(point.coords.components.iter())
-                .for_each(|(min, &new)| *min = cmp::min(*min, new));
-
-            aabb.max
-                .coords
-                .components
-                .iter_mut()
-                .zip(point.coords.components.iter())
-                .for_each(|(max, &new)| *max = cmp::max(*max, new));
-        }
-
-        Some(aabb)
-    }
-
     /// Construct a 2-dimensional AABB from a Parry AABB
     pub fn from_parry(aabb: parry2d_f64::bounding_volume::Aabb) -> Self {
         Self {
@@ -109,16 +109,6 @@ impl Aabb<2> {
 }
 
 impl Aabb<3> {
-    /// Construct a 3-dimensional AABB from a list of points
-    ///
-    /// The resulting AABB will contain all the points.
-    pub fn from_points(
-        points: impl IntoIterator<Item = impl Into<Point<3>>>,
-    ) -> Option<Self> {
-        let points = points.into_iter().map(|point| point.into().to_na());
-        Some(parry3d_f64::bounding_volume::Aabb::from_points(points).into())
-    }
-
     /// Construct a 3-dimensional AABB from a Parry AABB
     pub fn from_parry(aabb: parry3d_f64::bounding_volume::Aabb) -> Self {
         Self {
