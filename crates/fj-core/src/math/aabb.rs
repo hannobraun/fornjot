@@ -109,7 +109,20 @@ impl Aabb<3> {
 
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
-        self.to_parry().vertices().map(Into::into)
+        let [min_x, min_y, min_z] = self.min.coords.components;
+        let [max_x, max_y, max_z] = self.min.coords.components;
+
+        [
+            [min_x, min_y, min_z],
+            [min_x, min_y, max_z],
+            [min_x, max_y, min_z],
+            [min_x, max_y, max_z],
+            [max_x, min_y, min_z],
+            [max_x, min_y, max_z],
+            [max_x, max_y, min_z],
+            [max_x, max_y, max_z],
+        ]
+        .map(Into::into)
     }
 }
 
