@@ -88,33 +88,7 @@ impl<const D: usize> Aabb<D> {
     }
 }
 
-impl Aabb<2> {
-    /// Construct a 2-dimensional AABB from a Parry AABB
-    pub fn from_parry(aabb: parry2d_f64::bounding_volume::Aabb) -> Self {
-        Self {
-            min: aabb.mins.into(),
-            max: aabb.maxs.into(),
-        }
-    }
-
-    /// Convert the AABB to a Parry AABB
-    pub fn to_parry(self) -> parry2d_f64::bounding_volume::Aabb {
-        parry2d_f64::bounding_volume::Aabb {
-            mins: self.min.to_na(),
-            maxs: self.max.to_na(),
-        }
-    }
-}
-
 impl Aabb<3> {
-    /// Construct a 3-dimensional AABB from a Parry AABB
-    pub fn from_parry(aabb: parry3d_f64::bounding_volume::Aabb) -> Self {
-        Self {
-            min: aabb.mins.into(),
-            max: aabb.maxs.into(),
-        }
-    }
-
     /// Convert the AABB to a Parry AABB
     pub fn to_parry(self) -> parry3d_f64::bounding_volume::Aabb {
         parry3d_f64::bounding_volume::Aabb {
@@ -136,26 +110,6 @@ impl Aabb<3> {
     /// Compute the size of the AABB
     pub fn size(&self) -> Vector<3> {
         self.to_parry().extents().into()
-    }
-
-    /// Compute an AABB that includes an additional point
-    pub fn include_point(self, point: &Point<3>) -> Self {
-        let mut aabb = self.to_parry();
-        aabb.take_point(point.to_na());
-
-        Self::from_parry(aabb)
-    }
-}
-
-impl From<parry2d_f64::bounding_volume::Aabb> for Aabb<2> {
-    fn from(aabb: parry2d_f64::bounding_volume::Aabb) -> Self {
-        Self::from_parry(aabb)
-    }
-}
-
-impl From<parry3d_f64::bounding_volume::Aabb> for Aabb<3> {
-    fn from(aabb: parry3d_f64::bounding_volume::Aabb) -> Self {
-        Self::from_parry(aabb)
     }
 }
 
