@@ -109,7 +109,7 @@ impl Aabb<3> {
 
     /// Compute the size of the AABB
     pub fn size(&self) -> Vector<3> {
-        self.to_parry().extents().into()
+        self.max - self.min
     }
 }
 
