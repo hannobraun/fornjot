@@ -53,9 +53,9 @@ impl Aabb<2> {
     /// The resulting AABB will contain all the points.
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
+    ) -> Option<Self> {
         let points = points.into_iter().map(|point| point.into().to_na());
-        parry2d_f64::bounding_volume::Aabb::from_points(points).into()
+        Some(parry2d_f64::bounding_volume::Aabb::from_points(points).into())
     }
 
     /// Construct a 2-dimensional AABB from a Parry AABB
@@ -154,7 +154,11 @@ mod tests {
 
     #[test]
     fn contains() {
-        let aabb = Aabb::<2>::from_points([[1., 1.], [3., 3.]]);
+        let Some(aabb) = Aabb::<2>::from_points([[1., 1.], [3., 3.]]) else {
+            unreachable!(
+                "We provided points, so the constructor must return an AABB."
+            );
+        };
 
         assert!(aabb.contains([2., 2.]));
 
