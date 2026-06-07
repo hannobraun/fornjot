@@ -114,9 +114,9 @@ impl Aabb<3> {
     /// The resulting AABB will contain all the points.
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<3>>>,
-    ) -> Self {
+    ) -> Option<Self> {
         let points = points.into_iter().map(|point| point.into().to_na());
-        parry3d_f64::bounding_volume::Aabb::from_points(points).into()
+        Some(parry3d_f64::bounding_volume::Aabb::from_points(points).into())
     }
 
     /// Construct a 3-dimensional AABB from a Parry AABB

@@ -232,7 +232,9 @@ impl Window {
                     .map(|PointWithLabel { point, label }| (label, point))
                     .collect();
 
-                self.add_geometry(render_mode, vertices, labels, aabb);
+                if let Some(aabb) = aabb {
+                    self.add_geometry(render_mode, vertices, labels, aabb);
+                }
             }
         }
     }

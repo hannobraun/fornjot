@@ -22,7 +22,7 @@ impl super::BoundingVolume<3> for &Face {
 
         (self.region().exterior().deref(), self.surface())
             .aabb(geometry)
-            .map(|aabb2| {
+            .and_then(|aabb2| {
                 let surface =
                     &geometry.of_surface_2(self.surface()).unwrap().generator;
                 let tri_mesh =
@@ -33,14 +33,14 @@ impl super::BoundingVolume<3> for &Face {
                     )
                 });
 
-                let mut aabb3 = Aabb::<3>::from_points(tri_mesh);
+                let mut aabb3 = Aabb::<3>::from_points(tri_mesh)?;
 
                 let offset = Vector::from([tolerance.inner(); 3]);
 
                 aabb3.min -= offset;
                 aabb3.max += offset;
 
-                aabb3
+                Some(aabb3)
             })
     }
 }
