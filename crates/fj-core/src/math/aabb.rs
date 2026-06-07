@@ -1,6 +1,5 @@
 use std::cmp;
 
-use parry2d_f64::bounding_volume::BoundingVolume as _;
 use parry3d_f64::bounding_volume::BoundingVolume as _;
 
 use super::{Point, Vector};
@@ -104,7 +103,8 @@ impl Aabb<2> {
 
     /// Merge this AABB with another
     pub fn merged(&self, other: &Self) -> Self {
-        self.to_parry().merged(&other.to_parry()).into()
+        Self::from_points([self.min, self.max, other.min, other.max])
+            .expect("Provided points, so must get an AABB back.")
     }
 }
 
