@@ -104,7 +104,7 @@ impl Aabb<3> {
 
     /// Compute the center point of the AABB
     pub fn center(&self) -> Point<3> {
-        self.to_parry().center().into()
+        self.min + self.size() / 2.
     }
 
     /// Compute the size of the AABB
