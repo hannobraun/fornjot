@@ -1,7 +1,5 @@
 use std::cmp;
 
-use parry3d_f64::bounding_volume::BoundingVolume as _;
-
 use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
@@ -82,6 +80,12 @@ impl<const D: usize> Aabb<D> {
 
         true
     }
+
+    /// Merge this AABB with another
+    pub fn merged(&self, other: &Self) -> Self {
+        Self::from_points([self.min, self.max, other.min, other.max])
+            .expect("Provided points, so must get an AABB back.")
+    }
 }
 
 impl Aabb<2> {
@@ -99,12 +103,6 @@ impl Aabb<2> {
             mins: self.min.to_na(),
             maxs: self.max.to_na(),
         }
-    }
-
-    /// Merge this AABB with another
-    pub fn merged(&self, other: &Self) -> Self {
-        Self::from_points([self.min, self.max, other.min, other.max])
-            .expect("Provided points, so must get an AABB back.")
     }
 }
 
@@ -146,11 +144,6 @@ impl Aabb<3> {
         aabb.take_point(point.to_na());
 
         Self::from_parry(aabb)
-    }
-
-    /// Merge this AABB with another
-    pub fn merged(&self, other: &Self) -> Self {
-        self.to_parry().merged(&other.to_parry()).into()
     }
 }
 
