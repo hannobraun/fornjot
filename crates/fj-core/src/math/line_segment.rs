@@ -42,20 +42,6 @@ impl<const D: usize> LineSegment<D> {
     }
 }
 
-impl LineSegment<2> {
-    /// Convert the 2-dimensional segment to a Parry segment
-    pub fn to_parry(self) -> parry2d_f64::shape::Segment {
-        self.points.map(|point| point.to_na()).into()
-    }
-}
-
-impl LineSegment<3> {
-    /// Convert the 3-dimensional segment to a Parry segment
-    pub fn to_parry(self) -> parry3d_f64::shape::Segment {
-        self.points.map(|point| point.to_na()).into()
-    }
-}
-
 impl<P, const D: usize> From<[P; 2]> for LineSegment<D>
 where
     P: Into<Point<D>>,
