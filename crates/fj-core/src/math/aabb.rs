@@ -1,3 +1,5 @@
+use std::cmp;
+
 use parry2d_f64::bounding_volume::BoundingVolume as _;
 use parry3d_f64::bounding_volume::BoundingVolume as _;
 
@@ -54,8 +56,32 @@ impl Aabb<2> {
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Option<Self> {
-        let points = points.into_iter().map(|point| point.into().to_na());
-        Some(parry2d_f64::bounding_volume::Aabb::from_points(points).into())
+        let mut points = points.into_iter().map(Into::into);
+
+        let initial_point = points.next()?;
+
+        let mut aabb = Self {
+            min: initial_point,
+            max: initial_point,
+        };
+
+        for point in points {
+            aabb.min
+                .coords
+                .components
+                .iter_mut()
+                .zip(point.coords.components.iter())
+                .for_each(|(min, &new)| *min = cmp::min(*min, new));
+
+            aabb.max
+                .coords
+                .components
+                .iter_mut()
+                .zip(point.coords.components.iter())
+                .for_each(|(max, &new)| *max = cmp::max(*max, new));
+        }
+
+        Some(aabb)
     }
 
     /// Construct a 2-dimensional AABB from a Parry AABB
