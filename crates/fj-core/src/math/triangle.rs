@@ -214,13 +214,7 @@ impl Triangle<3> {
     /// # Convert the triangle to a Parry triangle
     pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
         self.points
-            .map(|point| {
-                point
-                    .coords
-                    .components
-                    .map(Scalar::into_f64)
-                    .into()
-            })
+            .map(|point| point.coords.components.map(Scalar::into_f64).into())
             .into()
     }
 
@@ -233,11 +227,7 @@ impl Triangle<3> {
         solid: bool,
     ) -> Option<Scalar> {
         let ray = Ray {
-            origin: origin
-                .coords
-                .components
-                .map(Scalar::into_f64)
-                .into(),
+            origin: origin.coords.components.map(Scalar::into_f64).into(),
             dir: dir.components.map(Scalar::into_f64).into(),
         };
 
