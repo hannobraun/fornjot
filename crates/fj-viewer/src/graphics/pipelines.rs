@@ -141,7 +141,16 @@ impl Pipeline {
                 },
                 primitive: wgpu::PrimitiveState {
                     topology,
-                    strip_index_format: None,
+                    strip_index_format: match topology {
+                        wgpu::PrimitiveTopology::LineStrip
+                        | wgpu::PrimitiveTopology::TriangleStrip => {
+                            Some(INDEX_FORMAT)
+                        }
+
+                        wgpu::PrimitiveTopology::PointList
+                        | wgpu::PrimitiveTopology::LineList
+                        | wgpu::PrimitiveTopology::TriangleList => None,
+                    },
                     front_face: wgpu::FrontFace::Ccw,
                     cull_mode: None,
                     unclipped_depth: false,
