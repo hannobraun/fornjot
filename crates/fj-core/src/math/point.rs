@@ -38,6 +38,15 @@ impl<const D: usize> Point<D> {
         Self { coords }
     }
 
+    /// # Construct "maximum" point from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided points, the new point
+    /// will have the maximum of each.
+    pub fn max(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let coords = Vector::max(a.into().coords, b.into().coords);
+        Self { coords }
+    }
+
     /// # Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
         Self {
@@ -317,5 +326,10 @@ mod tests {
     #[test]
     fn min() {
         assert_eq!(Point::min([1., 2.], [2., 1.]), Point::from([1., 1.]));
+    }
+
+    #[test]
+    fn max() {
+        assert_eq!(Point::max([1., 2.], [2., 1.]), Point::from([2., 2.]));
     }
 }
