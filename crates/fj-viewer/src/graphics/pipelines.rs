@@ -188,10 +188,8 @@ impl Pipeline {
     ) {
         render_pass.set_pipeline(&self.inner);
         render_pass.set_vertex_buffer(0, geometry.vertex_buffer.slice(..));
-        render_pass.set_index_buffer(
-            geometry.index_buffer.slice(..),
-            wgpu::IndexFormat::Uint32,
-        );
+        render_pass
+            .set_index_buffer(geometry.index_buffer.slice(..), INDEX_FORMAT);
 
         render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
     }
@@ -203,3 +201,5 @@ pub enum RenderMode {
     Point,
     Polyline,
 }
+
+const INDEX_FORMAT: wgpu::IndexFormat = wgpu::IndexFormat::Uint32;
