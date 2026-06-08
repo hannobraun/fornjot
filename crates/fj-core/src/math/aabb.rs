@@ -21,7 +21,7 @@ impl<const D: usize> Aabb<D> {
     /// otherwise.
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<D>>>,
-    ) -> Option<Self> {
+    ) -> Self {
         let mut points = points.into_iter().map(Into::into);
 
         let Some(initial_point) = points.next() else {
@@ -49,7 +49,7 @@ impl<const D: usize> Aabb<D> {
                 .for_each(|(max, &new)| *max = cmp::max(*max, new));
         }
 
-        Some(aabb)
+        aabb
     }
 
     /// Compute the center point of the AABB
@@ -96,7 +96,6 @@ impl<const D: usize> Aabb<D> {
     /// Merge this AABB with another
     pub fn merged(&self, other: &Self) -> Self {
         Self::from_points([self.min, self.max, other.min, other.max])
-            .expect("Provided points, so must get an AABB back.")
     }
 }
 
@@ -126,11 +125,7 @@ mod tests {
 
     #[test]
     fn contains() {
-        let Some(aabb) = Aabb::<2>::from_points([[1., 1.], [3., 3.]]) else {
-            unreachable!(
-                "We provided points, so the constructor must return an AABB."
-            );
-        };
+        let aabb = Aabb::<2>::from_points([[1., 1.], [3., 3.]]);
 
         assert!(aabb.contains([2., 2.]));
 

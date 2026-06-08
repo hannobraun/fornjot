@@ -44,7 +44,7 @@ impl super::BoundingVolume<2>
                         path.point_from_path_coords(point_curve)
                     });
 
-                Aabb::<2>::from_points(points)
+                Some(Aabb::<2>::from_points(points))
             }
         }
     }

@@ -81,15 +81,11 @@ impl TriMesh {
 
     /// # Compute the axis-aligned bounding box of this mesh
     pub fn aabb(&self) -> Aabb<3> {
-        let Some(aabb) = Aabb::<3>::from_points(
+        Aabb::<3>::from_points(
             self.triangles
                 .iter()
                 .flat_map(|triangle| triangle.inner.points),
-        ) else {
-            panic!("Can't compute AABB of empty triangle mesh.");
-        };
-
-        aabb
+        )
     }
 }
 
