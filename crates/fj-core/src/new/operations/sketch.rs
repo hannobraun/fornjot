@@ -249,8 +249,9 @@ impl SketchSegment {
             }
         };
 
+        let boundary = EdgeBoundary { vertices };
         let edge = topology.edges.push(Edge {
-            boundary: EdgeBoundary { vertices },
+            boundary,
             approx: approx.iter().copied().map(|point| point.global).collect(),
         });
         let orientation = Orientation::Nominal;
