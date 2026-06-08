@@ -31,28 +31,24 @@ impl<const D: usize> Aabb<D> {
             panic!("Must provide at least one point to `Aabb::from_points`.");
         };
 
-        let mut aabb = Self {
-            min: initial_point,
-            max: initial_point,
-        };
+        let mut min = initial_point;
+        let mut max = initial_point;
 
         for point in points {
-            aabb.min
-                .coords
+            min.coords
                 .components
                 .iter_mut()
                 .zip(point.coords.components.iter())
                 .for_each(|(min, &new)| *min = cmp::min(*min, new));
 
-            aabb.max
-                .coords
+            max.coords
                 .components
                 .iter_mut()
                 .zip(point.coords.components.iter())
                 .for_each(|(max, &new)| *max = cmp::max(*max, new));
         }
 
-        aabb
+        Self { min, max }
     }
 
     /// Compute the center point of the AABB
