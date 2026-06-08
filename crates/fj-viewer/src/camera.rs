@@ -186,8 +186,11 @@ impl Camera {
         for vertex in aabb.vertices() {
             let point = view_transform.transform_point(&vertex);
 
-            let a1 = point.coords.vector_projection_onto(&view_direction);
-            let dist = a1.magnitude().into_f64();
+            let dist = point
+                .coords
+                .vector_projection_onto(&view_direction)
+                .magnitude()
+                .into_f64();
 
             if dist < dist_min {
                 dist_min = dist;
