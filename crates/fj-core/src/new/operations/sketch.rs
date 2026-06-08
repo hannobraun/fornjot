@@ -7,8 +7,8 @@ use crate::{
         approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
         topology::{
-            Edge, Face, HalfEdge, HalfFace, Handle, Orientation, Topology,
-            Vertex,
+            Edge, EdgeBoundary, Face, HalfEdge, HalfFace, Handle, Orientation,
+            Topology, Vertex,
         },
     },
 };
@@ -250,7 +250,7 @@ impl SketchSegment {
         };
 
         let edge = topology.edges.push(Edge {
-            boundary,
+            boundary: EdgeBoundary { vertices: boundary },
             approx: approx.iter().copied().map(|point| point.global).collect(),
         });
         let half_edge = topology.half_edges.push(HalfEdge {

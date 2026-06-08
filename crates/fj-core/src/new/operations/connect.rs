@@ -2,7 +2,9 @@ use std::collections::BTreeMap;
 
 use crate::{
     math::Point,
-    new::topology::{Edge, HalfEdge, Handle, Orientation, Topology, Vertex},
+    new::topology::{
+        Edge, EdgeBoundary, HalfEdge, Handle, Orientation, Topology, Vertex,
+    },
 };
 
 /// # Connect two primitives, creating a new one
@@ -33,7 +35,7 @@ impl Connect {
         }
 
         let edge = topology.edges.push(Edge {
-            boundary: vertices,
+            boundary: EdgeBoundary { vertices },
             approx: approx.into_iter().collect(),
         });
         let half_edge = topology.half_edges.push(HalfEdge {

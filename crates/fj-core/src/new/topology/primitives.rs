@@ -49,7 +49,7 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// # Access the half-edge's boundary
     pub fn boundary(&self, edges: &Store<Edge>) -> [Handle<Vertex>; 2] {
-        let [a, b] = edges[self.edge].boundary;
+        let [a, b] = edges[self.edge].boundary.vertices;
 
         match self.orientation {
             Orientation::Nominal => [a, b],
@@ -81,6 +81,7 @@ impl HalfEdge {
 
         let [start, _] = topology.edges[self.edge]
             .boundary
+            .vertices
             .map(|handle| topology.vertices[handle].point);
 
         [start].into_iter().chain(approx).collect()
@@ -96,6 +97,7 @@ impl HalfEdge {
 
         let [start, end] = topology.edges[self.edge]
             .boundary
+            .vertices
             .map(|handle| topology.vertices[handle].point);
 
         [start].into_iter().chain(approx).chain([end]).collect()
@@ -121,13 +123,20 @@ impl HalfEdge {
 #[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct Edge {
     /// # The two vertices that bound the edge
-    pub boundary: [Handle<Vertex>; 2],
+    pub boundary: EdgeBoundary,
 
     /// # The points that approximate the edge
     ///
     /// These points approximate the edge _between_ the boundary vertices. So
     /// this might be empty, if the edge is a line segment.
     pub approx: Vec<Point<3>>,
+}
+
+/// # The boundary of an [`Edge`]
+#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+pub struct EdgeBoundary {
+    /// # The vertices that make up the boundary
+    pub vertices: [Handle<Vertex>; 2],
 }
 
 /// # A half-face
