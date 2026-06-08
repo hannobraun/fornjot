@@ -214,7 +214,6 @@ impl Window {
                 self.add_geometry(render_mode, vertices, labels, aabb);
             }
             Displayable::Polyline { points } => {
-                let render_mode = RenderMode::Polyline;
                 let vertices = Vertices::for_polyline(
                     points
                         .iter()
@@ -232,7 +231,7 @@ impl Window {
                     .map(|PointWithLabel { point, label }| (label, point))
                     .collect();
 
-                self.add_geometry(render_mode, vertices, labels, aabb);
+                self.add_geometry(RenderMode::Polyline, vertices, labels, aabb);
             }
         }
     }
