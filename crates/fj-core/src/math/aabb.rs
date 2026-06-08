@@ -109,7 +109,20 @@ impl Aabb<3> {
 
 #[cfg(test)]
 mod tests {
+    use crate::math::Point;
+
     use super::Aabb;
+
+    #[test]
+    fn from_points() {
+        assert_eq!(
+            Aabb::from_points([[1., 2.], [2., 1.]]),
+            Aabb {
+                min: Point::from([1., 1.]),
+                max: Point::from([2., 2.]),
+            },
+        );
+    }
 
     #[test]
     fn contains() {
