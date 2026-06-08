@@ -139,6 +139,14 @@ pub struct EdgeBoundary {
     pub vertices: [Handle<Vertex>; 2],
 }
 
+impl EdgeBoundary {
+    /// # Return an `EdgeBoundary` instance that is the reverse of this one
+    pub fn to_reverse(&self) -> Self {
+        let [a, b] = self.vertices;
+        Self { vertices: [b, a] }
+    }
+}
+
 /// # A half-face
 ///
 /// Half-faces make up the boundary of [`Solid`]s. Directed half-faces relate to
