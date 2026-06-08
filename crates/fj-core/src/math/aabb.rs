@@ -14,11 +14,14 @@ pub struct Aabb<const D: usize> {
 }
 
 impl<const D: usize> Aabb<D> {
-    /// Construct an AABB from a list of points
+    /// # Construct an axis-aligned bounding box from a list of points
     ///
     /// Returns an axis-aligned-bounding box that contains all the points from
-    /// the provided iterator, if the iterator yields any points. Returns `None`
-    /// otherwise.
+    /// the provided iterator. The iterator must yield at least one point.
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the provided iterator is empty.
     pub fn from_points(
         points: impl IntoIterator<Item = impl Into<Point<D>>>,
     ) -> Self {
