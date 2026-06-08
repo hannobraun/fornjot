@@ -229,7 +229,7 @@ impl SketchSegment {
     ) -> (Handle<HalfEdge>, Vec<ApproxPoint<2>>) {
         let approx = self.geometry.approx(prev.end, self.end, surface);
 
-        let boundary = match self.attachment {
+        let vertices = match self.attachment {
             Some(SketchSegmentAttachment::HalfEdge { half_edge }) => {
                 // We just assume that the approximation of the sketch segment
                 // and the existing approximation of the half-edge match. We
@@ -250,7 +250,7 @@ impl SketchSegment {
         };
 
         let edge = topology.edges.push(Edge {
-            boundary: EdgeBoundary { vertices: boundary },
+            boundary: EdgeBoundary { vertices },
             approx: approx.iter().copied().map(|point| point.global).collect(),
         });
         let half_edge = topology.half_edges.push(HalfEdge {
