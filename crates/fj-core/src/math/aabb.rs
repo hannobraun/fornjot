@@ -1,5 +1,3 @@
-use std::cmp;
-
 use super::{Point, Vector};
 
 /// An axis-aligned bounding box (AABB)
@@ -35,17 +33,8 @@ impl<const D: usize> Aabb<D> {
         let mut max = initial_point;
 
         for point in points {
-            min.coords
-                .components
-                .iter_mut()
-                .zip(point.coords.components.iter())
-                .for_each(|(min, &new)| *min = cmp::min(*min, new));
-
-            max.coords
-                .components
-                .iter_mut()
-                .zip(point.coords.components.iter())
-                .for_each(|(max, &new)| *max = cmp::max(*max, new));
+            min = Point::min(min, point);
+            max = Point::max(max, point);
         }
 
         Self { min, max }
