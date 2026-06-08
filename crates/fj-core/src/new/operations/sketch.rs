@@ -253,10 +253,9 @@ impl SketchSegment {
             boundary: EdgeBoundary { vertices },
             approx: approx.iter().copied().map(|point| point.global).collect(),
         });
-        let half_edge = topology.half_edges.push(HalfEdge {
-            edge,
-            orientation: Orientation::Nominal,
-        });
+        let orientation = Orientation::Nominal;
+        let half_edge =
+            topology.half_edges.push(HalfEdge { edge, orientation });
 
         (half_edge, approx)
     }
