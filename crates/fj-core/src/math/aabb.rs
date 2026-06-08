@@ -83,7 +83,10 @@ impl<const D: usize> Aabb<D> {
 
     /// Merge this AABB with another
     pub fn merged(&self, other: &Self) -> Self {
-        Self::from_points([self.min, self.max, other.min, other.max])
+        Self {
+            min: Point::min(self.min, other.min),
+            max: Point::max(self.max, other.max),
+        }
     }
 }
 
