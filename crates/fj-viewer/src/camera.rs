@@ -178,7 +178,7 @@ impl Camera {
     /// Update the max and minimum rendering distance for this camera.
     pub fn update_planes(&mut self, aabb: &Aabb<3>) {
         let view_transform = self.model_to_camera();
-        let view_direction = Vector::from([0., 0., -1.]);
+        let view_direction = Vector::from([0., 0., -1.]).assert_non_zero();
 
         let mut dist_min = f64::INFINITY;
         let mut dist_max = f64::NEG_INFINITY;
@@ -191,7 +191,7 @@ impl Camera {
             //
             // Let's rename the variables first, so they fit the names in that
             // page.
-            let (a, b) = (point.coords, view_direction);
+            let (a, b) = (point.coords, view_direction.into_value());
             let a1 = b * a.dot(&b) / b.dot(&b);
 
             let dist = a1.magnitude().into_f64();
