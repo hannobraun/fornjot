@@ -94,7 +94,7 @@ impl Aabb<3> {
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
         let [min_x, min_y, min_z] = self.min.coords.components;
-        let [max_x, max_y, max_z] = self.min.coords.components;
+        let [max_x, max_y, max_z] = self.max.coords.components;
 
         [
             [min_x, min_y, min_z],
