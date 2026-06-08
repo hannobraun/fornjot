@@ -44,6 +44,22 @@ impl<const D: usize> Vector<D> {
         Self { components }
     }
 
+    /// # Construct "maximum" vector from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided vectors, the new vector
+    /// will have the maximum of each.
+    pub fn max(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let components = a
+            .into()
+            .components
+            .into_iter_fixed()
+            .zip(b.into().components)
+            .map(|(a, b)| cmp::max(a, b))
+            .collect();
+
+        Self { components }
+    }
+
     /// # Convert the vector into an nalgebra vector
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.components.map(Scalar::into_f64).into()
@@ -556,6 +572,11 @@ mod tests {
     #[test]
     fn min() {
         assert_eq!(Vector::min([1., 2.], [2., 1.]), Vector::from([1., 1.]));
+    }
+
+    #[test]
+    fn max() {
+        assert_eq!(Vector::max([1., 2.], [2., 1.]), Vector::from([2., 2.]));
     }
 
     #[test]
