@@ -24,7 +24,9 @@ impl<const D: usize> Aabb<D> {
     ) -> Option<Self> {
         let mut points = points.into_iter().map(Into::into);
 
-        let initial_point = points.next()?;
+        let Some(initial_point) = points.next() else {
+            panic!("Must provide at least one point to `Aabb::from_points`.");
+        };
 
         let mut aabb = Self {
             min: initial_point,
