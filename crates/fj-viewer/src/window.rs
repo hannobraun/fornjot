@@ -200,6 +200,28 @@ impl Window {
                     tri_mesh.aabb(),
                 );
 
+                for half_edge in model.invalid_half_edges {
+                    let points = model.topology.half_edges[half_edge]
+                        .boundary_and_approx(&model.topology);
+
+                    let vertices =
+                        Vertices::for_polyline(points.iter().copied());
+
+                    let labels = points
+                        .iter()
+                        .map(|&point| (format!("{point:.3?}"), point))
+                        .collect();
+
+                    let aabb = Aabb::from_points(points);
+
+                    self.add_geometry(
+                        RenderMode::Polyline,
+                        vertices,
+                        labels,
+                        aabb,
+                    );
+                }
+
                 self.tri_mesh = self.tri_mesh.clone().merge(tri_mesh);
             }
             Displayable::Point { point } => {
