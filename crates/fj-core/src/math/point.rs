@@ -29,6 +29,15 @@ impl<const D: usize> Point<D> {
         }
     }
 
+    /// # Construct "minimum" point from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided points, the new point
+    /// will have the minimum of each.
+    pub fn min(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let coords = Vector::min(a.into().coords, b.into().coords);
+        Self { coords }
+    }
+
     /// # Construct a `Point` from an nalgebra vector
     pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
         Self {
@@ -298,5 +307,15 @@ impl<const D: usize> approx::AbsDiffEq for Point<D> {
 
     fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
         self.coords.abs_diff_eq(&other.coords, epsilon)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::math::Point;
+
+    #[test]
+    fn min() {
+        assert_eq!(Point::min([1., 2.], [2., 1.]), Point::from([1., 1.]));
     }
 }
