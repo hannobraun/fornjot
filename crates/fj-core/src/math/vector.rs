@@ -1,4 +1,4 @@
-use std::{fmt, ops};
+use std::{cmp, fmt, ops};
 
 use iter_fixed::IntoIteratorFixed;
 
@@ -26,6 +26,22 @@ impl<const D: usize> Vector<D> {
         Self {
             components: [scalar.into(); D],
         }
+    }
+
+    /// # Construct "minimum" vector from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided vectors, the new vector
+    /// will have the minimum of each.
+    pub fn min(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let components = a
+            .into()
+            .components
+            .into_iter_fixed()
+            .zip(b.into().components)
+            .map(|(a, b)| cmp::min(a, b))
+            .collect();
+
+        Self { components }
     }
 
     /// # Convert the vector into an nalgebra vector
@@ -536,6 +552,11 @@ impl<const D: usize> num_traits::Zero for Vector<D> {
 #[cfg(test)]
 mod tests {
     use crate::math::{Scalar, Vector};
+
+    #[test]
+    fn min() {
+        assert_eq!(Vector::min([1., 2.], [2., 1.]), Vector::from([1., 1.]));
+    }
 
     #[test]
     fn to_uv() {
