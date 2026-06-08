@@ -186,14 +186,7 @@ impl Camera {
         for vertex in aabb.vertices() {
             let point = view_transform.transform_point(&vertex);
 
-            // Project `point` onto `view_direction`. See this Wikipedia page:
-            // https://en.wikipedia.org/wiki/Vector_projection
-            //
-            // Let's rename the variables first, so they fit the names in that
-            // page.
-            let (a, b) = (point.coords, view_direction.into_value());
-            let a1 = b * a.dot(&b) / b.dot(&b);
-
+            let a1 = point.coords.vector_projection_onto(&view_direction);
             let dist = a1.magnitude().into_f64();
 
             if dist < dist_min {
