@@ -148,9 +148,7 @@ mod tests {
                 .iter()
                 .map(|&half_edge| &topology.half_edges[half_edge]);
 
-            for (prev, half_edge, next) in
-                boundary.into_iter().circular_tuple_windows()
-            {
+            for (prev, half_edge, next) in boundary.circular_tuple_windows() {
                 assert_eq!(
                     prev.boundary(&topology.edges)[1],
                     half_edge.boundary(&topology.edges)[0]
