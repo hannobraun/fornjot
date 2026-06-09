@@ -114,7 +114,7 @@ mod tests {
         new::{
             geometry::Plane,
             operations::Sketch2,
-            topology::{Face, Orientation, Topology},
+            topology::{Face, HalfFace, Orientation, Topology},
         },
     };
 
@@ -142,24 +142,7 @@ mod tests {
 
         {
             assert_eq!(half_face.boundary.len(), 3);
-
-            for (prev, half_edge, next) in half_face
-                .boundary
-                .iter()
-                .map(|&half_edge| &topology.half_edges[half_edge])
-                .circular_tuple_windows()
-            {
-                assert_eq!(
-                    prev.boundary(&topology.edges)[1],
-                    half_edge.boundary(&topology.edges)[0]
-                );
-                assert_eq!(
-                    half_edge.boundary(&topology.edges)[1],
-                    next.boundary(&topology.edges)[0]
-                );
-
-                assert_eq!(half_edge.orientation, Orientation::Nominal);
-            }
+            check_connecting_vertices(&half_face, &topology);
         }
 
         {
@@ -181,5 +164,25 @@ mod tests {
         }
 
         assert_eq!(half_face.orientation, Orientation::Nominal);
+    }
+
+    fn check_connecting_vertices(half_face: &HalfFace, topology: &Topology) {
+        for (prev, half_edge, next) in half_face
+            .boundary
+            .iter()
+            .map(|&half_edge| &topology.half_edges[half_edge])
+            .circular_tuple_windows()
+        {
+            assert_eq!(
+                prev.boundary(&topology.edges)[1],
+                half_edge.boundary(&topology.edges)[0]
+            );
+            assert_eq!(
+                half_edge.boundary(&topology.edges)[1],
+                next.boundary(&topology.edges)[0]
+            );
+
+            assert_eq!(half_edge.orientation, Orientation::Nominal);
+        }
     }
 }
