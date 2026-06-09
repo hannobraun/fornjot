@@ -10,6 +10,14 @@ pub struct Plane {
 }
 
 impl Plane {
+    /// # Construct a representation of the xy-plane
+    pub fn xy() -> Self {
+        Self {
+            origin: Point::origin(),
+            axes: [Vector::unit_x(), Vector::unit_y()],
+        }
+    }
+
     /// # Convert a surface-local point to a global one
     pub fn local_point_to_global(&self, local: Point<2>) -> Point<3> {
         self.origin + self.local_vector_to_global(local.coords)
