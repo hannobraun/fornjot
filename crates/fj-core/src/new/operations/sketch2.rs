@@ -51,18 +51,24 @@ impl Sketch2 {
             };
         };
 
+        let mut vertices = self
+            .segments
+            .iter()
+            .map(|segment| segment.to)
+            .map(|point| surface.local_point_to_global(point))
+            .map(|point| topology.vertices.push(Vertex { point }))
+            .collect::<Vec<_>>();
+        vertices.rotate_right(1);
+
         let mut boundary = Vec::new();
         let mut boundary_approx = Vec::new();
 
         for i in 0..=last_segment_index {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
 
-            let segment = &self.segments[i];
             let prev = &self.segments[prev_i];
 
-            let vertices = [prev.to, segment.to]
-                .map(|point| surface.local_point_to_global(point))
-                .map(|point| topology.vertices.push(Vertex { point }));
+            let vertices = [vertices[prev_i], vertices[i]];
             let edge = topology.edges.push(Edge {
                 boundary: EdgeBoundary { vertices },
                 approx: Vec::new(),
@@ -101,6 +107,8 @@ struct SketchSegment {
 
 #[cfg(test)]
 mod tests {
+    use itertools::Itertools;
+
     use crate::{
         math::Point,
         new::{
@@ -142,7 +150,18 @@ mod tests {
             let boundary =
                 [a, b, c].map(|&half_edge| &topology.half_edges[half_edge]);
 
-            for half_edge in boundary {
+            for (prev, half_edge, next) in
+                boundary.into_iter().circular_tuple_windows()
+            {
+                assert_eq!(
+                    prev.boundary(&topology.edges)[1],
+                    half_edge.boundary(&topology.edges)[0]
+                );
+                assert_eq!(
+                    half_edge.boundary(&topology.edges)[1],
+                    next.boundary(&topology.edges)[0]
+                );
+
                 assert_eq!(half_edge.orientation, Orientation::Nominal);
             }
         }
