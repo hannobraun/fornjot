@@ -133,7 +133,7 @@ pub struct Edge {
 }
 
 /// # The boundary of an [`Edge`]
-#[derive(Clone, Debug, Eq, Ord, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialOrd, PartialEq)]
 pub struct EdgeBoundary {
     /// # The vertices that make up the boundary
     pub vertices: [Handle<Vertex>; 2],
