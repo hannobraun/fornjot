@@ -143,12 +143,12 @@ mod tests {
         {
             assert_eq!(half_face.boundary.len(), 3);
 
-            let boundary = half_face
+            for (prev, half_edge, next) in half_face
                 .boundary
                 .iter()
-                .map(|&half_edge| &topology.half_edges[half_edge]);
-
-            for (prev, half_edge, next) in boundary.circular_tuple_windows() {
+                .map(|&half_edge| &topology.half_edges[half_edge])
+                .circular_tuple_windows()
+            {
                 assert_eq!(
                     prev.boundary(&topology.edges)[1],
                     half_edge.boundary(&topology.edges)[0]
