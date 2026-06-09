@@ -141,14 +141,16 @@ mod tests {
             .into_half_face(Plane::xy(), &mut topology);
 
         {
-            let [a, b, c] = half_face.boundary.as_slice() else {
+            let [_, _, _] = half_face.boundary.as_slice() else {
                 panic!(
                     "Expected half-face to have a boundary of three half-edges."
                 );
             };
 
-            let boundary =
-                [a, b, c].map(|&half_edge| &topology.half_edges[half_edge]);
+            let boundary = half_face
+                .boundary
+                .iter()
+                .map(|&half_edge| &topology.half_edges[half_edge]);
 
             for (prev, half_edge, next) in
                 boundary.into_iter().circular_tuple_windows()
