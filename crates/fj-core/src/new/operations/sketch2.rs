@@ -39,8 +39,6 @@ impl Sketch2 {
         surface: Plane,
         topology: &mut Topology,
     ) -> HalfFace {
-        let _ = surface;
-
         let Some(last_segment_index) = self.segments.len().checked_sub(1)
         else {
             let empty_boundary = Vec::new();
