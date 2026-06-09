@@ -135,11 +135,18 @@ mod tests {
             .into_half_face(Plane::xy(), &mut topology);
 
         {
-            let [_, _, _] = half_face.boundary.as_slice() else {
+            let [a, b, c] = half_face.boundary.as_slice() else {
                 panic!(
                     "Expected half-face to have a boundary of three half-edges."
                 );
             };
+
+            let boundary =
+                [a, b, c].map(|&half_edge| &topology.half_edges[half_edge]);
+
+            for half_edge in boundary {
+                assert_eq!(half_edge.orientation, Orientation::Nominal);
+            }
         }
 
         {
