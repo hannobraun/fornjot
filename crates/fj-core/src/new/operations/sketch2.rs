@@ -140,10 +140,8 @@ mod tests {
             .line_to([0., 0.])
             .into_half_face(Plane::xy(), &mut topology);
 
-        {
-            assert_eq!(half_face.boundary.len(), 3);
-            check_connecting_vertices(&half_face, &topology);
-        }
+        assert_eq!(half_face.boundary.len(), 3);
+        check_connecting_vertices(&half_face, &topology);
 
         {
             let [triangle] = topology.faces[half_face.face].approx.as_slice()
