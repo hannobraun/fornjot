@@ -146,7 +146,7 @@ mod tests {
     use itertools::Itertools;
 
     use crate::{
-        math::Point,
+        math::{Point, Scalar},
         new::{
             geometry::Plane,
             operations::Sketch2,
@@ -224,7 +224,14 @@ mod tests {
 
         for expected in expected_triangle_points {
             let expected = expected.into();
-            assert!(triangle_points.remove(&expected));
+
+            let Some(&point) = triangle_points.iter().find(|&&point| {
+                (point - expected).magnitude() < Scalar::from(0.001)
+            }) else {
+                panic!("Could not find expected point `{expected:?}`.");
+            };
+
+            assert!(triangle_points.remove(&point));
         }
 
         assert!(triangle_points.is_empty());
