@@ -189,12 +189,13 @@ mod tests {
         expected: [[[f64; 3]; 3]; N],
     ) {
         let face = &topology.faces[half_face.face];
+        assert_eq!(face.approx.len(), expected.len());
+
         let mut triangles = face
             .approx
             .iter()
             .map(|triangle| triangle.points)
             .collect::<BTreeSet<_>>();
-        assert_eq!(triangles.len(), expected.len());
 
         for expected in expected {
             let [a, b, c] = expected.map(Point::from);
