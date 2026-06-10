@@ -178,21 +178,26 @@ mod tests {
         topology: &Topology,
         expected: [[[f64; 3]; 3]; N],
     ) {
-        let triangles = topology.faces[half_face.face]
+        let mut triangles = topology.faces[half_face.face]
             .approx
             .iter()
             .map(|triangle| triangle.points)
             .collect::<BTreeSet<_>>();
         assert_eq!(triangles.len(), expected.len());
 
-        for (triangle, expected) in triangles.into_iter().zip(expected) {
+        for expected in expected {
             let [a, b, c] = expected.map(Point::from);
 
-            assert!(
-                triangle == [a, b, c]
-                    || triangle == [b, c, a]
-                    || triangle == [c, a, b]
-            );
+            let mut num_found = 0;
+
+            for expected in [[a, b, c], [b, c, a], [c, a, b]] {
+                if triangles.contains(&expected) {
+                    triangles.remove(&expected);
+                    num_found += 1;
+                }
+            }
+
+            assert_eq!(num_found, 1);
         }
     }
 }
