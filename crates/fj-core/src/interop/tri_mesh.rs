@@ -14,12 +14,12 @@ pub struct TriMesh {
 }
 
 impl TriMesh {
-    /// Construct a new instance of `TriMesh`
+    /// # Construct an empty triangle mesh
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Construct a triangle mesh from a model
+    /// # Construct a triangle mesh from a model
     pub fn from_model(model: &Model) -> Self {
         let triangles = model.topology.solids[model.solid]
             .boundary
@@ -62,7 +62,7 @@ impl TriMesh {
         })
     }
 
-    /// Determine whether the mesh contains the provided triangle
+    /// # Determine whether the mesh contains the provided triangle
     ///
     /// Returns true, if a triangle with any combination of the provided points
     /// is part of the mesh.
