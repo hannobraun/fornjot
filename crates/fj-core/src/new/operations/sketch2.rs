@@ -184,7 +184,7 @@ mod tests {
             .collect::<BTreeSet<_>>();
         assert_eq!(triangles.len(), expected.len());
 
-        for (triangle, expected) in triangles.iter().zip(expected) {
+        for (triangle, expected) in triangles.into_iter().zip(expected) {
             let [a, b, c] = expected.map(Point::from);
 
             assert!(
