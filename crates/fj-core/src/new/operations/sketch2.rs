@@ -153,9 +153,6 @@ impl SketchSegmentGeometry {
         end: Point<2>,
         surface: &Plane,
     ) -> Vec<ApproxPoint<2>> {
-        let _ = start;
-        let _ = end;
-
         let approx = match *self {
             SketchSegmentGeometry::Arc { radius, tolerance } => {
                 let Some(start_to_end) = NonZero::new(end - start) else {
