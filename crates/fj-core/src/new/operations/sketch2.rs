@@ -181,6 +181,7 @@ mod tests {
         let triangles = topology.faces[half_face.face]
             .approx
             .iter()
+            .map(|triangle| triangle.points)
             .collect::<BTreeSet<_>>();
         assert_eq!(triangles.len(), expected.len());
 
@@ -188,9 +189,9 @@ mod tests {
             let [a, b, c] = expected.map(Point::from);
 
             assert!(
-                triangle.points == [a, b, c]
-                    || triangle.points == [b, c, a]
-                    || triangle.points == [c, a, b]
+                triangle == [a, b, c]
+                    || triangle == [b, c, a]
+                    || triangle == [c, a, b]
             );
         }
     }
