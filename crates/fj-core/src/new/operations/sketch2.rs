@@ -107,6 +107,8 @@ struct SketchSegment {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::BTreeSet;
+
     use itertools::Itertools;
 
     use crate::{
@@ -176,7 +178,10 @@ mod tests {
         topology: &Topology,
         expected: [[[f64; 3]; 3]; N],
     ) {
-        let triangles = &topology.faces[half_face.face].approx;
+        let triangles = topology.faces[half_face.face]
+            .approx
+            .iter()
+            .collect::<BTreeSet<_>>();
         assert_eq!(triangles.len(), expected.len());
 
         for (triangle, expected) in triangles.iter().zip(expected) {
