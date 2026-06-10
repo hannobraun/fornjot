@@ -24,7 +24,10 @@ impl Sketch2 {
 
     /// # Add a line segment to a given point
     pub fn line_to(mut self, to: impl Into<Point<2>>) -> Self {
-        self.segments.push(SketchSegment { to: to.into() });
+        self.segments.push(SketchSegment {
+            to: to.into(),
+            geometry: SketchSegmentGeometry::Line,
+        });
         self
     }
 
@@ -67,6 +70,7 @@ impl Sketch2 {
             let prev_i = i.checked_sub(1).unwrap_or(last_segment_index);
 
             let prev = &self.segments[prev_i];
+            let segment = &self.segments[i];
 
             let vertices = [vertices[prev_i], vertices[i]];
             let edge = topology.edges.push(Edge {
@@ -79,7 +83,9 @@ impl Sketch2 {
             });
             boundary.push(half_edge);
 
-            let curve = Vec::new();
+            let curve = match segment.geometry {
+                SketchSegmentGeometry::Line => Vec::new(),
+            };
             boundary_approx.push(ApproxHalfEdge::from_points(
                 prev.to, curve, half_edge, topology,
             ));
@@ -103,6 +109,11 @@ impl Sketch2 {
 
 struct SketchSegment {
     to: Point<2>,
+    geometry: SketchSegmentGeometry,
+}
+
+enum SketchSegmentGeometry {
+    Line,
 }
 
 #[cfg(test)]
