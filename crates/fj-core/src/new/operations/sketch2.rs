@@ -188,7 +188,8 @@ mod tests {
         topology: &Topology,
         expected: [[[f64; 3]; 3]; N],
     ) {
-        let mut triangles = topology.faces[half_face.face]
+        let face = &topology.faces[half_face.face];
+        let mut triangles = face
             .approx
             .iter()
             .map(|triangle| triangle.points)
