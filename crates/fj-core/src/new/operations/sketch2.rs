@@ -28,6 +28,7 @@ impl Sketch2 {
             to: to.into(),
             geometry: SketchSegmentGeometry::Line,
         });
+
         self
     }
 
