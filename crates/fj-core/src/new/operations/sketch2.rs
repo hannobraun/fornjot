@@ -223,8 +223,8 @@ mod tests {
             .collect::<BTreeSet<_>>();
 
         for expected in expected_triangle_points {
-            let point = expected.into();
-            assert!(triangle_points.remove(&point));
+            let expected = expected.into();
+            assert!(triangle_points.remove(&expected));
         }
 
         assert!(triangle_points.is_empty());
