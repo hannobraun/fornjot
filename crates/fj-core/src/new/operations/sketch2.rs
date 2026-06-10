@@ -83,7 +83,7 @@ impl Sketch2 {
             });
             boundary.push(half_edge);
 
-            let curve = segment.geometry.approx();
+            let curve = segment.geometry.approx(&surface);
             boundary_approx.push(ApproxHalfEdge::from_points(
                 prev.to, curve, half_edge, topology,
             ));
@@ -115,10 +115,18 @@ enum SketchSegmentGeometry {
 }
 
 impl SketchSegmentGeometry {
-    fn approx(&self) -> Vec<ApproxPoint<2>> {
-        match self {
+    fn approx(&self, surface: &Plane) -> Vec<ApproxPoint<2>> {
+        let approx = match self {
             SketchSegmentGeometry::Line => Vec::new(),
-        }
+        };
+
+        approx
+            .into_iter()
+            .map(|local| {
+                let global = surface.local_point_to_global(local);
+                ApproxPoint { local, global }
+            })
+            .collect()
     }
 }
 
