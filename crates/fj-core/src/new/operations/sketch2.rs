@@ -145,7 +145,7 @@ mod tests {
         check_approx(
             &half_face,
             &topology,
-            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
+            [[[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]],
         );
 
         assert_eq!(half_face.orientation, Orientation::Nominal);
@@ -171,22 +171,22 @@ mod tests {
         }
     }
 
-    fn check_approx(
+    fn check_approx<const N: usize>(
         half_face: &HalfFace,
         topology: &Topology,
-        expected: [[f64; 3]; 3],
+        expected: [[[f64; 3]; 3]; N],
     ) {
-        let [triangle] = topology.faces[half_face.face].approx.as_slice()
-        else {
-            panic!("Expected face approximation to consist of one triangle.");
-        };
+        let triangles = topology.faces[half_face.face].approx.as_slice();
+        assert_eq!(triangles.len(), expected.len());
 
-        let [a, b, c] = expected.map(Point::from);
+        for (triangle, expected) in triangles.iter().zip(expected) {
+            let [a, b, c] = expected.map(Point::from);
 
-        assert!(
-            triangle.points == [a, b, c]
-                || triangle.points == [b, c, a]
-                || triangle.points == [c, a, b]
-        );
+            assert!(
+                triangle.points == [a, b, c]
+                    || triangle.points == [b, c, a]
+                    || triangle.points == [c, a, b]
+            );
+        }
     }
 }
