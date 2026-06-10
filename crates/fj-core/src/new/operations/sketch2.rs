@@ -149,7 +149,6 @@ mod tests {
             &topology,
             [[[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]],
         );
-
         assert_eq!(half_face.orientation, Orientation::Nominal);
     }
 
