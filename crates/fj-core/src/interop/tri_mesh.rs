@@ -5,7 +5,7 @@ use crate::{
     math::{Aabb, Triangle},
     new::{
         Model,
-        topology::{HalfFace, Handle, Topology},
+        topology::{HalfFace, Topology},
     },
 };
 
@@ -24,22 +24,22 @@ impl TriMesh {
 
     /// # Construct a triangle mesh from a model
     pub fn from_model(model: &Model) -> Self {
-        let half_faces =
-            model.topology.solids[model.solid].boundary.iter().copied();
+        let half_faces = model.topology.solids[model.solid]
+            .boundary
+            .iter()
+            .map(|&half_face| &model.topology.half_faces[half_face]);
 
         Self::from_half_faces(half_faces, &model.topology)
     }
 
     /// # Construct a triangle mesh from half-faces
-    pub fn from_half_faces(
-        half_faces: impl IntoIterator<Item = Handle<HalfFace>>,
+    pub fn from_half_faces<'r>(
+        half_faces: impl IntoIterator<Item = &'r HalfFace>,
         topology: &Topology,
     ) -> Self {
         let triangles = half_faces
             .into_iter()
-            .flat_map(|half_face| {
-                topology.half_faces[half_face].approx(&topology.faces)
-            })
+            .flat_map(|half_face| half_face.approx(&topology.faces))
             .map(|triangle| MeshTriangle {
                 inner: triangle,
                 is_internal: false,
