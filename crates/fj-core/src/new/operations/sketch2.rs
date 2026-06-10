@@ -199,5 +199,7 @@ mod tests {
 
             assert_eq!(num_found, 1);
         }
+
+        assert!(triangles.is_empty());
     }
 }
