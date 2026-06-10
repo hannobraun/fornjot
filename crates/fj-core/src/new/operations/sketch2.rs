@@ -142,14 +142,11 @@ mod tests {
 
         assert_eq!(half_face.boundary.len(), 3);
         check_connecting_vertices(&half_face, &topology);
-
-        {
-            check_approx(
-                &half_face,
-                &topology,
-                [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
-            );
-        }
+        check_approx(
+            &half_face,
+            &topology,
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
+        );
 
         assert_eq!(half_face.orientation, Orientation::Nominal);
     }
