@@ -158,7 +158,8 @@ mod tests {
         check_approx(
             &half_face,
             &topology,
-            [[[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]]],
+            1,
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
         );
         assert_eq!(half_face.orientation, Orientation::Nominal);
     }
@@ -183,35 +184,26 @@ mod tests {
         }
     }
 
-    fn check_approx<const N: usize>(
+    fn check_approx(
         half_face: &HalfFace,
         topology: &Topology,
-        expected: [[[f64; 3]; 3]; N],
+        num_expected_triangles: usize,
+        expected_triangle_points: impl IntoIterator<Item = impl Into<Point<3>>>,
     ) {
         let face = &topology.faces[half_face.face];
-        assert_eq!(face.approx.len(), expected.len());
+        assert_eq!(face.approx.len(), num_expected_triangles);
 
-        let mut triangles = face
+        let mut triangle_points = face
             .approx
             .iter()
-            .map(|triangle| triangle.points)
+            .flat_map(|triangle| triangle.points)
             .collect::<BTreeSet<_>>();
 
-        for expected in expected {
-            let [a, b, c] = expected.map(Point::from);
-
-            let mut num_found = 0;
-
-            for expected in [[a, b, c], [b, c, a], [c, a, b]] {
-                if triangles.contains(&expected) {
-                    triangles.remove(&expected);
-                    num_found += 1;
-                }
-            }
-
-            assert_eq!(num_found, 1);
+        for point in expected_triangle_points {
+            let point = point.into();
+            assert!(triangle_points.remove(&point));
         }
 
-        assert!(triangles.is_empty());
+        assert!(triangle_points.is_empty());
     }
 }
