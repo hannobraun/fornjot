@@ -222,8 +222,8 @@ mod tests {
             .flat_map(|triangle| triangle.points)
             .collect::<BTreeSet<_>>();
 
-        for point in expected_triangle_points {
-            let point = point.into();
+        for expected in expected_triangle_points {
+            let point = expected.into();
             assert!(triangle_points.remove(&point));
         }
 
