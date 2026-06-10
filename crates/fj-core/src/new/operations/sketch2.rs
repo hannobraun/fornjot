@@ -1,7 +1,7 @@
 use crate::{
     math::Point,
     new::{
-        approx::{ApproxHalfEdge, face_approx},
+        approx::{ApproxHalfEdge, ApproxPoint, face_approx},
         geometry::Plane,
         topology::{
             Edge, EdgeBoundary, Face, HalfEdge, HalfFace, Orientation,
@@ -83,9 +83,7 @@ impl Sketch2 {
             });
             boundary.push(half_edge);
 
-            let curve = match segment.geometry {
-                SketchSegmentGeometry::Line => Vec::new(),
-            };
+            let curve = segment.geometry.approx();
             boundary_approx.push(ApproxHalfEdge::from_points(
                 prev.to, curve, half_edge, topology,
             ));
@@ -114,6 +112,14 @@ struct SketchSegment {
 
 enum SketchSegmentGeometry {
     Line,
+}
+
+impl SketchSegmentGeometry {
+    fn approx(&self) -> Vec<ApproxPoint<2>> {
+        match self {
+            SketchSegmentGeometry::Line => Vec::new(),
+        }
+    }
 }
 
 #[cfg(test)]
