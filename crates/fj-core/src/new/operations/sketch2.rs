@@ -144,20 +144,10 @@ mod tests {
         check_connecting_vertices(&half_face, &topology);
 
         {
-            let [triangle] = topology.faces[half_face.face].approx.as_slice()
-            else {
-                panic!(
-                    "Expected face approximation to consist of one triangle."
-                );
-            };
-
-            let [a, b, c] =
-                [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]].map(Point::from);
-
-            assert!(
-                triangle.points == [a, b, c]
-                    || triangle.points == [b, c, a]
-                    || triangle.points == [c, a, b]
+            check_approx(
+                &half_face,
+                &topology,
+                [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
             );
         }
 
@@ -182,5 +172,24 @@ mod tests {
 
             assert_eq!(half_edge.orientation, Orientation::Nominal);
         }
+    }
+
+    fn check_approx(
+        half_face: &HalfFace,
+        topology: &Topology,
+        expected: [[f64; 3]; 3],
+    ) {
+        let [triangle] = topology.faces[half_face.face].approx.as_slice()
+        else {
+            panic!("Expected face approximation to consist of one triangle.");
+        };
+
+        let [a, b, c] = expected.map(Point::from);
+
+        assert!(
+            triangle.points == [a, b, c]
+                || triangle.points == [b, c, a]
+                || triangle.points == [c, a, b]
+        );
     }
 }
