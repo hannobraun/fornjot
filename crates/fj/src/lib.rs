@@ -16,11 +16,11 @@ mod instance;
 mod process_model;
 mod viewer;
 
+pub mod core;
+
 pub use self::{
     cli::Arguments,
     debug::{DEBUG_WINDOW, DebugWindow},
     instance::{Error, Instance, Result},
     process_model::process_model,
 };
-
-pub use fj_core as core;

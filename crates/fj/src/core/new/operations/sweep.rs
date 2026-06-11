@@ -1,0 +1,201 @@
+use itertools::Itertools;
+
+use crate::core::{
+    math::Point,
+    new::{
+        approx::{ApproxAxis, ApproxHalfEdge, ApproxPoint, face_approx},
+        geometry::Curve,
+        operations::{Connect, Reverse, Translate},
+        topology::{Face, HalfFace, Handle, Orientation, Solid, Topology},
+    },
+};
+
+/// # Sweep a primitive along a curve to create another primitive
+#[derive(Default)]
+pub struct Sweep {}
+
+impl Sweep {
+    /// # Construct a new instance of `Sweep`
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// # Sweep a face into a solid body
+    ///
+    /// **Attention, this method is rather finicky** in regards to how the face
+    /// and the curve it is swept along must be oriented towards each other, to
+    /// produce a valid solid.
+    ///
+    /// In addition, the limitations are not well-tested, and thus not
+    /// well-understood at this point.
+    pub fn face_to_solid(
+        &mut self,
+        bottom: Handle<HalfFace>,
+        curve: &impl Curve,
+        topology: &mut Topology,
+    ) -> Handle<Solid> {
+        let approx = curve.approx();
+
+        let mut connect = Connect::new();
+        let mut reverse = Reverse::new();
+        let mut translate = Translate::new();
+
+        let bottom_inv = reverse.half_face(bottom, topology);
+
+        let top = {
+            let top = translate.half_face(
+                &bottom_inv,
+                curve.end().into_value(),
+                topology,
+            );
+            topology.half_faces.push(top)
+        };
+
+        let bottom_edges_for_sides = bottom_inv.boundary.clone();
+        let top_edges_for_sides = {
+            let mut top_edges =
+                reverse.half_face(top, topology).boundary.clone();
+
+            top_edges.reverse();
+
+            top_edges
+        };
+
+        let bottom_vertices = bottom_edges_for_sides
+            .iter()
+            .copied()
+            .map(|e| {
+                let [v, _] = topology.half_edges[e].boundary(&topology.edges);
+                v
+            })
+            .collect::<Vec<_>>();
+        let top_vertices = top_edges_for_sides
+            .iter()
+            .copied()
+            .map(|e| {
+                let [_, v] = topology.half_edges[e].boundary(&topology.edges);
+                v
+            })
+            .collect::<Vec<_>>();
+
+        let (side_edges_going_up, side_edges_going_down) = {
+            let mut side_edges_going_up = bottom_vertices
+                .iter()
+                .copied()
+                .zip(top_vertices.iter().copied())
+                .map(|(v_bottom, v_top)| {
+                    connect.vertices(
+                        [v_bottom, v_top],
+                        approx
+                            .iter()
+                            .copied()
+                            .map(|vector| {
+                                topology.vertices[v_bottom].point + vector
+                            })
+                            .collect::<Vec<_>>(),
+                        topology,
+                    )
+                })
+                .collect::<Vec<_>>();
+
+            // Both lists of side edges need to line up, so that the same index
+            // refers to an edge for the same face. This makes some shuffling
+            // necessary.
+            side_edges_going_up.rotate_left(1);
+
+            let side_edges_going_down = top_vertices
+                .into_iter()
+                .zip(bottom_vertices)
+                .map(|(v_top, v_bottom)| {
+                    connect.vertices(
+                        [v_top, v_bottom],
+                        approx
+                            .iter()
+                            .copied()
+                            .rev()
+                            .map(|vector| {
+                                topology.vertices[v_bottom].point + vector
+                            })
+                            .collect::<Vec<_>>(),
+                        topology,
+                    )
+                })
+                .collect::<Vec<_>>();
+
+            (side_edges_going_up, side_edges_going_down)
+        };
+
+        let side_faces = bottom_edges_for_sides
+            .into_iter()
+            .zip(side_edges_going_up)
+            .zip(top_edges_for_sides)
+            .zip(side_edges_going_down)
+            .map(|(((bottom, right), top), left)| {
+                let boundary = [
+                    ApproxHalfEdge::from_start_and_axes(
+                        [0., 0.],
+                        ApproxAxis::Uniform { reverse: false },
+                        ApproxAxis::fixed(0.),
+                        bottom,
+                        topology,
+                    ),
+                    ApproxHalfEdge::from_start_and_axes(
+                        [1., 0.],
+                        ApproxAxis::fixed(1.),
+                        ApproxAxis::Uniform { reverse: false },
+                        right,
+                        topology,
+                    ),
+                    ApproxHalfEdge::from_start_and_axes(
+                        [1., 1.],
+                        ApproxAxis::Uniform { reverse: true },
+                        ApproxAxis::fixed(1.),
+                        top,
+                        topology,
+                    ),
+                    ApproxHalfEdge::from_start_and_axes(
+                        [0., 1.],
+                        ApproxAxis::fixed(0.),
+                        ApproxAxis::Uniform { reverse: true },
+                        left,
+                        topology,
+                    ),
+                ];
+                let surface = {
+                    let [bottom, right, _, _] = &boundary;
+
+                    let u = bottom.curve.iter().map(|point| point.local.u);
+                    let v = right.curve.iter().map(|point| point.local.v);
+
+                    let local = u
+                        .cartesian_product(v)
+                        .map(|(u, v)| Point::from([u, v]));
+                    let global = bottom
+                        .curve
+                        .iter()
+                        .map(|point| point.global)
+                        .cartesian_product(approx.iter().copied())
+                        .map(|(point, vector)| point + vector);
+
+                    local
+                        .zip(global)
+                        .map(|(local, global)| ApproxPoint { local, global })
+                };
+
+                let approx = face_approx(&boundary, surface);
+
+                let face = topology.faces.push(Face { approx });
+                topology.half_faces.push(HalfFace {
+                    boundary: vec![bottom, right, top, left],
+                    face,
+                    orientation: Orientation::Nominal,
+                })
+            });
+
+        let all_faces = [bottom, top].into_iter().chain(side_faces).collect();
+
+        topology.solids.push(Solid {
+            boundary: all_faces,
+        })
+    }
+}

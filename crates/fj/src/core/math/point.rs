@@ -1,0 +1,335 @@
+use std::{fmt, ops};
+
+use super::{
+    Scalar, Vector,
+    coordinates::{T, Uv, Xyz},
+};
+
+/// # An n-dimensional point
+///
+/// The dimensionality of the point is defined by the const generic `D`
+/// parameter.
+#[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[repr(C)]
+pub struct Point<const D: usize> {
+    /// # The coordinates of the point
+    pub coords: Vector<D>,
+}
+
+impl<const D: usize> Point<D> {
+    /// # Construct a `Point` at the origin of the coordinate system
+    pub fn origin() -> Self {
+        nalgebra::Point::<_, D>::origin().into()
+    }
+
+    /// # Construct a `Point` from an array
+    pub fn from_array(array: [f64; D]) -> Self {
+        Self {
+            coords: array.map(Scalar::from_f64).into(),
+        }
+    }
+
+    /// # Construct "minimum" point from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided points, the new point
+    /// will have the minimum of each.
+    pub fn min(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let coords = Vector::min(a.into().coords, b.into().coords);
+        Self { coords }
+    }
+
+    /// # Construct "maximum" point from the provided ones
+    ///
+    /// For each pair of coordinates of the two provided points, the new point
+    /// will have the maximum of each.
+    pub fn max(a: impl Into<Self>, b: impl Into<Self>) -> Self {
+        let coords = Vector::max(a.into().coords, b.into().coords);
+        Self { coords }
+    }
+
+    /// # Construct a `Point` from an nalgebra vector
+    pub fn from_na(point: nalgebra::Point<f64, D>) -> Self {
+        Self {
+            coords: point.coords.into(),
+        }
+    }
+
+    /// # Convert the point into an nalgebra point
+    pub fn to_na(self) -> nalgebra::Point<f64, D> {
+        nalgebra::Point {
+            coords: self.coords.into(),
+        }
+    }
+
+    /// Convert the point to a 3-dimensional point
+    ///
+    /// See [`Vector::to_xyz`] for details. This method follows the same rules.
+    pub fn to_xyz(self) -> Point<3> {
+        Point {
+            coords: self.coords.to_xyz(),
+        }
+    }
+
+    /// # Compute the distance between two points
+    pub fn distance_to(&self, other: &Self) -> Scalar {
+        (self.coords - other.coords).magnitude()
+    }
+
+    /// # Transform the point by calling [`Scalar::floor`] on its components
+    pub fn floor(self) -> Self {
+        Self {
+            coords: self.coords.floor(),
+        }
+    }
+}
+
+impl ops::Deref for Point<1> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::Deref for Point<2> {
+    type Target = Uv;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::Deref for Point<3> {
+    type Target = Xyz;
+
+    fn deref(&self) -> &Self::Target {
+        self.coords.deref()
+    }
+}
+
+impl ops::DerefMut for Point<1> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<2> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl ops::DerefMut for Point<3> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.coords.deref_mut()
+    }
+}
+
+impl<const D: usize> From<[Scalar; D]> for Point<D> {
+    fn from(array: [Scalar; D]) -> Self {
+        Self {
+            coords: array.into(),
+        }
+    }
+}
+
+impl<const D: usize> From<[f64; D]> for Point<D> {
+    fn from(array: [f64; D]) -> Self {
+        Self::from_array(array)
+    }
+}
+
+impl<const D: usize> From<nalgebra::Point<f64, D>> for Point<D> {
+    fn from(point: nalgebra::Point<f64, D>) -> Self {
+        Self::from_na(point)
+    }
+}
+
+impl<const D: usize> From<Point<D>> for [f32; D] {
+    fn from(point: Point<D>) -> Self {
+        point.coords.into()
+    }
+}
+
+impl<const D: usize> From<Point<D>> for [f64; D] {
+    fn from(point: Point<D>) -> Self {
+        point.coords.into()
+    }
+}
+
+impl<const D: usize> From<Point<D>> for [Scalar; D] {
+    fn from(point: Point<D>) -> Self {
+        point.coords.into()
+    }
+}
+
+impl<const D: usize> ops::Neg for Point<D> {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self {
+            coords: self.coords.neg(),
+        }
+    }
+}
+
+impl<const D: usize> ops::Sub<Self> for Point<D> {
+    type Output = Vector<D>;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        self.coords.sub(rhs.coords)
+    }
+}
+
+impl<S, const D: usize> ops::Mul<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn mul(self, s: S) -> Self::Output {
+        Self {
+            coords: self.coords * s.into(),
+        }
+    }
+}
+
+impl<S, const D: usize> ops::MulAssign<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    fn mul_assign(&mut self, s: S) {
+        *self = *self * s.into()
+    }
+}
+
+impl<S, const D: usize> ops::Div<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn div(self, s: S) -> Self::Output {
+        Self {
+            coords: self.coords / s.into(),
+        }
+    }
+}
+
+impl<S, const D: usize> ops::DivAssign<S> for Point<D>
+where
+    S: Into<Scalar>,
+{
+    fn div_assign(&mut self, s: S) {
+        *self = *self / s.into()
+    }
+}
+
+impl<V, const D: usize> ops::Add<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    type Output = Self;
+
+    fn add(self, rhs: V) -> Self::Output {
+        Self {
+            coords: self.coords.add(rhs),
+        }
+    }
+}
+
+impl<V, const D: usize> ops::AddAssign<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    fn add_assign(&mut self, rhs: V) {
+        *self = *self + rhs;
+    }
+}
+
+impl<V, const D: usize> ops::Sub<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: V) -> Self::Output {
+        Self {
+            coords: self.coords.sub(rhs),
+        }
+    }
+}
+
+impl<V, const D: usize> ops::SubAssign<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    fn sub_assign(&mut self, v: V) {
+        *self = *self - v.into();
+    }
+}
+
+impl<const D: usize> ops::Mul<Vector<D>> for Point<D> {
+    type Output = Self;
+
+    fn mul(self, v: Vector<D>) -> Self::Output {
+        Self {
+            coords: self.coords * v,
+        }
+    }
+}
+
+impl<const D: usize> ops::MulAssign<Vector<D>> for Point<D> {
+    fn mul_assign(&mut self, v: Vector<D>) {
+        *self = *self * v
+    }
+}
+
+impl<const D: usize> ops::Div<Vector<D>> for Point<D> {
+    type Output = Self;
+
+    fn div(self, v: Vector<D>) -> Self::Output {
+        Self {
+            coords: self.coords / v,
+        }
+    }
+}
+
+impl<const D: usize> ops::DivAssign<Vector<D>> for Point<D> {
+    fn div_assign(&mut self, v: Vector<D>) {
+        *self = *self / v
+    }
+}
+
+impl<const D: usize> fmt::Debug for Point<D> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.coords.fmt(f)
+    }
+}
+
+impl<const D: usize> approx::AbsDiffEq for Point<D> {
+    type Epsilon = <Vector<D> as approx::AbsDiffEq>::Epsilon;
+
+    fn default_epsilon() -> Self::Epsilon {
+        Scalar::default_epsilon()
+    }
+
+    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
+        self.coords.abs_diff_eq(&other.coords, epsilon)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::core::math::Point;
+
+    #[test]
+    fn min() {
+        assert_eq!(Point::min([1., 2.], [2., 1.]), Point::from([1., 1.]));
+    }
+
+    #[test]
+    fn max() {
+        assert_eq!(Point::max([1., 2.], [2., 1.]), Point::from([2., 2.]));
+    }
+}

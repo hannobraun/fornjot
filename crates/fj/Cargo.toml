@@ -18,15 +18,25 @@ workspace = true
 fj-core.workspace = true
 fj-export.workspace = true
 fj-viewer.workspace = true
+approx = "0.5.1"
+decorum = "0.4.0"
 futures = "0.3.32"
+geo = "0.33.1"
 glyphon = "0.11.0" # must always stay compatible with `wgpu`
+iter_fixed = "0.4.0"
 itertools = "0.14.0"
 nalgebra = "0.35.0"
+num-traits = "0.2.19"
+parking_lot = "0.12.5"
+parry3d-f64 = "0.28.0"
+robust = "1.2.0"
+spade = "2.15.1"
 stl = "0.2.1"
 thiserror = "2.0.18"
 threemf = "0.8.0"
 tobj = "4.0.3"
 tracing = "0.1.44"
+type-map = "0.5.1"
 wavefront_rs = "=2.0.0-beta.1"
 winit = "0.30.13"
 
@@ -57,3 +67,7 @@ features = ["webgl"]
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 version = "0.3.4"
 features = ["wasm_js"]
+
+[dev-dependencies]
+anyhow = "1.0.102"
+pretty_assertions = "1.4.1"
