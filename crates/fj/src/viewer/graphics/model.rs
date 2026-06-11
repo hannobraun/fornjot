@@ -3,7 +3,7 @@ use std::ops::Range;
 use tobj::LoadError;
 use wgpu::util::DeviceExt;
 
-use crate::assets::Assets;
+use crate::viewer::assets::Assets;
 
 use super::texture::{self, LoadTextureError};
 

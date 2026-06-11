@@ -7,10 +7,12 @@ use fj_core::{
     math::{Aabb, Point, Scalar},
     validation::{ValidationConfig, ValidationErrors},
 };
-use fj_viewer::make_viewer_and_spawn_thread;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{Arguments, export, viewer};
+use crate::{
+    Arguments, export,
+    viewer::{self, make_viewer_and_spawn_thread},
+};
 
 /// An instance of Fornjot
 ///

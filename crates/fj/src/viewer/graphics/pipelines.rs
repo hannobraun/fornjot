@@ -1,6 +1,6 @@
 use std::mem::size_of;
 
-use crate::graphics::MULTISAMPLE_STATE;
+use crate::viewer::graphics::MULTISAMPLE_STATE;
 
 use super::{
     DEPTH_FORMAT, DrawConfig,

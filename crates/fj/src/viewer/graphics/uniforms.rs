@@ -1,6 +1,6 @@
 use bytemuck::{Pod, Zeroable};
 
-use crate::graphics::transform::NativeTransform;
+use crate::viewer::graphics::transform::NativeTransform;
 
 use super::transform::Transform;
 

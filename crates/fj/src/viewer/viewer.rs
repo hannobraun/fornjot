@@ -19,7 +19,7 @@ use winit::{
     window::WindowId,
 };
 
-use crate::{
+use crate::viewer::{
     RendererInitError,
     input::DEFAULT_CAMERA_TUNING_CONFIG,
     window::{Displayable, PointWithLabel, Window},
@@ -262,9 +262,11 @@ impl ApplicationHandler<EventLoopEvent> for Viewer {
             }
             WindowEvent::MouseInput { state, button, .. } => {
                 let button = match button {
-                    MouseButton::Left => Some(crate::input::MouseButton::Left),
+                    MouseButton::Left => {
+                        Some(crate::viewer::input::MouseButton::Left)
+                    }
                     MouseButton::Right => {
-                        Some(crate::input::MouseButton::Right)
+                        Some(crate::viewer::input::MouseButton::Right)
                     }
                     _ => None,
                 };

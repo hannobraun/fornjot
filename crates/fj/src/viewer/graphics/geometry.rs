@@ -2,7 +2,7 @@ use std::convert::TryInto;
 
 use wgpu::util::DeviceExt;
 
-use crate::graphics::{RenderMode, text::Label};
+use crate::viewer::graphics::{RenderMode, text::Label};
 
 use super::vertices::Vertex;
 

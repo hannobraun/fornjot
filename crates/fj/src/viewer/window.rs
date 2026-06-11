@@ -9,7 +9,7 @@ use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
-use crate::{
+use crate::viewer::{
     RendererInitError,
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, RenderMode, Renderer, Vertices},

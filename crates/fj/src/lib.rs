@@ -14,6 +14,7 @@ mod debug;
 mod export;
 mod instance;
 mod process_model;
+mod viewer;
 
 pub use self::{
     cli::Arguments,
@@ -23,4 +24,3 @@ pub use self::{
 };
 
 pub use fj_core as core;
-pub use fj_viewer as viewer;

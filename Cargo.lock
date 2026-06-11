@@ -1150,16 +1150,26 @@ checksum = "5baebc0774151f905a1a2cc41989300b1e6fbb29aff0ceffa1064fdd3088d582"
 name = "fj"
 version = "0.49.0"
 dependencies = [
+ "bytemuck",
  "clap",
  "fj-core",
  "fj-export",
  "fj-viewer",
+ "futures",
+ "getrandom 0.3.4",
+ "glyphon",
+ "image",
+ "itertools",
+ "nalgebra",
  "stl",
  "thiserror 2.0.18",
  "threemf",
+ "tobj",
  "tracing",
  "tracing-subscriber",
  "wavefront_rs",
+ "wgpu",
+ "winit",
 ]
 
 [[package]]

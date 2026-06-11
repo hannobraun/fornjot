@@ -18,16 +18,42 @@ workspace = true
 fj-core.workspace = true
 fj-export.workspace = true
 fj-viewer.workspace = true
+futures = "0.3.32"
+glyphon = "0.11.0" # must always stay compatible with `wgpu`
+itertools = "0.14.0"
+nalgebra = "0.35.0"
 stl = "0.2.1"
 thiserror = "2.0.18"
 threemf = "0.8.0"
+tobj = "4.0.3"
 tracing = "0.1.44"
 wavefront_rs = "=2.0.0-beta.1"
+winit = "0.30.13"
+
+[dependencies.bytemuck]
+version = "1.25.0"
+features = ["derive"]
 
 [dependencies.clap]
 version = "4.6.1"
 features = ["derive"]
 
+[dependencies.image]
+version = "0.25"
+default-features = false
+features = ["png", "jpeg"]
+
 [dependencies.tracing-subscriber]
 version = "0.3.23"
 features = ["env-filter"]
+
+[dependencies.wgpu]
+version = "29.0.1" # must always stay compatible with `glyphon`
+features = ["webgl"]
+
+# We don't depend on `getrandom` directly, but we need this to enable the
+# `wasm_js` feature when cross-compiling to WASM. Otherwise, `getrandom` will
+# not build.
+[target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
+version = "0.3.4"
+features = ["wasm_js"]

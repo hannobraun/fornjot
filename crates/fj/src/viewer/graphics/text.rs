@@ -1,7 +1,9 @@
 use fj_core::math::{Point, Vector};
 use glyphon::{FontSystem, TextArea, TextBounds};
 
-use crate::graphics::{DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform};
+use crate::viewer::graphics::{
+    DEPTH_FORMAT, MULTISAMPLE_STATE, transform::Transform,
+};
 
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,

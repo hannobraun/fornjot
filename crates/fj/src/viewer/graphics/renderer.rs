@@ -6,7 +6,7 @@ use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::{
+use crate::viewer::{
     camera::Camera,
     graphics::{
         RenderMode,

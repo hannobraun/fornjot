@@ -6,7 +6,7 @@ use fj_core::{
     math::{Aabb, Point, Scalar, Transform, Vector},
 };
 
-use crate::window::NormalizedScreenPosition;
+use crate::viewer::window::NormalizedScreenPosition;
 
 /// The camera abstraction
 ///

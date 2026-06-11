@@ -1,6 +1,6 @@
 use nalgebra::Perspective3;
 
-use crate::camera::Camera;
+use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy)]
 pub struct Transform {
