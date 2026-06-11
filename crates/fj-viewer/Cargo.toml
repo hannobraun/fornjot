@@ -12,36 +12,3 @@ categories.workspace = true
 
 [lints]
 workspace = true
-
-
-[dependencies]
-fj-core.workspace = true
-futures = "0.3.32"
-nalgebra = "0.35.0"
-tobj = "4.0.3"
-raw-window-handle = "0.6.0"
-thiserror = "2.0.18"
-tracing = "0.1.44"
-winit = "0.30.13"
-glyphon = "0.11.0" # must always stay compatible with `wgpu`
-itertools = "0.14.0"
-
-[dependencies.bytemuck]
-version = "1.25.0"
-features = ["derive"]
-
-[dependencies.image]
-version = "0.25"
-default-features = false
-features = ["png", "jpeg"]
-
-[dependencies.wgpu]
-version = "29.0.1" # must always stay compatible with `glyphon`
-features = ["webgl"]
-
-# We don't depend on `getrandom` directly, but we need this to enable the
-# `wasm_js` feature when cross-compiling to WASM. Otherwise, `getrandom` will
-# not build.
-[target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
-version = "0.3.4"
-features = ["wasm_js"]
