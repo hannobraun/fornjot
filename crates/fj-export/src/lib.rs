@@ -149,7 +149,7 @@ pub fn export_obj(
                         w: None,
                     },
                 )
-                .or(Err(Error::OBJ))?;
+                .or(Err(Error::Obj))?;
         }
 
         // write the triangle
@@ -176,7 +176,7 @@ pub fn export_obj(
                     ],
                 },
             )
-            .or(Err(Error::OBJ))?;
+            .or(Err(Error::Obj))?;
     }
 
     Ok(())
@@ -207,5 +207,5 @@ pub enum Error {
 
     /// OBJ exporter error whilst exporting to OBJ file
     #[error("obj error whilst exporting to OBJ file")]
-    OBJ,
+    Obj,
 }
