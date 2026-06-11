@@ -18,8 +18,11 @@ workspace = true
 fj-core.workspace = true
 fj-export.workspace = true
 fj-viewer.workspace = true
+stl = "0.2.1"
 thiserror = "2.0.18"
+threemf = "0.8.0"
 tracing = "0.1.44"
+wavefront_rs = "=2.0.0-beta.1"
 
 [dependencies.clap]
 version = "4.6.1"

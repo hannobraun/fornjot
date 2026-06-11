@@ -11,6 +11,7 @@
 
 mod cli;
 mod debug;
+mod export;
 mod instance;
 mod process_model;
 
@@ -22,5 +23,4 @@ pub use self::{
 };
 
 pub use fj_core as core;
-pub use fj_export as export;
 pub use fj_viewer as viewer;

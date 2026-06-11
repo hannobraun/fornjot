@@ -1154,9 +1154,12 @@ dependencies = [
  "fj-core",
  "fj-export",
  "fj-viewer",
+ "stl",
  "thiserror 2.0.18",
+ "threemf",
  "tracing",
  "tracing-subscriber",
+ "wavefront_rs",
 ]
 
 [[package]]
