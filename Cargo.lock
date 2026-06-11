@@ -1186,13 +1186,6 @@ dependencies = [
 [[package]]
 name = "fj-export"
 version = "0.49.0"
-dependencies = [
- "fj-core",
- "stl",
- "thiserror 2.0.18",
- "threemf",
- "wavefront_rs",
-]
 
 [[package]]
 name = "fj-interop"
