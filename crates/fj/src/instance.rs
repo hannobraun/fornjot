@@ -1,16 +1,19 @@
 use std::{error::Error as _, fmt};
 
-use fj_core::{
-    Core,
-    algorithms::{bounding_volume::BoundingVolume, triangulate::Triangulate},
-    approx::{InvalidTolerance, Tolerance},
-    math::{Aabb, Point, Scalar},
-    validation::{ValidationConfig, ValidationErrors},
-};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::{
-    Arguments, export,
+    Arguments,
+    core::{
+        Core,
+        algorithms::{
+            bounding_volume::BoundingVolume, triangulate::Triangulate,
+        },
+        approx::{InvalidTolerance, Tolerance},
+        math::{Aabb, Point, Scalar},
+        validation::{ValidationConfig, ValidationErrors},
+    },
+    export,
     viewer::{self, make_viewer_and_spawn_thread},
 };
 
@@ -31,7 +34,7 @@ impl Instance {
 
     /// Construct an instance of `Instance`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let core = fj_core::Core::with_validation_config(config);
+        let core = crate::core::Core::with_validation_config(config);
         Self { core }
     }
 

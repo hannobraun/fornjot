@@ -1,19 +1,21 @@
 use std::sync::Arc;
 
-use fj_core::{
-    interop::TriMesh,
-    math::{Aabb, Point},
-    new::Model,
-};
 use itertools::Itertools;
 use tracing::warn;
 use winit::{dpi::PhysicalSize, event_loop::ActiveEventLoop};
 
-use crate::viewer::{
-    RendererInitError,
-    camera::{Camera, FocusPoint},
-    graphics::{DrawConfig, RenderMode, Renderer, Vertices},
-    input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+use crate::{
+    core::{
+        interop::TriMesh,
+        math::{Aabb, Point},
+        new::Model,
+    },
+    viewer::{
+        RendererInitError,
+        camera::{Camera, FocusPoint},
+        graphics::{DrawConfig, RenderMode, Renderer, Vertices},
+        input::{DEFAULT_CAMERA_TUNING_CONFIG, MouseButton},
+    },
 };
 
 pub struct Window {

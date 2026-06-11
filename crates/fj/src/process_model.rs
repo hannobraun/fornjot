@@ -1,6 +1,7 @@
-use fj_core::{interop::TriMesh, new::Model};
-
-use crate::{Arguments, Result};
+use crate::{
+    Arguments, Result,
+    core::{interop::TriMesh, new::Model},
+};
 
 /// # Process a model, according to the provided arguments
 ///

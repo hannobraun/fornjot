@@ -1,16 +1,18 @@
 use std::{io, mem::size_of, sync::Arc, vec};
 
-use fj_core::math::Point;
 use thiserror::Error;
 use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 use winit::dpi::PhysicalSize;
 
-use crate::viewer::{
-    camera::Camera,
-    graphics::{
-        RenderMode,
-        text::{TextDrawError, TextRenderer},
+use crate::{
+    core::math::Point,
+    viewer::{
+        camera::Camera,
+        graphics::{
+            RenderMode,
+            text::{TextDrawError, TextRenderer},
+        },
     },
 };
 

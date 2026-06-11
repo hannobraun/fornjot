@@ -5,7 +5,6 @@ use std::{
     thread,
 };
 
-use fj_core::{interop::TriMesh, math::Point, new::Model};
 use futures::executor::block_on;
 use winit::{
     application::ApplicationHandler,
@@ -19,10 +18,13 @@ use winit::{
     window::WindowId,
 };
 
-use crate::viewer::{
-    RendererInitError,
-    input::DEFAULT_CAMERA_TUNING_CONFIG,
-    window::{Displayable, PointWithLabel, Window},
+use crate::{
+    core::{interop::TriMesh, math::Point, new::Model},
+    viewer::{
+        RendererInitError,
+        input::DEFAULT_CAMERA_TUNING_CONFIG,
+        window::{Displayable, PointWithLabel, Window},
+    },
 };
 
 /// # Create a model viewer and spawn a new thread where to use it

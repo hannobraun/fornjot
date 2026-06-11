@@ -4,12 +4,12 @@ use crate::viewer::camera::Camera;
 
 #[derive(Clone, Copy)]
 pub struct Transform {
-    inner: fj_core::math::Transform,
+    inner: crate::core::math::Transform,
 }
 
 impl Transform {
     pub fn identity() -> Self {
-        Self::from(fj_core::math::Transform::identity())
+        Self::from(crate::core::math::Transform::identity())
     }
 
     /// Compute transform used for vertices
@@ -24,7 +24,7 @@ impl Transform {
         );
 
         Self {
-            inner: fj_core::math::Transform {
+            inner: crate::core::math::Transform {
                 inner: perspective.to_projective()
                     * camera.model_to_camera().inner,
             },
@@ -41,7 +41,7 @@ impl Transform {
         Self::from(transform)
     }
 
-    pub fn inner(&self) -> &fj_core::math::Transform {
+    pub fn inner(&self) -> &crate::core::math::Transform {
         &self.inner
     }
 
@@ -53,8 +53,8 @@ impl Transform {
     }
 }
 
-impl From<fj_core::math::Transform> for Transform {
-    fn from(transform: fj_core::math::Transform) -> Self {
+impl From<crate::core::math::Transform> for Transform {
+    fn from(transform: crate::core::math::Transform) -> Self {
         Self { inner: transform }
     }
 }

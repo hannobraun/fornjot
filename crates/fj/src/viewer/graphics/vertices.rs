@@ -1,4 +1,4 @@
-use fj_core::{
+use crate::core::{
     interop::{Index, TriMesh, vertices_to_indexed_vertices},
     math::{Point, Scalar},
 };

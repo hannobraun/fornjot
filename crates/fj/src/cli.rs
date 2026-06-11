@@ -1,6 +1,6 @@
 use std::{num::ParseFloatError, path::PathBuf, str::FromStr};
 
-use fj_core::{
+use crate::core::{
     approx::{InvalidTolerance, Tolerance},
     math::Scalar,
 };

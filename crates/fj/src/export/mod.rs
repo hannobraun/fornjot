@@ -8,7 +8,7 @@ use std::{
 
 use thiserror::Error;
 
-use fj_core::{interop::vertices_to_indexed_vertices, math::Triangle};
+use crate::core::{interop::vertices_to_indexed_vertices, math::Triangle};
 
 /// # Export the provided mesh to the file at the given path
 ///

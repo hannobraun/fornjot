@@ -1,12 +1,13 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
-use fj_core::{
-    interop::TriMesh,
-    math::{Aabb, Point, Scalar, Transform, Vector},
+use crate::{
+    core::{
+        interop::TriMesh,
+        math::{Aabb, Point, Scalar, Transform, Vector},
+    },
+    viewer::window::NormalizedScreenPosition,
 };
-
-use crate::viewer::window::NormalizedScreenPosition;
 
 /// The camera abstraction
 ///
