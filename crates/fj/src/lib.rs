@@ -17,6 +17,7 @@ mod process_model;
 mod viewer;
 
 pub mod core;
+pub mod tests;
 
 pub use self::{
     cli::Arguments,
