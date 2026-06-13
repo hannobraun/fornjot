@@ -14,10 +14,10 @@ mod debug;
 mod export;
 mod instance;
 mod process_model;
-mod viewer;
 
 pub mod core;
 pub mod tests;
+pub mod viewer;
 
 pub use self::{
     cli::Arguments,
