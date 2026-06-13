@@ -12,7 +12,7 @@ use crate::core::{
 /// means that all [`HalfEdge`]s that bound a `Region` have the interior of the
 /// region on their left side (on the region's front side).
 ///
-/// [`HalfEdge`]: crate::topology::HalfEdge
+/// [`HalfEdge`]: crate::core::topology::HalfEdge
 #[derive(Clone, Debug)]
 pub struct Region {
     exterior: Handle<Cycle>,

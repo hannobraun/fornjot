@@ -14,7 +14,7 @@ use crate::core::{
 /// Coincident half-edges within the same shell must be siblings, for the solid
 /// to be valid.
 ///
-/// [`Edge`]: crate::new::topology::Edge
+/// [`Edge`]: crate::core::new::topology::Edge
 pub struct CoincidentNonSiblingHalfEdges {
     /// # The coincident, non-sibling half-edges
     pub half_edges: [Handle<HalfEdge>; 2],

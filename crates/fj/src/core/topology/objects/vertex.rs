@@ -24,9 +24,9 @@
 /// bugs, if left unchecked.
 ///
 /// With [`Vertex`], we can provide a unique identity to each point where it is
-/// computed. This allows [validation code](crate::validate) to exist, which can
-/// identify where our code generates multiple distinct points that might end up
-/// in slightly different positions in a real-life scenario.
+/// computed. This allows [validation code](crate::core::validate) to exist,
+/// which can identify where our code generates multiple distinct points that
+/// might end up in slightly different positions in a real-life scenario.
 ///
 ///
 /// ## Positions
@@ -78,11 +78,11 @@
 /// `Eq`/`Ord`/..., you can use `HandleWrapper<Vertex>` to do that. It will
 /// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 ///
-/// [`HalfEdge`]: crate::topology::HalfEdge
-/// [`Handle`]: crate::storage::Handle
-/// [`Sketch`]: crate::topology::Sketch
-/// [`Solid`]: crate::topology::Solid
-/// [`Surface`]: crate::topology::Surface
+/// [`HalfEdge`]: crate::core::topology::HalfEdge
+/// [`Handle`]: crate::core::storage::Handle
+/// [`Sketch`]: crate::core::topology::Sketch
+/// [`Solid`]: crate::core::topology::Solid
+/// [`Surface`]: crate::core::topology::Surface
 #[derive(Clone, Debug, Default)]
 pub struct Vertex {}
 

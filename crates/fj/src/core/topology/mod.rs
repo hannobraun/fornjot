@@ -10,7 +10,7 @@
 //! All objects are stored in centralized storage (see [`Topology`]) and
 //! referred to through a [`Handle`].
 //!
-//! [`Handle`]: crate::storage::Handle
+//! [`Handle`]: crate::core::storage::Handle
 
 mod any_object;
 mod is_object;

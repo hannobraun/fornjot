@@ -87,8 +87,8 @@
 //! <https://doc.rust-lang.org/beta/unstable-book/language-features/arbitrary-self-types.html>
 //!
 //!
-//! [`Handle`]: crate::storage::Handle
-//! [update operations]: crate::operations::update
+//! [`Handle`]: crate::core::storage::Handle
+//! [update operations]: crate::core::operations::update
 
 mod curve;
 mod half_edge;

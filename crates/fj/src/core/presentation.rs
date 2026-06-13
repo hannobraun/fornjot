@@ -13,7 +13,7 @@ use crate::core::{interop::Color, storage::Handle, topology::Region};
 ///
 /// This data is made available through [`Layers`].
 ///
-/// [`Layers`]: crate::layers::Layers
+/// [`Layers`]: crate::core::layers::Layers
 #[derive(Default)]
 pub struct Presentation {
     /// Color assigned to regions

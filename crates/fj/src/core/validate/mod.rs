@@ -54,12 +54,13 @@
 //!
 //! ## Implementation Note
 //!
-//! This module is in the process of being replaced. See [`crate::validation`].
+//! This module is in the process of being replaced. See
+//! [`crate::core::validation`].
 //!
 //!
 //! [`fj-export`]: https://crates.io/crates/fj-export
 //! [issue tracker]: https://github.com/hannobraun/fornjot/issues
-//! [`Layers`]: crate::layers::Layers
+//! [`Layers`]: crate::core::layers::Layers
 
 mod curve;
 mod cycle;

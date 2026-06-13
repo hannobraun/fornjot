@@ -18,7 +18,7 @@ use std::{
 /// exists. If you decide to create more, you must take care not to mix up
 /// [`Handle`] instances from different stores.
 ///
-/// [`Topology`]: crate::new::topology::Topology
+/// [`Topology`]: crate::core::new::topology::Topology
 #[derive(Debug)]
 pub struct Store<T> {
     inner: Vec<T>,

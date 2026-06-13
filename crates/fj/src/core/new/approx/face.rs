@@ -15,7 +15,7 @@ use crate::core::{
 ///
 /// This function produces a value that fits in [`HalfFace`]'s `approx` field.
 ///
-/// [`HalfFace`]: crate::new::topology::HalfFace
+/// [`HalfFace`]: crate::core::new::topology::HalfFace
 pub fn face_approx(
     boundary: &[ApproxHalfEdge],
     surface: impl IntoIterator<Item = ApproxPoint<2>>,

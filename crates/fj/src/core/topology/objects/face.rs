@@ -27,8 +27,8 @@ use crate::core::{
 /// means that all [`HalfEdge`]s that bound a `Face` have the interior of the
 /// face on their left side (on the face's front side).
 ///
-/// [`HalfEdge`]: crate::topology::HalfEdge
-/// [`Shell`]: crate::topology::Shell
+/// [`HalfEdge`]: crate::core::topology::HalfEdge
+/// [`Shell`]: crate::core::topology::Shell
 #[derive(Clone, Debug)]
 pub struct Face {
     surface: Handle<Surface>,

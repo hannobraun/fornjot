@@ -8,7 +8,7 @@
 //! [topological primitives][`topology`]. This module thus plays a supporting
 //! role, by helping to create these approximations.
 //!
-//! [`topology`]: crate::new::topology
+//! [`topology`]: crate::core::new::topology
 
 mod curve;
 mod surface;

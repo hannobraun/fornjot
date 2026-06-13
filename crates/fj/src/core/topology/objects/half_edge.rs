@@ -28,8 +28,8 @@ use crate::core::{
 /// their start vertices are different.
 ///
 ///
-/// [`Cycle`]: crate::topology::Cycle
-/// [`Shell`]: crate::topology::Shell
+/// [`Cycle`]: crate::core::topology::Cycle
+/// [`Shell`]: crate::core::topology::Shell
 #[derive(Clone, Debug)]
 pub struct HalfEdge {
     curve: Handle<Curve>,

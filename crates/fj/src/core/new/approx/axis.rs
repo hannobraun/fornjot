@@ -4,7 +4,7 @@ use crate::core::math::Scalar;
 ///
 /// See [`ApproxHalfEdge::from_start_and_axes`].
 ///
-/// [`ApproxHalfEdge::from_start_and_axes`]: crate::new::approx::ApproxHalfEdge::from_start_and_axes
+/// [`ApproxHalfEdge::from_start_and_axes`]: crate::core::new::approx::ApproxHalfEdge::from_start_and_axes
 pub enum ApproxAxis {
     /// # Provide one fixed coordinate for the whole axis
     Fixed {

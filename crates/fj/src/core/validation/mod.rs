@@ -12,8 +12,8 @@
 //!
 //! ## Implementation Note
 //!
-//! This is a new module whose goal is to replace [`crate::validate`]. While
-//! this transition is ongoing, both modules will be incomplete.
+//! This is a new module whose goal is to replace [`crate::core::validate`].
+//! While this transition is ongoing, both modules will be incomplete.
 //!
 //! Issues that track the transition:
 //!
