@@ -1,7 +1,9 @@
 //! Custom test runner
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     for test in fj::tests::all() {
         test();
     }
+
+    Ok(())
 }
