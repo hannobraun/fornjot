@@ -15,6 +15,7 @@ workspace = true
 
 
 [dependencies]
+anyhow = "1.0.102"
 approx = "0.5.1"
 decorum = "0.4.0"
 futures = "0.3.32"
@@ -66,5 +67,4 @@ version = "0.3.4"
 features = ["wasm_js"]
 
 [dev-dependencies]
-anyhow = "1.0.102"
 pretty_assertions = "1.4.1"
