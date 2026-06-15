@@ -73,6 +73,7 @@ impl PullRequestsSinceLastRelease {
 
                 let number = pull_request.number;
                 let title = pull_request.title;
+
                 let author = Author::from_user(&pull_request.user)?;
 
                 let pull_request = PullRequest {
