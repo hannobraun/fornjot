@@ -47,7 +47,12 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macOS-latest
+          # Build for macOS is disabled for the time being, due to this error:
+          # https://github.com/hannobraun/fornjot/actions/runs/27576809141/job/81527153592
+          #
+          # I can't reproduce this on Linux and don't understand why it would
+          # show up _just_ on macOS.
+          # - macOS-latest
           # Windows CI build disabled for the time being. More information:
           # https://github.com/hannobraun/fornjot/issues/2376
           # - windows-latest
