@@ -86,7 +86,7 @@ impl PullRequestsSinceLastRelease {
 
                 let user =
                     pull_request.user.ok_or(anyhow!("User not available."))?;
-                let author = Author::from_user(user)?;
+                let author = Author::from_user(user);
 
                 let pull_request = PullRequest {
                     number,
@@ -131,10 +131,10 @@ pub struct Author {
 }
 
 impl Author {
-    pub fn from_user(user: Box<OctocrabAuthor>) -> anyhow::Result<Self> {
+    pub fn from_user(user: Box<OctocrabAuthor>) -> Self {
         let name = user.login;
         let profile = user.html_url;
 
-        Ok(Self { name, profile })
+        Self { name, profile }
     }
 }
