@@ -73,7 +73,7 @@ impl PullRequestsSinceLastRelease {
 
                 let number = pull_request.number;
                 let title = pull_request.title;
-                let user = &pull_request.user;
+                let user = pull_request.user;
 
                 let author = Author::from_user(user)?;
 
@@ -120,7 +120,7 @@ pub struct Author {
 }
 
 impl Author {
-    pub fn from_user(user: &SimpleUser) -> anyhow::Result<Self> {
+    pub fn from_user(user: Box<SimpleUser>) -> anyhow::Result<Self> {
         let name = user.login.clone();
         let profile = user.html_url.clone();
 
