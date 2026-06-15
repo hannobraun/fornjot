@@ -115,8 +115,10 @@ pub struct Author {
 
 impl Author {
     pub fn from_pull_request(pull_request: &SimplePullRequest) -> Self {
-        let name = pull_request.user.login.clone();
-        let profile = pull_request.user.html_url.clone();
+        let user = &pull_request.user;
+
+        let name = user.login.clone();
+        let profile = user.html_url.clone();
 
         Self { name, profile }
     }
