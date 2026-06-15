@@ -121,8 +121,8 @@ pub struct Author {
 
 impl Author {
     pub fn from_user(user: Box<SimpleUser>) -> anyhow::Result<Self> {
-        let name = user.login.clone();
-        let profile = user.html_url.clone();
+        let name = user.login;
+        let profile = user.html_url;
 
         Ok(Self { name, profile })
     }
