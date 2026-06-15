@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use autolib::find_version_in_str;
 use chrono::{DateTime, Utc};
 use octocrab::{
-    models::pulls::SimplePullRequest,
+    models::SimpleUser,
     params::{pulls::Sort, Direction, State},
     Octocrab,
 };
@@ -72,7 +72,7 @@ impl PullRequestsSinceLastRelease {
                 };
 
                 let number = pull_request.number;
-                let author = Author::from_pull_request(&pull_request)?;
+                let author = Author::from_pull_request(&pull_request.user)?;
 
                 let pull_request = PullRequest {
                     number,
@@ -117,11 +117,7 @@ pub struct Author {
 }
 
 impl Author {
-    pub fn from_pull_request(
-        pull_request: &SimplePullRequest,
-    ) -> anyhow::Result<Self> {
-        let user = &pull_request.user;
-
+    pub fn from_pull_request(user: &SimpleUser) -> anyhow::Result<Self> {
         let name = user.login.clone();
         let profile = user.html_url.clone();
 
