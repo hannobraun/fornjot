@@ -39,7 +39,9 @@ impl PullRequestsSinceLastRelease {
                 .await?;
 
             for pull_request in pull_request_page.items {
-                for label in &pull_request.labels {
+                let labels = &pull_request.labels;
+
+                for label in labels {
                     if label.name == "release" {
                         // We have found the most recently updated release PR.
                         // Unless it has been updated since being merged (which
