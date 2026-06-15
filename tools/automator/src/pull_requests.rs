@@ -4,7 +4,7 @@ use anyhow::anyhow;
 use autolib::find_version_in_str;
 use chrono::{DateTime, Utc};
 use octocrab::{
-    models::SimpleUser,
+    models::Author as OctocrabAuthor,
     params::{pulls::Sort, Direction, State},
     Octocrab,
 };
@@ -39,7 +39,9 @@ impl PullRequestsSinceLastRelease {
                 .await?;
 
             for pull_request in pull_request_page.items {
-                let labels = &pull_request.labels;
+                let labels = pull_request
+                    .labels
+                    .ok_or(anyhow!("Labels not available."))?;
 
                 for label in labels {
                     if label.name == "release" {
@@ -48,7 +50,9 @@ impl PullRequestsSinceLastRelease {
                         // we prevent, by locking release PRs as part of the
                         // release procedure), we can stop here.
 
-                        let title = pull_request.title;
+                        let title = pull_request
+                            .title
+                            .ok_or(anyhow!("Title not available."))?;
 
                         let version = find_version_in_str(&title)?;
                         let version = version.ok_or_else(|| {
@@ -71,11 +75,17 @@ impl PullRequestsSinceLastRelease {
                     continue;
                 };
 
-                let number = pull_request.number;
-                let title = pull_request.title;
-                let url = pull_request.html_url;
+                let number = pull_request
+                    .number
+                    .ok_or(anyhow!("Number not available."))?;
+                let title =
+                    pull_request.title.ok_or(anyhow!("Title not available"))?;
+                let url = pull_request
+                    .html_url
+                    .ok_or(anyhow!("Url not available"))?;
 
-                let user = pull_request.user;
+                let user =
+                    pull_request.user.ok_or(anyhow!("User not available."))?;
                 let author = Author::from_user(user)?;
 
                 let pull_request = PullRequest {
@@ -121,7 +131,7 @@ pub struct Author {
 }
 
 impl Author {
-    pub fn from_user(user: Box<SimpleUser>) -> anyhow::Result<Self> {
+    pub fn from_user(user: Box<OctocrabAuthor>) -> anyhow::Result<Self> {
         let name = user.login;
         let profile = user.html_url;
 
