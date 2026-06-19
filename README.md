@@ -1,6 +1,6 @@
-# Fornjot
-
 **This project has been shut down. Its goals were never reached. The rest of this README has been left as it was, for posterity.**
+
+# Fornjot
 
 [**Blog**](https://www.fornjot.app/blog/) | [**Contribution Guide**](CONTRIBUTING.md)
 
