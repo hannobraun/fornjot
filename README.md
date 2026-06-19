@@ -1,6 +1,6 @@
 # Fornjot
 
-[**Blog**](https://www.fornjot.app/blog/) | [**Community**](https://www.fornjot.app/community/) | [**Contribution Guide**](CONTRIBUTING.md)
+[**Blog**](https://www.fornjot.app/blog/) | [**Contribution Guide**](CONTRIBUTING.md)
 
 ## About
 
