@@ -13,10 +13,16 @@ let
     libxkbcommon
     vulkan-loader
     wayland
+    # X11 support for winit
+    xorg.libX11
+    xorg.libXcursor
+    xorg.libXrandr
+    xorg.libXi
   ];
 in
 pkgs.mkShell {
   packages = with pkgs; [
+    rustup
     # Used as a local build tool.
     just
 
@@ -27,4 +33,8 @@ pkgs.mkShell {
 
   # Otherwise `export-validator` produces an error trying to link `libstdc++`.
   LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib:${libPath}";
+
+  # Ensure rustup uses a local dir, not ~/.rustup polluting your home
+  RUSTUP_HOME = toString ./.rustup;
+  CARGO_HOME  = toString ./.cargo;
 }
